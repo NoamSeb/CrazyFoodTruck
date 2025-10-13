@@ -50,6 +50,14 @@ SourceArt/**/*.tga
 Binaries/*
 Plugins/**/Binaries/*
 
+#Do Not Ignore these files
+#(Allow non programmers to access project without compiling)
+!Binaries/Win64
+Binaries/Win64*
+!Binaries/Win64/CrazyFoodTruckEditor.target
+!Binaries/Win64/UnrealEditor.modules
+!Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll
+
 # Builds
 Build/*
 
