@@ -3,12 +3,18 @@
 
 #include "CrazyFoodTruck/Public/BulletController.h"
 
+#include "Kismet/KismetSystemLibrary.h"
+
 
 // Sets default values
 ABulletController::ABulletController()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	_BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Coll_Box"));
+	_BoxCollider->SetGenerateOverlapEvents(true);
+	_BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ABulletController::OnOverlapBegin);
+	
 }
 
 void ABulletController::Initialize(float speed, float lifeTime)
@@ -21,7 +27,6 @@ void ABulletController::Initialize(float speed, float lifeTime)
 	if (BulletMovementComponent)
 	{
 		BulletMovementComponent->InitialSpeed = speed;
-		//BulletMovementComponent->Velocity = GetActorForwardVector() * speed;
 	}
 }
 
@@ -47,6 +52,17 @@ void ABulletController::Tick(float DeltaTime)
 	else
 	{
 		_alive = false;
+		Destroy();
+	}
+}
+
+void ABulletController::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	auto* entity = Cast<IIEntity>(OtherActor);
+	if (entity)
+	{
+		entity->ReceiveDamage(1);
 		Destroy();
 	}
 }

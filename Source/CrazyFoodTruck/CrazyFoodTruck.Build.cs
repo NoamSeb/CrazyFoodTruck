@@ -8,7 +8,17 @@ public class CrazyFoodTruck : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+		PublicDependencyModuleNames.AddRange(new string[]
+		{
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"InputCore",
+			"EnhancedInput",
+			"UMG",       // <--- add this
+			"Slate",     // <--- add this
+			"SlateCore"  // <--- add this
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
