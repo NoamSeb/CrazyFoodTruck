@@ -12,7 +12,6 @@ AHordeManager::AHordeManager()
 	PrimaryActorTick.bCanEverTick = false;
 
 	SpawnZone = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnZone"));
-	RootComponent = SpawnZone;
 
 	// Couleur / visibilité dans l'éditeur
 	SpawnZone->SetBoxExtent(FVector(500.0f, 500.0f, 200.0f)); // taille par défaut
