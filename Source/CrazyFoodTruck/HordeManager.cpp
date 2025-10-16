@@ -45,8 +45,12 @@ void AHordeManager::SpawnHordeZombie()
 		NewTransform.SetLocation(SpawnLocation);
 		NewTransform.SetScale3D(SpawnScale);
 
+		//définir comment les zombies spawn et leurs collision quand ils spawn
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		
 		//faire spawn un character de la class PawnZombie remplis avant avec son transfom
-		ACharacter* NewZombie = GetWorld()->SpawnActor<ACharacter>(PawnZombie, NewTransform);
+		ACharacter* NewZombie = GetWorld()->SpawnActor<ACharacter>(PawnZombie, NewTransform, SpawnParams);
 		ListHordeZombie.Add(NewZombie);
 
 		//lui ajouté manuellement un controller sinon il ne bougera pas 
