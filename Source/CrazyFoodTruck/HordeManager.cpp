@@ -25,10 +25,8 @@ void AHordeManager::SpawnHordeZombie()
 {
 	FVector BoxExtent = SpawnZone->GetScaledBoxExtent();
 
-	//pour "refaire" le rand à chaque lancé du jeu
-	srand(time(0));
 	//aléatoir min et max inclus
-	int8 numberZombies = rand() % nbrMaxZombies + nbrMinZombies;
+	int8 numberZombies = FMath::RandRange(nbrMinZombies, nbrMaxZombies);
 	
 	for (int i = 0; i < numberZombies; i++)
 	{

@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "stdlib.h"
-#include "time.h"
 #include "Components/BoxComponent.h"
 #include "HordeManager.generated.h"
 
