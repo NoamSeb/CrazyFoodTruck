@@ -19,7 +19,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ACharacter> PawnZombie = AActor::StaticClass();
 
-	void SpawnHordeZombie();
+	UFUNCTION(BlueprintCallable, Category = "Horde")
+	void SpawnHordeZombie(int nbrMin, int nbrMax);
 
 	//garder les zombies dans la liste
 	UPROPERTY(VisibleAnywhere)

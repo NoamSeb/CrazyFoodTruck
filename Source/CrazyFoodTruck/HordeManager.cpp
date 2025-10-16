@@ -20,12 +20,30 @@ AHordeManager::AHordeManager()
 	SpawnZone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void AHordeManager::SpawnHordeZombie()
+void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)
 {
+	if (!ListHordeZombie.IsEmpty())
+	{
+		for (ACharacter* Zombie : ListHordeZombie)
+		{
+			Zombie->Destroy();
+		}
+		ListHordeZombie.Empty();
+	}
+	
+	if (nbrMinZombies > nbrMaxZombies)
+	{
+		int8 intTempo = nbrMinZombies;
+		nbrMinZombies = nbrMaxZombies;
+		nbrMaxZombies = intTempo;
+
+		GEngine->AddOnScreenDebugMessage(-1,10.f,FColor::Magenta,"min et max changer");
+	}
+	
 	FVector BoxExtent = SpawnZone->GetScaledBoxExtent();
 
 	//aléatoir min et max inclus
-	int8 numberZombies = FMath::RandRange(nbrMinZombies, nbrMaxZombies);
+	int8 numberZombies = FMath::RandRange(nbrMin, nbrMax);
 	
 	for (int i = 0; i < numberZombies; i++)
 	{
@@ -67,15 +85,7 @@ void AHordeManager::SpawnHordeZombie()
 void AHordeManager::BeginPlay()
 {
 	Super::BeginPlay();
-	if (nbrMinZombies > nbrMaxZombies)
-	{
-		int8 intTempo = nbrMinZombies;
-		nbrMinZombies = nbrMaxZombies;
-		nbrMaxZombies = intTempo;
-
-		GEngine->AddOnScreenDebugMessage(-1,10.f,FColor::Magenta,"min et max changer");
-	}
-	SpawnHordeZombie();
+	SpawnHordeZombie(nbrMinZombies, nbrMaxZombies);
 }
 
 // Called every frame
