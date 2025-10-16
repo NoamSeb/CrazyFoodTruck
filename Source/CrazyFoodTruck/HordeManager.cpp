@@ -25,32 +25,34 @@ void AHordeManager::SpawnHordeZombie()
 {
 	FVector BoxExtent = SpawnZone->GetScaledBoxExtent();
 
+	//pour "refaire" le rand à chaque lancé du jeu
 	srand(time(0));
-	int8 numberZombies = rand() % 10 + 5;
-
-	GEngine->AddOnScreenDebugMessage(1, 10.0f, FColor::Red, FString::Printf(TEXT("Number Zombies: %d"), numberZombies));
+	//aléatoir min et max inclus
+	int8 numberZombies = rand() % nbrMaxZombies + nbrMinZombies;
 	
 	for (int i = 0; i < numberZombies; i++)
 	{
 		//FVector SpawnLocation(FMath::RandRange(-BoxExtent.X, BoxExtent.X), FMath::RandRange(-BoxExtent.Y, BoxExtent.Y), 90.0f);
+		//pos aléatoire dans les limites de la box (l'aide visuelle)
 		FVector SpawnLocation = SpawnZone->GetComponentLocation() + FVector(
 	FMath::RandRange(-BoxExtent.X, BoxExtent.X),
 	FMath::RandRange(-BoxExtent.Y, BoxExtent.Y),
 	90.0f
 );
-		FRotator SpawnRotation(0.0f, 0.0f, 0.0f);
 		FVector SpawnScale(1.0f, 1.0f, 1.0f);
-	
 		
 		FTransform NewTransform;
 		NewTransform.SetLocation(SpawnLocation);
 		NewTransform.SetScale3D(SpawnScale);
 
+		//faire spawn un character de la class PawnZombie remplis avant avec son transfom
 		ACharacter* NewZombie = GetWorld()->SpawnActor<ACharacter>(PawnZombie, NewTransform);
 		ListHordeZombie.Add(NewZombie);
 
+		//lui ajouté manuellement un controller sinon il ne bougera pas 
 		NewZombie->SpawnDefaultController();
 
+		//apelle la fonction CE round pour le "mettre en route"
 		//à voir pour remplacer plus tard le ce round d'ici pas un custom event init
 		UFunction* EventRoundZombie = NewZombie->FindFunction(FName("CE_Round"));
 		if (EventRoundZombie)
@@ -64,6 +66,14 @@ void AHordeManager::SpawnHordeZombie()
 void AHordeManager::BeginPlay()
 {
 	Super::BeginPlay();
+	if (nbrMinZombies > nbrMaxZombies)
+	{
+		int8 intTempo = nbrMinZombies;
+		nbrMinZombies = nbrMaxZombies;
+		nbrMaxZombies = intTempo;
+
+		GEngine->AddOnScreenDebugMessage(-1,10.f,FColor::Magenta,"min et max changer");
+	}
 	SpawnHordeZombie();
 }
 

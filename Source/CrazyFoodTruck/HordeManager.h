@@ -17,13 +17,25 @@ class CRAZYFOODTRUCK_API AHordeManager : public AActor
 public:
 	// Sets default values for this actor's properties
 	AHordeManager();
+	//mettre le BP du zombie dans le BP de la horde
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ACharacter> PawnZombie = AActor::StaticClass();
+
 	void SpawnHordeZombie();
+
+	//garder les zombies dans la liste
 	UPROPERTY(VisibleAnywhere)
 	TArray<ACharacter*> ListHordeZombie;
+
+	//c'est une aide visuelle pour savoir où les limites où on place les zombies
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Spawn Area")
 	UBoxComponent* SpawnZone;
+
+	//définir nombre max et min de zombies
+	UPROPERTY(EditAnywhere)
+	int8 nbrMinZombies = 5;
+	UPROPERTY(EditAnywhere)
+	int8 nbrMaxZombies = 10;
 	
 
 protected:
