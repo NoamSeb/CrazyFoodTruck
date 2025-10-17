@@ -1,0 +1,112 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Pawn.h"
+#include "InputMappingContext.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "GameFramework/FloatingPawnMovement.h"
+#include "Vehicle.generated.h"
+
+UENUM()
+enum class VehicleStates
+{
+	Idle,
+	Rotating
+};
+UENUM()
+enum class VehicleOrientation
+{
+	Left,
+	Right
+};
+
+UCLASS()
+class CRAZYFOODTRUCK_API AVehicle : public APawn
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this pawn's properties
+	AVehicle();
+	
+	UPROPERTY()
+	TObjectPtr<UFloatingPawnMovement> MovementComponent;
+	
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Variable in kilometers per hour", ForceUnits="km/h"), Category="Vehicle Settings")
+	float TruckMaxSpeed = 50.f;
+
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Represent the speed of rotation of the Truck per frame", Units="Degrees"), Category="Vehicle Settings")
+	float TruckAngleSpeed = 1.f;
+	
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Represent the max rotation of the truck", Units="Degrees"), Category="Vehicle Settings | Rotation")
+	float TruckMaxRotation = 25.f;
+	
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Represent the time the truck need to rotate", Units="seconds"), Category="Vehicle Settings | Rotation")
+	float TruckInterpolationDuration = 1.f;
+	
+	UPROPERTY(EditAnywhere, Category="Vehicle Settings | Rotation")
+	TObjectPtr<UCurveFloat> RotationAnimCurve;
+	
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Represent the max rotation of the truck", Units="Degrees"), Category="Vehicle Settings | Tilt")
+	float TruckMaxTilt = 10.f;
+	
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Represent the time the truck need to tilt", Units="seconds"), Category="Vehicle Settings | Tilt")
+	float TruckInterpolationTilt = 1;
+
+	UPROPERTY(EditAnywhere, Category="Vehicle Settings | Tilt")
+	TObjectPtr<UCurveFloat> TiltAnimCurve;
+
+	
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private :
+	VehicleStates TruckState;
+	VehicleOrientation TruckOrientation;
+	float InputRotatingValue;
+
+	float RotationTimer;
+	float TiltTimer;
+	float StartRotationYaw;
+	float StartRotationRoll;
+	bool AlreadyPassed = false;
+
+	FRotator destinationRotation;
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+	
+	UFUNCTION()
+	void MoveForward();
+
+#pragma region Input Data
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Input");
+	TObjectPtr<UInputMappingContext> FoodTruckInputMappingContext;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input");
+	TObjectPtr<UInputAction> TurnTruckAction;
+
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	void SetupMappingContextIntoController() const;
+
+#pragma endregion
+	
+#pragma region  Input Rotate Truck
+private:
+	void BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
+
+#pragma region Truck State
+	void SetTruckRotatingStates(const FInputActionValue& InputActionValue);
+	void SetTruckIdleStates();
+#pragma endregion
+	
+	void RotateTruck(float DeltaTime);
+	void UpdateRotationTruck(FRotator TargetRotation, float DeltaTime);
+	void ResetTruckTilt(float DeltaTime);
+#pragma endregion
+};
