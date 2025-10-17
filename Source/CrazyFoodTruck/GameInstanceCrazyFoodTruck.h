@@ -12,6 +12,7 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 {
 	GENERATED_BODY()
 
+	
 	public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool InGame;

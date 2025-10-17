@@ -5,15 +5,20 @@
 
 AGameModeCrazyFoodTruck::AGameModeCrazyFoodTruck()
 {
-	GetInstance = Cast<UGameInstanceCrazyFoodTruck>(UGameplayStatics::GetGameInstance(GetWorld()));
 }
+
+void AGameModeCrazyFoodTruck::BeginPlay()
+{
+	Super::BeginPlay();
+	GetInstance = Cast<UGameInstanceCrazyFoodTruck>(GetGameInstance());
+	//GetInstance = UGameInstanceCrazyFoodTruck().GameInstance;  ???
+}
+
 
 void AGameModeCrazyFoodTruck::ChangeGamePhase()
 {
 	switch (GetInstance->CurrentGamePhase)
 	{
-	case EPhaseGameCrazyFoodTruckState::Menu:
-		GamePhaseRoute();
 	case EPhaseGameCrazyFoodTruckState::Route:
 		GamePhaseBase();
 	case EPhaseGameCrazyFoodTruckState::Base:
@@ -36,8 +41,8 @@ void AGameModeCrazyFoodTruck::GamePhaseBase()
 
 void AGameModeCrazyFoodTruck::GamePhaseAmelioration()
 {
-	//setup pour la phase d'amelioration
-	//augmentation de la difficulté pour le phase route
+	//setup pour la phase d amelioration
+	//augmentation de la difficult pour le phase route
 }
 
 bool AGameModeCrazyFoodTruck::CheckDefeat()
