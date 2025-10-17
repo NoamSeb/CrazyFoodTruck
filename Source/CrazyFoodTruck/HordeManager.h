@@ -16,14 +16,14 @@ public:
 	// Sets default values for this actor's properties
 	AHordeManager();
 	//mettre le BP du zombie dans le BP de la horde
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Zombie")
 	TSubclassOf<ACharacter> PawnZombie = AActor::StaticClass();
 
-	UFUNCTION(BlueprintCallable, Category = "Horde")
+	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Horde")
 	void SpawnHordeZombie(int nbrMin, int nbrMax);
 
 	//garder les zombies dans la liste
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category= "Horde Manager | Spawn Vague")
 	TArray<ACharacter*> ListHordeZombie;
 
 	//c'est une aide visuelle pour savoir où les limites où on place les zombies
@@ -31,9 +31,9 @@ public:
 	UBoxComponent* SpawnZone;
 
 	//définir nombre max et min de zombies
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category= "Horde Manager | Spawn Vague")
 	int8 nbrMinZombies = 5;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category= "Horde Manager | Spawn Vague")
 	int8 nbrMaxZombies = 10;
 	
 
