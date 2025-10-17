@@ -57,13 +57,44 @@ void ABulletController::Tick(float DeltaTime)
 }
 
 void ABulletController::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	auto* entity = Cast<IIEntity>(OtherActor);
-	if (entity)
+
+	if (OtherActor == nullptr || OtherActor == this)
+    {
+        return;
+    }
+	
+	if (OtherActor->GetClass()->ImplementsInterface(UIEntity::StaticClass()))
 	{
-		entity->ReceiveDamage(1);
+		IIEntity::Execute_ReceiveDamageBlueprint(OtherActor, 1);
+		IIEntity* EntityInterface = Cast<IIEntity>(OtherActor);
+
+		if (EntityInterface)
+		{
+			if (EntityInterface == nullptr)
+			{
+				return;
+			}
+			EntityInterface->ReceiveDamage(1);
+		}
 		Destroy();
 	}
+	
+	auto tag = OtherActor->Tags;
+
+	
+	if (tag.Num() > 0)
+    {
+		if (tag.Contains("Ground"))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Hit Ground");
+			Destroy();
+		}
+    }
+
+	// TOUCHED NOTHING 
 }
+
+
 

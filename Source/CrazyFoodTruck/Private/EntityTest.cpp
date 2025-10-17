@@ -14,10 +14,22 @@ void AEntityTest::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AEntityTest::ReceiveDamage(int8 DamageAmount)
+void AEntityTest::ReceiveDamage(int DamageAmount)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Received Damage : " + FString::FromInt(DamageAmount));
+	Health -= DamageAmount;
+	if (Health <= 0)
+	{
+		OnDeath.Broadcast();
+		Destroy();
+	}
+	OnLifeChange.Broadcast(Health);
 }
+
+void AEntityTest::CrushUnderTruck()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Crushed !");
+}
+
 
 // Called every frame
 void AEntityTest::Tick(float DeltaTime)

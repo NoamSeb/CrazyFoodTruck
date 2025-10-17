@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values
@@ -27,14 +28,20 @@ void ATurretController::BeginPlay()
 		if (SceneComponent->GetName() == "SC_JointCanon")
 		{
 			_CanonToRotate = Cast<USceneComponent>(SceneComponent);
-			break;
 		}
+		if (SceneComponent->GetName() == "SC_CursorJoint")
+        {
+            _CursorJoint = Cast<USceneComponent>(SceneComponent);
+        }
 	}
 	
 	ResetCoolDown();
 	ResetAmmo();
 	AddInputMapping();
 	StartPossessTurret();
+
+	Shoot();
+	UpdateTurretCanonRotation();
 	
 }
 
@@ -128,32 +135,13 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	}
 }
 
-void ATurretController::InputShootTriggered(const FInputActionValue& Value)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, "Input Shoot Started");
-	Shoot();
-}
 
-void ATurretController::InputYaw(const FInputActionValue& Value)
-{
-//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, "Input Yaw = " + FString::SanitizeFloat(Value.Get<float>()));
-	if (_CanonToRotate)
-	{
-		
-	}
-}
 
-void ATurretController::InputRoll(const FInputActionValue& Value)
+
+
+
+void ATurretController::CanonKnockBackAnim()
 {
-	float valueToFloat = Value.Get<float>();
-	if (_CanonToRotate)
-	{
-		FRotator CurrentRotation = _CanonToRotate->GetComponentRotation();
-		
-		CurrentRotation.Yaw += valueToFloat * (_RotationSpeed * GetWorld()->GetDeltaSeconds());
-		CurrentRotation.Yaw = FMath::Clamp(CurrentRotation.Yaw, minRotation, maxRotation);
-		_CanonToRotate->SetWorldRotation(CurrentRotation);
-	}
 }
 
 
@@ -181,6 +169,12 @@ void ATurretController::DecrementAmmo()
 	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
 }
 
+float ATurretController::GetCoolDownBetweenShoot()
+{
+	return _BaseCoolDownShoot;
+}
+
+
 void ATurretController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -198,8 +192,12 @@ void ATurretController::Shoot()
 	if (!HasAmmo()) return;
 
 	ResetCoolDown();
+	
+	CanonKnockBackAnim();
+
 	DecrementAmmo();
 	FActorSpawnParameters bulletParams;
+	OnShoot.Broadcast();
 
 	AActor* bulletInstance = GetWorld()->SpawnActor<AActor>(BulletPrefab, _SpawnBulletTransform->GetComponentTransform(), bulletParams);
 	if (bulletInstance)
@@ -211,5 +209,64 @@ void ATurretController::Shoot()
 			bulletController->Initialize(2200.f, 1.5f);
 		}
 	}
+}
+
+// INPUT
+
+void ATurretController::InputShootTriggered(const FInputActionValue& Value)
+{
+	Shoot();
+}
+
+void ATurretController::InputRoll(const FInputActionValue& Value)
+{
+	float valueToFloat = Value.Get<float>();
+
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("ROLL INPUT")));
+
+	if (_CursorJoint)
+	{
+		FVector CurrentLocation = _CursorJoint->GetRelativeLocation();
+
+		CurrentLocation.Y += valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds());
+		CurrentLocation.Y = FMath::Clamp(CurrentLocation.Y,-AreaRangeDepht , AreaRangeDepht);
+
+		_CursorJoint->SetRelativeLocation(CurrentLocation);
+
+		UpdateTurretCanonRotation(); 
+	}
+}
+
+void ATurretController::UpdateTurretCanonRotation()
+{
+	if (_CanonToRotate)
+	{
+		// LOOK AT TARGET
+		FVector cursorPosition = _CursorJoint->GetComponentLocation();
+		FVector TurretPosition = _CanonToRotate->GetComponentLocation();
+		FRotator lookAtRotator = UKismetMathLibrary::FindLookAtRotation(TurretPosition, cursorPosition);
+		_CanonToRotate->SetWorldRotation(lookAtRotator);
+	}
+}
+
+void ATurretController::InputYaw(const FInputActionValue& Value)
+{
+	float valueToFloat = Value.Get<float>();
+
+	if (_CursorJoint)
+	{
+		FVector CurrentLocation = _CursorJoint->GetRelativeLocation();
+
+		CurrentLocation.X += valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds());
+		CurrentLocation.X = FMath::Clamp(CurrentLocation.X,-AreaRangeSide , AreaRangeSide);
+
+		_CursorJoint->SetRelativeLocation(CurrentLocation);
+
+		UpdateTurretCanonRotation(); 
+	}
+
+	
+	
+
 }
 

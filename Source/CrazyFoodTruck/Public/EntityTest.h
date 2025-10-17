@@ -7,6 +7,9 @@
 #include "GameFramework/Actor.h"
 #include "EntityTest.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLifeChange, int, NewLife);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEvent);
+
 UCLASS()
 class CRAZYFOODTRUCK_API AEntityTest : public AActor, public IIEntity
 {
@@ -14,12 +17,29 @@ class CRAZYFOODTRUCK_API AEntityTest : public AActor, public IIEntity
 
 public:
 	AEntityTest();
+	UFUNCTION(BlueprintCallable)
+	int GetHealth() const {return Health;}
 
 protected:
+	
 	virtual void BeginPlay() override;
-	virtual void ReceiveDamage(int8 DamageAmount) override;
+
+	UFUNCTION()
+	virtual void ReceiveDamage(int DamageAmount) override;
+
+	virtual void CrushUnderTruck() override;
+
+	
+	
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnLifeChange OnLifeChange;
+	FOnEvent OnDeath;
 
 public:
 	
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category="Stats")
+	int Health = 5;
 };

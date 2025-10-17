@@ -6,7 +6,8 @@
 #include "UObject/Interface.h"
 #include "IEntity.generated.h"
 
-// This class does not need to be modified.
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnDamage, int, damageAmount);
+
 UINTERFACE()
 class UIEntity : public UInterface
 {
@@ -18,6 +19,16 @@ class CRAZYFOODTRUCK_API IIEntity
 	GENERATED_BODY()
 
 public:
+
+	// DAMAGE
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
+	void ReceiveDamageBlueprint(int DamageAmount);
+
+	virtual void ReceiveDamage(int DamageAmount) = 0;
+
+	// ROAD
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
+	void CrushUnderTruckBlueprint(int DamageAmount);
 	
-	virtual void ReceiveDamage(int8 DamageAmount) = 0;
+	virtual void CrushUnderTruck() = 0;
 };

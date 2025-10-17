@@ -33,9 +33,9 @@ public:
 	void Reload();
 	void DecrementAmmo();
 	bool HasAmmo() const { return _CurrentAmmo > 0; }
-	
-	UPROPERTY(EditAnywhere)
-	float FireRate = 1.0f;
+
+	UFUNCTION(BlueprintCallable)
+	float GetCoolDownBetweenShoot();
 
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnShootSignature OnAmmoChanged;
@@ -45,6 +45,9 @@ public:
 	FOnTurretEvent OnReload;
 	
 protected:
+
+	UPROPERTY(EditAnywhere, Category="OTHER")
+	USceneComponent* _CursorJoint;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputMappingContext* TurretMappingContext;
@@ -79,14 +82,14 @@ private:
 	float _CurrentCoolDown = 0.f;
 
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float _RotationSpeed = 5.f;
+	float _CursorSpeed = 5.f;
 	
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float minRotation = -30.f;
+	float AreaRangeSide = 200.f;
 	
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float maxRotation = 30.f;
-	
+	float AreaRangeDepht = 200.f;
+
 	void Shoot();
 	UFUNCTION(BlueprintCallable)
 	void SetBulletSpawnTransform(USceneComponent* Scp);
@@ -109,7 +112,10 @@ private:
 	void InputShootTriggered(const FInputActionValue& Value);
 	void InputYaw(const FInputActionValue& Value);
 	void InputRoll(const FInputActionValue& Value);
+	void UpdateTurretCanonRotation();
 
 	int32 mappingPriority = 0;
+
+	void CanonKnockBackAnim();
 
 };
