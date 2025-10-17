@@ -13,4 +13,6 @@ UCLASS()
 class CRAZYFOODTRUCK_API AGameModeCrazyFoodTruck : public AGameMode
 {
 	GENERATED_BODY()
+
+	AGameModeCrazyFoodTruck();
 };

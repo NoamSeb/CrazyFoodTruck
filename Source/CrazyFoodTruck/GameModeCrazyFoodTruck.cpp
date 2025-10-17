@@ -2,3 +2,8 @@
 
 
 #include "GameModeCrazyFoodTruck.h"
+
+AGameModeCrazyFoodTruck::AGameModeCrazyFoodTruck()
+{
+	
+}

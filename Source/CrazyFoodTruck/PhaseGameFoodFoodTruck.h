@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 
-/**
- * 
- */
-class CRAZYFOODTRUCK_API PhaseGameFoodFoodTruck
+UENUM(BlueprintType)
+enum class EPhaseGameCrazyFoodTruckState : uint8
 {
-public:
-	PhaseGameFoodFoodTruck();
-	~PhaseGameFoodFoodTruck();
+	Menu = 0,
+	Route,
+	Base,
+	Amelioration
 };

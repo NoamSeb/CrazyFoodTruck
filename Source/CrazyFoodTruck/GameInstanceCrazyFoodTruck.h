@@ -6,11 +6,14 @@
 #include "Engine/GameInstance.h"
 #include "GameInstanceCrazyFoodTruck.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 {
 	GENERATED_BODY()
+
+	public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool InGame;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString LevelName;
 };

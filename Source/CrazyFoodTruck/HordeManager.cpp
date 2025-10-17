@@ -5,10 +5,9 @@
 #include "GameFramework/Character.h"
 
 
-// Sets default values
+
 AHordeManager::AHordeManager()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	SpawnZone = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnZone"));
@@ -81,14 +80,14 @@ void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)
 	}
 }
 
-// Called when the game starts or when spawned
+
 void AHordeManager::BeginPlay()
 {
 	Super::BeginPlay();
 	SpawnHordeZombie(nbrMinZombies, nbrMaxZombies);
 }
 
-// Called every frame
+
 void AHordeManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
