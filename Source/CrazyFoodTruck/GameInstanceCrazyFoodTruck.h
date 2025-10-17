@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "PhaseGameFoodFoodTruck.h"
 #include "GameInstanceCrazyFoodTruck.generated.h"
 
 UCLASS()
@@ -16,4 +17,6 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	bool InGame;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString LevelName;
+	UPROPERTY(VisibleAnywhere)
+	EPhaseGameCrazyFoodTruckState CurrentGamePhase;
 };

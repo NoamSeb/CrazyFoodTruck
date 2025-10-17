@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+#include "PhaseGameFoodFoodTruck.h"
+#include "GameInstanceCrazyFoodTruck.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameModeCrazyFoodTruck.generated.h"
 
 /**
@@ -15,4 +18,16 @@ class CRAZYFOODTRUCK_API AGameModeCrazyFoodTruck : public AGameMode
 	GENERATED_BODY()
 
 	AGameModeCrazyFoodTruck();
+
+	public:
+	static UGameInstanceCrazyFoodTruck* GetInstance;
+	UFUNCTION(BlueprintCallable, Category = "Game Mode")
+	void ChangeGamePhase();
+	UFUNCTION(BlueprintCallable, Category = "Game Mode")
+	bool CheckDefeat();
+
+	private:
+	void GamePhaseRoute();
+	void GamePhaseBase();
+	void GamePhaseAmelioration();
 };
