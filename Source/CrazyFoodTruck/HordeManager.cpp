@@ -17,6 +17,8 @@ AHordeManager::AHordeManager()
 	SpawnZone->SetHiddenInGame(true);
 	SpawnZone->SetVisibility(true);
 	SpawnZone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	//NavMeshBoundsVolumeSpawnZone->
 }
 
 void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)

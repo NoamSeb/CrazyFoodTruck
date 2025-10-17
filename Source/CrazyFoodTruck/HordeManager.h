@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "NavMesh/NavMeshBoundsVolume.h"
 #include "HordeManager.generated.h"
 
 UCLASS()
@@ -29,6 +30,7 @@ public:
 	//c'est une aide visuelle pour savoir où les limites où on place les zombies
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Spawn Area")
 	UBoxComponent* SpawnZone;
+	//ANavMeshBoundsVolume NavMeshBoundsVolumeSpawnZone;
 
 	//définir nombre max et min de zombies
 	UPROPERTY(EditAnywhere, Category= "Horde Manager | Spawn Vague")
