@@ -3,10 +3,10 @@
 
 #include "Players/LocalMultiplayerCharacter.h"
 
+#include "Engine/Engine.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
-#include "InputAction.h"
 #include "InputActionValue.h"
 
 // Sets default values
@@ -48,6 +48,11 @@ void ALocalMultiplayerCharacter::SetupPlayerInputComponent(UInputComponent* Play
             EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &ALocalMultiplayerCharacter::OnInputMove);
             EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Ongoing, this, &ALocalMultiplayerCharacter::OnInputMove);
         }
+
+        if (IA_Interact)
+        {
+            EnhancedInputComponent->BindAction(IA_Interact, ETriggerEvent::Started, this, &ALocalMultiplayerCharacter::TryInteract);
+        }
     }
 }
 
@@ -62,5 +67,30 @@ void ALocalMultiplayerCharacter::OnInputMove(const FInputActionValue& InputActio
 
     AddMovementInput(Forward, Axis.Y);
     AddMovementInput(Right, Axis.X);
+}
+
+void ALocalMultiplayerCharacter::TryInteract()
+{
+    if (FocusedInteractable)
+    {
+        IInteractable::Execute_Interact(FocusedInteractable.GetObject(), this);
+    }
+    else
+    {
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Yellow, TEXT("Nothing to interact with here."));
+        }
+    }
+}
+
+const TScriptInterface<IInteractable>& ALocalMultiplayerCharacter::GetFocusedInteractable() const
+{
+    return FocusedInteractable;
+}
+
+void ALocalMultiplayerCharacter::SetFocusedInteractable(const TScriptInterface<IInteractable>& NewTarget)
+{
+    FocusedInteractable = NewTarget;
 }
 

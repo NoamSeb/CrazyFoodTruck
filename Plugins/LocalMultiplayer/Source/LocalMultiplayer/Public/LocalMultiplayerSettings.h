@@ -10,9 +10,6 @@ class UInputMappingContext;
 
 struct FKey;
 
-/**
- * 
- */
 UENUM()
 enum class ELocalMultiplayerInputMappingType
 {
@@ -39,6 +36,9 @@ public:
     bool ContainsKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;
 };
 
+/**
+ *
+ */
 UCLASS(Config=Game, DefaultConfig, meta=(DisplayName="Local Multiplayer Settings"))
 class LOCALMULTIPLAYER_API ULocalMultiplayerSettings : public UDeveloperSettings
 {

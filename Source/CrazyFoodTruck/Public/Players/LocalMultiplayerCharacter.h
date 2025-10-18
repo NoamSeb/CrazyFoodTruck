@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Interactable/Interactable.h"
 #include "LocalMultiplayerCharacter.generated.h"
 
 class UInputAction;
-class UInputMappingContext;
 
 struct FInputActionValue;
 
@@ -33,11 +33,22 @@ public:
 
 private:
 	void OnInputMove(const FInputActionValue& InputActionValue);
+	void TryInteract();
 
 public:
 	UPROPERTY(EditAnywhere, Category="Movement")
 	float MovementSpeed = 600.f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
-	TObjectPtr<UInputAction> IA_Move;
+	TObjectPtr<UInputAction> IA_Move = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> IA_Interact = nullptr;
+
+	const TScriptInterface<IInteractable>& GetFocusedInteractable() const;
+	void SetFocusedInteractable(const TScriptInterface<IInteractable>& NewTarget);
+
+private:
+	UPROPERTY()
+	TScriptInterface<IInteractable> FocusedInteractable;
 };
