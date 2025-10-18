@@ -24,7 +24,9 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 		return;
 	}
 
-	const int TargetPlayers = LocalMultiplayerSettings->GetNbKeyboardProfiles();
+	const int NbKeyboardProfiles = LocalMultiplayerSettings->GetNbKeyboardProfiles();
+	const int NbMaxGamepads = LocalMultiplayerSettings->NbMaxGamepads;
+	const int TargetPlayers = FMath::Max(1, NbKeyboardProfiles + NbMaxGamepads);
 
 	while (GameInstance->GetLocalPlayers().Num() < TargetPlayers)
 	{
@@ -34,8 +36,6 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 	}
 
 	LastAssignedPlayerIndex = 0;
-	PlayerIndexFromKeyboardProfileIndex.Reset();
-	PlayerIndexFromGamepadProfileIndex.Reset();
 }
 
 int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromKeyboardProfileIndex(int KeyboardProfileIndex) const
@@ -68,6 +68,16 @@ int ULocalMultiplayerSubsystem::AssignNewPlayerToKeyboardProfileIndex(int Keyboa
 
 	const int AssignedPlayerIndex = LastAssignedPlayerIndex++;
 	PlayerIndexFromKeyboardProfileIndex.Add(KeyboardProfileIndex, AssignedPlayerIndex);
+
+	if (UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (!GameInstance->GetLocalPlayerByIndex(AssignedPlayerIndex))
+		{
+			FString OutError;
+			GameInstance->CreateLocalPlayer(AssignedPlayerIndex, OutError, true);
+		}
+	}
+
 	return AssignedPlayerIndex;
 }
 
@@ -81,6 +91,16 @@ int ULocalMultiplayerSubsystem::AssignNewPlayerToGamepadDeviceID(int DeviceID)
 
 	const int AssignedPlayerIndex = LastAssignedPlayerIndex++;
 	PlayerIndexFromGamepadProfileIndex.Add(DeviceID, AssignedPlayerIndex);
+
+	if (UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (!GameInstance->GetLocalPlayerByIndex(AssignedPlayerIndex))
+		{
+			FString OutError;
+			GameInstance->CreateLocalPlayer(AssignedPlayerIndex, OutError, true);
+		}
+	}
+
 	return AssignedPlayerIndex;
 }
 
