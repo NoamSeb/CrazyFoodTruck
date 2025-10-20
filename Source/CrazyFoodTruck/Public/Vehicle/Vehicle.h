@@ -35,9 +35,20 @@ public:
 	UPROPERTY()
 	TObjectPtr<UFloatingPawnMovement> MovementComponent;
 	
-	UPROPERTY(EditAnywhere, meta=(ToolTip="Variable in kilometers per hour", ForceUnits="km/h"), Category="Vehicle Settings")
+#pragma region Vehicle settings
+	
+#pragma region Speed settings
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Variable in kilometers per hour", ForceUnits="km/h"), Category="Vehicle Settings | Speed ")
 	float TruckMaxSpeed = 50.f;
 
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Variable in kilometers per hour", ForceUnits="km/h"), Category="Vehicle Settings | Speed")
+	float TruckLossSpeed = 10.f;
+	
+	UPROPERTY(EditAnywhere, meta=(Tooltip="Represent the time the truck need to recover his full speed", Units="seconds"), Category="Vehicle Settings | Speed")
+	float SpeedRecoveryDuration = 2.0f;
+	
+#pragma endregion
+	
 	UPROPERTY(EditAnywhere, meta=(ToolTip="Represent the speed of rotation of the Truck per frame", Units="Degrees"), Category="Vehicle Settings")
 	float TruckAngleSpeed = 1.f;
 	
@@ -59,6 +70,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Vehicle Settings | Tilt")
 	TObjectPtr<UCurveFloat> TiltAnimCurve;
 
+#pragma endregion
 	
 protected:
 	// Called when the game starts or when spawned
@@ -68,7 +80,8 @@ private :
 	VehicleStates TruckState;
 	VehicleOrientation TruckOrientation;
 	float InputRotatingValue;
-
+	float KilometersToMetersConvertingValue = 27.777777777778;
+		
 	float RotationTimer;
 	float TiltTimer;
 	float StartRotationYaw;
@@ -76,9 +89,15 @@ private :
 	bool AlreadyPassed = false;
 
 	FRotator destinationRotation;
+
+	FTimerHandle SpeedRecoveryHandle;
+	float ElapsedTime = 0.0f;
+	bool bRecoveringSpeed = false;
+	float StartSpeed = 0.0f;
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	
 	UFUNCTION()
 	void MoveForward();
@@ -109,4 +128,11 @@ private:
 	void UpdateRotationTruck(FRotator TargetRotation, float DeltaTime);
 	void ResetTruckTilt(float DeltaTime);
 #pragma endregion
+
+#pragma region Truck Speed Management
+private:
+	void ReduceSpeed();
+	void StartSpeedRecovery();
+#pragma endregion
+	
 };

@@ -3,8 +3,7 @@
 
 #include "CrazyFoodTruck/Public/Vehicle/Vehicle.h"
 
-#include "FrameTypes.h"
-#include "Math/UnitConversion.h"
+#include "AI/NavigationSystemBase.h"
 
 // Sets default values
 AVehicle::AVehicle()
@@ -18,7 +17,7 @@ void AVehicle::BeginPlay()
 {
 	Super::BeginPlay();
 	MovementComponent = Cast<UFloatingPawnMovement>(this->GetMovementComponent());
-	MovementComponent->MaxSpeed = TruckMaxSpeed * 27.777777777778;
+	MovementComponent->MaxSpeed = TruckMaxSpeed * KilometersToMetersConvertingValue;
 	GetWorld()->GetFirstPlayerController()->Possess(this);
 }
 
@@ -39,12 +38,32 @@ void AVehicle::Tick(float DeltaTime)
 		default:
 			break;
 	}
-	
+
+	if (bRecoveringSpeed)
+	{
+		ElapsedTime += DeltaTime;
+		float Alpha = FMath::Clamp(ElapsedTime / SpeedRecoveryDuration, 0.f, 1.f);
+		
+		MovementComponent->MaxSpeed = FMath::Lerp(TruckMaxSpeed * KilometersToMetersConvertingValue - TruckLossSpeed * KilometersToMetersConvertingValue, TruckMaxSpeed * KilometersToMetersConvertingValue, Alpha);
+
+		if (Alpha >= 1.0f)
+		{
+			bRecoveringSpeed = false;
+		}
+	}
+}
+
+void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	OtherActor->Destroy(true);
+	ReduceSpeed();
 }
 
 void AVehicle::MoveForward()
 {
-	this->AddMovementInput(GetActorForwardVector(),1);	
+	AddMovementInput(GetActorForwardVector(),1);
 }
 
 #pragma region Input
@@ -127,7 +146,7 @@ void AVehicle::RotateTruck(float DeltaTime)
 	destinationRotation.Yaw += (InputRotatingValue * TruckAngleSpeed) * DeltaTime;
 	destinationRotation.Yaw = FMath::Clamp(destinationRotation.Yaw, -TruckMaxRotation, TruckMaxRotation);
 
-	destinationRotation.Roll += (-(InputRotatingValue * TruckAngleSpeed)/2) * DeltaTime;
+	destinationRotation.Roll += ((InputRotatingValue * TruckAngleSpeed)/2) * DeltaTime;
 	destinationRotation.Roll = FMath::Clamp(destinationRotation.Roll, -TruckMaxTilt, TruckMaxTilt);
 	
 	UpdateRotationTruck(destinationRotation, DeltaTime);
@@ -167,7 +186,27 @@ void AVehicle::ResetTruckTilt(float DeltaTime)
 	
 	SetActorRotation(actorRotation);
 }
-
 #pragma endregion
 
+#pragma region Truck Speed Management
+void AVehicle::ReduceSpeed()
+{
+	StartSpeed = MovementComponent->MaxSpeed;
+	MovementComponent->MaxSpeed -= KilometersToMetersConvertingValue;
+	
+	GetWorld()->GetTimerManager().SetTimer(
+		SpeedRecoveryHandle,
+		this,
+		&AVehicle::StartSpeedRecovery,
+		0.5f,
+		false
+	);
+	
+}
 
+void AVehicle::StartSpeedRecovery()
+{
+	bRecoveringSpeed = true;
+	ElapsedTime = 0.0f;
+}
+#pragma endregion
