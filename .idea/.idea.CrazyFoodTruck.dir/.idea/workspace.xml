@@ -8,185 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7353be7c-d26f-421a-af07-6943e8daf039" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP8ets.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_HordeManager.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_IA.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_ZombieIA.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/Test.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/GI_CrazyFoodTruck.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/GM_CrazyFoodTruck.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/NewMapTestZombie.umap" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/NewMapTestZombie_HLOD0_Instancing.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_CrazyFoodTruck.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/Utility/EUW_SpawnNewHorde.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP_Main.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP_Menu.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/6W/0FMMMDX7GBMVUXRYO2NALG.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/9S/OGOXH2T87GGQ5A66KMM2CR.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/CH/WQAO2TBNXIEVE56U7MABIN.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/F1/XOVVQPFXE2H2GVWNARNAWM.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/GL/WYLGLMT08JPPSJS1PVTSF8.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/OZ/KD5EOX6QN4Y93L2G8LQYGE.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/T4/N47M5F18NRLI06XYE87WMD.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/US/YIACNU6MR5I3A2MY8IFB04.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/WB/BY2QB92TDJS5IQSMINPTHG.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/0/ZA/L5YFXIOL08MBHYJCWXXCVT.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/0X/C8AQH3C24QEE3A5FA6EIW3.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/2O/YV2KHJVNYDNFEVPF7008QB.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/9D/GJHTO9YQRXCQKFS6ROI24M.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/9E/72BA367W38NUHJ8DTVHVIE.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/JC/A5TSWIK31WTAGVEJ3LHDWK.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/KX/JE49DTR4UH7IKNWD7S5O5P.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/MO/WMXW564WXCG5FEDUXFMNNW.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/R1/UWQCMGGWW22JO9BDMQSBMQ.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/W9/FCVP9TJZ5PS0OVFJDWF9Y6.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/1/ZQ/ERN32FVSO64ZPCUTFD1GZ1.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/2X/Z2G0LLVQY8R8LF2JQ5X8WF.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/3J/HKGTGKBJ1IZBQN5BN6PIKC.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/5G/4T50I3QH6X8D9WGCE37FP1.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/95/6E0W2UHAQ1HAR60ROQ3EZ7.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/9E/SO5J1H04XRNXB46HU97VL8.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/BF/VTR25THVZ1EGD5QHE6U3BO.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/C9/CZ27OFMNKZIPIH5IAEW82X.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/F9/WXIVV65PF0RE7O3FJ0YA45.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/HM/LL0Z2GLV0MYYZ1THHLVSSG.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/VS/G6WA5PF9GZWNM409Z9SR9H.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/2/WC/MYP4GLIIT58E4JB0WJM0XG.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/14/XLD5HZ28VOMJFLNDGHDHOX.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/2G/XBP4PF5KODA05EG7LKVC9N.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/5E/1MMHN4FYX9IORL5OT9M61U.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/5G/6ZUSFPAXYLOXXFLM1NPVFO.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/9I/KI7IBRNRTBS1XQH0SPKRCB.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/CW/7MBQMQXMITQH9JZ20I8306.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/DH/GINHPNERO9X1U7XFHW7F0A.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/FI/6UA8TO9J3CKGWGW2VUCRAZ.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/GP/5XC06RJS854XIUVU34GW0V.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/KJ/A5QYRKVRDZLUID93KKBMBI.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/LK/JYOM1M28IUB6NVHUYPVWC5.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/O4/VBQRIJFPVO9YJV1G22SGVV.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/RD/26MMMSR1QYAX9EQQP5WUYJ.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/TZ/JQJOEYXE18GF1J7IL6ICQ5.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/UM/NDE7RVC8RCY4W1D6IJL9T6.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/W2/3D0QINIUZDGASMKUYZJH5Q.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/3/YB/N5Y1ZEIQ8UV2O6LZHWS3H3.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/2D/KWJ0809DWOTYJ2EJJOJX9N.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/6B/427H1IX8FNCA0PVIMWILLD.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/8K/DFR3RY9ED9XOMUTND1J2N7.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/DZ/4VNTB6BS1V9AW8O6O3CGU3.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/G4/DMTKI9J9P1NUORVJFTUZTF.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/H3/KI167T4HDOY3MFXTO3ZKCB.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/HV/5A58EZV5HDI9VH32OXJ9HX.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/I0/CZ5UX3L212CH7U69OJLIAU.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/QM/SWMW3XGHXC5T53HQ4WPPQP.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/RQ/K8Q50N48SSFVC6UOYQE560.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/4/XZ/JL1DPZ5954L2P4O0LL7ENA.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/5/0R/LT9GXGANMOEDZSHYPTVRWR.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/5/53/AY900C2DGBYFW1FCX2X1UE.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/5/5R/QGRQTP94MMFOE4MOMJYLRR.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/5/61/Z3IZH44LOST7ZLEQ11VN0H.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/5/9D/GT1BCHVEGNEW5WZ7JVZAYI.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/5/PG/S0CJRPOAX53RG0WIM706HB.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/5/QS/ZTOKJ0D3ZEUOVDURW1V7TI.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/6/B4/5SRSUBK30539X4BEWXCQ0M.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/6/VE/1V25VW76EPB88V7XKGVBW2.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/6/WZ/V7U5MHN3IO71X9FI3IQ16H.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/6/Y1/NIC4T6JYDYE7CKDDVT2U3F.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/7/1F/4E64NVA7SSVLI3J2S547HF.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/7/GN/I56RIGFMSZBSXTS8XTRT8S.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/7/I5/W0QY8A2VHMRIWVLOB371R3.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/7/NA/VYRUCM50VS88LOJ40I7ANU.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/7/O4/9RTRQ4N5UWBBYMYJY9XABR.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/7/T8/KWY37URLTB25RQJQ3JC534.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/7/ZA/AQKJF1C1H3L1P8G6PZD1YW.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/6W/DDVL1DN2RYXAYE7XMHNK7W.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/AG/6FAUG00S8Q2TL7JZW8SBO4.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/GU/G9V8XB8BN3M7MZJC8Z0JZ9.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/IA/BHQX39XGRIFVR0T8H0BHZO.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/KD/FPEE9SSJ4452O8EUMXQHEB.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/M8/YCF0J5O8TBUOLMH5FAHOHR.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/VE/PBR792OQ2DSJ1IP4MXE3UM.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/XG/6QP855M20MDWBUDOBLJU8Y.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/8/Z5/2I0BK0FER4QGTTFMI5STFE.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/0N/Y9XB74Q93FNWOD8EWCXA1O.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/3C/3ZP7R9R3XTSA3I6TKAL45V.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/9S/I4EWLQOGC7K2PF3GPQD9Y0.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/CR/W24MXJSA0F74J9G1348PBU.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/F2/E8JYS75461XSGA6E3WP590.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/NW/4IF5WYE4ZFBGEIQFCBHBUQ.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/PZ/VPI5G1RNE9F5895TCXUDJT.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/S0/BRILIVD6W606A4QQOCVK6X.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/VX/TMGQRYZFHDI0X7DMHZ9IT2.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/9/WA/188LF9W78CEGRZV5NXZUV6.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/A/6N/SJG6QDHLIG55MTR2FWZ3ER.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/A/FM/X3J4WSMBL7R32P7ZLV32DZ.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/A/HV/B53DVWBPVNMLSQPVVFYT4A.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/A/K7/P1WH74FJLKWDKVISE1P2H6.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/A/N9/6G3MLLYQQOJZRWRLAZ3LI6.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/A/QO/OF6V8WKVBWL1ED8E3JH8B0.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/A/UB/1IEKDAW1ZOPZI0RJG6DXC6.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/A/V2/T5QIRMGC5IJAAS862CO9BY.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/0G/K39PO2AXYM8PZ1RY3NADZA.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/2I/YHZI6TZ3DAUDTQRMJJ6FZ9.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/35/54ISD9ROA9SUTSLA084RHP.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/90/ZEZXT3PJ1KR7IPBN3W89JA.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/F7/F54IGFQ9JG2CRMIKFVOYV5.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/HH/G0SA6BAQJUTTF8BH7SON7K.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/Q5/UVTJDR8YJF5T4WNSV1UXA8.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/SU/I3UX074VN3GWEJZRX7Q8T0.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/XF/TVATFTVYDGLTVIB6RBD6U0.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/B/YG/JTIVUDUY56ZVEOYLBL5DDD.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/C/15/AP8965AQJNFV8XZ4FZCVT7.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/C/E5/HV3DJO1P9HPSEU46FR4W92.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/C/FW/1105UIIZWS1INR17QUNCB2.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/C/GG/ZXVQD9DTKAYGS27W6F4KCI.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/C/HZ/LAPIEQ8HJSXXE0SV0AS20X.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/C/NN/AHV8CJN43KAZ5XLH55LTNV.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/C/QA/PGXQ3OMY7L2DIZIZJ2H5GJ.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/C/Y5/XSEFCUX8Q7VE2BOFJLC0GL.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/D/7P/X5JFW03UK991V0ZUE0SO6N.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/D/AT/NF65AILQU9MS4NX8L0A8D5.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/D/CJ/XMXNHQKF9PLMAAK3PLLW8E.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/D/E1/P16OO9ZPZT6UOF844M2AZM.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/D/KY/8PHV0P1HPJCMGH7SH51NVC.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/D/LQ/A1YFE0KCNYK2UNE8LVQAI5.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/D/OR/UVO9CNAB6J3KYCX3DCXRLG.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/D/PT/KJN0KQHXNP3LR0YAOHZAK2.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/2M/6RAT0VO3MB8JHD3RAVC0XS.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/54/TX3YR9JVIJMPUT005YGK1O.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/78/QRB7AWPP3H6AQMMZMU6ZJ1.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/BX/01I810I1DTM24P356CIH2W.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/FO/LK0DRUFT59B2K2WJ66QZAI.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/KF/IFDLEVV8CUTYHQ9QQUSVNU.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/U9/O2J84KCPXU1GKD8JFW20X4.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/XJ/2Q9PDEV2R7XPD4FRYZY0CO.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/YB/DCQU1D7J09D7BYTZPKAKE6.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/E/ZR/LGTG1T3184CHJURM13H4YL.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/NewMapTestZombie/F/4B/7HPD76XSCQBNR4XD557JE6.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalObjects__/CrazyFoodTruck/Levels/NewMapTestZombie/3/GB/A2AMNTKSZCPRZA9QGMXO7D.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalObjects__/CrazyFoodTruck/Levels/NewMapTestZombie/4/BF/AUAMVN5Q2BOHAQG27A4S3P.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalObjects__/CrazyFoodTruck/Levels/NewMapTestZombie/6/4X/3WBJ1KU8WD2NO8QTUO1U1H.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalObjects__/CrazyFoodTruck/Levels/NewMapTestZombie/7/G5/9H7CM7X4QJMUWIVHT2XWZJ.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalObjects__/CrazyFoodTruck/Levels/NewMapTestZombie/8/2K/9412SVQX8MEHM8BR37CWML.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Content/__ExternalObjects__/CrazyFoodTruck/Levels/NewMapTestZombie/E/Y5/RA9DJM4EOUW5MWPTYDV8NX.uasset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CrazyFoodTruck.sln.DotSettings.user" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/GameInstanceCrazyFoodTruck.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/GameInstanceCrazyFoodTruck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/GameModeCrazyFoodTruck.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/GameModeCrazyFoodTruck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HUDCrazyFoodTruck.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HUDCrazyFoodTruck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/PhaseGameFoodFoodTruck.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/A_TurrentController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/A_TurrentController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_HordeManager.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_HordeManager.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_ZombieIA.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_ZombieIA.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TurrelLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TurrelLevel.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Prefab/BC_Bullet.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Prefab/BC_Bullet.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/TurrelLevel/7/7L/4OP2QPMB8NJGZXC2DTCEKM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/TurrelLevel/7/7L/4OP2QPMB8NJGZXC2DTCEKM.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/TurrelLevel/D/1I/IGDZQNG207SSI3FQ56O4W3.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/TurrelLevel/D/1I/IGDZQNG207SSI3FQ56O4W3.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TurretController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TurretController.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,15 +54,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Uproject.CrazyFoodTruck.executor": "Run",
-    "git-widget-placeholder": "Merging feature/Turret",
-    "settings.editor.selected.configurable": "configurable.group.appearance"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Uproject.CrazyFoodTruck.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/Turret&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.appearance&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="CrazyFoodTruck" type="Uproject" factoryName="rider.uproject">
       <configuration_1 setup="1">
@@ -323,7 +155,8 @@
       <workItem from="1760473649437" duration="4184000" />
       <workItem from="1760512959929" duration="17053000" />
       <workItem from="1760600051923" duration="7531000" />
-      <workItem from="1760704983927" duration="6679000" />
+      <workItem from="1760704983927" duration="7157000" />
+      <workItem from="1760946461955" duration="1266000" />
     </task>
     <servers />
   </component>

@@ -14,8 +14,6 @@
 ATurretController::ATurretController()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-
 }
 
 void ATurretController::BeginPlay()
@@ -44,7 +42,7 @@ void ATurretController::BeginPlay()
 	UpdateTurretCanonRotation();
 	
 }
-
+	
 void ATurretController::SetBulletSpawnTransform(USceneComponent* Scp)
 {
 	_SpawnBulletTransform = Scp;
@@ -75,8 +73,6 @@ void ATurretController::AddInputMapping()
 			}
 		}
 	}
-
-	
 }
 
 void ATurretController::RemoveInputMapping()
@@ -206,7 +202,7 @@ void ATurretController::Shoot()
 		ABulletController* bulletController = Cast<ABulletController>(bulletInstance);
 		if (bulletController)
 		{
-			bulletController->Initialize(2200.f, 1.5f);
+			bulletController->Initialize(3000.f, 1.5f);
 		}
 	}
 }
@@ -264,9 +260,5 @@ void ATurretController::InputYaw(const FInputActionValue& Value)
 
 		UpdateTurretCanonRotation(); 
 	}
-
-	
-	
-
 }
 
