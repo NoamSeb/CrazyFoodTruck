@@ -18,7 +18,25 @@ AHordeManager::AHordeManager()
 	SpawnZone->SetVisibility(true);
 	SpawnZone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	//NavMeshBoundsVolumeSpawnZone->
+	//ANavMeshBoundsVolume* NavVolum = GetWorld()->SpawnActor<ANavMeshBoundsVolume>();
+	//NavVolum->SetActorScale3D(FVector(500.0f, 500.0f, 200.0f));
+	
+	//NavMeshBoundsVolumeSpawnZone = CreateDefaultSubobject<ANavMeshBoundsVolume>(TEXT("NavMeshBoundsVolumeSpawnZone"));
+	//NavMeshBoundsVolumeSpawnZone->scale
+}
+
+void AHordeManager::SetAreaSpawnZombie()
+{
+	SpawnZone = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnZone"));
+
+	// Couleur / visibilité dans l'éditeur
+	SpawnZone->SetBoxExtent(FVector(500.0f, 500.0f, 200.0f)); // taille par défaut
+	SpawnZone->SetHiddenInGame(true);
+	SpawnZone->SetVisibility(true);
+	SpawnZone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	//ANavMeshBoundsVolume* NavVolum = GetWorld()->SpawnActor<ANavMeshBoundsVolume>();
+	//NavVolum->SetActorScale3D(FVector(500.0f, 500.0f, 200.0f));
 }
 
 void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)

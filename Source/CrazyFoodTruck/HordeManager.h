@@ -30,7 +30,6 @@ public:
 	//c'est une aide visuelle pour savoir où les limites où on place les zombies
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Spawn Area")
 	UBoxComponent* SpawnZone;
-	//ANavMeshBoundsVolume NavMeshBoundsVolumeSpawnZone;
 
 	//définir nombre max et min de zombies
 	UPROPERTY(EditAnywhere, Category= "Horde Manager | Spawn Vague")
@@ -46,4 +45,7 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	private:
+	void SetAreaSpawnZombie();
 };
