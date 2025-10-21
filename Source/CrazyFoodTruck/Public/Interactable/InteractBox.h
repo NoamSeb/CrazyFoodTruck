@@ -29,7 +29,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interact")
 	FString Message = TEXT("Successful interaction!");
 
-	virtual void Interact_Implementation(ALocalMultiplayerCharacter* InstigatorCharacter) override;
+	virtual void Interact_Implementation(ACrazyFoodTruckCharacter* InstigatorCharacter) override;
 
 private:
 	UFUNCTION()

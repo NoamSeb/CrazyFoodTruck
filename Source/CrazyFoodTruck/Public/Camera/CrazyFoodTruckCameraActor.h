@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "LocalMultiplayerCameraActor.generated.h"
+#include "CrazyFoodTruckCameraActor.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class CRAZYFOODTRUCK_API ALocalMultiplayerCameraActor : public AActor
+class CRAZYFOODTRUCK_API ACrazyFoodTruckCameraActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ALocalMultiplayerCameraActor();
+	ACrazyFoodTruckCameraActor();
 
 protected:
 	// Called when the game starts or when spawned

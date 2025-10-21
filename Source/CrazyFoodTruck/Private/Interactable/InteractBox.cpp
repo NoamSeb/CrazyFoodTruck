@@ -3,7 +3,7 @@
 
 #include "Interactable/InteractBox.h"
 
-#include "Players/LocalMultiplayerCharacter.h"
+#include "Characters/CrazyFoodTruckCharacter.h"
 
 #include "Components/BoxComponent.h"
 #include "Engine/Engine.h"
@@ -35,7 +35,7 @@ void AInteractBox::BeginPlay()
 
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (ALocalMultiplayerCharacter* Character = Cast<ALocalMultiplayerCharacter>(OtherActor))
+	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor))
 	{
 		Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
 	}
@@ -43,7 +43,7 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 
 void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (ALocalMultiplayerCharacter* Character = Cast<ALocalMultiplayerCharacter>(OtherActor))
+	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor))
 	{
 		if (Character->GetFocusedInteractable().GetInterface() == static_cast<IInteractable*>(this))
 		{
@@ -52,7 +52,7 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 	}
 }
 
-void AInteractBox::Interact_Implementation(ALocalMultiplayerCharacter* InstigatorCharacter)
+void AInteractBox::Interact_Implementation(ACrazyFoodTruckCharacter* InstigatorCharacter)
 {
 	if (GEngine)
 	{

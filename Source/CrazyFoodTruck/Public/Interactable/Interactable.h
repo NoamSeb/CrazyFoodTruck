@@ -6,7 +6,7 @@
 #include "UObject/Interface.h"
 #include "Interactable.generated.h"
 
-class ALocalMultiplayerCharacter;
+class ACrazyFoodTruckCharacter;
 
 UINTERFACE(BlueprintType)
 class CRAZYFOODTRUCK_API UInteractable : public UInterface
@@ -20,5 +20,5 @@ class CRAZYFOODTRUCK_API IInteractable
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Interactable")
-	void Interact(ALocalMultiplayerCharacter* InstigatorCharacter);
+	void Interact(ACrazyFoodTruckCharacter* InstigatorCharacter);
 };
