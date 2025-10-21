@@ -2,8 +2,7 @@
 
 
 #include "HordeManager.h"
-#include "GameFramework/Character.h"
-
+#include "NavigationSystem.h"
 
 
 AHordeManager::AHordeManager()
@@ -17,12 +16,6 @@ AHordeManager::AHordeManager()
 	SpawnZone->SetHiddenInGame(true);
 	SpawnZone->SetVisibility(true);
 	SpawnZone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	//ANavMeshBoundsVolume* NavVolum = GetWorld()->SpawnActor<ANavMeshBoundsVolume>();
-	//NavVolum->SetActorScale3D(FVector(500.0f, 500.0f, 200.0f));
-	
-	//NavMeshBoundsVolumeSpawnZone = CreateDefaultSubobject<ANavMeshBoundsVolume>(TEXT("NavMeshBoundsVolumeSpawnZone"));
-	//NavMeshBoundsVolumeSpawnZone->scale
 }
 
 void AHordeManager::SetAreaSpawnZombie()
@@ -34,16 +27,13 @@ void AHordeManager::SetAreaSpawnZombie()
 	SpawnZone->SetHiddenInGame(true);
 	SpawnZone->SetVisibility(true);
 	SpawnZone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	//ANavMeshBoundsVolume* NavVolum = GetWorld()->SpawnActor<ANavMeshBoundsVolume>();
-	//NavVolum->SetActorScale3D(FVector(500.0f, 500.0f, 200.0f));
 }
 
 void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)
 {
 	if (!ListHordeZombie.IsEmpty())
 	{
-		for (ACharacter* Zombie : ListHordeZombie)
+		for (AZombieIA* Zombie : ListHordeZombie)
 		{
 			Zombie->Destroy();
 		}
@@ -64,15 +54,14 @@ void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)
 	//aléatoir min et max inclus
 	int8 numberZombies = FMath::RandRange(nbrMin, nbrMax);
 	
+	
+	
 	for (int i = 0; i < numberZombies; i++)
 	{
 		//FVector SpawnLocation(FMath::RandRange(-BoxExtent.X, BoxExtent.X), FMath::RandRange(-BoxExtent.Y, BoxExtent.Y), 90.0f);
 		//pos aléatoire dans les limites de la box (l'aide visuelle)
 		FVector SpawnLocation = SpawnZone->GetComponentLocation() + FVector(
-	FMath::RandRange(-BoxExtent.X, BoxExtent.X),
-	FMath::RandRange(-BoxExtent.Y, BoxExtent.Y),
-	90.0f
-);
+	FMath::RandRange(-BoxExtent.X, BoxExtent.X),FMath::RandRange(-BoxExtent.Y, BoxExtent.Y),90.0f);
 		FVector SpawnScale(1.0f, 1.0f, 1.0f);
 		
 		FTransform NewTransform;
@@ -84,19 +73,14 @@ void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 		
 		//faire spawn un character de la class PawnZombie remplis avant avec son transfom
-		ACharacter* NewZombie = GetWorld()->SpawnActor<ACharacter>(PawnZombie, NewTransform, SpawnParams);
+		AZombieIA* NewZombie = GetWorld()->SpawnActor<AZombieIA>(PawnZombie, NewTransform, SpawnParams);
 		ListHordeZombie.Add(NewZombie);
 
 		//lui ajouté manuellement un controller sinon il ne bougera pas 
 		NewZombie->SpawnDefaultController();
 
-		//apelle la fonction CE round pour le "mettre en route"
-		//à voir pour remplacer plus tard le ce round d'ici pas un custom event init
-		UFunction* EventRoundZombie = NewZombie->FindFunction(FName("CE_Round"));
-		if (EventRoundZombie)
-		{
-			NewZombie->ProcessEvent(EventRoundZombie, nullptr);
-		}
+		NewZombie->SetFollower(CharacterFollower);
+		NewZombie->CallRound();
 	}
 }
 
@@ -104,6 +88,14 @@ void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)
 void AHordeManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	TArray<UStaticMeshComponent*> Components;
+	CharacterFollower->GetComponents<UStaticMeshComponent>(Components);
+	for (auto Component : Components)
+	{
+		Component->SetCanEverAffectNavigation(false);
+	}
+	
 	SpawnHordeZombie(nbrMinZombies, nbrMaxZombies);
 }
 

@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ZombieIA.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
-#include "NavMesh/NavMeshBoundsVolume.h"
 #include "HordeManager.generated.h"
 
 UCLASS()
@@ -18,14 +18,20 @@ public:
 	AHordeManager();
 	//mettre le BP du zombie dans le BP de la horde
 	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Zombie")
-	TSubclassOf<ACharacter> PawnZombie = AActor::StaticClass();
+	TSubclassOf<AZombieIA> PawnZombie = AActor::StaticClass();
+	//Attention sur Character Follower regarder si ça affect nav mash parce que ça peut ne pas fonctionner avec ça si c'est le cas mettre Can Ever Affect Navigation en false
+	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character Player")
+	AActor* CharacterFollower;
 
 	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Horde")
 	void SpawnHordeZombie(int nbrMin, int nbrMax);
 
+	//UFUNCTION(BlueprintCallable, Category = "Horde Manager | Refresh Nav")
+	//void RefreshNav();
+
 	//garder les zombies dans la liste
 	UPROPERTY(VisibleAnywhere, Category= "Horde Manager | Spawn Vague")
-	TArray<ACharacter*> ListHordeZombie;
+	TArray<AZombieIA*> ListHordeZombie;
 
 	//c'est une aide visuelle pour savoir où les limites où on place les zombies
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Spawn Area")
