@@ -31,14 +31,14 @@ void AHordeManager::SetAreaSpawnZombie()
 
 void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)
 {
-	if (!ListHordeZombie.IsEmpty())
-	{
-		for (AZombieIA* Zombie : ListHordeZombie)
-		{
-			Zombie->Destroy();
-		}
-		ListHordeZombie.Empty();
-	}
+	//if (!ListHordeZombie.IsEmpty())
+	//{
+	//	for (AZombieIA* Zombie : ListHordeZombie)
+	//	{
+	//		Zombie->Destroy();
+	//	}
+	//	ListHordeZombie.Empty();
+	//}
 	
 	if (nbrMinZombies > nbrMaxZombies)
 	{
@@ -84,19 +84,20 @@ void AHordeManager::SpawnHordeZombie(int nbrMin, int nbrMax)
 	}
 }
 
-
-void AHordeManager::BeginPlay()
+void AHordeManager::InitHordeZombies()
 {
-	Super::BeginPlay();
-
 	TArray<UStaticMeshComponent*> Components;
 	CharacterFollower->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
 		Component->SetCanEverAffectNavigation(false);
 	}
-	
 	SpawnHordeZombie(nbrMinZombies, nbrMaxZombies);
+}
+
+void AHordeManager::BeginPlay()
+{
+	Super::BeginPlay();
 }
 
 

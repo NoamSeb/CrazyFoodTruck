@@ -42,6 +42,9 @@ public:
 	int8 nbrMinZombies = 5;
 	UPROPERTY(EditAnywhere, Category= "Horde Manager | Spawn Vague")
 	int8 nbrMaxZombies = 10;
+
+	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Vague")
+	void InitHordeZombies();
 	
 
 protected:
