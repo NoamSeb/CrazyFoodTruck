@@ -11,10 +11,9 @@ ABulletController::ABulletController()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	_BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Coll_Box"));
-	_BoxCollider->SetGenerateOverlapEvents(true);
-	_BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ABulletController::OnOverlapBegin);
-	
+	// _BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Coll_Box"));
+	// _BoxCollider->SetGenerateOverlapEvents(true);
+	// _BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ABulletController::OnOverlapBegin);
 }
 
 void ABulletController::Initialize(float speed, float lifeTime)
@@ -28,10 +27,6 @@ void ABulletController::Initialize(float speed, float lifeTime)
 	{
 		BulletMovementComponent->InitialSpeed = speed;
 	}
-}
-
-void ABulletController::AddVelocity(FVector dir, float speed)
-{
 }
 
 void ABulletController::BeginPlay()
@@ -93,7 +88,6 @@ UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHi
 		}
     }
 
-	// TOUCHED NOTHING 
 }
 
 

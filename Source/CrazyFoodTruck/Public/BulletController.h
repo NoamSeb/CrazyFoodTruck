@@ -19,7 +19,6 @@ class CRAZYFOODTRUCK_API ABulletController : public AActor
 public:
 	ABulletController();
 	void Initialize(float speed, float lifeTime);
-	void AddVelocity(FVector dir, float speed);
 
 protected:
 	virtual void BeginPlay() override;
