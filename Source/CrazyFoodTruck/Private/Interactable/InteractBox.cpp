@@ -89,27 +89,61 @@ FColor AInteractBox::GetPlayerColorFromPlayerController(APlayerController* Playe
 	}
 }
 
+void AInteractBox::AddOverlappingPlayerController(APlayerController* PlayerController)
+{
+	if (PlayerController)
+	{
+		OverlappingPlayerControllers.Add(PlayerController);
+	}
+}
+
+void AInteractBox::RemoveOverlappingPlayerController(APlayerController* PlayerController)
+{
+	if (PlayerController)
+	{
+		OverlappingPlayerControllers.Remove(PlayerController);
+	}
+}
+
+bool AInteractBox::IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerController) const
+{
+	int32 CountValid = 0;
+	
+	for (const TWeakObjectPtr<APlayerController>& It : OverlappingPlayerControllers)
+	{
+		if (It.IsValid())
+		{
+			++CountValid;
+			if (ThisPlayerController && It.Get() != ThisPlayerController)
+			{
+				return true;
+			}
+		}
+	}
+	
+	return CountValid > 1;
+}
+
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(OtherActor);
+	AddOverlappingPlayerController(EnteringPlayerController);
+
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor))
 	{
-		APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(OtherActor);
+		const bool bLockedByAnother = CurrentInteractorPlayerController.IsValid() && EnteringPlayerController && CurrentInteractorPlayerController.Get() != EnteringPlayerController;
+		const bool bAnotherPlayerInside = IsAnotherPlayerAlreadyInside(EnteringPlayerController);
 
-		const bool bOccupiedByAnother = CurrentInteractorPlayerController.IsValid() && EnteringPlayerController && CurrentInteractorPlayerController.Get() != EnteringPlayerController;
-
-		if (!bOccupiedByAnother)
+		if (!bLockedByAnother && !bAnotherPlayerInside)
 		{
 			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
 
-			if (!CurrentInteractorPlayerController.IsValid())
+			if (!CurrentInteractorPlayerController.IsValid() && GEngine)
 			{
-				if (GEngine)
-				{
-					const FColor PlayerColor = GetPlayerColorFromPlayerController(EnteringPlayerController);
-					const int32 PlayerIndex = GetPlayerIndexFromPlayerController(EnteringPlayerController);
-					const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-					GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Press X to interact"));
-				}
+				const FColor PlayerColor = GetPlayerColorFromPlayerController(EnteringPlayerController);
+				const int32 PlayerIndex = GetPlayerIndexFromPlayerController(EnteringPlayerController);
+				const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
+				GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Press A to interact."));
 			}
 		}
 	}
@@ -117,6 +151,9 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 
 void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(OtherActor);
+	RemoveOverlappingPlayerController(LeavingPlayerController);
+
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor))
 	{
 		if (Character->GetFocusedInteractable().GetInterface() == static_cast<IInteractable*>(this))

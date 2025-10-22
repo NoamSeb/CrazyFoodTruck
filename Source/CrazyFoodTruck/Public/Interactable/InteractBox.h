@@ -43,6 +43,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Interact|State")
 	TWeakObjectPtr<APlayerController> CurrentInteractorPlayerController;
 
+	UPROPERTY(VisibleAnywhere, Category="Interact|State")
+	TSet<TWeakObjectPtr<APlayerController>> OverlappingPlayerControllers;
+
 private:
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -55,4 +58,8 @@ private:
 	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
 	FColor GetPlayerColorFromPlayerController(APlayerController* PlayerController) const;
+
+	void AddOverlappingPlayerController(APlayerController* PlayerController);
+	void RemoveOverlappingPlayerController(APlayerController* PlayerController);
+	bool IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerController) const;
 };
