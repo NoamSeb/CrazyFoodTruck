@@ -57,8 +57,15 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	OtherActor->Destroy(true);
+
+	if (!OtherActor) return;
+	
+	//Si c'est un obstable alors
 	ReduceSpeed();
+	//Si c'est un zombie alors
+	//Function...
+	//Si c'est un MapSwicther alors
+	//Change map
 }
 
 void AVehicle::MoveForward()
