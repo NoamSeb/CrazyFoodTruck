@@ -108,7 +108,7 @@ private:
 	void ResetAmmo();
 	void AddInputMapping();
 	void RemoveInputMapping();
-	void StartPossessTurret();
+	void StartPossessTurret(APlayerController* Pc);
 	void SwitchBulletType(EbulletType NewType);
 	FString GetRowNameFromBulletType(EbulletType Type);
 

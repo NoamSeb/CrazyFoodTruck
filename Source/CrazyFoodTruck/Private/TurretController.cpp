@@ -33,7 +33,7 @@ void ATurretController::BeginPlay()
 	ResetCoolDown();
 	ResetAmmo();
 	AddInputMapping();
-	StartPossessTurret();
+//	StartPossessTurret();
 
 	SwitchBulletType(EbulletType::BulletNormal);
 	Shoot();
@@ -89,14 +89,10 @@ void ATurretController::RemoveInputMapping()
 	}
 }
 
-void ATurretController::StartPossessTurret()
+void ATurretController::StartPossessTurret(APlayerController* Pc)
 {
-	APlayerController* Pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	
 	if (Pc){Pc->Possess(this);}
 }
-
-
 
 void ATurretController::SwitchBulletType(EbulletType NewType)
 {
