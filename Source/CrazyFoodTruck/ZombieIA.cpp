@@ -18,13 +18,6 @@ void AZombieIA::BeginPlay()
 	
 }
 
-void AZombieIA::SetFollower(AActor* newFollower)
-{
-	CharacterFollower = newFollower;
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, newFollower->GetName());
-}
-
-
 // Called every frame
 void AZombieIA::Tick(float DeltaTime)
 {

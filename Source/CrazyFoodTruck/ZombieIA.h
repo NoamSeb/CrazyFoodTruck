@@ -15,12 +15,14 @@ public:
 	// Sets default values for this character's properties
 	AZombieIA();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* CharacterFollower;
+	AActor* MainActorToFollower;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* FirstActorToFollower;
 	UFUNCTION(BlueprintImplementableEvent)
 	void CallRound();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float vitesseZombie;
 
-	UFUNCTION(BlueprintCallable)
-	void SetFollower(AActor* newFollower);
 
 protected:
 	// Called when the game starts or when spawned
