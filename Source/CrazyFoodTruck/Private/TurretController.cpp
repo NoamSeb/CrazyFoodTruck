@@ -29,18 +29,21 @@ void ATurretController::BeginPlay()
             _CursorJoint = Cast<USceneComponent>(SceneComponent);
         }
 	}
+
+	if (InteractBox)
+	{
+		InteractBox->OnInteractionStarted.AddDynamic(this, &ATurretController::StartPossessTurret);
+	}
 	
 	ResetCoolDown();
 	ResetAmmo();
-	AddInputMapping();
-//	StartPossessTurret();
-
 	SwitchBulletType(EbulletType::BulletNormal);
 	Shoot();
 	UpdateTurretCanonRotation();
 	
 }
-	
+
+
 void ATurretController::SetBulletSpawnTransform(USceneComponent* Scp)
 {
 	_SpawnBulletTransform = Scp;
@@ -59,16 +62,12 @@ void ATurretController::ResetAmmo()
 void ATurretController::AddInputMapping()
 {
 	if (!TurretMappingContext){return;}
-
-	APlayerController* Pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (Pc)
+	if (!ActualPlayerController){return;}
+	if (ULocalPlayer* Lp = ActualPlayerController->GetLocalPlayer())
 	{
-		if (ULocalPlayer* Lp = Pc->GetLocalPlayer())
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 		{
-			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-			{
-				Subsystem->AddMappingContext(TurretMappingContext, mappingPriority);
-			}
+			Subsystem->AddMappingContext(TurretMappingContext, 20);
 		}
 	}
 }
@@ -76,28 +75,30 @@ void ATurretController::AddInputMapping()
 void ATurretController::RemoveInputMapping()
 {
 	if (!TurretMappingContext){return;}
+	if (!ActualPlayerController){return;}
 
-	if (APlayerController* Pc = Cast<APlayerController>(GetController()))
+	if (ULocalPlayer* Lp = ActualPlayerController->GetLocalPlayer())
 	{
-		if (ULocalPlayer* Lp = Pc->GetLocalPlayer())
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 		{
-			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-			{
-				Subsystem->RemoveMappingContext(TurretMappingContext);
-			}
+			Subsystem->RemoveMappingContext(TurretMappingContext);
 		}
 	}
 }
 
 void ATurretController::StartPossessTurret(APlayerController* Pc)
 {
-	if (Pc){Pc->Possess(this);}
+	if (Pc)
+	{
+		ActualPlayerController = Pc;
+		ActualPawn = ActualPlayerController->GetPawn();
+		AddInputMapping();
+		Pc->Possess(this);
+	}
 }
 
 void ATurretController::SwitchBulletType(EbulletType NewType)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("SwitchBulletType to %d"), NewType));
-
 	_actualBulletType = NewType;
 	
 	FString TargetName = GetRowNameFromBulletType(_actualBulletType);
@@ -122,14 +123,11 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 	if (LoadedClass)
 	{
 		ActualBulletPrefab = LoadedClass;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Successfully LoadedClass for %s"), *FullPath));
 	}
 	else
 	{
 		ActualBulletPrefab = nullptr;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Failed to LoadClass for %s"), *FullPath));
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("END LOAD")));
 }
 
 FString ATurretController::GetRowNameFromBulletType(EbulletType Type)
@@ -152,19 +150,19 @@ FString ATurretController::GetRowNameFromBulletType(EbulletType Type)
 void ATurretController::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("PossessedBy TurretController by %s"), *NewController->GetName()));
 	AddInputMapping();
 }
 
 void ATurretController::UnPossessed()
 {
-	Super::UnPossessed();
 	RemoveInputMapping();
+	Super::UnPossessed();
 }
 
 void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		if (ShootAction) 
@@ -183,19 +181,12 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		{
 			Eic->BindAction(ChangeBulletAction, ETriggerEvent::Started, this, &ATurretController::InputChangeBulletType);
 		}
+		if (QuitTurret)
+		{
+			Eic->BindAction(QuitTurret, ETriggerEvent::Started, this, &ATurretController::InputQuitTurret);
+		}
 	}
 }
-
-
-
-
-
-
-void ATurretController::CanonKnockBackAnim()
-{
-}
-
-
 void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 {
 	_CurrentAmmo = NewAmmo;
@@ -243,7 +234,6 @@ void ATurretController::Shoot()
 	if (!HasAmmo()) return;
 
 	ResetCoolDown();
-	CanonKnockBackAnim();
 	DecrementAmmo();
 	
 	FActorSpawnParameters bulletParams;
@@ -309,16 +299,35 @@ void ATurretController::UpdateTurretCanonRotation()
 void ATurretController::InputYaw(const FInputActionValue& Value)
 {
 	float valueToFloat = Value.Get<float>();
+
 	if (_CursorJoint)
 	{
 		FVector CurrentLocation = _CursorJoint->GetRelativeLocation();
-
 		CurrentLocation.X += valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds());
 		CurrentLocation.X = FMath::Clamp(CurrentLocation.X,-AreaRangeSide , AreaRangeSide);
-
+		
 		_CursorJoint->SetRelativeLocation(CurrentLocation);
-
-		UpdateTurretCanonRotation(); 
+		UpdateTurretCanonRotation();
 	}
 }
 
+void ATurretController::InputQuitTurret(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("Quit Turret")));
+	if (ActualPlayerController)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("UnPossess")));
+
+		UnPossessed();
+		ActualPlayerController->UnPossess();
+		if (ActualPawn)
+		{
+			ActualPlayerController->Possess(ActualPawn);
+		}else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("ActualPawn is null")));
+		}
+		ActualPlayerController = nullptr;
+		ActualPawn = nullptr;
+	}
+}

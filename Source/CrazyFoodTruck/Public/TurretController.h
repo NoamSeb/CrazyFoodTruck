@@ -12,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "FBulletStructure.h"
 #include "GameFramework/Actor.h"
+#include "Interactable/InteractBox.h"
 #include "TurretController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShootSignature, int32, AmmoLeft, int32, AmmoMax); 
@@ -28,10 +29,14 @@ public:
 	
 	TSubclassOf<ABulletBase> ActualBulletPrefab;
 
-	UPROPERTY(editanywhere, Category="Data")
+	UPROPERTY(EditAnywhere, Category="Data")
 	UDataTable* BulletDataTable;
 
-	
+	UPROPERTY(EditAnywhere, Category="Variable")
+	AInteractBox* InteractBox;
+
+	APlayerController* ActualPlayerController;
+	APawn* ActualPawn;
 	
 	int GetAmmo() const { return _CurrentAmmo;}
 	int GetAmmoMax() const { return _AmmoMax;}
@@ -69,6 +74,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* ChangeBulletAction;
+
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* QuitTurret;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Component Mesh")
 	USceneComponent* _CanonToRotate;
@@ -93,10 +102,7 @@ private:
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
 	float _CursorSpeed = 5.f;
 	
-	UPROPERTY(EditAnywhere, Category="Turret Parameters")
 	float AreaRangeSide;
-	
-	UPROPERTY(EditAnywhere, Category="Turret Parameters")
 	float AreaRangeDepht;
 	
 	void Shoot();
@@ -108,6 +114,8 @@ private:
 	void ResetAmmo();
 	void AddInputMapping();
 	void RemoveInputMapping();
+
+	UFUNCTION()
 	void StartPossessTurret(APlayerController* Pc);
 	void SwitchBulletType(EbulletType NewType);
 	FString GetRowNameFromBulletType(EbulletType Type);
@@ -133,11 +141,12 @@ private:
 	void InputYaw(const FInputActionValue& Value);
 	void InputRoll(const FInputActionValue& Value);
 	void InputChangeBulletType(const FInputActionValue& Value);
+	void InputQuitTurret(const FInputActionValue& Value);
+	
 	void UpdateTurretCanonRotation();
 
 	int32 mappingPriority = 0;
 
-	void CanonKnockBackAnim();
-
 };
+
 
