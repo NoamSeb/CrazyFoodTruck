@@ -163,14 +163,11 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex, ELoc
 
 	if (UEnhancedInputLocalPlayerSubsystem* EIS = GetEISForPlayerIndex(PlayerIndex))
 	{
-
 		if (!EIS->HasMappingContext(IMC))
 		{
 			FModifyContextOptions Options;
 			Options.bForceImmediately = true;
 			EIS->AddMappingContext(const_cast<UInputMappingContext*>(IMC), 0, Options);
-		}else
-		{
 		}
 	}
 

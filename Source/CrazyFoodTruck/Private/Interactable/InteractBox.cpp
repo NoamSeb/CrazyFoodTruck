@@ -110,6 +110,8 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 
 			if (!CurrentInteractorPlayerController.IsValid())
 			{
+				OnCollisionEnter.Broadcast();
+
 				if (GEngine)
 				{
 					const FColor PlayerColor = GetPlayerColorFromPlayerController(EnteringPlayerController);
@@ -130,7 +132,8 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 		{
 			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(nullptr));
 		}
-
+		
+		OnCollisionExit.Broadcast();
 		TryReleaseLockFromActor(OtherActor);
 	}
 }

@@ -1,9 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BulletBase.h"
+#include "Bullet/BulletBase.h"
 
-#include "FBulletStructure.h"
+#include "Bullet/FBulletStructure.h"
 #include "Math/UnitConversion.h"
 
 

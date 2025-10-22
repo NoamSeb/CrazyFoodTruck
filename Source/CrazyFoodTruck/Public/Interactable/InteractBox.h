@@ -13,6 +13,7 @@ class APlayerController;
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractController, APlayerController*, InstigatorPlayerController);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCollision);
 
 UCLASS()
 class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
@@ -41,6 +42,12 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnInteractController OnInteractionEnded;
 
+	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
+	FOnCollision OnCollisionEnter;
+
+	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
+	FOnCollision OnCollisionExit;
+	
 	virtual void Interact_Implementation(APlayerController* InstigatorPlayerController) override;
 
 	UPROPERTY(EditAnywhere)
@@ -65,7 +72,6 @@ private:
 	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
 	FColor GetPlayerColorFromPlayerController(APlayerController* PlayerController) const;
-
 	
 	APlayerController* ActualPlayerController;
 	APawn* ActualPawn;

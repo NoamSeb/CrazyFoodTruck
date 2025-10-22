@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BulletBase.h"
-#include "EBulletType.h"
+#include "Bullet/BulletBase.h"
+#include "Bullet/EBulletType.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "FBulletStructure.h"
+#include "Bullet/FBulletStructure.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/InteractBox.h"
 #include "TurretController.generated.h"

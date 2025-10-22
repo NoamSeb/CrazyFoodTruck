@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CrazyFoodTruck/Public/BulletController.h"
+#include "Bullet/BulletController.h"
 
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -10,10 +10,6 @@
 ABulletController::ABulletController()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	// _BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Coll_Box"));
-	// _BoxCollider->SetGenerateOverlapEvents(true);
-	// _BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ABulletController::OnOverlapBegin);
 }
 
 void ABulletController::Initialize(float speed, float lifeTime)
