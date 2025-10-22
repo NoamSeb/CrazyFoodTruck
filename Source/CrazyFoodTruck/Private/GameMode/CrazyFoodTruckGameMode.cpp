@@ -1,19 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "GameMode/CrazyFoodTruckGameMode.h"
 
-#include "Characters/CrazyFoodTruckCharacter.h"
-#include "Characters/CrazyFoodTruckCharacterInputData.h"
-#include "Characters/CrazyFoodTruckCharacterSettings.h"
 #include "CrazyFoodTruck/CrazyFoodTruckSettings.h"
 
-#include "LocalMultiplayerSettings.h"
+#include "Characters/CrazyFoodTruckCharacter.h"
+#include "Characters/CrazyFoodTruckCharacterSettings.h"
+#include "Characters/CrazyFoodTruckCharacterInputData.h"
+
 #include "LocalMultiplayerSubsystem.h"
 
-#include "Engine/GameInstance.h"
-#include "Engine/World.h"
 #include "GameFramework/PlayerStart.h"
+
 #include "Kismet/GameplayStatics.h"
 
 void ACrazyFoodTruckGameMode::BeginPlay()
@@ -27,43 +25,15 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     SpawnCharacters(PlayerStartsPoints);
 }
 
-UCrazyFoodTruckCharacterInputData* ACrazyFoodTruckGameMode::LoadInputDataFromConfig() const
-{
-    const UCrazyFoodTruckCharacterSettings* CharacterSettings = GetDefault<UCrazyFoodTruckCharacterSettings>();
-    if (!CharacterSettings)
-    {
-        return nullptr;
-    }
-
-    return CharacterSettings->InputData.LoadSynchronous();
-}
-
-UInputMappingContext* ACrazyFoodTruckGameMode::LoadInputMappingContextFromConfig() const
-{
-    const UCrazyFoodTruckCharacterSettings* CharacterSettings = GetDefault<UCrazyFoodTruckCharacterSettings>();
-    if (!CharacterSettings)
-    {
-        return nullptr;
-    }
-
-    return CharacterSettings->InputMappingContext.LoadSynchronous();
-}
-
 void ACrazyFoodTruckGameMode::CreateAndInitPlayers() const
 {
-    UGameInstance* GameInstance = GetGameInstance();
-    if (!GameInstance)
+    if (UGameInstance* GameInstance = GetGameInstance())
     {
-        return;
+        if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
+        {
+            LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
+        }
     }
-
-    ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>();
-    if (!LocalMultiplayerSubsystem)
-    {
-        return;
-    }
-
-    LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
 }
 
 void ACrazyFoodTruckGameMode::FindPlayerStartActors(TArray<APlayerStart*>& ResultsActors) const
@@ -111,6 +81,18 @@ void ACrazyFoodTruckGameMode::SpawnCharacters(const TArray<APlayerStart*>& Spawn
     }
 }
 
+UCrazyFoodTruckCharacterInputData* ACrazyFoodTruckGameMode::LoadInputDataFromConfig() const
+{
+    const UCrazyFoodTruckCharacterSettings* CharacterSettings = GetDefault<UCrazyFoodTruckCharacterSettings>();
+    return CharacterSettings ? CharacterSettings->InputData.LoadSynchronous() : nullptr;
+}
+
+UInputMappingContext* ACrazyFoodTruckGameMode::LoadInputMappingContextFromConfig() const
+{
+    const UCrazyFoodTruckCharacterSettings* CharacterSettings = GetDefault<UCrazyFoodTruckCharacterSettings>();
+    return CharacterSettings ? CharacterSettings->InputMappingContext.LoadSynchronous() : nullptr;
+}
+
 TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const
 {
     const UCrazyFoodTruckSettings* CrazyFoodTruckSettings = GetDefault<UCrazyFoodTruckSettings>();
@@ -133,4 +115,3 @@ TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruck
         return nullptr;
     }
 }
-

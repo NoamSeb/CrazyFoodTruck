@@ -5,22 +5,15 @@
 
 #include "Characters/CrazyFoodTruckCharacterInputData.h"
 
-#include "Components/SkeletalMeshComponent.h"
-#include "Engine/Engine.h"
-#include "Engine/LocalPlayer.h"
-#include "Engine/World.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/PlayerController.h"
-#include "InputAction.h"
-#include "InputActionValue.h"
-#include "InputMappingContext.h"
 
 // Sets default values
 ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -36,6 +29,8 @@ void ACrazyFoodTruckCharacter::BeginPlay()
     {
         Move->MaxWalkSpeed = MovementSpeed;
     }
+
+    UpdatePlayerColorFromController();
 }
 
 // Called every frame
@@ -54,7 +49,48 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         BindInputMoveAction(EnhancedInputComponent);
-        BindInputInteract(EnhancedInputComponent);
+        BindInputInteractAction(EnhancedInputComponent);
+    }
+}
+
+int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
+{
+    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController)
+    {
+        return -1;
+    }
+
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    {
+        return LocalPlayer ? LocalPlayer->GetControllerId() : -1;
+    }
+}
+
+FLinearColor ACrazyFoodTruckCharacter::GetPlayerColor() const
+{
+    return PlayerColor;
+}
+
+void ACrazyFoodTruckCharacter::UpdatePlayerColorFromController()
+{
+    switch (GetPlayerIndex())
+    {
+    case 0:
+        PlayerColor = FLinearColor(0.0f, 0.45f, 1.0f);
+        break;
+    case 1:
+        PlayerColor = FLinearColor(0.1f, 0.8f, 0.2f); 
+        break;
+    case 2:
+        PlayerColor = FLinearColor(1.0f, 0.1f, 0.1f); 
+        break;
+    case 3:
+        PlayerColor = FLinearColor(1.0f, 0.9f, 0.1f);
+        break;
+    default:
+        PlayerColor = FLinearColor::White;
+        break;
     }
 }
 
@@ -76,28 +112,20 @@ void ACrazyFoodTruckCharacter::SetupMappingContextIntoController() const
         return;
     }
 
-    const ULocalPlayer* Player = PlayerController->GetLocalPlayer();
-    if (!Player)
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    if (!LocalPlayer)
     {
         return;
     }
 
-    if (UEnhancedInputLocalPlayerSubsystem* InputSystem = Player->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+    if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
     {
-        if (InputMappingContext)
-        {
-            InputSystem->AddMappingContext(InputMappingContext, 0);
-        }
+        EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContext, 0);
     }
 }
 
 void ACrazyFoodTruckCharacter::BindInputMoveAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-    if (!InputData)
-    {
-        return;
-    }
-
     if (InputData->InputActionMove)
     {
         EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::OnInputMove);
@@ -126,13 +154,8 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
     }
 }
 
-void ACrazyFoodTruckCharacter::BindInputInteract(UEnhancedInputComponent* EnhancedInputComponent)
+void ACrazyFoodTruckCharacter::BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-    if (!InputData)
-    {
-        return;
-    }
-
     if (InputData->InputActionInteract)
     {
         EnhancedInputComponent->BindAction(InputData->InputActionInteract, ETriggerEvent::Started, this, &ACrazyFoodTruckCharacter::TryInteract);
@@ -149,7 +172,7 @@ void ACrazyFoodTruckCharacter::TryInteract()
     {
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::Yellow, TEXT("Nothing to interact with here."));
+            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Nothing to interact with here."));
         }
     }
 }
@@ -163,4 +186,3 @@ void ACrazyFoodTruckCharacter::SetFocusedInteractable(const TScriptInterface<IIn
 {
     FocusedInteractable = NewTarget;
 }
-

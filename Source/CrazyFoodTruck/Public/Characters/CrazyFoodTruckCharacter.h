@@ -12,8 +12,6 @@ class UCrazyFoodTruckCharacterInputData;
 
 class UEnhancedInputComponent;
 
-struct FInputActionValue;
-
 UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckCharacter : public ACharacter
 {
@@ -35,6 +33,24 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+#pragma endregion
+
+#pragma region Player Infos
+
+public:
+	UFUNCTION(BlueprintCallable, Category="Player")
+	int32 GetPlayerIndex() const;
+
+	UFUNCTION(BlueprintCallable, Category="Player")
+	FLinearColor GetPlayerColor() const;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Player")
+	FLinearColor PlayerColor = FLinearColor::White;
+
+private:
+	void UpdatePlayerColorFromController();
 
 #pragma endregion
 
@@ -77,7 +93,7 @@ private:
 	UPROPERTY()
 	TScriptInterface<IInteractable> FocusedInteractable;
 
-	void BindInputInteract(UEnhancedInputComponent* EnhancedInputComponent);
+	void BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void TryInteract();
 
 #pragma endregion

@@ -7,6 +7,8 @@
 #include "Interactable.h"
 #include "InteractBox.generated.h"
 
+class ACrazyFoodTruckCharacter;
+
 class UBoxComponent;
 
 UCLASS()
@@ -26,8 +28,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
 	TObjectPtr<UBoxComponent> Box = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interact")
-	FString Message = TEXT("Successful interaction!");
+	UPROPERTY(VisibleAnywhere, Category="Interact|State")
+	TWeakObjectPtr<ACrazyFoodTruckCharacter> CurrentInteractor;
 
 	virtual void Interact_Implementation(ACrazyFoodTruckCharacter* InstigatorCharacter) override;
 
@@ -37,4 +39,6 @@ private:
 
 	UFUNCTION()
 	void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	void TryReleaseLock(ACrazyFoodTruckCharacter* LeavingCharacter);
 };

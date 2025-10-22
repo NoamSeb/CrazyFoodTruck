@@ -10,9 +10,6 @@ class UCrazyFoodTruckCharacterInputData;
 
 class UInputMappingContext;
 
-/**
- * 
- */
 UCLASS(Config=Game, DefaultConfig, meta=(DisplayName="CrazyFoodTruck Character Settings"))
 class CRAZYFOODTRUCK_API UCrazyFoodTruckCharacterSettings : public UDeveloperSettings
 {

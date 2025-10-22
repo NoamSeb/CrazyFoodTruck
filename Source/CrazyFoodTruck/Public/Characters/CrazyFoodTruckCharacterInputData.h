@@ -8,9 +8,6 @@
 
 class UInputAction;
 
-/**
- * 
- */
 UCLASS()
 class CRAZYFOODTRUCK_API UCrazyFoodTruckCharacterInputData : public UDataAsset
 {

@@ -9,12 +9,8 @@
 class ACrazyFoodTruckCharacter;
 class UCrazyFoodTruckCharacterInputData;
 
-class APlayerStart;
 class UInputMappingContext;
 
-/**
- * 
- */
 UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckGameMode : public AGameModeBase
 {
@@ -28,13 +24,13 @@ protected:
 	TArray<ACrazyFoodTruckCharacter*> Characters;
 
 private:
-	UCrazyFoodTruckCharacterInputData* LoadInputDataFromConfig() const;
-	UInputMappingContext* LoadInputMappingContextFromConfig() const;
-
 	void CreateAndInitPlayers() const;
 
 	void FindPlayerStartActors(TArray<APlayerStart*>& ResultsActors) const;
 	void SpawnCharacters(const TArray<APlayerStart*>& SpawnPoints);
+
+	UCrazyFoodTruckCharacterInputData* LoadInputDataFromConfig() const;
+	UInputMappingContext* LoadInputMappingContextFromConfig() const;
 
 	TSubclassOf<ACrazyFoodTruckCharacter> GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
 };
