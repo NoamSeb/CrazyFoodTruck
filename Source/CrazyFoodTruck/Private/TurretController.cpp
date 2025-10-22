@@ -32,7 +32,7 @@ void ATurretController::BeginPlay()
 
 	if (InteractBox)
 	{
-		InteractBox->OnInteractionStarted.AddDynamic(this, &ATurretController::StartPossessTurret);
+		//InteractBox->OnInteractionStarted.AddDynamic(this, &ATurretController::StartPossessTurret);
 	}
 	
 	ResetCoolDown();
@@ -40,7 +40,6 @@ void ATurretController::BeginPlay()
 	SwitchBulletType(EbulletType::BulletNormal);
 	Shoot();
 	UpdateTurretCanonRotation();
-	
 }
 
 
@@ -59,43 +58,43 @@ void ATurretController::ResetAmmo()
 	_CurrentAmmo = _AmmoMax;
 }
 
-void ATurretController::AddInputMapping()
-{
-	if (!TurretMappingContext){return;}
-	if (!ActualPlayerController){return;}
-	if (ULocalPlayer* Lp = ActualPlayerController->GetLocalPlayer())
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-		{
-			Subsystem->AddMappingContext(TurretMappingContext, 20);
-		}
-	}
-}
+// void ATurretController::AddInputMapping()
+// {
+// 	if (!TurretMappingContext){return;}
+// 	if (!ActualPlayerController){return;}
+// 	if (ULocalPlayer* Lp = ActualPlayerController->GetLocalPlayer())
+// 	{
+// 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+// 		{
+// 			Subsystem->AddMappingContext(TurretMappingContext, mappingPriority);
+// 		}
+// 	}
+// }
+//
+// void ATurretController::RemoveInputMapping()
+// {
+// 	if (!TurretMappingContext){return;}
+// 	if (!ActualPlayerController){return;}
+//
+// 	if (ULocalPlayer* Lp = ActualPlayerController->GetLocalPlayer())
+// 	{
+// 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+// 		{
+// 			Subsystem->RemoveMappingContext(TurretMappingContext);
+// 		}
+// 	}
+// }
 
-void ATurretController::RemoveInputMapping()
-{
-	if (!TurretMappingContext){return;}
-	if (!ActualPlayerController){return;}
-
-	if (ULocalPlayer* Lp = ActualPlayerController->GetLocalPlayer())
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-		{
-			Subsystem->RemoveMappingContext(TurretMappingContext);
-		}
-	}
-}
-
-void ATurretController::StartPossessTurret(APlayerController* Pc)
-{
-	if (Pc)
-	{
-		ActualPlayerController = Pc;
-		ActualPawn = ActualPlayerController->GetPawn();
-		AddInputMapping();
-		Pc->Possess(this);
-	}
-}
+// void ATurretController::StartPossessTurret(APlayerController* Pc)
+// {
+// 	if (Pc)
+// 	{
+// 		ActualPlayerController = Pc;
+// 		ActualPawn = ActualPlayerController->GetPawn();
+// 		AddInputMapping();
+// 		Pc->Possess(this);
+// 	}
+// }
 
 void ATurretController::SwitchBulletType(EbulletType NewType)
 {
@@ -147,18 +146,18 @@ FString ATurretController::GetRowNameFromBulletType(EbulletType Type)
 	}
 }
 
-void ATurretController::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("PossessedBy TurretController by %s"), *NewController->GetName()));
-	AddInputMapping();
-}
-
-void ATurretController::UnPossessed()
-{
-	RemoveInputMapping();
-	Super::UnPossessed();
-}
+// void ATurretController::PossessedBy(AController* NewController)
+// {
+// 	Super::PossessedBy(NewController);
+// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("PossessedBy TurretController by %s"), *NewController->GetName()));
+// 	AddInputMapping();
+// }
+//
+// void ATurretController::UnPossessed()
+// {
+// 	RemoveInputMapping();
+// 	Super::UnPossessed();
+// }
 
 void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -313,21 +312,5 @@ void ATurretController::InputYaw(const FInputActionValue& Value)
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("Quit Turret")));
-	if (ActualPlayerController)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("UnPossess")));
-
-		UnPossessed();
-		ActualPlayerController->UnPossess();
-		if (ActualPawn)
-		{
-			ActualPlayerController->Possess(ActualPawn);
-		}else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("ActualPawn is null")));
-		}
-		ActualPlayerController = nullptr;
-		ActualPawn = nullptr;
-	}
+	InteractBox->UnPossessPawn();
 }

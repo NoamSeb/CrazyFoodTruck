@@ -14,7 +14,10 @@ UENUM()
 enum class ELocalMultiplayerInputMappingType
 {
 	Menu,
-    InGame
+    InGame,
+	Vehicule,
+	Turret,
+	Cabestan
 };
 
 USTRUCT()
@@ -32,6 +35,13 @@ public:
 	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC In Game"))
 	TObjectPtr<UInputMappingContext> IMCInGame = nullptr;
 
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC VEHICULE"))
+	TObjectPtr<UInputMappingContext> IMCVehicule = nullptr;
+
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC TURRET"))
+	TObjectPtr<UInputMappingContext> IMCTurret = nullptr;
+
+	
     UInputMappingContext* GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const;
     bool ContainsKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;
 };

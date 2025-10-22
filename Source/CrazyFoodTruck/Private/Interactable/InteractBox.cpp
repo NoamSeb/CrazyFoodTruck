@@ -2,6 +2,7 @@
 
 #include "Interactable/InteractBox.h"
 
+#include "LocalMultiplayerSubsystem.h"
 #include "Characters/CrazyFoodTruckCharacter.h"
 
 #include "Components/BoxComponent.h"
@@ -27,6 +28,10 @@ AInteractBox::AInteractBox()
 void AInteractBox::BeginPlay()
 {
 	Super::BeginPlay();
+	if (!PawnToPossess)
+	{
+		return;
+	}
 }
 
 APlayerController* AInteractBox::GetPlayerControllerFromActor(AActor* Actor) const
@@ -88,6 +93,8 @@ FColor AInteractBox::GetPlayerColorFromPlayerController(APlayerController* Playe
 		return FColor::White;
 	}
 }
+
+
 
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -173,14 +180,59 @@ void AInteractBox::Interact_Implementation(APlayerController* InstigatorPlayerCo
 		return;
 	}
 
-	if (!CurrentInteractorPlayerController.IsValid())
+	if (!CurrentInteractorPlayerController.IsValid()) // PLAYER START POSSESSING
 	{
 		CurrentInteractorPlayerController = InstigatorPlayerController;
 		OnInteractionStarted.Broadcast(InstigatorPlayerController);
+
+		PosessPawn(InstigatorPlayerController);
 	}
 
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Successful interaction!"));
 	}
+}
+
+void AInteractBox::PosessPawn(APlayerController* PlayerController)
+{
+	// GET PLAYER INDE
+	ActualPlayerController = PlayerController;
+	ActualPawn = PlayerController->GetPawn();
+	int PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
+	if (PlayerIndex == -1)
+	{
+		return;
+	}
+	if (PawnToPossess)
+	{
+		if (UGameInstance* GI = GetGameInstance())
+		{
+			if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
+			{
+				LMS->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, ELocalMultiplayerInputMappingType::Turret);
+			}
+		}
+	}
+}
+
+void AInteractBox::UnPossessPawn()
+{
+	int PlayerIndex = GetPlayerIndexFromPlayerController(ActualPlayerController);
+	if (PlayerIndex == -1)
+	{
+		return;
+	}
+	if (PawnToPossess)
+	{
+		if (UGameInstance* GI = GetGameInstance())
+		{
+			if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
+			{
+				LMS->UnPossessPawnForPlayerIndex(PlayerIndex, ActualPawn, ELocalMultiplayerInputMappingType::Turret);
+			}
+		}
+	}
+
+	ActualPlayerController = nullptr;
 }

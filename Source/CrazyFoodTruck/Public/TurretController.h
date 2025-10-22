@@ -112,11 +112,11 @@ private:
 	
 	void ResetCoolDown();
 	void ResetAmmo();
-	void AddInputMapping();
-	void RemoveInputMapping();
+	//void AddInputMapping();
+	//void RemoveInputMapping();
 
-	UFUNCTION()
-	void StartPossessTurret(APlayerController* Pc);
+	//UFUNCTION()
+	//void StartPossessTurret(APlayerController* Pc);
 	void SwitchBulletType(EbulletType NewType);
 	FString GetRowNameFromBulletType(EbulletType Type);
 
@@ -131,8 +131,9 @@ private:
 	float GetBulletFireRate() { return BulletFireRate ;}
 	// VIRTUAL
 
-	virtual void PossessedBy(AController* NewController) override;
-	virtual void UnPossessed() override;
+	//virtual void PossessedBy(AController* NewController) override;
+	//virtual void UnPossessed() override;
+	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	// INPUT

@@ -22,6 +22,13 @@ class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
 public:	
 	// Sets default values for this actor's properties
 	AInteractBox();
+	
+	
+	// GABRIEL ADD
+
+	
+	void PosessPawn(APlayerController* PlayerController);
+	void UnPossessPawn();
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,6 +42,9 @@ public:
 	FOnInteractController OnInteractionEnded;
 
 	virtual void Interact_Implementation(APlayerController* InstigatorPlayerController) override;
+
+	UPROPERTY(EditAnywhere)
+	APawn* PawnToPossess = nullptr;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
@@ -55,4 +65,10 @@ private:
 	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
 	FColor GetPlayerColorFromPlayerController(APlayerController* PlayerController) const;
+
+	
+	APlayerController* ActualPlayerController;
+	APawn* ActualPawn;
+
+	
 };
