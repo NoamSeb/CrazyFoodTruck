@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Characters/CrazyFoodTruckCharacter.h"
 
 #include "Characters/CrazyFoodTruckCharacterInputData.h"
@@ -166,7 +165,18 @@ void ACrazyFoodTruckCharacter::TryInteract()
 {
     if (FocusedInteractable)
     {
-        IInteractable::Execute_Interact(FocusedInteractable.GetObject(), this);
+        APlayerController* PlayerController = Cast<APlayerController>(Controller);
+        if (!PlayerController)
+        {
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("No PlayerController found."));
+            }
+            
+            return;
+        }
+
+        IInteractable::Execute_Interact(FocusedInteractable.GetObject(), PlayerController);
     }
     else
     {

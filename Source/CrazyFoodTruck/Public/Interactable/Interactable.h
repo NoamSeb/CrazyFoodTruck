@@ -20,5 +20,5 @@ class CRAZYFOODTRUCK_API IInteractable
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Interactable")
-	void Interact(ACrazyFoodTruckCharacter* InstigatorCharacter);
+	void Interact(APlayerController* InstigatorPlayerController);
 };

@@ -9,7 +9,6 @@
 // Sets default values
 AInteractBox::AInteractBox()
 {
-	// Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
@@ -25,23 +24,93 @@ AInteractBox::AInteractBox()
 	Box->OnComponentEndOverlap.AddDynamic(this, &AInteractBox::OnBoxEndOverlap);
 }
 
-// Called when the game starts or when spawned
 void AInteractBox::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+APlayerController* AInteractBox::GetPlayerControllerFromActor(AActor* Actor) const
+{
+	if (!Actor)
+	{
+		return nullptr;
+	}
+
+	if (APawn* Pawn = Cast<APawn>(Actor))
+	{
+		return Cast<APlayerController>(Pawn->GetController());
+	}
+
+	return Cast<APlayerController>(Actor);
+}
+
+int32 AInteractBox::GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const
+{
+	if (!PlayerController)
+	{
+		return -1;
+	}
+	
+	if (const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer())
+	{
+		return LocalPlayer->GetControllerId();
+	}
+	
+	return -1;
+}
+
+FColor AInteractBox::GetPlayerColorFromPlayerController(APlayerController* PlayerController) const
+{
+	if (!PlayerController)
+	{
+		return FColor::White;
+	}
+
+	if (APawn* Pawn = PlayerController->GetPawn())
+	{
+		if (const ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Pawn))
+		{
+			return Character->GetPlayerColor().ToFColor(true);
+		}
+	}
+
+	switch (GetPlayerIndexFromPlayerController(PlayerController))
+	{
+	case 0:
+		return FColor(0, 115, 255);
+	case 1:
+		return FColor(26, 204, 51);
+	case 2:
+		return FColor(255, 26, 26);
+	case 3:
+		return FColor(255, 230, 26);
+	default:
+		return FColor::White;
+	}
 }
 
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor))
 	{
-		Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
+		APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(OtherActor);
 
-		if (GEngine)
+		const bool bOccupiedByAnother = CurrentInteractorPlayerController.IsValid() && EnteringPlayerController && CurrentInteractorPlayerController.Get() != EnteringPlayerController;
+
+		if (!bOccupiedByAnother)
 		{
-			const FColor PlayerColor = Character->GetPlayerColor().ToFColor(true);
-			const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), Character->GetPlayerIndex());
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Press X to interact"));
+			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
+
+			if (!CurrentInteractorPlayerController.IsValid())
+			{
+				if (GEngine)
+				{
+					const FColor PlayerColor = GetPlayerColorFromPlayerController(EnteringPlayerController);
+					const int32 PlayerIndex = GetPlayerIndexFromPlayerController(EnteringPlayerController);
+					const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
+					GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Press X to interact"));
+				}
+			}
 		}
 	}
 }
@@ -55,36 +124,46 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(nullptr));
 		}
 
-		TryReleaseLock(Character);
+		TryReleaseLockFromActor(OtherActor);
 	}
 }
 
-void AInteractBox::TryReleaseLock(ACrazyFoodTruckCharacter* LeavingCharacter)
+void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
 {
-	if (CurrentInteractor.IsValid() && CurrentInteractor.Get() == LeavingCharacter)
+	APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(LeavingActor);
+	if (!LeavingPlayerController)
 	{
-		CurrentInteractor = nullptr;
+		return;
+	}
+
+	if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() == LeavingPlayerController)
+	{
+		CurrentInteractorPlayerController = nullptr;
+
+		OnInteractionEnded.Broadcast(LeavingPlayerController);
 
 		if (GEngine)
 		{
-			const FColor PlayerColor = LeavingCharacter->GetPlayerColor().ToFColor(true);
-			const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), LeavingCharacter->GetPlayerIndex());
+			const FColor PlayerColor = GetPlayerColorFromPlayerController(LeavingPlayerController);
+			const int32 PlayerIndex = GetPlayerIndexFromPlayerController(LeavingPlayerController);
+			const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Interaction released."));
 		}
 	}
 }
 
-void AInteractBox::Interact_Implementation(ACrazyFoodTruckCharacter* InstigatorCharacter)
+void AInteractBox::Interact_Implementation(APlayerController* InstigatorPlayerController)
 {
-	if (!InstigatorCharacter)
+	if (!InstigatorPlayerController)
 	{
 		return;
 	}
 
-	const FColor PlayerColor = InstigatorCharacter->GetPlayerColor().ToFColor(true);
-	const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), InstigatorCharacter->GetPlayerIndex());
+	const FColor PlayerColor = GetPlayerColorFromPlayerController(InstigatorPlayerController);
+	const int32 PlayerIndex = GetPlayerIndexFromPlayerController(InstigatorPlayerController);
+	const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
 
-	if (CurrentInteractor.IsValid() && CurrentInteractor.Get() != InstigatorCharacter)
+	if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
 	{
 		if (GEngine)
 		{
@@ -94,9 +173,10 @@ void AInteractBox::Interact_Implementation(ACrazyFoodTruckCharacter* InstigatorC
 		return;
 	}
 
-	if (!CurrentInteractor.IsValid())
+	if (!CurrentInteractorPlayerController.IsValid())
 	{
-		CurrentInteractor = InstigatorCharacter;
+		CurrentInteractorPlayerController = InstigatorPlayerController;
+		OnInteractionStarted.Broadcast(InstigatorPlayerController);
 	}
 
 	if (GEngine)

@@ -9,7 +9,10 @@
 
 class ACrazyFoodTruckCharacter;
 
+class APlayerController;
 class UBoxComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractController, APlayerController*, InstigatorPlayerController);
 
 UCLASS()
 class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
@@ -24,14 +27,21 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+public:
+	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
+	FOnInteractController OnInteractionStarted;
+
+	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
+	FOnInteractController OnInteractionEnded;
+
+	virtual void Interact_Implementation(APlayerController* InstigatorPlayerController) override;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
 	TObjectPtr<UBoxComponent> Box = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category="Interact|State")
-	TWeakObjectPtr<ACrazyFoodTruckCharacter> CurrentInteractor;
-
-	virtual void Interact_Implementation(ACrazyFoodTruckCharacter* InstigatorCharacter) override;
+	TWeakObjectPtr<APlayerController> CurrentInteractorPlayerController;
 
 private:
 	UFUNCTION()
@@ -40,5 +50,9 @@ private:
 	UFUNCTION()
 	void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	void TryReleaseLock(ACrazyFoodTruckCharacter* LeavingCharacter);
+	void TryReleaseLockFromActor(AActor* LeavingActor);
+
+	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
+	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
+	FColor GetPlayerColorFromPlayerController(APlayerController* PlayerController) const;
 };
