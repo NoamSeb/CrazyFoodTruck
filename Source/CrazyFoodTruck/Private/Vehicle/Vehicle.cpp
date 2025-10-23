@@ -3,7 +3,7 @@
 
 #include "CrazyFoodTruck/Public/Vehicle/Vehicle.h"
 
-#include "AI/NavigationSystemBase.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AVehicle::AVehicle()
@@ -56,22 +56,23 @@ void AVehicle::Tick(float DeltaTime)
 void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-
-
-	if (!OtherActor) return;
 	
-	//Si c'est un obstable alors
-	ReduceSpeed();
-	//Si c'est un zombie alors
-	//Function...
-	//Si c'est un MapSwicther alors
-	//Change map
-}
+	if (!OtherActor) return;
 
+	if (OtherActor->Tags.Contains("Obstacle"))
+	{
+		ReduceSpeed();
+	}
+	else if (OtherActor->Tags.Contains("MapSwitch"))
+	{
+		ChangeMap();
+	}
+}
 void AVehicle::MoveForward()
 {
 	AddMovementInput(GetActorForwardVector(),1);
 }
+
 
 #pragma region Input
 void AVehicle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
