@@ -70,13 +70,21 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 				switch (differentePos)
 				{
 					case EPositionSpawn::Right:
+						GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, "Droite");
 						NewZombie->FirstActorToFollower = RightActorToFollow;
+					break;
 					case EPositionSpawn::Left:
+						GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, "Gauche");
 						NewZombie->FirstActorToFollower = LeftActorToFollow;
+					break;
 					case EPositionSpawn::Forward:
+						GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, "Devant");
 						NewZombie->FirstActorToFollower = ForwardActorToFollow;
+					break;
 					case EPositionSpawn::Backward:
+						GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, "Derriere");
 						NewZombie->FirstActorToFollower = RightActorToFollow;
+					break;
 				}
 				
 				NewZombie->CallRound();

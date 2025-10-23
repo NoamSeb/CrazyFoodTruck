@@ -49,7 +49,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
 	TObjectPtr<AActor> MainActorToFollow;
 
-	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horde Manager | Character to Follow")
 	TObjectPtr<AActor> LeftActorToFollow;
 
 	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
