@@ -15,7 +15,7 @@ struct FWaveStructure : public FTableRowBase
 	int32 ZombieAmount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Wave")
-	float TempSpawnWaveAfterBeginPlay;
+	float TempSpawnBetweenWave;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Wave")
 	EPositionSpawn PositionSpawn;

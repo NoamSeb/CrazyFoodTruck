@@ -1,6 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "HordeManager.h"
+
+#include <string>
+
 #include "Components/BoxComponent.h"
 
 
@@ -11,6 +14,11 @@ AHordeManager::AHordeManager()
 
 void AHordeManager::AddSpawnArea()
 {
+	//FActorSpawnParameters SpawnParams;
+	//std::string Name = "SpawnArea_" + std::to_string(ListSpawnArea.Num());
+	//SpawnParams.Name = Name.c_str();
+	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "SpawnArea_" + ListSpawnArea.Num());
+	
 	AAreaZombieSpawn* NewArea = GetWorld()->SpawnActor<AAreaZombieSpawn>(AreaZombieSpawn);
 	NewArea->InitArea(ListSpawnArea.Num(),this);
 	
@@ -26,7 +34,7 @@ void AHordeManager::AddSpawnArea()
 			GEditor->SelectActor(NewArea, true, true, true);
 
 			// Centrer la vue dessus
-			//GEditor->MoveViewportCamerasToActor(*NewArea, false);
+			GEditor->MoveViewportCamerasToActor(*NewArea, false);
 			
 		}
 	#endif

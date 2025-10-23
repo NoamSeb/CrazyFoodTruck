@@ -21,6 +21,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMeshActor.h"
 
+#include "UnrealEd.h"
+
 #include "HordeManager.generated.h"
 
 UCLASS()
