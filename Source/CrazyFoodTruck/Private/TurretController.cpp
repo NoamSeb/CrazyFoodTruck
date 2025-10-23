@@ -32,7 +32,6 @@ void ATurretController::BeginPlay()
 
 	if (InteractBox)
 	{
-		//InteractBox->OnInteractionStarted.AddDynamic(this, &ATurretController::StartPossessTurret);
 	}
 	
 	ResetCoolDown();
@@ -41,7 +40,6 @@ void ATurretController::BeginPlay()
 	Shoot();
 	UpdateTurretCanonRotation();
 }
-
 
 void ATurretController::SetBulletSpawnTransform(USceneComponent* Scp)
 {
@@ -57,44 +55,6 @@ void ATurretController::ResetAmmo()
 {
 	_CurrentAmmo = _AmmoMax;
 }
-
-// void ATurretController::AddInputMapping()
-// {
-// 	if (!TurretMappingContext){return;}
-// 	if (!ActualPlayerController){return;}
-// 	if (ULocalPlayer* Lp = ActualPlayerController->GetLocalPlayer())
-// 	{
-// 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-// 		{
-// 			Subsystem->AddMappingContext(TurretMappingContext, mappingPriority);
-// 		}
-// 	}
-// }
-//
-// void ATurretController::RemoveInputMapping()
-// {
-// 	if (!TurretMappingContext){return;}
-// 	if (!ActualPlayerController){return;}
-//
-// 	if (ULocalPlayer* Lp = ActualPlayerController->GetLocalPlayer())
-// 	{
-// 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-// 		{
-// 			Subsystem->RemoveMappingContext(TurretMappingContext);
-// 		}
-// 	}
-// }
-
-// void ATurretController::StartPossessTurret(APlayerController* Pc)
-// {
-// 	if (Pc)
-// 	{
-// 		ActualPlayerController = Pc;
-// 		ActualPawn = ActualPlayerController->GetPawn();
-// 		AddInputMapping();
-// 		Pc->Possess(this);
-// 	}
-// }
 
 void ATurretController::SwitchBulletType(EbulletType NewType)
 {
