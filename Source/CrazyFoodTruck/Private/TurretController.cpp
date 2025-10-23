@@ -272,5 +272,5 @@ void ATurretController::InputYaw(const FInputActionValue& Value)
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
-	InteractBox->UnPossessPawn();
+	InteractBox->UnpossessPawn();
 }
