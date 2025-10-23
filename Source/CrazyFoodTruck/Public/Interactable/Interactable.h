@@ -19,6 +19,5 @@ class CRAZYFOODTRUCK_API IInteractable
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Interactable")
-	void Interact(APlayerController* InstigatorPlayerController);
+	virtual void Interact(APlayerController* InstigatorPlayerController) = 0;
 };

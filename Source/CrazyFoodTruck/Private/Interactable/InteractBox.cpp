@@ -95,7 +95,6 @@ FColor AInteractBox::GetPlayerColorFromPlayerController(APlayerController* Playe
 }
 
 
-
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor))
@@ -162,44 +161,41 @@ void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
 	}
 }
 
-void AInteractBox::Interact_Implementation(APlayerController* InstigatorPlayerController)
+void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
 {
-	if (!InstigatorPlayerController)
-	{
-		return;
-	}
-
-	const FColor PlayerColor = GetPlayerColorFromPlayerController(InstigatorPlayerController);
-	const int32 PlayerIndex = GetPlayerIndexFromPlayerController(InstigatorPlayerController);
-	const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-
-	if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Already in use by another player."));
-		}
+		 if (!InstigatorPlayerController)
+		 {
+		 	return;
+		 }
+		 const FColor PlayerColor = GetPlayerColorFromPlayerController(InstigatorPlayerController);
+		 const int32 PlayerIndex = GetPlayerIndexFromPlayerController(InstigatorPlayerController);
+		 const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
 		
-		return;
-	}
-
-	if (!CurrentInteractorPlayerController.IsValid()) // PLAYER START POSSESSING
-	{
-		CurrentInteractorPlayerController = InstigatorPlayerController;
-		OnInteractionStarted.Broadcast(InstigatorPlayerController);
-
-		PosessPawn(InstigatorPlayerController);
-	}
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Successful interaction!"));
-	}
+		 if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
+		 {
+		 	if (GEngine)
+		 	{
+		 		GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Already in use by another player."));
+		 	}
+		 	return;
+		 }
+		
+		 if (!CurrentInteractorPlayerController.IsValid())
+		 {
+		 	CurrentInteractorPlayerController = InstigatorPlayerController;
+		 	OnInteractionStarted.Broadcast(InstigatorPlayerController);
+		 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,  TEXT("IS VALID"));
+		 	PosessPawn(InstigatorPlayerController);
+		 }
+		
+		 if (GEngine)
+		 {
+		 	GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Successful interaction!"));
+		 }
 }
 
 void AInteractBox::PosessPawn(APlayerController* PlayerController)
 {
-	// GET PLAYER INDE
 	ActualPlayerController = PlayerController;
 	ActualPawn = PlayerController->GetPawn();
 	int PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);

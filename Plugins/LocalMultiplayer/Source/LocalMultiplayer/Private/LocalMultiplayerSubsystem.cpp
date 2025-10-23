@@ -160,7 +160,6 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex, ELoc
 	{
 		return;
 	}	
-
 	if (UEnhancedInputLocalPlayerSubsystem* EIS = GetEISForPlayerIndex(PlayerIndex))
 	{
 		if (!EIS->HasMappingContext(IMC))
@@ -170,7 +169,6 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex, ELoc
 			EIS->AddMappingContext(const_cast<UInputMappingContext*>(IMC), 0, Options);
 		}
 	}
-
 }
 
 APlayerController* ULocalMultiplayerSubsystem::GetPlayerControllerForIndex(int PlayerIndex)

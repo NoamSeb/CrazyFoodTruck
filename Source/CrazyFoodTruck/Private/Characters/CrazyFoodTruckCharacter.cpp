@@ -8,6 +8,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interactable/InteractBox.h"
 
 // Sets default values
 ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
@@ -161,29 +162,54 @@ void ACrazyFoodTruckCharacter::BindInputInteractAction(UEnhancedInputComponent* 
 
 void ACrazyFoodTruckCharacter::TryInteract()
 {
-    if (FocusedInteractable)
+    if (!FocusedInteractable)
     {
-        APlayerController* PlayerController = Cast<APlayerController>(Controller);
-        if (!PlayerController)
-        {
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("No PlayerController found."));
-            }
-            
-            return;
-        }
+        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Nothing to interact with here."));
+        return;
+    }
 
-        IInteractable::Execute_Interact(FocusedInteractable.GetObject(), PlayerController);
+    UObject* Obj = FocusedInteractable.GetObject();
+    APlayerController* PC = Cast<APlayerController>(Controller);
+
+    if (!Obj)
+    {
+        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("FocusedInteractable.GetObject() returned null!"));
+        return;
+    }
+
+    if (!PC)
+    {
+        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("No PlayerController found."));
+        return;
+    }
+
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green,
+            FString::Printf(TEXT("Interacting with: %s"), *Obj->GetName()));
+    }
+
+    if (Obj->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+    {
+        FocusedInteractable->Interact(PC);
     }
     else
     {
-        if (GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Nothing to interact with here."));
-        }
+        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Object does NOT implement IInteractable at runtime."));
     }
+
+    
+    //
+    // if (AInteractBox* Box = Cast<AInteractBox>(Obj))
+    // {
+    //     Box->Interact_Implementation(PC);
+    // }
+    // else
+    // {
+    //     IInteractable::Execute_Interact(Obj, PC);
+    // }
 }
+
 
 const TScriptInterface<IInteractable>& ACrazyFoodTruckCharacter::GetFocusedInteractable() const
 {

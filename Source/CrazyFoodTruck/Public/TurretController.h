@@ -12,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Bullet/FBulletStructure.h"
 #include "GameFramework/Actor.h"
+#include "Interactable/Interactable.h"
 #include "Interactable/InteractBox.h"
 #include "TurretController.generated.h"
 
@@ -112,11 +113,6 @@ private:
 	
 	void ResetCoolDown();
 	void ResetAmmo();
-	//void AddInputMapping();
-	//void RemoveInputMapping();
-
-	//UFUNCTION()
-	//void StartPossessTurret(APlayerController* Pc);
 	void SwitchBulletType(EbulletType NewType);
 	FString GetRowNameFromBulletType(EbulletType Type);
 
@@ -129,10 +125,6 @@ private:
 	int GetBulletDamage() { return BulletDamage ;}
 	float GetBulletSpeed() { return BulletSpeed ;}
 	float GetBulletFireRate() { return BulletFireRate ;}
-	// VIRTUAL
-
-	//virtual void PossessedBy(AController* NewController) override;
-	//virtual void UnPossessed() override;
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 

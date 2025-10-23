@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Interactable.h"
+#include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
 class ACrazyFoodTruckCharacter;
@@ -21,18 +21,13 @@ class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AInteractBox();
-	
-	
 	// GABRIEL ADD
-
 	
 	void PosessPawn(APlayerController* PlayerController);
 	void UnPossessPawn();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
@@ -47,9 +42,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnCollision OnCollisionExit;
-	
-	virtual void Interact_Implementation(APlayerController* InstigatorPlayerController) override;
 
+	//virtual void Interact_Implementation(APlayerController* InstigatorPlayerController) override;
+	virtual void Interact(APlayerController* InstigatorPlayerController) override;
 	UPROPERTY(EditAnywhere)
 	APawn* PawnToPossess = nullptr;
 
@@ -75,6 +70,4 @@ private:
 	
 	APlayerController* ActualPlayerController;
 	APawn* ActualPawn;
-
-	
 };
