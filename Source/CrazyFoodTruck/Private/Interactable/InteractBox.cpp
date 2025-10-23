@@ -226,7 +226,7 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
 		 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,  TEXT("IS VALID"));
 		 	PosessPawn(InstigatorPlayerController);
 		 }
-		
+	
 		 if (GEngine)
 		 {
 		 	GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Successful interaction!"));
