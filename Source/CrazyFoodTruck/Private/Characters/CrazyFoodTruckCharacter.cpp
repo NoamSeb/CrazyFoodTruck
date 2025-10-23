@@ -8,7 +8,6 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Interactable/InteractBox.h"
 
 // Sets default values
 ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
@@ -43,7 +42,7 @@ void ACrazyFoodTruckCharacter::Tick(float DeltaTime)
 void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("SetupPlayerInputComponent called in ACrazyFoodTruckCharacter"));
+    
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         BindInputMoveAction(EnhancedInputComponent);
@@ -60,9 +59,7 @@ int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
     }
 
     const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
-    {
-        return LocalPlayer ? LocalPlayer->GetControllerId() : -1;
-    }
+    return LocalPlayer ? LocalPlayer->GetControllerId() : -1;
 }
 
 FLinearColor ACrazyFoodTruckCharacter::GetPlayerColor() const
@@ -164,52 +161,36 @@ void ACrazyFoodTruckCharacter::TryInteract()
 {
     if (!FocusedInteractable)
     {
-        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Nothing to interact with here."));
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Nothing to interact with here."));
+        }
+        
         return;
     }
 
-    UObject* Obj = FocusedInteractable.GetObject();
-    APlayerController* PC = Cast<APlayerController>(Controller);
-
-    if (!Obj)
+    UObject* Object = FocusedInteractable.GetObject();
+    if (!Object)
     {
-        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("FocusedInteractable.GetObject() returned null!"));
         return;
     }
 
-    if (!PC)
+    APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController)
     {
-        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("No PlayerController found."));
         return;
     }
 
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green,
-            FString::Printf(TEXT("Interacting with: %s"), *Obj->GetName()));
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, FString::Printf(TEXT("Interacting with: %s"), *Object->GetName()));
     }
 
-    if (Obj->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+    if (Object->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
     {
-        FocusedInteractable->Interact(PC);
+        FocusedInteractable->Interact(PlayerController);
     }
-    else
-    {
-        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Object does NOT implement IInteractable at runtime."));
-    }
-
-    
-    //
-    // if (AInteractBox* Box = Cast<AInteractBox>(Obj))
-    // {
-    //     Box->Interact_Implementation(PC);
-    // }
-    // else
-    // {
-    //     IInteractable::Execute_Interact(Obj, PC);
-    // }
 }
-
 
 const TScriptInterface<IInteractable>& ACrazyFoodTruckCharacter::GetFocusedInteractable() const
 {

@@ -3,10 +3,8 @@
 
 #include "LocalMultiplayerSubsystem.h"
 
-#include "LocalMultiplayerSettings.h"
-#include "Engine/GameInstance.h"
-#include "Engine/LocalPlayer.h"
 #include "EnhancedInputSubsystems.h"
+
 #include "InputMappingContext.h"
 
 void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMappingType MappingType)
@@ -105,7 +103,7 @@ int ULocalMultiplayerSubsystem::AssignNewPlayerToGamepadDeviceID(int DeviceID)
 
 void ULocalMultiplayerSubsystem::AssignKeyboardInputMapping(int PlayerIndex, int KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const
 {
-	UInputMappingContext* IMC = GetIMCFromEnumType(MappingType);
+	UInputMappingContext* IMC = GetKeyboardIMC(KeyboardProfileIndex, MappingType);
 	if (!IMC)
 	{
 		return;
@@ -130,21 +128,14 @@ void ULocalMultiplayerSubsystem::AssignKeyboardInputMapping(int PlayerIndex, int
 		{
 			FModifyContextOptions Options;
 			Options.bForceImmediately = true;
-
-			EIS->AddMappingContext(const_cast<UInputMappingContext*>(IMC), 0, Options);
+			EIS->AddMappingContext(IMC, 0, Options);
 		}
 	}
 }
 
-UInputMappingContext* ULocalMultiplayerSubsystem::GetIMCFromEnumType(ELocalMultiplayerInputMappingType MappingType) const
-{
-	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
-	return LocalMultiplayerSettings->GamepadProfileData.GetIMCFromType(MappingType);
-}
-
 void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex, ELocalMultiplayerInputMappingType MappingType) const
 {
-	UInputMappingContext* IMC = GetIMCFromEnumType(MappingType);
+	UInputMappingContext* IMC = GetGamepadIMC(MappingType);
 	if (!IMC)
 	{
 		return;
@@ -166,119 +157,173 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex, ELoc
 		{
 			FModifyContextOptions Options;
 			Options.bForceImmediately = true;
-			EIS->AddMappingContext(const_cast<UInputMappingContext*>(IMC), 0, Options);
+			EIS->AddMappingContext(IMC, 0, Options);
 		}
 	}
 }
 
-APlayerController* ULocalMultiplayerSubsystem::GetPlayerControllerForIndex(int PlayerIndex)
+APlayerController* ULocalMultiplayerSubsystem::GetPlayerControllerForIndex(int32 PlayerIndex)
 {
 	ULocalPlayer* LP = GetLocalPlayerForIndex(PlayerIndex);
-	if (!LP) return nullptr;
+	if (!LP)
+	{
+		return nullptr;
+	}
 
 	if (UWorld* World = GetWorld())
 	{
 		return LP->GetPlayerController(World);
 	}
+	
 	return nullptr;
 }
 
-ULocalPlayer* ULocalMultiplayerSubsystem::GetLocalPlayerForIndex(int PlayerIndex)
+ULocalPlayer* ULocalMultiplayerSubsystem::GetLocalPlayerForIndex(int32 PlayerIndex)
 {
 	if (UGameInstance* GI = GetGameInstance())
 	{
-		if (GI->GetLocalPlayers().IsValidIndex(PlayerIndex))
-		{
-			return GI->GetLocalPlayers()[PlayerIndex];
-		}
+		return GI->GetLocalPlayerByIndex(PlayerIndex);
 	}
+	
 	return nullptr;
 }
 
-bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType)
+int32 ULocalMultiplayerSubsystem::GetPlayerIndexFromController(APlayerController* PlayerController) const
 {
-	if (!PawnToPossess) return false;
-	APlayerController* PlayerController = GetPlayerControllerForIndex(PlayerIndex);
-	if (!PlayerController) return false;
-	PlayerController->Possess(PawnToPossess);
-	AddTemporaryMappingForPlayer(PlayerIndex, GetIMCFromEnumType(MappingType));
-	return true;
-}
+	if (!PlayerController)
+	{
+		return -1;
+	}
 
-bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType)
-{
-	APlayerController* PlayerController = GetPlayerControllerForIndex(PlayerIndex);
-	if (!PlayerController) return false;
-	PlayerController->UnPossess();
-	PlayerController->Possess(PlayerPawn);
-	RemoveTemporaryMappingForPlayer(PlayerIndex, GetIMCFromEnumType(MappingType));
-	return true;
-}
-
-int ULocalMultiplayerSubsystem::GetPlayerIndexFromController(APlayerController* PlayerController) const
-{
-	if (!PlayerController) return -1;
-
-	ULocalPlayer* LP = Cast<ULocalPlayer>(PlayerController->Player);
-	if (!LP) -1;
-
-	return LP->GetControllerId();
-}
-
-
-
-// MAXIME ADD
-
-
-void ULocalMultiplayerSubsystem::AddTemporaryMappingForPlayer(int PlayerIndex, UInputMappingContext* IMC, int Priority,bool bForceImmediately)
-{
+	if (ULocalPlayer* LP = Cast<ULocalPlayer>(PlayerController->Player))
+	{
+		return LP->GetControllerId();
+	}
 	
-	if (!IMC) return;
+	return -1;
+}
+
+bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType)
+{
+	if (!PawnToPossess)
+	{
+		return false;
+	}
+
+	APlayerController* PC = GetPlayerControllerForIndex(PlayerIndex);
+	if (!PC)
+	{
+		return false;
+	}
+
+	PC->Possess(PawnToPossess);
+
+	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
+	{
+		AddTemporaryMappingForPlayer(PlayerIndex, IMC, 100, true);
+	}
+	
+	return true;
+}
+
+bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType)
+{
+	APlayerController* PC = GetPlayerControllerForIndex(PlayerIndex);
+	if (!PC)
+	{
+		return false;
+	}
+
+	PC->UnPossess();
+	if (PlayerPawn)
+	{
+		PC->Possess(PlayerPawn);
+	}
+
+	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
+	{
+		RemoveTemporaryMappingForPlayer(PlayerIndex, IMC, true);
+	}
+
+	return true;
+}
+
+void ULocalMultiplayerSubsystem::AddTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, int32 Priority, bool bForceImmediately)
+{
+	if (!IMC)
+	{
+		return;
+	}
 
 	if (UEnhancedInputLocalPlayerSubsystem* EIS = GetEISForPlayerIndex(PlayerIndex))
 	{
 		if (!EIS->HasMappingContext(IMC))
 		{
-			FModifyContextOptions Opt;
-			Opt.bForceImmediately = bForceImmediately;
-			EIS->AddMappingContext(IMC, Priority, Opt);
+			FModifyContextOptions Options;
+			Options.bForceImmediately = bForceImmediately;
+			EIS->AddMappingContext(IMC, Priority, Options);
 		}
 	}
 }
 
-void ULocalMultiplayerSubsystem::RemoveTemporaryMappingForPlayer(int PlayerIndex, UInputMappingContext* IMC, bool bForceImmediately)
+void ULocalMultiplayerSubsystem::RemoveTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, bool bForceImmediately)
 {
-	if (!IMC) return;
+	if (!IMC)
+	{
+		return;
+	}
+
 	if (UEnhancedInputLocalPlayerSubsystem* EIS = GetEISForPlayerIndex(PlayerIndex))
 	{
 		if (EIS->HasMappingContext(IMC))
 		{
-			FModifyContextOptions Opt;
-			Opt.bForceImmediately = bForceImmediately;
-			EIS->RemoveMappingContext(IMC, Opt);
+			FModifyContextOptions Options;
+			Options.bForceImmediately = bForceImmediately;
+			EIS->RemoveMappingContext(IMC, Options);
 		}
 	}
-	AssignGamepadInputMapping(PlayerIndex, ELocalMultiplayerInputMappingType::InGame);
 }
 
-
-UEnhancedInputLocalPlayerSubsystem* ULocalMultiplayerSubsystem::GetEISForPlayerIndex(int PlayerIndex) const
+UEnhancedInputLocalPlayerSubsystem* ULocalMultiplayerSubsystem::GetEISForPlayerIndex(int32 PlayerIndex) const
 {
 	UGameInstance* GI = GetGameInstance();
-	if (!GI) return nullptr;
+	if (!GI)
+	{
+		return nullptr;
+	}
 
 	ULocalPlayer* LP = GI->GetLocalPlayerByIndex(PlayerIndex);
-	if (!LP) return nullptr;
+	if (!LP)
+	{
+		return nullptr;
+	}
 
 	return LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 }
 
-UEnhancedInputLocalPlayerSubsystem* ULocalMultiplayerSubsystem::GetEISForPlayerController(APlayerController* PlayerController) const
+UInputMappingContext* ULocalMultiplayerSubsystem::GetKeyboardIMC(int32 KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const
 {
-	if (!PlayerController) return nullptr;
+	const ULocalMultiplayerSettings* Settings = GetDefault<ULocalMultiplayerSettings>();
+	if (!Settings)
+	{
+		return nullptr;
+	}
 
-	ULocalPlayer* LP = Cast<ULocalPlayer>(PlayerController->Player);
-	if (!LP) return nullptr;
+	if (!Settings->KeyboardProfilesData.IsValidIndex(KeyboardProfileIndex))
+	{
+		return nullptr;
+	}
 
-	return LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	return Settings->KeyboardProfilesData[KeyboardProfileIndex].GetIMCFromType(MappingType);
+}
+
+UInputMappingContext* ULocalMultiplayerSubsystem::GetGamepadIMC(ELocalMultiplayerInputMappingType MappingType) const
+{
+	const ULocalMultiplayerSettings* Settings = GetDefault<ULocalMultiplayerSettings>();
+	if (!Settings)
+	{
+		return nullptr;
+	}
+
+	return Settings->GamepadProfileData.GetIMCFromType(MappingType);
 }

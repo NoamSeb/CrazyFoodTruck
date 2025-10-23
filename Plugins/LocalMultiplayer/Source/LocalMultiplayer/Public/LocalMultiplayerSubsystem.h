@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "LocalMultiplayerSettings.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputMappingContext.h"
 #include "LocalMultiplayerSubsystem.generated.h"
+
+class UEnhancedInputLocalPlayerSubsystem;
+
+class UInputMappingContext;
 
 /**
  * 
@@ -28,30 +30,20 @@ public:
 	int AssignNewPlayerToGamepadDeviceID(int DeviceID);
 
 	void AssignKeyboardInputMapping(int PlayerIndex, int KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const;
-	UInputMappingContext* GetIMCFromEnumType(ELocalMultiplayerInputMappingType MappingType) const;
 	void AssignGamepadInputMapping(int PlayerIndex, ELocalMultiplayerInputMappingType MappingType) const;
 
-	// GABRIEL ADD
+	APlayerController* GetPlayerControllerForIndex(int32 PlayerIndex);
+	ULocalPlayer* GetLocalPlayerForIndex(int32 PlayerIndex);
+	int32 GetPlayerIndexFromController(APlayerController* PlayerController) const;
 
-	APlayerController* GetPlayerControllerForIndex(int PlayerIndex);
-	ULocalPlayer* GetLocalPlayerForIndex(int PlayerIndex);
-
-	bool PossessPawnForPlayerIndex(int PlayerIndex, APawn* PawnToPossess,ELocalMultiplayerInputMappingType MappingType);
-	bool UnPossessPawnForPlayerIndex(int PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType);
-	int GetPlayerIndexFromController(APlayerController* PlayerController) const;
-	
-	// MAXIME ADD
-	
-	UFUNCTION(BlueprintCallable, Category="Local Multiplayer|Input")
-	void AddTemporaryMappingForPlayer(int PlayerIndex, UInputMappingContext* IMC, int Priority = 100, bool bForceImmediately = true);
+	bool PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType);
+	bool UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType);
 
 	UFUNCTION(BlueprintCallable, Category="Local Multiplayer|Input")
-	void RemoveTemporaryMappingForPlayer(int PlayerIndex, UInputMappingContext* IMC, bool bForceImmediately = true);
+	void AddTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, int32 Priority = 100, bool bForceImmediately = true);
 
-private:
-	
-	UEnhancedInputLocalPlayerSubsystem* GetEISForPlayerIndex(int PlayerIndex) const;
-	UEnhancedInputLocalPlayerSubsystem* GetEISForPlayerController(APlayerController* PlayerController) const;
+	UFUNCTION(BlueprintCallable, Category="Local Multiplayer|Input")
+	void RemoveTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, bool bForceImmediately = true);
 	
 protected:
 	UPROPERTY()
@@ -62,4 +54,10 @@ protected:
 
 	UPROPERTY()
 	TMap<int, int> PlayerIndexFromGamepadProfileIndex;
+
+private:
+	UEnhancedInputLocalPlayerSubsystem* GetEISForPlayerIndex(int32 PlayerIndex) const;
+
+	UInputMappingContext* GetKeyboardIMC(int32 KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const;
+	UInputMappingContext* GetGamepadIMC(ELocalMultiplayerInputMappingType MappingType) const;
 };
