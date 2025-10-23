@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Interface/IBoxInteract.h"
 #include "UInteractBoxWidget.generated.h"
 
 UCLASS()
@@ -13,10 +14,10 @@ class CRAZYFOODTRUCK_API UUInteractBoxWidget : public UUserWidget
 
 public :
 	
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="InteractBox")
 	void ShowInteract();
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="InteractBox")
 	void HideInteract();
 	
 };

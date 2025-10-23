@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
@@ -35,7 +36,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnCollision OnCollisionExit;
-
+	
+	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
+	FOnCollision OnPlayerQuit;
+	
 	UPROPERTY(EditAnywhere, Category="Interact|Possess")
 	APawn* PawnToPossess = nullptr;
 
@@ -43,6 +47,14 @@ public:
 
 	void PossessPawn(APlayerController* PlayerController);
 	void UnpossessPawn();
+
+	UFUNCTION(BlueprintCallable, Category="Interact|State")
+	void UpdateVisibilityInput(bool bIsVisible);
+
+
+	UFUNCTION(BlueprintCallable, Category="Interact|State")
+	bool GetInputVisibilityState() const { return _IsShowingInput; }
+
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
@@ -57,7 +69,7 @@ protected:
 private:
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+	void TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character);
 	UFUNCTION()
 	void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
@@ -72,5 +84,9 @@ private:
 	bool IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerController) const;
 	
 	APlayerController* CachedPlayerController = nullptr;
+	ACrazyFoodTruckCharacter* CachedCharacter = nullptr;
 	APawn* CachedPreviousPawn = nullptr;
+
+	bool _IsShowingInput = false;
+
 };
