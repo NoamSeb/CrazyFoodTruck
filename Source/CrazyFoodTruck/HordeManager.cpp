@@ -15,6 +15,21 @@ void AHordeManager::AddSpawnArea()
 	NewArea->InitArea(ListSpawnArea.Num(),this);
 	
 	ListSpawnArea.Add(FZoneSpawn(NewArea));
+
+	#if WITH_EDITOR
+		if (GEditor && NewArea)
+		{
+			// Nettoyer la sélection précédente
+			GEditor->SelectNone(false, true, false);
+
+			// Sélectionner le nouvel acteur
+			GEditor->SelectActor(NewArea, true, true, true);
+
+			// Centrer la vue dessus
+			//GEditor->MoveViewportCamerasToActor(*NewArea, false);
+			
+		}
+	#endif
 }
 
 void AHordeManager::ClearSpawnArea()
@@ -70,19 +85,15 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 				switch (differentePos)
 				{
 					case EPositionSpawn::Right:
-						GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, "Droite");
 						NewZombie->FirstActorToFollower = RightActorToFollow;
 					break;
 					case EPositionSpawn::Left:
-						GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, "Gauche");
 						NewZombie->FirstActorToFollower = LeftActorToFollow;
 					break;
 					case EPositionSpawn::Forward:
-						GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, "Devant");
 						NewZombie->FirstActorToFollower = ForwardActorToFollow;
 					break;
 					case EPositionSpawn::Backward:
-						GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, "Derriere");
 						NewZombie->FirstActorToFollower = RightActorToFollow;
 					break;
 				}
@@ -106,32 +117,26 @@ void AHordeManager::InitHordeZombies()
 	for (auto Component : Components)
 	{
 		Component->SetCanEverAffectNavigation(false);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, Component->GetName());
 	}
 	RightActorToFollow->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
 		Component->SetCanEverAffectNavigation(false);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, Component->GetName());
 	}
 	LeftActorToFollow->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
 		Component->SetCanEverAffectNavigation(false);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, Component->GetName());
 	}
 	ForwardActorToFollow->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
 		Component->SetCanEverAffectNavigation(false);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, Component->GetName());
 	}
 	BackwardActorToFollow->GetComponents<UStaticMeshComponent>(Components);
-	
 	for (auto Component : Components)
 	{
 		Component->SetCanEverAffectNavigation(false);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, Component->GetName());
 	}
 #pragma endregion
 	//SpawnHordeZombie();
