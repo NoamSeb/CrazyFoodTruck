@@ -2,3 +2,11 @@
 
 
 #include "Widget/UInteractBoxWidget.h"
+
+void UUInteractBoxWidget::HideInteract_Implementation()
+{
+}
+
+void UUInteractBoxWidget::ShowInteract_Implementation()
+{
+}
