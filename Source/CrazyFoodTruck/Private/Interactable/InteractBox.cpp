@@ -2,6 +2,7 @@
 
 #include "Interactable/InteractBox.h"
 
+#include "LocalMultiplayerSubsystem.h"
 #include "Characters/CrazyFoodTruckCharacter.h"
 
 #include "Components/BoxComponent.h"
@@ -27,6 +28,10 @@ AInteractBox::AInteractBox()
 void AInteractBox::BeginPlay()
 {
 	Super::BeginPlay();
+	if (!PawnToPossess)
+	{
+		return;
+	}
 }
 
 APlayerController* AInteractBox::GetPlayerControllerFromActor(AActor* Actor) const
@@ -89,61 +94,31 @@ FColor AInteractBox::GetPlayerColorFromPlayerController(APlayerController* Playe
 	}
 }
 
-void AInteractBox::AddOverlappingPlayerController(APlayerController* PlayerController)
-{
-	if (PlayerController)
-	{
-		OverlappingPlayerControllers.Add(PlayerController);
-	}
-}
 
-void AInteractBox::RemoveOverlappingPlayerController(APlayerController* PlayerController)
-{
-	if (PlayerController)
-	{
-		OverlappingPlayerControllers.Remove(PlayerController);
-	}
-}
-
-bool AInteractBox::IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerController) const
-{
-	int32 CountValid = 0;
-	
-	for (const TWeakObjectPtr<APlayerController>& It : OverlappingPlayerControllers)
-	{
-		if (It.IsValid())
-		{
-			++CountValid;
-			if (ThisPlayerController && It.Get() != ThisPlayerController)
-			{
-				return true;
-			}
-		}
-	}
-	
-	return CountValid > 1;
-}
 
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(OtherActor);
-	AddOverlappingPlayerController(EnteringPlayerController);
-
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor))
 	{
-		const bool bLockedByAnother = CurrentInteractorPlayerController.IsValid() && EnteringPlayerController && CurrentInteractorPlayerController.Get() != EnteringPlayerController;
-		const bool bAnotherPlayerInside = IsAnotherPlayerAlreadyInside(EnteringPlayerController);
+		APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(OtherActor);
 
-		if (!bLockedByAnother && !bAnotherPlayerInside)
+		const bool bOccupiedByAnother = CurrentInteractorPlayerController.IsValid() && EnteringPlayerController && CurrentInteractorPlayerController.Get() != EnteringPlayerController;
+
+		if (!bOccupiedByAnother)
 		{
 			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
 
-			if (!CurrentInteractorPlayerController.IsValid() && GEngine)
+			if (!CurrentInteractorPlayerController.IsValid())
 			{
-				const FColor PlayerColor = GetPlayerColorFromPlayerController(EnteringPlayerController);
-				const int32 PlayerIndex = GetPlayerIndexFromPlayerController(EnteringPlayerController);
-				const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-				GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Press A to interact."));
+				OnCollisionEnter.Broadcast();
+
+				if (GEngine)
+				{
+					const FColor PlayerColor = GetPlayerColorFromPlayerController(EnteringPlayerController);
+					const int32 PlayerIndex = GetPlayerIndexFromPlayerController(EnteringPlayerController);
+					const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
+					GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Press X to interact"));
+				}
 			}
 		}
 	}
@@ -151,16 +126,14 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 
 void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(OtherActor);
-	RemoveOverlappingPlayerController(LeavingPlayerController);
-
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor))
 	{
 		if (Character->GetFocusedInteractable().GetInterface() == static_cast<IInteractable*>(this))
 		{
 			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(nullptr));
 		}
-
+		
+		OnCollisionExit.Broadcast();
 		TryReleaseLockFromActor(OtherActor);
 	}
 }
@@ -210,14 +183,59 @@ void AInteractBox::Interact_Implementation(APlayerController* InstigatorPlayerCo
 		return;
 	}
 
-	if (!CurrentInteractorPlayerController.IsValid())
+	if (!CurrentInteractorPlayerController.IsValid()) // PLAYER START POSSESSING
 	{
 		CurrentInteractorPlayerController = InstigatorPlayerController;
 		OnInteractionStarted.Broadcast(InstigatorPlayerController);
+
+		PosessPawn(InstigatorPlayerController);
 	}
 
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Successful interaction!"));
 	}
+}
+
+void AInteractBox::PosessPawn(APlayerController* PlayerController)
+{
+	// GET PLAYER INDE
+	ActualPlayerController = PlayerController;
+	ActualPawn = PlayerController->GetPawn();
+	int PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
+	if (PlayerIndex == -1)
+	{
+		return;
+	}
+	if (PawnToPossess)
+	{
+		if (UGameInstance* GI = GetGameInstance())
+		{
+			if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
+			{
+				LMS->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, ELocalMultiplayerInputMappingType::Turret);
+			}
+		}
+	}
+}
+
+void AInteractBox::UnPossessPawn()
+{
+	int PlayerIndex = GetPlayerIndexFromPlayerController(ActualPlayerController);
+	if (PlayerIndex == -1)
+	{
+		return;
+	}
+	if (PawnToPossess)
+	{
+		if (UGameInstance* GI = GetGameInstance())
+		{
+			if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
+			{
+				LMS->UnPossessPawnForPlayerIndex(PlayerIndex, ActualPawn, ELocalMultiplayerInputMappingType::Turret);
+			}
+		}
+	}
+
+	ActualPlayerController = nullptr;
 }

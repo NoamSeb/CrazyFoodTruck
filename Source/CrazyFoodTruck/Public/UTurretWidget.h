@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ITurretWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "Interface/ITurretWidget.h"
 #include "UTurretWidget.generated.h"
 
 UCLASS()

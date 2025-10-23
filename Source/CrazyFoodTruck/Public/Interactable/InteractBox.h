@@ -13,6 +13,7 @@ class APlayerController;
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractController, APlayerController*, InstigatorPlayerController);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCollision);
 
 UCLASS()
 class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
@@ -22,6 +23,13 @@ class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
 public:	
 	// Sets default values for this actor's properties
 	AInteractBox();
+	
+	
+	// GABRIEL ADD
+
+	
+	void PosessPawn(APlayerController* PlayerController);
+	void UnPossessPawn();
 
 protected:
 	// Called when the game starts or when spawned
@@ -34,7 +42,16 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnInteractController OnInteractionEnded;
 
+	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
+	FOnCollision OnCollisionEnter;
+
+	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
+	FOnCollision OnCollisionExit;
+	
 	virtual void Interact_Implementation(APlayerController* InstigatorPlayerController) override;
+
+	UPROPERTY(EditAnywhere)
+	APawn* PawnToPossess = nullptr;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
@@ -42,9 +59,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category="Interact|State")
 	TWeakObjectPtr<APlayerController> CurrentInteractorPlayerController;
-
-	UPROPERTY(VisibleAnywhere, Category="Interact|State")
-	TSet<TWeakObjectPtr<APlayerController>> OverlappingPlayerControllers;
 
 private:
 	UFUNCTION()
@@ -58,8 +72,9 @@ private:
 	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
 	FColor GetPlayerColorFromPlayerController(APlayerController* PlayerController) const;
+	
+	APlayerController* ActualPlayerController;
+	APawn* ActualPawn;
 
-	void AddOverlappingPlayerController(APlayerController* PlayerController);
-	void RemoveOverlappingPlayerController(APlayerController* PlayerController);
-	bool IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerController) const;
+	
 };

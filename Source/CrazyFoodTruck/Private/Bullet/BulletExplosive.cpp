@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BulletExplosive.h"
+#include "Bullet/BulletExplosive.h"
 
 
 
@@ -35,14 +35,11 @@ void ABulletExplosive::SpawnExplosion()
     const FVector TraceStart = GetActorLocation();
     const FVector TraceEnd = TraceStart;
 
-    // Liste d'acteurs à ignorer (typiquement soi-même)
     TArray<AActor*> ActorsToIgnore;
     ActorsToIgnore.Add(this);
 
-    // Conteneur qui recevra les hits
     TArray<FHitResult> OutHits;
 
-    // Couleurs pour le debug (trace et hit)
     const FLinearColor TraceColor = FLinearColor::Red;
     const FLinearColor HitColor = FLinearColor::Green;
     const float DrawTimeSeconds = 3.0f;
@@ -50,7 +47,6 @@ void ABulletExplosive::SpawnExplosion()
     TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
     ObjectTypes.Add(UEngineTypes::ConvertToObjectType( ECC_Pawn));
 
-    // Lancer la sphere trace pour plusieurs types d'objets
     bool bHitSomething = UKismetSystemLibrary::SphereTraceMultiForObjects(
         GetWorld(),                 // World context
         TraceStart,                 // Start

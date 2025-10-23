@@ -42,9 +42,7 @@ void ACrazyFoodTruckCharacter::Tick(float DeltaTime)
 void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-    // SetupMappingContextIntoController();
-
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("SetupPlayerInputComponent called in ACrazyFoodTruckCharacter"));
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         BindInputMoveAction(EnhancedInputComponent);

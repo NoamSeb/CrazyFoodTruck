@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
-#include "IEntity.h"
+#include "Interface/IEntity.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "BulletController.generated.h"
 

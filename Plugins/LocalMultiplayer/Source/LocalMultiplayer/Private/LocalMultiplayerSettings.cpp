@@ -15,6 +15,10 @@ UInputMappingContext* FLocalMultiplayerProfileData::GetIMCFromType(ELocalMultipl
 		return IMCMenu;
 	case ELocalMultiplayerInputMappingType::InGame:
 		return IMCInGame;
+	case ELocalMultiplayerInputMappingType::Vehicule:
+		return IMCVehicule;
+	case ELocalMultiplayerInputMappingType::Turret:
+		return IMCTurret;
 	default:
 		return nullptr;
 	}

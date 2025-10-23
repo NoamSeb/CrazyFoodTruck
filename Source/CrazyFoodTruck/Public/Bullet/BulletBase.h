@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FBulletStructure.h"
-#include "IEntity.h"
+#include "Interface/IEntity.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
