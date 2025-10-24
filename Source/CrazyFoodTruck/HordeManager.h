@@ -10,18 +10,12 @@
 
 #include "Editor.h"
 #include "FZoneSpawn.h"
-#include "Engine/Selection.h"
 #include "Engine/World.h"
 #include "Engine/Level.h"
-#include "Engine/LevelScriptActor.h"
-#include "Engine/Selection.h"
 #include "ScopedTransaction.h"
 
 #include "Editor/EditorEngine.h"
 #include "UObject/ConstructorHelpers.h"
-#include "Engine/StaticMeshActor.h"
-
-#include "UnrealEd.h"
 
 #include "HordeManager.generated.h"
 
