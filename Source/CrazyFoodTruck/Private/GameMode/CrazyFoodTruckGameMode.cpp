@@ -10,7 +10,10 @@
 
 #include "LocalMultiplayerSubsystem.h"
 
+#include "Components/SceneComponent.h"
+
 #include "GameFramework/PlayerStart.h"
+#include "GameFramework/PlayerController.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -23,6 +26,11 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     TArray<APlayerStart*> PlayerStartsPoints;
     FindPlayerStartActors(PlayerStartsPoints);
     SpawnCharacters(PlayerStartsPoints);
+
+    if (AActor* TruckActor = FindTruckActor())
+    {
+        ForceTruckCameraForAllPlayers(TruckActor);
+    }
 }
 
 void ACrazyFoodTruckGameMode::CreateAndInitPlayers() const
@@ -57,6 +65,11 @@ void ACrazyFoodTruckGameMode::SpawnCharacters(const TArray<APlayerStart*>& Spawn
 
     for (APlayerStart* SpawnPoint : SpawnPoints)
     {
+        if (!SpawnPoint)
+        {
+            continue;
+        }
+        
         const EAutoReceiveInput::Type InputType = SpawnPoint->AutoReceiveInput.GetValue();
         TSubclassOf<ACrazyFoodTruckCharacter> CrazyFoodTruckCharacterClass = GetCrazyFoodTruckCharacterClassFromInputType(InputType);
         if (!CrazyFoodTruckCharacterClass)
@@ -114,4 +127,38 @@ TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruck
     default:
         return nullptr;
     }
+}
+
+AActor* ACrazyFoodTruckGameMode::FindTruckActor() const
+{
+    TArray<AActor*> Found;
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FoodTruck"), Found);
+    return Found.Num() > 0 ? Found[0] : nullptr;
+}
+
+void ACrazyFoodTruckGameMode::ForceTruckCameraForAllPlayers(AActor* TruckActor) const
+{
+    if (!TruckActor)
+    {
+        return;
+    }
+
+    for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+    {
+        if (APlayerController* PlayerController = It->Get())
+        {
+            ForceTruckCameraFor(PlayerController, TruckActor);
+        }
+    }
+}
+
+void ACrazyFoodTruckGameMode::ForceTruckCameraFor(APlayerController* PlayerController, AActor* TruckActor) const
+{
+    if (!PlayerController || !TruckActor)
+    {
+        return;
+    }
+
+    PlayerController->bAutoManageActiveCameraTarget = false;
+    PlayerController->SetViewTargetWithBlend(TruckActor, 0.f);
 }

@@ -33,4 +33,9 @@ private:
 	UInputMappingContext* LoadInputMappingContextFromConfig() const;
 
 	TSubclassOf<ACrazyFoodTruckCharacter> GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
+
+	AActor* FindTruckActor() const;
+	
+	void ForceTruckCameraForAllPlayers(AActor* TruckActor) const;
+	void ForceTruckCameraFor(APlayerController* PlayerController, AActor* TruckActor) const;
 };
