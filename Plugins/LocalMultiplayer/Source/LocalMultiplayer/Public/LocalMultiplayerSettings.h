@@ -17,7 +17,7 @@ enum class ELocalMultiplayerInputMappingType
 	Player,
 	Vehicle,
 	Turret,
-	Capstan
+	Cabestan
 };
 
 USTRUCT()
@@ -42,7 +42,7 @@ public:
 	TObjectPtr<UInputMappingContext> IMCTurret = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Capstan"))
-	TObjectPtr<UInputMappingContext> IMCCapstan = nullptr;
+	TObjectPtr<UInputMappingContext> IMCCabestan = nullptr;
 	
     UInputMappingContext* GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const;
     bool ContainsKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;

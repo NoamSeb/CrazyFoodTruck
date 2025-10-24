@@ -46,8 +46,11 @@ public:
 	void DecrementAmmo();
 	bool HasAmmo() const { return _CurrentAmmo > 0; }
 
+
 	UFUNCTION(BlueprintCallable)
 	float GetCoolDownBetweenShoot();
+
+	void AddRotationInput(float value);
 
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnShootSignature OnAmmoChanged;
@@ -97,6 +100,9 @@ private:
 	int32 _CurrentAmmo = 0;
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
 	int32 _AmmoMax = 10;
+	
+	UPROPERTY(EditAnywhere, Category="Turret Parameters")
+	float TurretRotationSpeed;
 
 	float _CurrentCoolDown = 0.f;
 
@@ -115,8 +121,6 @@ private:
 	void ResetAmmo();
 	void SwitchBulletType(EbulletType NewType);
 	FString GetRowNameFromBulletType(EbulletType Type);
-
-
 
 	int BulletDamage;
 	float BulletSpeed;

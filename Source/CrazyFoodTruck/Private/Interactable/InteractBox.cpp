@@ -262,7 +262,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 		{
 			if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
 			{
-				LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, ELocalMultiplayerInputMappingType::Turret);
+				LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, InputMapping);
 			}
 		}
 	}

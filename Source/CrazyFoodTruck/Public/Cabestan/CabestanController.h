@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TurretController.h"
 #include "GameFramework/Actor.h"
 #include "CabestanController.generated.h"
 
@@ -14,9 +15,24 @@ class CRAZYFOODTRUCK_API ACabestanController : public AActor
 public:
 	ACabestanController();
 
+	void ReceiveInputToward(float value);
+	void ReceiveInputBackward(float value);
+	void AddRotationInput(float value);
+
+	UPROPERTY(EditAnywhere)
+	ATurretController* LinkedTurretController;
+
 protected:
 	virtual void BeginPlay() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
+private:
+
+	USceneComponent* RootCabestan;
+
+	
+	float towardInput = 0.f;
+	float backwardInput = 0.f;
 };

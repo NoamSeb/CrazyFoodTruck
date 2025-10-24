@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LocalMultiplayerSettings.h"
 #include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameFramework/Actor.h"
+
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
@@ -54,6 +56,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Interact|State")
 	bool GetInputVisibilityState() const { return _IsShowingInput; }
+
+	UPROPERTY(EditAnywhere, Category="Interact|State")
+	ELocalMultiplayerInputMappingType InputMapping;
 
 
 protected:

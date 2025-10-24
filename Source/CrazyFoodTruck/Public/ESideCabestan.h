@@ -4,13 +4,9 @@
 
 #include "CoreMinimal.h"
 
-
-
-enum EbulletType
+UENUM(BlueprintType)
+enum class ESideCabestan : uint8
 {
-	BulletNormal,
-	BulletExplosive,
-	BulletFlamethrower,
-	BulletPierce,
-	BulletBouncy,
+	Toward,
+	Backward,
 };
