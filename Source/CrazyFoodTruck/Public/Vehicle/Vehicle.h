@@ -102,6 +102,9 @@ public:
 	UFUNCTION()
 	void MoveForward();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
+	void ChangeMap();
+
 #pragma region Input Data
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input");

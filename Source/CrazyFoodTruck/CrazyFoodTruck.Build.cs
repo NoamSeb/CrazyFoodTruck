@@ -20,7 +20,7 @@ public class CrazyFoodTruck : ModuleRules
 			"SlateCore"  // <--- add this
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
