@@ -29,10 +29,6 @@ void ATurretController::BeginPlay()
             _CursorJoint = Cast<USceneComponent>(SceneComponent);
         }
 	}
-
-	if (InteractBox)
-	{
-	}
 	
 	ResetCoolDown();
 	ResetAmmo();
@@ -175,6 +171,14 @@ float ATurretController::GetCoolDownBetweenShoot()
 	return BulletFireRate;
 }
 
+void ATurretController::AddRotationInput(float value)
+{
+	float targetSpeed = value * (TurretRotationSpeed * GetWorld()->GetDeltaSeconds());
+	FRotator CurrentRotation = GetActorRotation();
+	FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw + targetSpeed, CurrentRotation.Roll);
+	SetActorRotation(NewRotation);
+}
+
 
 void ATurretController::Tick(float DeltaTime)
 {
@@ -272,5 +276,5 @@ void ATurretController::InputYaw(const FInputActionValue& Value)
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
-	InteractBox->UnPossessPawn();
+	InteractBox->UnpossessPawn();
 }

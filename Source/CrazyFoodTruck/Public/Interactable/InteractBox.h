@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LocalMultiplayerSettings.h"
+#include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameFramework/Actor.h"
+
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
-class ACrazyFoodTruckCharacter;
-
-class APlayerController;
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractController, APlayerController*, InstigatorPlayerController);
@@ -22,10 +22,6 @@ class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
 	
 public:	
 	AInteractBox();
-	// GABRIEL ADD
-	
-	void PosessPawn(APlayerController* PlayerController);
-	void UnPossessPawn();
 
 protected:
 	virtual void BeginPlay() override;
@@ -42,11 +38,28 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnCollision OnCollisionExit;
-
-	//virtual void Interact_Implementation(APlayerController* InstigatorPlayerController) override;
-	virtual void Interact(APlayerController* InstigatorPlayerController) override;
-	UPROPERTY(EditAnywhere)
+	
+	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
+	FOnCollision OnPlayerQuit;
+	
+	UPROPERTY(EditAnywhere, Category="Interact|Possess")
 	APawn* PawnToPossess = nullptr;
+
+	virtual void Interact(APlayerController* InstigatorPlayerController) override;
+
+	void PossessPawn(APlayerController* PlayerController);
+	void UnpossessPawn();
+
+	UFUNCTION(BlueprintCallable, Category="Interact|State")
+	void UpdateVisibilityInput(bool bIsVisible);
+
+
+	UFUNCTION(BlueprintCallable, Category="Interact|State")
+	bool GetInputVisibilityState() const { return _IsShowingInput; }
+
+	UPROPERTY(EditAnywhere, Category="Interact|State")
+	ELocalMultiplayerInputMappingType InputMapping;
+
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
@@ -61,7 +74,7 @@ protected:
 private:
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+	void TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character);
 	UFUNCTION()
 	void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
@@ -71,10 +84,14 @@ private:
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
 	FColor GetPlayerColorFromPlayerController(APlayerController* PlayerController) const;
 
-	void AddOverlappingPlayerController(APlayerController* PC);
-	void RemoveOverlappingPlayerController(APlayerController* PC);
-	bool IsAnotherPlayerAlreadyInside(APlayerController* ThisPC) const;
+	void AddOverlappingPlayerController(APlayerController* PlayerController);
+	void RemoveOverlappingPlayerController(APlayerController* PlayerController);
+	bool IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerController) const;
 	
-	APlayerController* ActualPlayerController;
-	APawn* ActualPawn;
+	APlayerController* CachedPlayerController = nullptr;
+	ACrazyFoodTruckCharacter* CachedCharacter = nullptr;
+	APawn* CachedPreviousPawn = nullptr;
+
+	bool _IsShowingInput = false;
+
 };

@@ -6,8 +6,6 @@
 #include "UObject/Interface.h"
 #include "Interactable.generated.h"
 
-class ACrazyFoodTruckCharacter;
-
 UINTERFACE(BlueprintType)
 class CRAZYFOODTRUCK_API UInteractable : public UInterface
 {
