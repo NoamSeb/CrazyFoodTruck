@@ -71,7 +71,6 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		return;
 	}
 	
-	// GET CLASS FROM ASSETS PATH 
 	FString FullPath = FString::Printf(TEXT("/Game/Resources/Bullet/%s.%s_C"), *TargetName, *TargetName);
 	
 	UClass* LoadedClass = LoadClass<ABulletBase>(nullptr, *FullPath);
@@ -101,19 +100,6 @@ FString ATurretController::GetRowNameFromBulletType(EbulletType Type)
 			return FString("normal");
 	}
 }
-
-// void ATurretController::PossessedBy(AController* NewController)
-// {
-// 	Super::PossessedBy(NewController);
-// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("PossessedBy TurretController by %s"), *NewController->GetName()));
-// 	AddInputMapping();
-// }
-//
-// void ATurretController::UnPossessed()
-// {
-// 	RemoveInputMapping();
-// 	Super::UnPossessed();
-// }
 
 void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
