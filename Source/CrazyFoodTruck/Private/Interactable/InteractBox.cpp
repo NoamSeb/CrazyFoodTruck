@@ -272,6 +272,10 @@ void AInteractBox::UnpossessPawn()
 {
 	CurrentInteractorPlayerController = nullptr;
 
+	if (!CachedPlayerController)
+	{
+		return;
+	}
 	int PlayerIndex = GetPlayerIndexFromPlayerController(CachedPlayerController);
 	if (PlayerIndex == -1)
 	{

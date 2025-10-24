@@ -223,11 +223,11 @@ void ATurretController::InputRoll(const FInputActionValue& Value)
 	float valueToFloat = Value.Get<float>();
 	if (_CursorJoint)
 	{
+		// PRINT DEBUG
 		FVector CurrentLocation = _CursorJoint->GetRelativeLocation();
-
 		CurrentLocation.Y += valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds());
 		CurrentLocation.Y = FMath::Clamp(CurrentLocation.Y,-AreaRangeDepht , AreaRangeDepht);
-
+		
 		_CursorJoint->SetRelativeLocation(CurrentLocation);
 
 		UpdateTurretCanonRotation(); 
@@ -262,5 +262,9 @@ void ATurretController::InputYaw(const FInputActionValue& Value)
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
+	if (!InteractBox)
+	{
+		return;
+	}
 	InteractBox->UnpossessPawn();
 }
