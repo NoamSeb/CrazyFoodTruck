@@ -13,6 +13,7 @@
 #include "Components/SceneComponent.h"
 
 #include "GameFramework/PlayerStart.h"
+#include "GameFramework/PlayerController.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -25,6 +26,11 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     TArray<APlayerStart*> PlayerStartsPoints;
     FindPlayerStartActors(PlayerStartsPoints);
     SpawnCharacters(PlayerStartsPoints);
+
+    if (AActor* TruckActor = FindTruckActor())
+    {
+        ForceTruckCameraForAllPlayers(TruckActor);
+    }
 }
 
 void ACrazyFoodTruckGameMode::CreateAndInitPlayers() const
@@ -57,9 +63,6 @@ void ACrazyFoodTruckGameMode::SpawnCharacters(const TArray<APlayerStart*>& Spawn
     UCrazyFoodTruckCharacterInputData* InputData = LoadInputDataFromConfig();
     UInputMappingContext* InputMappingContext = LoadInputMappingContextFromConfig();
 
-    AActor* FoodTruckActor = FindFoodTruckActor();
-    USceneComponent* FoodTruckRoot = FoodTruckActor ? FoodTruckActor->GetRootComponent() : nullptr;
-
     for (APlayerStart* SpawnPoint : SpawnPoints)
     {
         if (!SpawnPoint)
@@ -86,12 +89,6 @@ void ACrazyFoodTruckGameMode::SpawnCharacters(const TArray<APlayerStart*>& Spawn
         // NewCharacter->SetInputMappingContext(InputMappingContext);
 
         NewCharacter->FinishSpawning(SpawnPoint->GetTransform());
-
-        if (FoodTruckRoot)
-        {
-            const FAttachmentTransformRules KeepWorld(FAttachmentTransformRules::KeepWorldTransform);
-            NewCharacter->AttachToComponent(FoodTruckRoot, KeepWorld);
-        }
 
         Characters.Add(NewCharacter);
     }
@@ -132,9 +129,36 @@ TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruck
     }
 }
 
-AActor* ACrazyFoodTruckGameMode::FindFoodTruckActor() const
+AActor* ACrazyFoodTruckGameMode::FindTruckActor() const
 {
     TArray<AActor*> Found;
     UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FoodTruck"), Found);
     return Found.Num() > 0 ? Found[0] : nullptr;
+}
+
+void ACrazyFoodTruckGameMode::ForceTruckCameraForAllPlayers(AActor* TruckActor) const
+{
+    if (!TruckActor)
+    {
+        return;
+    }
+
+    for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+    {
+        if (APlayerController* PlayerController = It->Get())
+        {
+            ForceTruckCameraFor(PlayerController, TruckActor);
+        }
+    }
+}
+
+void ACrazyFoodTruckGameMode::ForceTruckCameraFor(APlayerController* PlayerController, AActor* TruckActor) const
+{
+    if (!PlayerController || !TruckActor)
+    {
+        return;
+    }
+
+    PlayerController->bAutoManageActiveCameraTarget = false;
+    PlayerController->SetViewTargetWithBlend(TruckActor, 0.f);
 }

@@ -34,5 +34,8 @@ private:
 
 	TSubclassOf<ACrazyFoodTruckCharacter> GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
 
-	AActor* FindFoodTruckActor() const;
+	AActor* FindTruckActor() const;
+	
+	void ForceTruckCameraForAllPlayers(AActor* TruckActor) const;
+	void ForceTruckCameraFor(APlayerController* PlayerController, AActor* TruckActor) const;
 };
