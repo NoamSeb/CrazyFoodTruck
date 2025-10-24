@@ -33,4 +33,6 @@ private:
 	UInputMappingContext* LoadInputMappingContextFromConfig() const;
 
 	TSubclassOf<ACrazyFoodTruckCharacter> GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
+
+	AActor* FindFoodTruckActor() const;
 };

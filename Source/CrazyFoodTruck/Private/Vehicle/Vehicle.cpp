@@ -18,7 +18,7 @@ void AVehicle::BeginPlay()
 	Super::BeginPlay();
 	MovementComponent = Cast<UFloatingPawnMovement>(this->GetMovementComponent());
 	MovementComponent->MaxSpeed = TruckMaxSpeed * KilometersToMetersConvertingValue;
-	GetWorld()->GetFirstPlayerController()->Possess(this);
+	//GetWorld()->GetFirstPlayerController()->Possess(this);
 }
 
 // Called every frame
@@ -99,7 +99,7 @@ void AVehicle::SetupMappingContextIntoController() const
 	if (InputSystem == nullptr) return;
 
 	// replace 0 by the player who takes control of the FoodTruck
-	InputSystem->AddMappingContext(FoodTruckInputMappingContext, 0);
+	//InputSystem->AddMappingContext(FoodTruckInputMappingContext, 0);
 }
 
 #pragma endregion

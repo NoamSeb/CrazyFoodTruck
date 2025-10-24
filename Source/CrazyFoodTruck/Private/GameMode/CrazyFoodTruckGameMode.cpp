@@ -10,6 +10,8 @@
 
 #include "LocalMultiplayerSubsystem.h"
 
+#include "Components/SceneComponent.h"
+
 #include "GameFramework/PlayerStart.h"
 
 #include "Kismet/GameplayStatics.h"
@@ -55,8 +57,16 @@ void ACrazyFoodTruckGameMode::SpawnCharacters(const TArray<APlayerStart*>& Spawn
     UCrazyFoodTruckCharacterInputData* InputData = LoadInputDataFromConfig();
     UInputMappingContext* InputMappingContext = LoadInputMappingContextFromConfig();
 
+    AActor* FoodTruckActor = FindFoodTruckActor();
+    USceneComponent* FoodTruckRoot = FoodTruckActor ? FoodTruckActor->GetRootComponent() : nullptr;
+
     for (APlayerStart* SpawnPoint : SpawnPoints)
     {
+        if (!SpawnPoint)
+        {
+            continue;
+        }
+        
         const EAutoReceiveInput::Type InputType = SpawnPoint->AutoReceiveInput.GetValue();
         TSubclassOf<ACrazyFoodTruckCharacter> CrazyFoodTruckCharacterClass = GetCrazyFoodTruckCharacterClassFromInputType(InputType);
         if (!CrazyFoodTruckCharacterClass)
@@ -76,6 +86,12 @@ void ACrazyFoodTruckGameMode::SpawnCharacters(const TArray<APlayerStart*>& Spawn
         // NewCharacter->SetInputMappingContext(InputMappingContext);
 
         NewCharacter->FinishSpawning(SpawnPoint->GetTransform());
+
+        if (FoodTruckRoot)
+        {
+            const FAttachmentTransformRules KeepWorld(FAttachmentTransformRules::KeepWorldTransform);
+            NewCharacter->AttachToComponent(FoodTruckRoot, KeepWorld);
+        }
 
         Characters.Add(NewCharacter);
     }
@@ -114,4 +130,11 @@ TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruck
     default:
         return nullptr;
     }
+}
+
+AActor* ACrazyFoodTruckGameMode::FindFoodTruckActor() const
+{
+    TArray<AActor*> Found;
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FoodTruck"), Found);
+    return Found.Num() > 0 ? Found[0] : nullptr;
 }
