@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttachPoint.h"
 #include "LocalMultiplayerSettings.h"
 #include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameFramework/Actor.h"
@@ -25,6 +26,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void FindSceneComponent();
 
 public:
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
@@ -52,6 +54,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Interact|State")
 	void UpdateVisibilityInput(bool bIsVisible);
+	void TeleportAndAttachPlayer(APlayerController* PlayerController);
+	void TeleportBackAndDetachPlayer(APlayerController* PlayerController);
 
 
 	UFUNCTION(BlueprintCallable, Category="Interact|State")
@@ -61,6 +65,18 @@ public:
 	ELocalMultiplayerInputMappingType InputMapping;
 
 
+	UPROPERTY(EditAnywhere, Category="Interact|Components")
+	AAttachPoint* AttachPoint;
+	UPROPERTY(EditAnywhere, Category="Interact|Components")
+	AAttachPoint* ReleasePoint;
+
+	UFUNCTION(CallInEditor)
+	void SpawnAttachPointInEditor();
+
+	UFUNCTION(CallInEditor)
+	void ClearAttachPoint();
+
+	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
 	TObjectPtr<UBoxComponent> Box = nullptr;
@@ -72,6 +88,7 @@ protected:
 	TSet<TWeakObjectPtr<APlayerController>> OverlappingPlayerControllers;
 
 private:
+	
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	void TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character);
@@ -87,11 +104,16 @@ private:
 	void AddOverlappingPlayerController(APlayerController* PlayerController);
 	void RemoveOverlappingPlayerController(APlayerController* PlayerController);
 	bool IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerController) const;
+
+	bool PlayerStillInsideCheck(ACrazyFoodTruckCharacter* TargetCharacter);
+	ACrazyFoodTruckCharacter* DetectPlayerInside();
+
 	
 	APlayerController* CachedPlayerController = nullptr;
 	ACrazyFoodTruckCharacter* CachedCharacter = nullptr;
 	APawn* CachedPreviousPawn = nullptr;
 
+	bool _IsPlayerControlling = false;
 	bool _IsShowingInput = false;
 
 };

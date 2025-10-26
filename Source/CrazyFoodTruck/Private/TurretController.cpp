@@ -262,9 +262,13 @@ void ATurretController::InputYaw(const FInputActionValue& Value)
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
-	if (!InteractBox)
+	if (InteractBox)
 	{
-		return;
+		InteractBox->UnpossessPawn();
 	}
-	InteractBox->UnpossessPawn();
+}
+
+void ATurretController::TestingFunction(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Testing Function Called"));
 }

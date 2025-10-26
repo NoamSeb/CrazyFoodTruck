@@ -139,7 +139,8 @@ private:
 	void InputRoll(const FInputActionValue& Value);
 	void InputChangeBulletType(const FInputActionValue& Value);
 	void InputQuitTurret(const FInputActionValue& Value);
-	
+	void TestingFunction(const FInputActionValue& Value);
+
 	void UpdateTurretCanonRotation();
 
 	int32 mappingPriority = 0;
