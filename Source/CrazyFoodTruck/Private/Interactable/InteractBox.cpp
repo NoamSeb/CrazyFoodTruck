@@ -240,40 +240,34 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 	CachedPlayerController = PlayerController;
 	CachedPreviousPawn = PlayerController ? PlayerController->GetPawn() : nullptr;
 
-	int PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
-	if (PlayerIndex == -1)
+	const int PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
+	if (PlayerIndex == -1 || !PawnToPossess)
 	{
 		return;
 	}
-	
-	if (PawnToPossess)
+
+	if (UGameInstance* GameInstance = GetGameInstance())
 	{
-		if (UGameInstance* GameInstance = GetGameInstance())
+		if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
 		{
-			if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
-			{
-				LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, ELocalMultiplayerInputMappingType::Turret);
-			}
+			LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType);
 		}
 	}
 }
 
 void AInteractBox::UnpossessPawn()
 {
-	int PlayerIndex = GetPlayerIndexFromPlayerController(CachedPlayerController);
-	if (PlayerIndex == -1)
+	const int PlayerIndex = GetPlayerIndexFromPlayerController(CachedPlayerController);
+	if (PlayerIndex == -1 || !PawnToPossess)
 	{
 		return;
 	}
 
-	if (PawnToPossess)
+	if (UGameInstance* GameInstance = GetGameInstance())
 	{
-		if (UGameInstance* GameInstance = GetGameInstance())
+		if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
 		{
-			if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
-			{
-				LocalMultiplayerSubsystem->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn, ELocalMultiplayerInputMappingType::Turret);
-			}
+			LocalMultiplayerSubsystem->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn, MappingType);
 		}
 	}
 
