@@ -229,11 +229,11 @@ bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, AP
 bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType)
 {
 	APlayerController* PC = GetPlayerControllerForIndex(PlayerIndex);
+
 	if (!PC)
 	{
 		return false;
 	}
-
 	PC->UnPossess();
 	if (PlayerPawn)
 	{
@@ -272,9 +272,11 @@ void ULocalMultiplayerSubsystem::RemoveTemporaryMappingForPlayer(int32 PlayerInd
 	{
 		return;
 	}
-
+	// PRINT IMC NAME
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("REMOVING IMC : %s"), *IMC->GetName()));
 	if (UEnhancedInputLocalPlayerSubsystem* EIS = GetEISForPlayerIndex(PlayerIndex))
 	{
+
 		if (EIS->HasMappingContext(IMC))
 		{
 			FModifyContextOptions Options;
