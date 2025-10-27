@@ -19,6 +19,11 @@ void ASideCabestan::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SideCabestan : CabestanController is not assigned !"));
 	}
+
+	if (InteractBox)
+	{
+		InteractBox->OnInteractionStarted.AddDynamic(this, &ASideCabestan::PlayerInteracted);
+	}
 }
 
 void ASideCabestan::Tick(float DeltaTime)
@@ -81,7 +86,6 @@ void ASideCabestan::DropRollInput()
 
 void ASideCabestan::DropYawInput()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Drop Yaw Input"));
 	float YawValue = 0.f;
 	switch (_Side)
 	{
@@ -96,7 +100,9 @@ void ASideCabestan::DropYawInput()
 	}
 }
 
-
+void ASideCabestan::PlayerInteracted(APlayerController* PlayerController)
+{
+}
 
 void ASideCabestan::HandleRoll(const FInputActionValue& Value)
 {
@@ -113,6 +119,8 @@ void ASideCabestan::HandleRoll(const FInputActionValue& Value)
 		break;
 	}
 }
+
+
 void ASideCabestan::HandleQuit(const FInputActionValue& Value)
 {
 	if (InteractBox)

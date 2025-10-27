@@ -61,6 +61,7 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if (OtherActor->Tags.Contains("Obstacle"))
 	{
+		OtherActor->Destroy();
 		ReduceSpeed();
 	}
 	else if (OtherActor->Tags.Contains("MapSwitch"))
@@ -99,7 +100,7 @@ void AVehicle::SetupMappingContextIntoController() const
 	if (InputSystem == nullptr) return;
 
 	// replace 0 by the player who takes control of the FoodTruck
-	//InputSystem->AddMappingContext(FoodTruckInputMappingContext, 0);
+	InputSystem->AddMappingContext(FoodTruckInputMappingContext, 0);
 }
 
 #pragma endregion

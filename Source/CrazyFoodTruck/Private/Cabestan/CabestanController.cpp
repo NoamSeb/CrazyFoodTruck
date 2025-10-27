@@ -12,6 +12,7 @@ ACabestanController::ACabestanController()
 void ACabestanController::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 void ACabestanController::Tick(float DeltaTime)
