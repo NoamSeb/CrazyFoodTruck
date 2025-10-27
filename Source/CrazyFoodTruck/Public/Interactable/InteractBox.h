@@ -11,6 +11,8 @@
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
+enum class ELocalMultiplayerInputMappingType;
+
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractController, APlayerController*, InstigatorPlayerController);
@@ -46,6 +48,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category="Interact|Possess")
 	APawn* PawnToPossess = nullptr;
+
+	UPROPERTY(EditAnywhere, Category="Interact|Possess")
+	ELocalMultiplayerInputMappingType MappingType;
 
 	virtual void Interact(APlayerController* InstigatorPlayerController) override;
 

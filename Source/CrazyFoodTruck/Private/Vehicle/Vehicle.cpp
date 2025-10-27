@@ -3,6 +3,13 @@
 
 #include "CrazyFoodTruck/Public/Vehicle/Vehicle.h"
 
+#include "Interactable/InteractBox.h"
+#include "TurretController.h"
+
+#include "LocalMultiplayerSettings.h"
+
+#include "Components/BoxComponent.h"
+
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -16,10 +23,11 @@ AVehicle::AVehicle()
 void AVehicle::BeginPlay()
 {
 	Super::BeginPlay();
+
 	MovementComponent = Cast<UFloatingPawnMovement>(this->GetMovementComponent());
 	MovementComponent->MaxSpeed = TruckMaxSpeed * KilometersToMetersConvertingValue;
-	//GetWorld()->GetFirstPlayerController()->Possess(this);
 }
+
 
 // Called every frame
 void AVehicle::Tick(float DeltaTime)
@@ -80,12 +88,17 @@ void AVehicle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
-	SetupMappingContextIntoController();
+	// SetupMappingContextIntoController();
 
-	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if (EnhancedInputComponent == nullptr) return;
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		BindInputRotateZAxisAndActions(EnhancedInputComponent);
 
-	BindInputRotateZAxisAndActions(EnhancedInputComponent);
+		if (QuitTruckAction)
+		{
+			EnhancedInputComponent->BindAction(QuitTruckAction, ETriggerEvent::Started, this, &AVehicle::InputQuitTruck);
+		}
+	}
 }
 
 void AVehicle::SetupMappingContextIntoController() const
@@ -116,6 +129,11 @@ void AVehicle::BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedI
 		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Triggered, this, &AVehicle::SetTruckRotatingStates);
 		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Completed, this, &AVehicle::SetTruckIdleStates);
 	}
+}
+
+void AVehicle::InputQuitTruck(const FInputActionValue& InputActionValue)
+{
+	InteractBox->UnpossessPawn();
 }
 
 #pragma region Truck States
