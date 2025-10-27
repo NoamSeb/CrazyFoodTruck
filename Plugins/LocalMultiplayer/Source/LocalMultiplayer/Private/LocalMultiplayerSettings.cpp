@@ -19,8 +19,8 @@ UInputMappingContext* FLocalMultiplayerProfileData::GetIMCFromType(ELocalMultipl
 		return IMCVehicle;
 	case ELocalMultiplayerInputMappingType::Turret:
 		return IMCTurret;
-	case ELocalMultiplayerInputMappingType::Capstan:
-		return IMCCapstan;
+	case ELocalMultiplayerInputMappingType::Cabestan:
+		return IMCCabestan;
 	default:
 		return nullptr;
 	}

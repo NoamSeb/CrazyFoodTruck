@@ -17,7 +17,8 @@ enum class ELocalMultiplayerInputMappingType
 	Player,
 	Vehicle,
 	Turret,
-	Capstan
+	Cabestan,
+	Plate,
 };
 
 USTRUCT()
@@ -26,6 +27,7 @@ struct FLocalMultiplayerProfileData
     GENERATED_BODY()
 
 public:
+	
 	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles")
 	FName ProfileName;
 
@@ -41,11 +43,15 @@ public:
 	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Turret"))
 	TObjectPtr<UInputMappingContext> IMCTurret = nullptr;
 
-	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Capstan"))
-	TObjectPtr<UInputMappingContext> IMCCapstan = nullptr;
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Cabestan"))
+	TObjectPtr<UInputMappingContext> IMCCabestan = nullptr;
+
+		UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Plate"))
+    	TObjectPtr<UInputMappingContext> IMCPlate = nullptr;
 	
     UInputMappingContext* GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const;
     bool ContainsKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;
+	
 };
 
 /**
@@ -57,6 +63,7 @@ class LOCALMULTIPLAYER_API ULocalMultiplayerSettings : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
+	
     UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
     TArray<FLocalMultiplayerProfileData> KeyboardProfilesData;
 
@@ -68,4 +75,5 @@ public:
 
 	int GetNbKeyboardProfiles() const;
 	int FindKeyboardProfileIndexFromKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;
+	
 };

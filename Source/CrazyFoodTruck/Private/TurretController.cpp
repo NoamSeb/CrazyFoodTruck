@@ -29,10 +29,6 @@ void ATurretController::BeginPlay()
             _CursorJoint = Cast<USceneComponent>(SceneComponent);
         }
 	}
-
-	if (InteractBox)
-	{
-	}
 	
 	ResetCoolDown();
 	ResetAmmo();
@@ -75,7 +71,6 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		return;
 	}
 	
-	// GET CLASS FROM ASSETS PATH 
 	FString FullPath = FString::Printf(TEXT("/Game/Resources/Bullet/%s.%s_C"), *TargetName, *TargetName);
 	
 	UClass* LoadedClass = LoadClass<ABulletBase>(nullptr, *FullPath);
@@ -105,19 +100,6 @@ FString ATurretController::GetRowNameFromBulletType(EbulletType Type)
 			return FString("normal");
 	}
 }
-
-// void ATurretController::PossessedBy(AController* NewController)
-// {
-// 	Super::PossessedBy(NewController);
-// 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf( TEXT("PossessedBy TurretController by %s"), *NewController->GetName()));
-// 	AddInputMapping();
-// }
-//
-// void ATurretController::UnPossessed()
-// {
-// 	RemoveInputMapping();
-// 	Super::UnPossessed();
-// }
 
 void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -173,6 +155,14 @@ void ATurretController::DecrementAmmo()
 float ATurretController::GetCoolDownBetweenShoot()
 {
 	return BulletFireRate;
+}
+
+void ATurretController::AddRotationInput(float value)
+{
+	float targetSpeed = value * (TurretRotationSpeed * GetWorld()->GetDeltaSeconds());
+	FRotator CurrentRotation = GetActorRotation();
+	FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw + targetSpeed, CurrentRotation.Roll);
+	SetActorRotation(NewRotation);
 }
 
 
@@ -233,11 +223,11 @@ void ATurretController::InputRoll(const FInputActionValue& Value)
 	float valueToFloat = Value.Get<float>();
 	if (_CursorJoint)
 	{
+		// PRINT DEBUG
 		FVector CurrentLocation = _CursorJoint->GetRelativeLocation();
-
 		CurrentLocation.Y += valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds());
 		CurrentLocation.Y = FMath::Clamp(CurrentLocation.Y,-AreaRangeDepht , AreaRangeDepht);
-
+		
 		_CursorJoint->SetRelativeLocation(CurrentLocation);
 
 		UpdateTurretCanonRotation(); 
@@ -272,5 +262,13 @@ void ATurretController::InputYaw(const FInputActionValue& Value)
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
-	InteractBox->UnpossessPawn();
+	if (InteractBox)
+	{
+		InteractBox->UnpossessPawn();
+	}
+}
+
+void ATurretController::TestingFunction(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Testing Function Called"));
 }

@@ -46,8 +46,11 @@ public:
 	void DecrementAmmo();
 	bool HasAmmo() const { return _CurrentAmmo > 0; }
 
+
 	UFUNCTION(BlueprintCallable)
 	float GetCoolDownBetweenShoot();
+
+	void AddRotationInput(float value);
 
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnShootSignature OnAmmoChanged;
@@ -97,11 +100,14 @@ private:
 	int32 _CurrentAmmo = 0;
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
 	int32 _AmmoMax = 10;
+	
+	UPROPERTY(EditAnywhere, Category="Turret Parameters")
+	float TurretRotationSpeed = 10.f;
 
 	float _CurrentCoolDown = 0.f;
 
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float _CursorSpeed = 5.f;
+	float _CursorSpeed = 300.f;
 	
 	float AreaRangeSide;
 	float AreaRangeDepht;
@@ -115,8 +121,6 @@ private:
 	void ResetAmmo();
 	void SwitchBulletType(EbulletType NewType);
 	FString GetRowNameFromBulletType(EbulletType Type);
-
-
 
 	int BulletDamage;
 	float BulletSpeed;
@@ -135,7 +139,8 @@ private:
 	void InputRoll(const FInputActionValue& Value);
 	void InputChangeBulletType(const FInputActionValue& Value);
 	void InputQuitTurret(const FInputActionValue& Value);
-	
+	void TestingFunction(const FInputActionValue& Value);
+
 	void UpdateTurretCanonRotation();
 
 	int32 mappingPriority = 0;
