@@ -158,6 +158,10 @@ void AInteractBox::SpawnAttachPointInEditor()
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     Params.OverrideLevel = GetLevel();
     Params.ObjectFlags |= RF_Transactional;
+	// GET RELATIVE TRANSFORM
+
+	FTransform RelativeTransform = FTransform::Identity;
+	
     if (!AttachPoint)
     {
         AAttachPoint* NewPoint = World->SpawnActor<AAttachPoint>(AAttachPoint::StaticClass(), GetActorTransform(), Params);
@@ -411,18 +415,16 @@ void AInteractBox::UnpossessPawn()
 		}
 	}
 
+	// TP PLAYER BACK AND DETACH
 	TeleportBackAndDetachPlayer(CachedPlayerController);
 
-
 	// CHECK IF PLAYER STILL INSIDE
-
 	if (CachedCharacter)
 	{
 		if (PlayerStillInsideCheck(CachedCharacter))
 		{
 			// PLAYER STILL INSIDE
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player STILL INSIDE !."));
-
 			TryDetectPlayer(CachedPlayerController, CachedCharacter);
 			return;
 		}
@@ -482,7 +484,6 @@ void AInteractBox::TeleportAndAttachPlayer(APlayerController* PlayerController)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Invalid AttachPoint!"));
 		return;
 	}
-
 	if (APawn* Pawn = PlayerController->GetPawn())
 	{
 		Pawn->SetActorLocation(AttachPoint->GetActorLocation());
@@ -501,7 +502,14 @@ void AInteractBox::TeleportBackAndDetachPlayer(APlayerController* PlayerControll
 	if (APawn* Pawn = PlayerController->GetPawn())
 	{
 		Pawn->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		//FVector targetPosition =  GetLocalPositionRelativeTo(ReleasePoint, this);
 		Pawn->SetActorLocation(ReleasePoint->GetActorLocation());
-		//Pawn->SetActorRotation(ReleasePoint->GetComponentRotation());
 	}
 }
+
+// FVector AInteractBox::GetLocalPositionRelativeTo(AActor* Child, AActor* Parent)
+// {
+// 	if (!Child || !Parent) return FVector::ZeroVector;
+//
+// 	return Parent->GetActorTransform().InverseTransformPosition(Child->GetActorLocation());
+// }
