@@ -56,6 +56,7 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ASideCabestan::HandleYaw(const FInputActionValue& Value)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, "Handle Yaw");
 	float YawValue = Value.Get<float>();
 	switch (_Side)
 	{
