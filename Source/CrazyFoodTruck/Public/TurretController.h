@@ -102,12 +102,12 @@ private:
 	int32 _AmmoMax = 10;
 	
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float TurretRotationSpeed;
+	float TurretRotationSpeed = 10.f;
 
 	float _CurrentCoolDown = 0.f;
 
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float _CursorSpeed = 5.f;
+	float _CursorSpeed = 300.f;
 	
 	float AreaRangeSide;
 	float AreaRangeDepht;
@@ -139,7 +139,8 @@ private:
 	void InputRoll(const FInputActionValue& Value);
 	void InputChangeBulletType(const FInputActionValue& Value);
 	void InputQuitTurret(const FInputActionValue& Value);
-	
+	void TestingFunction(const FInputActionValue& Value);
+
 	void UpdateTurretCanonRotation();
 
 	int32 mappingPriority = 0;

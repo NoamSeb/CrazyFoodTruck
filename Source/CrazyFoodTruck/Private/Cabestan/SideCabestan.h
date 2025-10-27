@@ -52,6 +52,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	AInteractBox* InteractBox;
 
+	
+	void PlayerInteracted(APlayerController* PlayerController);
+
 public:
 	
 	virtual void Tick(float DeltaTime) override;
