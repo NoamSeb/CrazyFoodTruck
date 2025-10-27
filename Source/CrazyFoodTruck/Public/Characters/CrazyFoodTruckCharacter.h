@@ -45,8 +45,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Player")
 	FLinearColor GetPlayerColor() const;
 
+	UFUNCTION(BlueprintCallable, Category="Player")
+	void SetPlayerColor(FLinearColor NewColor);
+
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Player")
+	UPROPERTY(EditAnywhere, Category="Player")
 	FLinearColor PlayerColor = FLinearColor::White;
 
 private:
