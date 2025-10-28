@@ -15,9 +15,13 @@ UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+    
 public:
 	virtual void BeginPlay() override;
+
+public:
+	void ApplyGlobalViewTo(APlayerController* PC) const;
+	void ApplyGlobalViewToAllPlayers() const;
 
 protected:
 	UPROPERTY()
@@ -34,8 +38,9 @@ private:
 
 	TSubclassOf<ACrazyFoodTruckCharacter> GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
 
-	AActor* FindTruckActor() const;
-	
-	void ForceTruckCameraForAllPlayers(AActor* TruckActor) const;
-	void ForceTruckCameraFor(APlayerController* PlayerController, AActor* TruckActor) const;
+private:
+	UPROPERTY()
+	TWeakObjectPtr<AActor> GlobalViewTarget;
+
+	AActor* ResolveGlobalViewTarget() const;
 };
