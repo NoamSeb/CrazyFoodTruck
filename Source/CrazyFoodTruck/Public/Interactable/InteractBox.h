@@ -11,6 +11,8 @@
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
+enum class ELocalMultiplayerInputMappingType;
+
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractController, APlayerController*, InstigatorPlayerController);
@@ -47,6 +49,9 @@ public:
 	UPROPERTY(EditAnywhere, Category="Interact|Possess")
 	APawn* PawnToPossess = nullptr;
 
+	UPROPERTY(EditAnywhere, Category="Interact|Possess")
+	ELocalMultiplayerInputMappingType MappingType;
+
 	virtual void Interact(APlayerController* InstigatorPlayerController) override;
 
 	void PossessPawn(APlayerController* PlayerController);
@@ -61,10 +66,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Interact|State")
 	bool GetInputVisibilityState() const { return _IsShowingInput; }
 
-	UPROPERTY(EditAnywhere, Category="Interact|State")
-	ELocalMultiplayerInputMappingType InputMapping;
-
-
 	UPROPERTY(EditAnywhere, Category="Interact|Components")
 	AAttachPoint* AttachPoint;
 	UPROPERTY(EditAnywhere, Category="Interact|Components")
@@ -76,6 +77,10 @@ public:
 	UFUNCTION(CallInEditor)
 	void ClearAttachPoint();
 
+	UPROPERTY()
+	FRotator RotationActorOnEnter;
+	UPROPERTY()
+	FRotator RotationControllerOnEnter;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")

@@ -10,6 +10,8 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Vehicle.generated.h"
 
+class AInteractBox;
+
 UENUM()
 enum class VehicleStates
 {
@@ -34,6 +36,9 @@ public:
 	
 	UPROPERTY()
 	TObjectPtr<UFloatingPawnMovement> MovementComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Variable")
+	AInteractBox* InteractBox;
 	
 #pragma region Vehicle settings
 	
@@ -94,6 +99,7 @@ private :
 	float ElapsedTime = 0.0f;
 	bool bRecoveringSpeed = false;
 	float StartSpeed = 0.0f;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -113,6 +119,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input");
 	TObjectPtr<UInputAction> TurnTruckAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> QuitTruckAction;
+
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	void SetupMappingContextIntoController() const;
 
@@ -121,6 +130,10 @@ protected:
 #pragma region  Input Rotate Truck
 private:
 	void BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
+
+#pragma region Input Quit Truck
+	void InputQuitTruck(const FInputActionValue& InputActionValue);
+#pragma endregion
 
 #pragma region Truck State
 	void SetTruckRotatingStates(const FInputActionValue& InputActionValue);
@@ -137,5 +150,4 @@ private:
 	void ReduceSpeed();
 	void StartSpeedRecovery();
 #pragma endregion
-	
 };

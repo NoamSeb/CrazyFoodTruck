@@ -27,10 +27,9 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     FindPlayerStartActors(PlayerStartsPoints);
     SpawnCharacters(PlayerStartsPoints);
 
-    if (AActor* TruckActor = FindTruckActor())
-    {
-        ForceTruckCameraForAllPlayers(TruckActor);
-    }
+    GlobalViewTarget = ResolveGlobalViewTarget();
+
+    ApplyGlobalViewToAllPlayers();
 }
 
 void ACrazyFoodTruckGameMode::CreateAndInitPlayers() const
@@ -129,36 +128,54 @@ TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruck
     }
 }
 
-AActor* ACrazyFoodTruckGameMode::FindTruckActor() const
+AActor* ACrazyFoodTruckGameMode::ResolveGlobalViewTarget() const
 {
-    TArray<AActor*> Found;
-    UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FoodTruck"), Found);
-    return Found.Num() > 0 ? Found[0] : nullptr;
+    UWorld* World = GetWorld();
+    if (!World)
+    {
+        return nullptr;
+    }
+    
+    TArray<AActor*> Trucks;
+    UGameplayStatics::GetAllActorsWithTag(World, FName("FoodTruck"), Trucks);
+    if (Trucks.Num() > 0)
+    {
+        return Trucks[0];
+    }
+
+    return nullptr;
 }
 
-void ACrazyFoodTruckGameMode::ForceTruckCameraForAllPlayers(AActor* TruckActor) const
+void ACrazyFoodTruckGameMode::ApplyGlobalViewTo(APlayerController* PC) const
 {
-    if (!TruckActor)
+    if (!PC || !GlobalViewTarget.IsValid())
     {
         return;
     }
 
-    for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Applying global view to player controller: %s"), *PC->GetName()));
+    PC->bAutoManageActiveCameraTarget = false;
+    PC->SetViewTargetWithBlend(GlobalViewTarget.Get(), 0.f);
+}
+
+void ACrazyFoodTruckGameMode::ApplyGlobalViewToAllPlayers() const
+{
+    if (!GlobalViewTarget.IsValid())
     {
-        if (APlayerController* PlayerController = It->Get())
+        return;
+    }
+
+    UWorld* World = GetWorld();
+    if (!World)
+    {
+        return;
+    }
+
+    for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
+    {
+        if (APlayerController* PC = It->Get())
         {
-            ForceTruckCameraFor(PlayerController, TruckActor);
+            ApplyGlobalViewTo(PC);
         }
     }
-}
-
-void ACrazyFoodTruckGameMode::ForceTruckCameraFor(APlayerController* PlayerController, AActor* TruckActor) const
-{
-    if (!PlayerController || !TruckActor)
-    {
-        return;
-    }
-
-    PlayerController->bAutoManageActiveCameraTarget = false;
-    PlayerController->SetViewTargetWithBlend(TruckActor, 0.f);
 }
