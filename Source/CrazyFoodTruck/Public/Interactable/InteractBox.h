@@ -66,10 +66,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Interact|State")
 	bool GetInputVisibilityState() const { return _IsShowingInput; }
 
-	UPROPERTY(EditAnywhere, Category="Interact|State")
-	ELocalMultiplayerInputMappingType InputMapping;
-
-
 	UPROPERTY(EditAnywhere, Category="Interact|Components")
 	AAttachPoint* AttachPoint;
 	UPROPERTY(EditAnywhere, Category="Interact|Components")
@@ -81,6 +77,10 @@ public:
 	UFUNCTION(CallInEditor)
 	void ClearAttachPoint();
 
+	UPROPERTY()
+	FRotator RotationActorOnEnter;
+	UPROPERTY()
+	FRotator RotationControllerOnEnter;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
