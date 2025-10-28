@@ -39,7 +39,14 @@ void AInteractBox::Tick(float DeltaSeconds)
 
 bool AInteractBox::CanDetectOverlapp()
 {
-	return overlappTimer <= 0.f;
+	if (overlappTimer > 0.f)
+	{
+		return false;
+	}else
+	{
+		overlappTimer = 0.14f;
+		return true;
+	}
 }
 
 void AInteractBox::BeginPlay()
@@ -237,7 +244,6 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 	{
 		return;
 	}
-	overlappTimer = 0.2f;
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("PLAYER IN"));
 
 	APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(OtherActor);
@@ -256,7 +262,6 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 	{
 		const bool bLockedByAnother = CurrentInteractorPlayerController.IsValid() && PlayerController && (CurrentInteractorPlayerController.Get() != PlayerController);
 		const bool bAnotherInside = IsAnotherPlayerAlreadyInside(PlayerController);
-
 		if (!bLockedByAnother && !bAnotherInside)
 		{
 			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
@@ -278,7 +283,6 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 	{
 		return;
 	}
-	overlappTimer = 0.2f;
 	if (_IsPlayerControlling){return;}
 	APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(OtherActor);
 	RemoveOverlappingPlayerController(LeavingPlayerController);
