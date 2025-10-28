@@ -28,6 +28,20 @@ AInteractBox::AInteractBox()
 
 }
 
+void AInteractBox::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (overlappTimer > 0.f)
+	{
+		overlappTimer -= DeltaSeconds;
+	}
+}
+
+bool AInteractBox::CanDetectOverlapp()
+{
+	return overlappTimer <= 0.f;
+}
+
 void AInteractBox::BeginPlay()
 {
 	Super::BeginPlay();
@@ -37,6 +51,7 @@ void AInteractBox::BeginPlay()
 void AInteractBox::FindSceneComponent()
 {
 }
+
 
 APlayerController* AInteractBox::GetPlayerControllerFromActor(AActor* Actor) const
 {
@@ -217,13 +232,22 @@ void AInteractBox::ClearAttachPoint()
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (_IsPlayerControlling){return;} // IF PLAYER CONTROL WE DONT DETECT ENTER
+	
+	if (!CanDetectOverlapp())
+	{
+		return;
+	}
+	overlappTimer = 0.2f;
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("PLAYER IN"));
+
 	APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(OtherActor);
 	AddOverlappingPlayerController(EnteringPlayerController);
-
-
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Overlap Begin Detected"));
+	
+	if (!EnteringPlayerController){return;}
+	
 	ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor);
 	TryDetectPlayer(EnteringPlayerController, Character);
+	
 }
 
 void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character)
@@ -235,20 +259,11 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 
 		if (!bLockedByAnother && !bAnotherInside)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player detected in interact box."));
 			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
 
 			if (!CurrentInteractorPlayerController.IsValid())
 			{
 				OnCollisionEnter.Broadcast();
-
-				if (GEngine)
-				{
-					const FColor PlayerColor = GetPlayerColorFromPlayerController(PlayerController);
-					const int32 PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
-					const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-					GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Press A to interact."));
-				}
 			}
 		}else
 		{
@@ -259,9 +274,15 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 
 void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (_IsPlayerControlling){return;} // IF PLAYER CONTROL WE DONT DETECT EXIT
+	if (!CanDetectOverlapp())
+	{
+		return;
+	}
+	overlappTimer = 0.2f;
+	if (_IsPlayerControlling){return;}
 	APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(OtherActor);
 	RemoveOverlappingPlayerController(LeavingPlayerController);
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Overlap EXIT "));
 
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor)) // PLAYER THAT WAS FIRST QUIT
 	{
@@ -276,6 +297,8 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 		CachedCharacter = nullptr;
 		CachedPlayerController = nullptr;
 		CachedPreviousPawn = nullptr;
+		
+		_IsPlayerControllerIn = false;
 
 		auto playerLeft = DetectPlayerInside();
 		if (playerLeft)
@@ -284,7 +307,6 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 			TryDetectPlayer(NewPlayerController, Cast<ACrazyFoodTruckCharacter>(playerLeft));
 		}
 	}
-	
 }
 
 void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
@@ -439,6 +461,7 @@ void AInteractBox::UnpossessPawn()
 		CachedPlayerController = nullptr;
 		CachedCharacter = nullptr;
 		CachedPreviousPawn = nullptr;
+		_IsPlayerControllerIn = false;
 	}
 	
 	if (UWorld* World = GetWorld())

@@ -27,6 +27,9 @@ public:
 	AInteractBox();
 
 protected:
+
+	virtual void Tick(float DeltaSeconds) override;
+	bool CanDetectOverlapp();
 	virtual void BeginPlay() override;
 	void FindSceneComponent();
 
@@ -77,6 +80,8 @@ public:
 	UFUNCTION(CallInEditor)
 	void ClearAttachPoint();
 
+	
+
 	UPROPERTY()
 	FRotator RotationActorOnEnter;
 	UPROPERTY()
@@ -113,12 +118,14 @@ private:
 	bool PlayerStillInsideCheck(ACrazyFoodTruckCharacter* TargetCharacter);
 	ACrazyFoodTruckCharacter* DetectPlayerInside();
 
+	float overlappTimer = 0.f;
 	
 	APlayerController* CachedPlayerController = nullptr;
 	ACrazyFoodTruckCharacter* CachedCharacter = nullptr;
 	APawn* CachedPreviousPawn = nullptr;
 
 	bool _IsPlayerControlling = false;
+	bool _IsPlayerControllerIn = false;
 	bool _IsShowingInput = false;
 
 };
