@@ -57,7 +57,7 @@ Binaries/Win64/*
 !Binaries/Win64/CrazyFoodTruckEditor.target
 !Binaries/Win64/UnrealEditor.modules
 !Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll
-!Binaries/Win64/UnrealEditor-LocalMultiplayer.dll
+!Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll
 
 # Builds
 Build/*
