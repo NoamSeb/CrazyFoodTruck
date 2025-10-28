@@ -39,6 +39,7 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	{
 		if (YawAction) // X
 		{
+			//
 		}
 		if (RollAction) // Y
 		{
