@@ -20,17 +20,14 @@
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_PlateSide.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_PlateSide.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Cuisine/BP_Plateau.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Cuisine/BP_Plateau.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/IMC/PlateInput/IA_PlateYaw.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/IMC/PlateInput/IA_PlateYaw.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/2/7U/32SO7Q9YANTSW6Z89LE7NJ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/2/7U/32SO7Q9YANTSW6Z89LE7NJ.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/3/ZK/H9GEC70LDJEX5HUTORISOG.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/3/ZK/H9GEC70LDJEX5HUTORISOG.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/B/7H/QN14OA39CPHHIRLJ15M7QC.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/B/7H/QN14OA39CPHHIRLJ15M7QC.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/C/OV/XG1JA6YIPZ600FK6M7ZDT2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/C/OV/XG1JA6YIPZ600FK6M7ZDT2.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Cabestan/SideCabestan.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Cabestan/SideCabestan.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Plate/PlateController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Plate/PlateController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Plate/PlateSide.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Plate/PlateSide.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Plate/PlateController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Plate/PlateController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Plate/SidePlate.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Plate/SidePlate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/0/5V/9F7FLBUUFHJKOBFBQBHHL9.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/1/GS/VFCJTAMETKOGPLDEQQEXD1.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/1/JH/P1QU7PGFI28CT34URXSEXL.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/4/PZ/NJDEBUM1P4VCR9MX9QVLMS.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/A/9P/PORN177VPNJV8YII7F8HMW.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/A/EP/F35GRBA9SFTQN83KS1H5M2.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/C/OV/XG1JA6YIPZ600FK6M7ZDT2.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LevelCuisine/D/KQ/CP1FILZT8PWWE0QOEXD2IZ.uasset" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -298,6 +295,7 @@
       <workItem from="1761590172617" duration="664000" />
       <workItem from="1761591611605" duration="3012000" />
       <workItem from="1761598916907" duration="10714000" />
+      <workItem from="1761648557318" duration="320000" />
     </task>
     <servers />
   </component>
