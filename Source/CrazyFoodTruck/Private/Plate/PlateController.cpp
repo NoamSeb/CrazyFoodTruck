@@ -15,7 +15,6 @@ APlateController::APlateController()
 void APlateController::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -25,27 +24,21 @@ void APlateController::Tick(float DeltaTime)
 
 	float value = rightInput - leftInput;
 	MovePlate(value);
-	//if (PlateActor)
-	//{
-	//	//PlateActor->MovePlate(value);
-	//}
 }
 
 void APlateController::ReceiveInputRight(float value)
 {
 	rightInput = value;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "right");
 }
 
 void APlateController::ReceiveInputLeft(float value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "left");
 	leftInput = value;
 }
 
 void APlateController::MovePlate(float value)
 {
-	float targetSpeed = value * (10 * GetWorld()->GetDeltaSeconds());
+	float targetSpeed = value * (Speed * GetWorld()->GetDeltaSeconds());
 	FVector CurrentLocation = PlateActor->GetActorLocation();
 	FVector newLocation = FVector(CurrentLocation.X + targetSpeed, CurrentLocation.Y, CurrentLocation.Z);
 	PlateActor->SetActorLocation(newLocation);

@@ -7,6 +7,7 @@
 UENUM(BlueprintType)
 enum class ESidePlate : uint8
 {
-	Right = 0,
+	None = 0,
+	Right,
 	Left
 };

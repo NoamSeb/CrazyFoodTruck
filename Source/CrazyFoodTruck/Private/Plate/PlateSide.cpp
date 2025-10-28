@@ -2,8 +2,6 @@
 
 
 #include "Plate/PlateSide.h"
-
-#include "EnhancedInputComponent.h"
 #include "Interactable/InteractBox.h"
 
 
@@ -31,6 +29,7 @@ void APlateSide::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+
 // Called to bind functionality to input
 void APlateSide::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -40,7 +39,6 @@ void APlateSide::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	{
 		if (YawAction) // X
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("meh"));
 			Eic->BindAction(YawAction, ETriggerEvent::Triggered, this, &APlateSide::HandleYaw);
 			Eic->BindAction(YawAction, ETriggerEvent::Completed, this, &APlateSide::DropYawInput);
 		}
@@ -54,8 +52,8 @@ void APlateSide::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void APlateSide::HandleYaw(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, "Handle Yaw");
 	float YawValue = Value.Get<float>();
+	YawValue = FMath::RoundToInt(YawValue);
 	switch (_Side)
 	{
 	case ESidePlate::Left:
@@ -71,7 +69,6 @@ void APlateSide::HandleYaw(const FInputActionValue& Value)
 
 void APlateSide::DropYawInput()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Drop Yaw Input"));
 	float YawValue = 0.f;
 	switch (_Side)
 	{
@@ -95,6 +92,7 @@ void APlateSide::HandleQuit(const FInputActionValue& Value)
 {
 	if (InteractBox)
 	{
+		//APlateSide::DropYawInput();
 		InteractBox->UnpossessPawn();
 	}
 }

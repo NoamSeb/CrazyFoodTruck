@@ -126,7 +126,9 @@ void ASideCabestan::HandleQuit(const FInputActionValue& Value)
 {
 	if (InteractBox)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, "UnPossessed");
 		InteractBox->UnpossessPawn();
 	}
 }
+
 

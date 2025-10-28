@@ -22,6 +22,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	AActor* PlateActor;
 
+	UPROPERTY(EditAnywhere)
+	float Speed = 300;
+
 	virtual void Tick(float DeltaTime) override;
 
 protected:
