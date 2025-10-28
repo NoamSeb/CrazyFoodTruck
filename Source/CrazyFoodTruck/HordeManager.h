@@ -3,12 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ZombieIA.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
-#include "NavMesh/NavMeshBoundsVolume.h"
+#include "AreaZombieSpawn.h"
+#include "FWaveStructure.h"
+
+#include "Editor.h"
+#include "FZoneSpawn.h"
+#include "Engine/Selection.h"
+#include "Engine/World.h"
+#include "Engine/Level.h"
+#include "Engine/LevelScriptActor.h"
+#include "Engine/Selection.h"
+#include "ScopedTransaction.h"
+
+#include "Editor/EditorEngine.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/StaticMeshActor.h"
+
+#include "UnrealEd.h"
+
 #include "HordeManager.generated.h"
 
 UCLASS()
+
 class CRAZYFOODTRUCK_API AHordeManager : public AActor
 {
 	GENERATED_BODY()
@@ -16,28 +34,73 @@ class CRAZYFOODTRUCK_API AHordeManager : public AActor
 public:
 	// Sets default values for this actor's properties
 	AHordeManager();
+
+#pragma region Rapport avec le zombie 
 	//mettre le BP du zombie dans le BP de la horde
 	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Zombie")
-	TSubclassOf<ACharacter> PawnZombie = AActor::StaticClass();
+	TSubclassOf<AZombieIA> PawnZombie = AActor::StaticClass();
+
+	UPROPERTY(EditAnywhere, meta=(ToolTip="Variable in kilometers per hour", ForceUnits="km/h"), Category= "Horde Manager | BP Zombie")
+	float DifferenceBetweenFoodTruck = 5.f;
+	float KilometersToMetersConvertingValue = 27.777777777778;
+	float vitesseFinalZombie;
+#pragma endregion
+
+#pragma region Actor to Follow
+	//Attention sur Character Follower regarder si ça affect nav mash parce que ça peut ne pas fonctionner avec ça si c'est le cas mettre Can Ever Affect Navigation en false
+	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
+	TObjectPtr<AActor> MainActorToFollow;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horde Manager | Character to Follow")
+	TObjectPtr<AActor> LeftActorToFollow;
+
+	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
+	TObjectPtr<AActor> RightActorToFollow;
+
+	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
+	TObjectPtr<AActor> ForwardActorToFollow;
+
+	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
+	TObjectPtr<AActor> BackwardActorToFollow;
+#pragma endregion
 
 	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Horde")
-	void SpawnHordeZombie(int nbrMin, int nbrMax);
+	void SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differentePos);
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite , Category = "Horde Manager | Spawn Horde")
+	UDataTable* DataWave;
+
+#pragma region Spawn Horde Zombie
+	
 	//garder les zombies dans la liste
 	UPROPERTY(VisibleAnywhere, Category= "Horde Manager | Spawn Vague")
-	TArray<ACharacter*> ListHordeZombie;
+	TArray<AZombieIA*> ListHordeZombie;
 
-	//c'est une aide visuelle pour savoir où les limites où on place les zombies
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Spawn Area")
-	UBoxComponent* SpawnZone;
-	//ANavMeshBoundsVolume NavMeshBoundsVolumeSpawnZone;
-
-	//définir nombre max et min de zombies
-	UPROPERTY(EditAnywhere, Category= "Horde Manager | Spawn Vague")
-	int8 nbrMinZombies = 5;
-	UPROPERTY(EditAnywhere, Category= "Horde Manager | Spawn Vague")
-	int8 nbrMaxZombies = 10;
+	UPROPERTY(VisibleAnywhere, Category = "Horde Manager | Spawn Vague")
+	int8 nbrZombiesDefinis = 5;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Horde Manager | Spawn Vague")
+	int32 nbrVague = 0;;
+
+	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Vague")
+	void InitHordeZombies();
+#pragma endregion
+
+#pragma region Area Spawn
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite , Category = "Spawn Area")
+	TSubclassOf<AAreaZombieSpawn> AreaZombieSpawn = AActor::StaticClass();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Area")
+	TArray<FZoneSpawn> ListSpawnArea;
+	
+	UFUNCTION(CallInEditor, Category = "Spawn Area")
+	void AddSpawnArea();
+	
+	UFUNCTION(CallInEditor, Category = "Spawn Area")
+	void ClearSpawnArea();
+	
+#pragma endregion 
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,4 +109,7 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// UFUNCTION(BlueprintCallable)
+	// UDataTable GetDataTable(){return DataWave;}
 };
