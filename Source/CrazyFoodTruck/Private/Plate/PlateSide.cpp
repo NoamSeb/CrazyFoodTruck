@@ -41,10 +41,12 @@ void APlateSide::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		{
 			Eic->BindAction(YawAction, ETriggerEvent::Triggered, this, &APlateSide::HandleYaw);
 			Eic->BindAction(YawAction, ETriggerEvent::Completed, this, &APlateSide::DropYawInput);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Yaw");
 		}
 		if (QuitAction)
 		{
 			Eic->BindAction(QuitAction, ETriggerEvent::Started, this, &APlateSide::HandleQuit);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Quit");
 		}
 	}
 }
@@ -54,6 +56,8 @@ void APlateSide::HandleYaw(const FInputActionValue& Value)
 {
 	float YawValue = Value.Get<float>();
 	YawValue = FMath::RoundToInt(YawValue);
+	// PRINT VALUE %f
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("YAWABALUE : %f"), YawValue));
 	switch (_Side)
 	{
 	case ESidePlate::Left:
@@ -90,9 +94,9 @@ void APlateSide::PlayerInteracted(APlayerController* PlayerController)
 
 void APlateSide::HandleQuit(const FInputActionValue& Value)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Quit");
 	if (InteractBox)
 	{
-		//APlateSide::DropYawInput();
 		InteractBox->UnpossessPawn();
 	}
 }

@@ -259,6 +259,7 @@ void ULocalMultiplayerSubsystem::AddTemporaryMappingForPlayer(int32 PlayerIndex,
 	{
 		if (!EIS->HasMappingContext(IMC))
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "GOOD MAP");
 			FModifyContextOptions Options;
 			Options.bForceImmediately = bForceImmediately;
 			EIS->AddMappingContext(IMC, Priority, Options);
