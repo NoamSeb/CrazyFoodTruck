@@ -119,8 +119,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input");
 	TObjectPtr<UInputAction> TurnTruckAction;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	TObjectPtr<UInputAction> QuitTruckAction;
+	UPROPERTY(EditDefaultsOnly, Category = "Input YAY")
+	TObjectPtr<UInputAction> QuitTruckAction ;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	void SetupMappingContextIntoController() const;

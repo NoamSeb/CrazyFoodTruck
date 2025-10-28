@@ -11,22 +11,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/RP/UZF0I531W8T6BE42YDRENN.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/RP/UZF0I531W8T6BE42YDRENN.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/05/5R2F8VBA7KYX042JW3QS2Q.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/05/5R2F8VBA7KYX042JW3QS2Q.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/7D/TFU0423BSKFMEMEVYGY0W0.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/7/QU/7AB1WKMLITX36LQZ09HS4D.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/7/QU/7AB1WKMLITX36LQZ09HS4D.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/A/SZ/XXW6WVEJQ28RAGI4QNZX1Q.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/A/SZ/XXW6WVEJQ28RAGI4QNZX1Q.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/B/2D/RDZIFT7NCTHTAZK1F9BBBY.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/B/2D/RDZIFT7NCTHTAZK1F9BBBY.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/T6/7WVZ5P2A4O9N9VCJA82KBR.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/T6/7WVZ5P2A4O9N9VCJA82KBR.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/GameMode/CrazyFoodTruckGameMode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/GameMode/CrazyFoodTruckGameMode.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/GameMode/CrazyFoodTruckGameMode.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/GameMode/CrazyFoodTruckGameMode.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interactable/InteractBox.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interactable/InteractBox.h" afterDir="false" />
-    </list>
+    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,14 +28,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/Cabestan",
-    "settings.editor.selected.configurable": "configurable.group.appearance"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/Cabestan&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.appearance&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="C/C++ Project.CrazyFoodTruck">
     <configuration name="CrazyFoodTruck" type="CppProject" factoryName="C++ Project">
       <configuration_1 setup="1">
@@ -146,6 +131,7 @@
       <workItem from="1760453243319" duration="242000" />
       <workItem from="1760953333016" duration="2000" />
       <workItem from="1761648188639" duration="1003000" />
+      <workItem from="1761660860004" duration="3000" />
     </task>
     <servers />
   </component>
