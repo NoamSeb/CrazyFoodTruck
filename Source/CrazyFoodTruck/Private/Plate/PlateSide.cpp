@@ -57,7 +57,7 @@ void APlateSide::HandleYaw(const FInputActionValue& Value)
 	float YawValue = Value.Get<float>();
 	YawValue = FMath::RoundToInt(YawValue);
 	// PRINT VALUE %f
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("YAWABALUE : %f"), YawValue));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("YAWABALUE : %f"), YawValue));
 	switch (_Side)
 	{
 	case ESidePlate::Left:
@@ -97,6 +97,7 @@ void APlateSide::HandleQuit(const FInputActionValue& Value)
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Quit");
 	if (InteractBox)
 	{
+		
 		InteractBox->UnpossessPawn();
 	}
 }

@@ -19,6 +19,12 @@ public:
 	void ReceiveInputLeft(float value);
 	void MovePlate(float value);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool HasSteak = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool CanMove = true;
+
 	UPROPERTY(EditAnywhere)
 	AActor* PlateActor;
 

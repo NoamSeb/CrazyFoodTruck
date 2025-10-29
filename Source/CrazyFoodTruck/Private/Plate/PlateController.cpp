@@ -23,7 +23,10 @@ void APlateController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	float value = rightInput - leftInput;
-	MovePlate(value);
+	if (CanMove)
+	{
+		MovePlate(value);
+	}
 }
 
 void APlateController::ReceiveInputRight(float value)
