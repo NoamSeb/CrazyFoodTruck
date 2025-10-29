@@ -364,9 +364,10 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
 
 		CurrentInteractorPlayerController = InstigatorPlayerController;	
 		OnInteractionStarted.Broadcast(InstigatorPlayerController);
-
+		//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, PawnToPossess->GetName());
 		if (PawnToPossess)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, "je suis dans le posses");
 			PossessPawn(InstigatorPlayerController);
 		}
 	}
