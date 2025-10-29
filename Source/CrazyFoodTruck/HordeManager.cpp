@@ -92,17 +92,17 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 				NewZombie->MainActorToFollower = MainActorToFollow;
 				switch (differentePos)
 				{
-					case EPositionSpawn::Right:
-						NewZombie->FirstActorToFollower = RightActorToFollow;
-					break;
-					case EPositionSpawn::Left:
-						NewZombie->FirstActorToFollower = LeftActorToFollow;
-					break;
-					case EPositionSpawn::Forward:
+					case EPositionSpawn::MiddleUp:
 						NewZombie->FirstActorToFollower = ForwardActorToFollow;
 					break;
-					case EPositionSpawn::Backward:
+					case EPositionSpawn::DownLeft:
+						NewZombie->FirstActorToFollower = LeftActorToFollow;
+					break;
+					case EPositionSpawn::DownRight:
 						NewZombie->FirstActorToFollower = RightActorToFollow;
+					break;
+					case EPositionSpawn::MiddleDown:
+						NewZombie->FirstActorToFollower = MainActorToFollow;
 					break;
 				}
 				
