@@ -42,7 +42,7 @@ void ACrazyFoodTruckCharacter::Tick(float DeltaTime)
 // Called to bind functionality to input
 void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
     
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
@@ -194,7 +194,7 @@ void ACrazyFoodTruckCharacter::TryInteract()
 
     if (Object->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
     {
-        FocusedInteractable->Interact(PlayerController);
+        FocusedInteractable->Interact(PlayerController, this);
     }
 }
 
@@ -207,3 +207,37 @@ void ACrazyFoodTruckCharacter::SetFocusedInteractable(const TScriptInterface<IIn
 {
     FocusedInteractable = NewTarget;
 }
+
+// INTERFACE
+void ACrazyFoodTruckCharacter::SetInteractState(bool bCanInteract)
+{
+    _canInteract = bCanInteract;
+}
+
+bool ACrazyFoodTruckCharacter::CanInteract()
+{
+    return _canInteract;
+}
+
+void ACrazyFoodTruckCharacter::SetAmmoState(bool bHasAmmo)
+{
+    _hasAmmo = bHasAmmo;
+}
+
+void ACrazyFoodTruckCharacter::TakeAmmoBox(AAmmoBox* AmmoBox)
+{
+    _carriedAmmoBox = AmmoBox;
+    SetAmmoState(true);
+}
+
+AAmmoBox* ACrazyFoodTruckCharacter::DepositAmmoBox()
+{
+    return  _carriedAmmoBox;
+}
+
+
+bool ACrazyFoodTruckCharacter::HasAmmo()
+{
+    return _hasAmmo;
+}
+

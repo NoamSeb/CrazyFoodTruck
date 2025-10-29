@@ -8,9 +8,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7353be7c-d26f-421a-af07-6943e8daf039" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/AmmoBox.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/AmmoDeposit.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/AmmunitionSpawner.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/EInteractionType.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interface/IPlayer.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/AmmoBox.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/AmmoDeposit.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/AmmunitionSpawner.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/EInteractionType.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interface/IPlayer.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/6/YZ/JQN3S2ZJQXS2U1JSN22Z9E.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/6/YZ/JQN3S2ZJQXS2U1JSN22Z9E.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/D/MQ/IPSNYQK3LE4BS9FWMR40DO.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/D/MQ/IPSNYQK3LE4BS9FWMR40DO.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_TurretWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_TurretWidget.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/U_TurretWidget.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/1/Y2/QBC89FDFZ8SITCG5MZTAWP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/1/Y2/QBC89FDFZ8SITCG5MZTAWP.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TurretController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TurretController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Characters/CrazyFoodTruckCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Characters/CrazyFoodTruckCharacter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/ESideCabestan.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/ESideCabestan.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interactable/InteractBox.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interactable/InteractBox.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interactable/Interactable.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interactable/Interactable.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/TurretController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/TurretController.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +88,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "Uproject.CrazyFoodTruck.executor": "Run",
-    "git-widget-placeholder": "feature/Cabestan",
+    "git-widget-placeholder": "Ammunition",
     "settings.editor.selected.configurable": "preferences.keymap"
   }
 }]]></component>
@@ -198,5 +220,16 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Cabestan/SideCabestan.h</url>
+          <line>4</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

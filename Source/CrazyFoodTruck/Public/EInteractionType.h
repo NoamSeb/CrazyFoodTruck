@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 
 UENUM(BlueprintType)
- enum class ESideCabestan : uint8
+enum class EInteractionType : uint8
 {
-	Toward,
-	Backward,
+	Possess = 0,
+	Interactable,
 };

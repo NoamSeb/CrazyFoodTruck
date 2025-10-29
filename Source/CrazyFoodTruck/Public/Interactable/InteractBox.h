@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AttachPoint.h"
+#include "EInteractionType.h"
 #include "LocalMultiplayerSettings.h"
 #include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameFramework/Actor.h"
-
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
@@ -34,6 +34,8 @@ protected:
 	void FindSceneComponent();
 
 public:
+
+	
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnInteractController OnInteractionStarted;
 
@@ -48,17 +50,26 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnCollision OnPlayerQuit;
+
+	UPROPERTY(EditAnywhere, Category="Interact|Possess")
+	EInteractionType InteractionType = EInteractionType::Possess;
 	
 	UPROPERTY(EditAnywhere, Category="Interact|Possess")
 	APawn* PawnToPossess = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="Interact|Possess")
+	AActor* InteractableObject = nullptr;
+	
+	UPROPERTY(EditAnywhere, Category="Interact|Possess")
 	ELocalMultiplayerInputMappingType MappingType;
 
-	virtual void Interact(APlayerController* InstigatorPlayerController) override;
+	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
 
 	void PossessPawn(APlayerController* PlayerController);
 	void UnpossessPawn();
+
+	void TryPossesPawn(APlayerController* InstigatorPlayerController);
+	void TryInteractWithObject(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter);
 
 	UFUNCTION(BlueprintCallable, Category="Interact|State")
 	void UpdateVisibilityInput(bool bIsVisible);
