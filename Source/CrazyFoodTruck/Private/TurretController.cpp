@@ -31,7 +31,6 @@ void ATurretController::BeginPlay()
 	}
 	
 	ResetCoolDown();
-	ResetAmmo();
 	SwitchBulletType(EbulletType::BulletNormal);
 	Shoot();
 	UpdateTurretCanonRotation();
@@ -146,8 +145,8 @@ void ATurretController::DecrementAmmo()
 	_CurrentAmmo -= 1;
 	if (_CurrentAmmo <= 0)
 	{
+		OnAmmoEmpty.Broadcast();
 		_CurrentAmmo = 0;
-		Reload();
 	}
 	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
 }

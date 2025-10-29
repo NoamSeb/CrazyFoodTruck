@@ -277,7 +277,7 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 	}
 }
 
-void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBo²dyIndex)
 {
 	if (!CanDetectOverlapp())
 	{
@@ -336,7 +336,7 @@ void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
 	}
 }
 
-void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
+void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter)
 {
 	if (_IsPlayerControlling){return;}
 	if (!InstigatorPlayerController)
@@ -347,7 +347,8 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
 	const FColor PlayerColor = GetPlayerColorFromPlayerController(InstigatorPlayerController);
 	const int32 PlayerIndex = GetPlayerIndexFromPlayerController(InstigatorPlayerController);
 	const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-		
+
+	
 	if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
 	{
 		if (GEngine)
@@ -357,24 +358,34 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
 		 	
 		return;
 	}
-		
-	if (!CurrentInteractorPlayerController.IsValid())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("NOT VALID"));
 
-		CurrentInteractorPlayerController = InstigatorPlayerController;	
-		OnInteractionStarted.Broadcast(InstigatorPlayerController);
-		//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, PawnToPossess->GetName());
-		if (PawnToPossess)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, "je suis dans le posses");
-			PossessPawn(InstigatorPlayerController);
-		}
+	switch (InteractionType)
+	{
+	case EInteractionType::Possess:
+		if (!CrazyCharacter->CanInteract()){break;}
+		TryPossesPawn(InstigatorPlayerController);
+		break;
+		case EInteractionType::Interactable:
+			TryInteractWithObject(InstigatorPlayerController, CrazyCharacter);
+			break;
+	default:
+		break;
 	}
 	
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Successful interaction!"));
+	}
+}
+
+void AInteractBox::TryInteractWithObject(APlayerController* InstigatorPlayerController,
+	ACrazyFoodTruckCharacter* CrazyCharacter)
+{
+	IInteractable* InteractableObjectInterface = Cast<IInteractable>(InteractableObject);
+	if (InteractableObjectInterface)
+	{
+		InteractableObjectInterface->Interact(InstigatorPlayerController, CrazyCharacter);
+		OnInteractionStarted.Broadcast(InstigatorPlayerController);
 	}
 }
 
@@ -474,6 +485,19 @@ void AInteractBox::UnpossessPawn()
 		if (auto* GM = Cast<ACrazyFoodTruckGameMode>(UGameplayStatics::GetGameMode(World)))
 		{
 			GM->ApplyGlobalViewTo(CachedPlayerController);
+		}
+	}
+}
+
+void AInteractBox::TryPossesPawn(APlayerController* InstigatorPlayerController)
+{
+	if (!CurrentInteractorPlayerController.IsValid())
+	{
+		CurrentInteractorPlayerController = InstigatorPlayerController;	
+		OnInteractionStarted.Broadcast(InstigatorPlayerController);
+		if (PawnToPossess)
+		{
+			PossessPawn(InstigatorPlayerController);
 		}
 	}
 }
