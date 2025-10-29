@@ -18,7 +18,7 @@ void AVehicle::BeginPlay()
 	Super::BeginPlay();
 	MovementComponent = Cast<UFloatingPawnMovement>(this->GetMovementComponent());
 	MovementComponent->MaxSpeed = TruckMaxSpeed * KilometersToMetersConvertingValue;
-	GetWorld()->GetFirstPlayerController()->Possess(this);
+	//GetWorld()->GetFirstPlayerController()->Possess(this);
 }
 
 // Called every frame
@@ -61,6 +61,7 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if (OtherActor->Tags.Contains("Obstacle"))
 	{
+		OtherActor->Destroy();
 		ReduceSpeed();
 	}
 	else if (OtherActor->Tags.Contains("MapSwitch"))
