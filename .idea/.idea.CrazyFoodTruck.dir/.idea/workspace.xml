@@ -9,7 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7353be7c-d26f-421a-af07-6943e8daf039" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/DT_Wave.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/DT_Wave.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,7 +187,7 @@
       <workItem from="1761642599971" duration="9844000" />
       <workItem from="1761660413100" duration="101000" />
       <workItem from="1761660636874" duration="4619000" />
-      <workItem from="1761688080253" duration="1138000" />
+      <workItem from="1761688080253" duration="2697000" />
     </task>
     <servers />
   </component>
