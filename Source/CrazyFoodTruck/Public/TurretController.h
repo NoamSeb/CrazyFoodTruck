@@ -58,7 +58,8 @@ public:
 	FOnTurretEvent OnShoot;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnTurretEvent OnReload;
-	
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnTurretEvent OnAmmoEmpty;
 protected:
 
 	UPROPERTY(EditAnywhere, Category="OTHER")
