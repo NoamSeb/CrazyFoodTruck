@@ -21,6 +21,8 @@ UInputMappingContext* FLocalMultiplayerProfileData::GetIMCFromType(ELocalMultipl
 		return IMCTurret;
 	case ELocalMultiplayerInputMappingType::Cabestan:
 		return IMCCabestan;
+	case ELocalMultiplayerInputMappingType::Plate:
+		return IMCPlate;
 	default:
 		return nullptr;
 	}

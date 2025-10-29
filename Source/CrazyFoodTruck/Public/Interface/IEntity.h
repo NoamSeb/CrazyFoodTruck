@@ -19,7 +19,16 @@ class CRAZYFOODTRUCK_API IIEntity
 	GENERATED_BODY()
 
 public:
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
+	int GetDamage();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
+	void InteractWithTruck();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
+	bool IsAZoombie();
+	
 	// DAMAGE
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
 	void ReceiveDamageBlueprint(int DamageAmount);

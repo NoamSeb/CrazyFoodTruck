@@ -140,6 +140,7 @@ private:
 	void InputChangeBulletType(const FInputActionValue& Value);
 	void InputQuitTurret(const FInputActionValue& Value);
 	void TestingFunction(const FInputActionValue& Value);
+	void Print(FString Message);
 
 	void UpdateTurretCanonRotation();
 
