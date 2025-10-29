@@ -8,6 +8,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "LocalMultiplayerSettings.h"
 
 // Sets default values
 ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
@@ -65,6 +66,11 @@ int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
 FLinearColor ACrazyFoodTruckCharacter::GetPlayerColor() const
 {
     return PlayerColor;
+}
+
+void ACrazyFoodTruckCharacter::SetPlayerColor(FLinearColor NewColor)
+{
+    PlayerColor = NewColor;
 }
 
 void ACrazyFoodTruckCharacter::UpdatePlayerColorFromController()
