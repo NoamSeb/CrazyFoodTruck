@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 
-
 UENUM(BlueprintType)
-enum class ECuissonSteak : uint8
+enum class ECuissonFood : uint8
 {
-	PasCuit = 0,
-	Cuit,
-	Brule
+	NotGrilled = 0,
+	Grilled,
+	Burned
 };
