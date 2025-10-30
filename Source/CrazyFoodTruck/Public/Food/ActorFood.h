@@ -28,9 +28,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TimeBurned = 20.f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ECuissonFood CurrentCuissonFace;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ECuissonFood CurrentCuissonPile;
 
 protected:
