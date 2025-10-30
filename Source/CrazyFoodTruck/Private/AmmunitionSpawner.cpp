@@ -52,7 +52,7 @@ void AAmmunitionSpawner::SpawnAmmo()
 
 	auto AmmoActor = GetWorld()->SpawnActor<AActor>(AmmoPrefab, SpawnLocation, SpawnRotation);
 	AmmoBoxSpawned = Cast<AAmmoBox>(AmmoActor);
-	
+	AmmoBoxSpawned->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	if (AmmoBoxSpawned)
 	{
 		AmmoBoxSpawned->Initialize();
@@ -72,7 +72,6 @@ void AAmmunitionSpawner::Interact(APlayerController* InstigatorPlayerController,
 {
 	if (CurrentAmmoTakeTimer > 0.f){return;}
 	if (!canTake){return;}
-	canTake = false;
 	if (AmmoOnHolder)
 	{
 		CrazyCharacter->TakeAmmoBox(AmmoBoxSpawned);
@@ -83,7 +82,6 @@ void AAmmunitionSpawner::Interact(APlayerController* InstigatorPlayerController,
 		AmmoBoxSpawned->AttachToActor(CrazyCharacter, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		AmmoBoxSpawned = nullptr;
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("GIVED AMMO"));
-
 	}
 }
 

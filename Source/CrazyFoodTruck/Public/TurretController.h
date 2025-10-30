@@ -100,7 +100,7 @@ private:
 
 	int32 _CurrentAmmo = 0;
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	int32 _AmmoMax = 10;
+	int32 _AmmoMax = 25;
 	
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
 	float TurretRotationSpeed = 10.f;
