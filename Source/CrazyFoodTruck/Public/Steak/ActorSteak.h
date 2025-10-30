@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CuissonSteak.h"
 #include "ActorSteak.generated.h"
 
 UCLASS()
@@ -15,6 +16,23 @@ public:
 	// Sets default values for this actor's properties
 	AActorSteak();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsReturn = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool OnGrille;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TempsSteakCuit = 15.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TempsSteakBrule = 20.f;
+
+	UPROPERTY(EditAnywhere)
+	ECuissonSteak CurrentCuissonFace;
+	UPROPERTY(EditAnywhere)
+	ECuissonSteak CurrentCuissonPile;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -22,4 +40,8 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	float cuissonPile = 0.f;
+	float cuissonFace = 0.f;
 };

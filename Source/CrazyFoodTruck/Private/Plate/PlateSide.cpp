@@ -48,6 +48,11 @@ void APlateSide::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 			Eic->BindAction(QuitAction, ETriggerEvent::Started, this, &APlateSide::HandleQuit);
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Quit");
 		}
+		if (ActionReturnSteak)
+		{
+			Eic->BindAction(ActionReturnSteak, ETriggerEvent::Triggered, this, &APlateSide::TriggerReturnSteak);
+			Eic->BindAction(ActionReturnSteak, ETriggerEvent::Completed, this, &APlateSide::CompleteReturnSteak);
+		}
 	}
 }
 
@@ -61,10 +66,10 @@ void APlateSide::HandleYaw(const FInputActionValue& Value)
 	switch (_Side)
 	{
 	case ESidePlate::Left:
-		_PlateController->ReceiveInputRight(YawValue);
+		_PlateController->ReceiveInputRightSteak(YawValue);
 		break;
 	case ESidePlate::Right:
-		_PlateController->ReceiveInputLeft(YawValue);
+		_PlateController->ReceiveInputLeftSteak(YawValue);
 		break;
 	default:
 		break;
@@ -77,10 +82,40 @@ void APlateSide::DropYawInput()
 	switch (_Side)
 	{
 	case ESidePlate::Left:
-		_PlateController->ReceiveInputRight(YawValue);
+		_PlateController->ReceiveInputRightSteak(YawValue);
 		break;
 	case ESidePlate::Right:
-		_PlateController->ReceiveInputLeft(YawValue);
+		_PlateController->ReceiveInputLeftSteak(YawValue);
+		break;
+	default:
+		break;
+	}
+}
+
+void APlateSide::TriggerReturnSteak()
+{
+	switch (_Side)
+	{
+	case ESidePlate::Left:
+		_PlateController->ReceiveInputLeftSteak(true);
+		break;
+	case ESidePlate::Right:
+		_PlateController->ReceiveInputRightSteak(true);
+		break;
+	default:
+		break;
+	}
+}
+
+void APlateSide::CompleteReturnSteak()
+{
+	switch (_Side)
+	{
+	case ESidePlate::Left:
+		_PlateController->ReceiveInputLeftSteak(false);
+		break;
+	case ESidePlate::Right:
+		_PlateController->ReceiveInputRightSteak(false);
 		break;
 	default:
 		break;

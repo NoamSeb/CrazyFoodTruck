@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Steak/ActorSteak.h"
 #include "PlateController.generated.h"
 
 UCLASS()
@@ -15,10 +16,18 @@ public:
 	// Sets default values for this actor's properties
 	APlateController();
 	
-	void ReceiveInputRight(float value);
-	void ReceiveInputLeft(float value);
+	void ReceiveInputRightSteak(float value);
+	void ReceiveInputLeftSteak(float value);
 	void MovePlate(float value);
 
+	void ReceiveInputRightSteak(bool value);
+	void ReceiveInputLeftSteak(bool value);
+
+	void ReturnSteak();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActorSteak* Steak;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool HasSteak = false;
 
@@ -39,4 +48,9 @@ protected:
 private:
 	float rightInput = 0.f;
 	float leftInput = 0.f;
+
+	bool rightSteak = false;
+	bool leftSteak = false;
+
+	bool alreadyReturned = false;
 };

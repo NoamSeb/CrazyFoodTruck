@@ -22,5 +22,45 @@ void AActorSteak::BeginPlay()
 void AActorSteak::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (OnGrille)
+	{
+		if (!IsReturn)
+		{
+			cuissonFace += DeltaTime;
+			if (cuissonFace > TempsSteakCuit && cuissonFace < TempsSteakBrule)
+			{
+				CurrentCuissonFace = ECuissonSteak::Cuit;
+			}
+			else if (cuissonFace > TempsSteakBrule)
+			{
+				CurrentCuissonFace = ECuissonSteak::Brule;
+				//Animation avant ?
+				this->Destroy();
+			}
+			else
+			{
+				CurrentCuissonFace = ECuissonSteak::PasCuit;
+			}
+		}
+		else
+		{
+			cuissonPile += DeltaTime;
+			if (cuissonPile > TempsSteakCuit && cuissonPile < TempsSteakBrule)
+			{
+				CurrentCuissonPile = ECuissonSteak::Cuit;
+			}
+			else if (cuissonPile > TempsSteakBrule)
+			{
+				CurrentCuissonPile = ECuissonSteak::Brule;
+				//Animation avant ?
+				this->Destroy();
+			}
+			else
+			{
+				CurrentCuissonPile = ECuissonSteak::PasCuit;
+			}
+		}
+	}
 }
 
