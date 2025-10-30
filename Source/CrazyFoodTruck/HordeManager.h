@@ -38,6 +38,7 @@ public:
 	float DifferenceBetweenFoodTruck = 5.f;
 	float KilometersToMetersConvertingValue = 27.777777777778;
 	float vitesseFinalZombie;
+	
 #pragma endregion
 
 #pragma region Actor to Follow
