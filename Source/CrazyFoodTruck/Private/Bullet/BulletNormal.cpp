@@ -22,7 +22,8 @@ void ABulletNormal::Initialize(FBulletStructure* BulletStructure, const FVector&
 
 void ABulletNormal::EnemyHitBlueprint(AActor* EntityActor)
 {
-	Super::EnemyHitBlueprint(EntityActor);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("DESTROY BULLET"));
+	Super::EnemyHitBlueprint(EntityActor); 
 }
 
 void ABulletNormal::GroundHit()

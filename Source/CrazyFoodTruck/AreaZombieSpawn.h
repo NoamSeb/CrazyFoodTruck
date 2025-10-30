@@ -6,6 +6,7 @@
 #include "PositionSpawn.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
+
 #include "AreaZombieSpawn.generated.h"
 
 UCLASS()
@@ -21,6 +22,7 @@ public:
 	UBoxComponent* NewBoxAreaSpawn;
 	
 	void InitArea(int32 IdArea, AActor* ParentActor);
+
 
 protected:
 	// Called when the game starts or when spawned

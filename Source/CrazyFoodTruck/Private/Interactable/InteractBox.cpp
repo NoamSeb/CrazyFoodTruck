@@ -5,6 +5,9 @@
 #include "LocalMultiplayerSubsystem.h"
 
 #include "Components/BoxComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameMode/CrazyFoodTruckGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AInteractBox::AInteractBox()
@@ -25,6 +28,27 @@ AInteractBox::AInteractBox()
 
 }
 
+void AInteractBox::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (overlappTimer > 0.f)
+	{
+		overlappTimer -= DeltaSeconds;
+	}
+}
+
+bool AInteractBox::CanDetectOverlapp()
+{
+	if (overlappTimer > 0.f)
+	{
+		return false;
+	}else
+	{
+		overlappTimer = 0.14f;
+		return true;
+	}
+}
+
 void AInteractBox::BeginPlay()
 {
 	Super::BeginPlay();
@@ -33,20 +57,8 @@ void AInteractBox::BeginPlay()
 
 void AInteractBox::FindSceneComponent()
 {
-	// FIND SCENE COMPONENT
-	// auto sceneComponents = K2_GetComponentsByClass(USceneComponent::StaticClass());
-	// for (auto SceneComponent : sceneComponents)
-	// {
-	// 	if (SceneComponent->GetName() == "AttachPoint")
-	// 	{
-	// 		AttachPoint = Cast<USceneComponent>(SceneComponent);
-	// 	}
-	// 	if (SceneComponent->GetName() == "ReleasePoint")
-	// 	{
-	// 		ReleasePoint = Cast<USceneComponent>(SceneComponent);
-	// 	}
-	// }
 }
+
 
 APlayerController* AInteractBox::GetPlayerControllerFromActor(AActor* Actor) const
 {
@@ -158,6 +170,10 @@ void AInteractBox::SpawnAttachPointInEditor()
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     Params.OverrideLevel = GetLevel();
     Params.ObjectFlags |= RF_Transactional;
+	// GET RELATIVE TRANSFORM
+
+	FTransform RelativeTransform = FTransform::Identity;
+	
     if (!AttachPoint)
     {
         AAttachPoint* NewPoint = World->SpawnActor<AAttachPoint>(AAttachPoint::StaticClass(), GetActorTransform(), Params);
@@ -223,11 +239,21 @@ void AInteractBox::ClearAttachPoint()
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (_IsPlayerControlling){return;} // IF PLAYER CONTROL WE DONT DETECT ENTER
+	
+	if (!CanDetectOverlapp())
+	{
+		return;
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("PLAYER IN"));
+
 	APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(OtherActor);
 	AddOverlappingPlayerController(EnteringPlayerController);
-
+	
+	if (!EnteringPlayerController){return;}
+	
 	ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor);
 	TryDetectPlayer(EnteringPlayerController, Character);
+	
 }
 
 void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character)
@@ -236,23 +262,13 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 	{
 		const bool bLockedByAnother = CurrentInteractorPlayerController.IsValid() && PlayerController && (CurrentInteractorPlayerController.Get() != PlayerController);
 		const bool bAnotherInside = IsAnotherPlayerAlreadyInside(PlayerController);
-
 		if (!bLockedByAnother && !bAnotherInside)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player detected in interact box."));
 			Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
 
 			if (!CurrentInteractorPlayerController.IsValid())
 			{
 				OnCollisionEnter.Broadcast();
-
-				if (GEngine)
-				{
-					const FColor PlayerColor = GetPlayerColorFromPlayerController(PlayerController);
-					const int32 PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
-					const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-					GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Press A to interact."));
-				}
 			}
 		}else
 		{
@@ -261,11 +277,16 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 	}
 }
 
-void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBo²dyIndex)
 {
-	if (_IsPlayerControlling){return;} // IF PLAYER CONTROL WE DONT DETECT EXIT
+	if (!CanDetectOverlapp())
+	{
+		return;
+	}
+	if (_IsPlayerControlling){return;}
 	APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(OtherActor);
 	RemoveOverlappingPlayerController(LeavingPlayerController);
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Overlap EXIT "));
 
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor)) // PLAYER THAT WAS FIRST QUIT
 	{
@@ -280,6 +301,8 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 		CachedCharacter = nullptr;
 		CachedPlayerController = nullptr;
 		CachedPreviousPawn = nullptr;
+		
+		_IsPlayerControllerIn = false;
 
 		auto playerLeft = DetectPlayerInside();
 		if (playerLeft)
@@ -288,7 +311,6 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 			TryDetectPlayer(NewPlayerController, Cast<ACrazyFoodTruckCharacter>(playerLeft));
 		}
 	}
-	
 }
 
 void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
@@ -314,7 +336,7 @@ void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
 	}
 }
 
-void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
+void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter)
 {
 	if (_IsPlayerControlling){return;}
 	if (!InstigatorPlayerController)
@@ -325,7 +347,8 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
 	const FColor PlayerColor = GetPlayerColorFromPlayerController(InstigatorPlayerController);
 	const int32 PlayerIndex = GetPlayerIndexFromPlayerController(InstigatorPlayerController);
 	const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-		
+
+	
 	if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
 	{
 		if (GEngine)
@@ -335,23 +358,34 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController)
 		 	
 		return;
 	}
-		
-	if (!CurrentInteractorPlayerController.IsValid())
+
+	switch (InteractionType)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("NOT VALID"));
-
-		CurrentInteractorPlayerController = InstigatorPlayerController;	
-		OnInteractionStarted.Broadcast(InstigatorPlayerController);
-
-		if (PawnToPossess)
-		{
-			PossessPawn(InstigatorPlayerController);
-		}
+	case EInteractionType::Possess:
+		if (!CrazyCharacter->CanInteract()){break;}
+		TryPossesPawn(InstigatorPlayerController);
+		break;
+		case EInteractionType::Interactable:
+			TryInteractWithObject(InstigatorPlayerController, CrazyCharacter);
+			break;
+	default:
+		break;
 	}
 	
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Successful interaction!"));
+	}
+}
+
+void AInteractBox::TryInteractWithObject(APlayerController* InstigatorPlayerController,
+	ACrazyFoodTruckCharacter* CrazyCharacter)
+{
+	IInteractable* InteractableObjectInterface = Cast<IInteractable>(InteractableObject);
+	if (InteractableObjectInterface)
+	{
+		InteractableObjectInterface->Interact(InstigatorPlayerController, CrazyCharacter);
+		OnInteractionStarted.Broadcast(InstigatorPlayerController);
 	}
 }
 
@@ -361,13 +395,15 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 	CachedPlayerController = PlayerController;
 	CachedCharacter = PlayerController ? Cast<ACrazyFoodTruckCharacter>(PlayerController->GetPawn()) : nullptr;
 	CachedPreviousPawn = PlayerController ? PlayerController->GetPawn() : nullptr;
-
 	int PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
 	if (PlayerIndex == -1)
 	{
 		return;
 	}
 	
+	RotationActorOnEnter = CachedCharacter->GetActorRotation();
+	RotationControllerOnEnter = PlayerController->GetControlRotation();
+	// PRINT ROTATION ENTER
 	if (PawnToPossess)
 	{
 		TeleportAndAttachPlayer(PlayerController);
@@ -376,8 +412,16 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 		{
 			if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
 			{
-				LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, InputMapping);
+				LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType);
 			}
+		}
+	}
+
+	if (UWorld* World = GetWorld())
+	{
+		if (auto* GM = Cast<ACrazyFoodTruckGameMode>(UGameplayStatics::GetGameMode(World)))
+		{
+			GM->ApplyGlobalViewTo(PlayerController);
 		}
 	}
 }
@@ -406,37 +450,56 @@ void AInteractBox::UnpossessPawn()
 		{
 			if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
 			{
-				LocalMultiplayerSubsystem->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn, InputMapping);
+				LocalMultiplayerSubsystem->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn, MappingType);
 			}
 		}
 	}
 
+	// TP PLAYER BACK AND DETACH
 	TeleportBackAndDetachPlayer(CachedPlayerController);
-
-
+	
 	// CHECK IF PLAYER STILL INSIDE
-
 	if (CachedCharacter)
 	{
+		CachedCharacter->SetActorRotation(RotationActorOnEnter);
+		CachedPlayerController->SetControlRotation(RotationControllerOnEnter);
+		
 		if (PlayerStillInsideCheck(CachedCharacter))
 		{
 			// PLAYER STILL INSIDE
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player STILL INSIDE !."));
-
 			TryDetectPlayer(CachedPlayerController, CachedCharacter);
-			return;
 		}
 	}
 	else
 	{
 		CachedCharacter->SetFocusedInteractable(nullptr);
+		CachedPlayerController = nullptr;
+		CachedCharacter = nullptr;
+		CachedPreviousPawn = nullptr;
+		_IsPlayerControllerIn = false;
 	}
 	
-	
-	CachedPlayerController = nullptr;
-	CachedCharacter = nullptr;
-	CachedPreviousPawn = nullptr;
-	
+	if (UWorld* World = GetWorld())
+	{
+		if (auto* GM = Cast<ACrazyFoodTruckGameMode>(UGameplayStatics::GetGameMode(World)))
+		{
+			GM->ApplyGlobalViewTo(CachedPlayerController);
+		}
+	}
+}
+
+void AInteractBox::TryPossesPawn(APlayerController* InstigatorPlayerController)
+{
+	if (!CurrentInteractorPlayerController.IsValid())
+	{
+		CurrentInteractorPlayerController = InstigatorPlayerController;	
+		OnInteractionStarted.Broadcast(InstigatorPlayerController);
+		if (PawnToPossess)
+		{
+			PossessPawn(InstigatorPlayerController);
+		}
+	}
 }
 
 bool AInteractBox::PlayerStillInsideCheck(ACrazyFoodTruckCharacter* TargetCharacter)
@@ -482,7 +545,6 @@ void AInteractBox::TeleportAndAttachPlayer(APlayerController* PlayerController)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Invalid AttachPoint!"));
 		return;
 	}
-
 	if (APawn* Pawn = PlayerController->GetPawn())
 	{
 		Pawn->SetActorLocation(AttachPoint->GetActorLocation());
@@ -492,16 +554,56 @@ void AInteractBox::TeleportAndAttachPlayer(APlayerController* PlayerController)
 
 void AInteractBox::TeleportBackAndDetachPlayer(APlayerController* PlayerController)
 {
-	if (!ReleasePoint)
+    if (!ReleasePoint)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Invalid ReleasePoint!"));
+        return;
+    }
+    if (!PlayerController) return;
+
+    APawn* Pawn = PlayerController->GetPawn();
+    if (!Pawn) return;
+
+    const FVector TargetLocation = ReleasePoint->GetActorLocation();
+    const FRotator TargetRotation = ReleasePoint->GetActorRotation();
+
+    Pawn->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    if (ACharacter* Char = Cast<ACharacter>(Pawn))
+    {
+	    if (UCharacterMovementComponent* MoveComp = Char->GetCharacterMovement())
+	    {
+	    	MoveComp->StopMovementImmediately();
+	    	MoveComp->Velocity = FVector::ZeroVector;
+	    	MoveComp->DisableMovement();
+	    	MoveComp->SetComponentTickEnabled(false); 
+	    }
+    }
+
+    const bool bTeleportSuccess = Pawn->SetActorLocation(TargetLocation, false, nullptr, ETeleportType::TeleportPhysics);
+    if (!bTeleportSuccess)
+    {
+        Pawn->TeleportTo(TargetLocation, TargetRotation, false, true);
+    }
+
+    if (ACharacter* Char2 = Cast<ACharacter>(Pawn))
+    {
+        if (UCharacterMovementComponent* MoveComp2 = Char2->GetCharacterMovement())
+        {
+            MoveComp2->StopMovementImmediately();
+            MoveComp2->Velocity = FVector::ZeroVector;
+        }
+    }
+
+	if (ACharacter* Char = Cast<ACharacter>(Pawn))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Invalid ReleasePoint!"));
-		return;
+		if (UCharacterMovementComponent* MoveComp = Char->GetCharacterMovement())
+		{
+			MoveComp->SetComponentTickEnabled(true);
+			MoveComp->Activate();
+			MoveComp->SetMovementMode(MOVE_Walking);
+		}
 	}
 
-	if (APawn* Pawn = PlayerController->GetPawn())
-	{
-		Pawn->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		Pawn->SetActorLocation(ReleasePoint->GetActorLocation());
-		//Pawn->SetActorRotation(ReleasePoint->GetComponentRotation());
-	}
+    GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player teleported back, detached and movement/physics blocked for testing."));
 }
+

@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "AttachPoint.h"
+#include "EInteractionType.h"
 #include "LocalMultiplayerSettings.h"
 #include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameFramework/Actor.h"
-
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
+
+enum class ELocalMultiplayerInputMappingType;
 
 class UBoxComponent;
 
@@ -25,10 +27,15 @@ public:
 	AInteractBox();
 
 protected:
+
+	virtual void Tick(float DeltaSeconds) override;
+	bool CanDetectOverlapp();
 	virtual void BeginPlay() override;
 	void FindSceneComponent();
 
 public:
+
+	
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnInteractController OnInteractionStarted;
 
@@ -43,14 +50,26 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
 	FOnCollision OnPlayerQuit;
+
+	UPROPERTY(EditAnywhere, Category="Interact|Possess")
+	EInteractionType InteractionType = EInteractionType::Possess;
 	
 	UPROPERTY(EditAnywhere, Category="Interact|Possess")
 	APawn* PawnToPossess = nullptr;
 
-	virtual void Interact(APlayerController* InstigatorPlayerController) override;
+	UPROPERTY(EditAnywhere, Category="Interact|Possess")
+	AActor* InteractableObject = nullptr;
+	
+	UPROPERTY(EditAnywhere, Category="Interact|Possess")
+	ELocalMultiplayerInputMappingType MappingType;
+
+	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
 
 	void PossessPawn(APlayerController* PlayerController);
 	void UnpossessPawn();
+
+	void TryPossesPawn(APlayerController* InstigatorPlayerController);
+	void TryInteractWithObject(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter);
 
 	UFUNCTION(BlueprintCallable, Category="Interact|State")
 	void UpdateVisibilityInput(bool bIsVisible);
@@ -60,10 +79,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Interact|State")
 	bool GetInputVisibilityState() const { return _IsShowingInput; }
-
-	UPROPERTY(EditAnywhere, Category="Interact|State")
-	ELocalMultiplayerInputMappingType InputMapping;
-
 
 	UPROPERTY(EditAnywhere, Category="Interact|Components")
 	AAttachPoint* AttachPoint;
@@ -76,6 +91,12 @@ public:
 	UFUNCTION(CallInEditor)
 	void ClearAttachPoint();
 
+	
+
+	UPROPERTY()
+	FRotator RotationActorOnEnter;
+	UPROPERTY()
+	FRotator RotationControllerOnEnter;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
@@ -108,12 +129,14 @@ private:
 	bool PlayerStillInsideCheck(ACrazyFoodTruckCharacter* TargetCharacter);
 	ACrazyFoodTruckCharacter* DetectPlayerInside();
 
+	float overlappTimer = 0.f;
 	
 	APlayerController* CachedPlayerController = nullptr;
 	ACrazyFoodTruckCharacter* CachedCharacter = nullptr;
 	APawn* CachedPreviousPawn = nullptr;
 
 	bool _IsPlayerControlling = false;
+	bool _IsPlayerControllerIn = false;
 	bool _IsShowingInput = false;
 
 };
