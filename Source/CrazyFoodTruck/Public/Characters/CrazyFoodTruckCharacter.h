@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AmmoBox.h"
 #include "GameFramework/Character.h"
 #include "Interactable/Interactable.h"
 #include "InputMappingContext.h"
+#include "Interface/IPlayer.h"
 #include "CrazyFoodTruckCharacter.generated.h"
 
 class UCrazyFoodTruckCharacterInputData;
@@ -13,7 +15,7 @@ class UCrazyFoodTruckCharacterInputData;
 class UEnhancedInputComponent;
 
 UCLASS()
-class CRAZYFOODTRUCK_API ACrazyFoodTruckCharacter : public ACharacter
+class CRAZYFOODTRUCK_API ACrazyFoodTruckCharacter : public ACharacter, public IIPlayer
 {
 	GENERATED_BODY()
 
@@ -34,6 +36,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// INTERFACE IPLAYER
+	virtual void SetInteractState(bool bCanInteract) override;
+	virtual bool CanInteract() override;
+	virtual void SetAmmoState(bool bHasAmmo) override;
+	void TakeAmmoBox(AAmmoBox* AmmoBox);
+	AAmmoBox* DepositAmmoBox();
+	virtual bool HasAmmo() override;
+
+	
+	
+private:
+
+	bool _canInteract = true;
+	bool _hasAmmo = false;
+	AAmmoBox* _carriedAmmoBox = nullptr;
+	
 #pragma endregion
 
 #pragma region Player Infos

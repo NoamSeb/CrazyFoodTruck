@@ -11,6 +11,6 @@ FZoneSpawn::FZoneSpawn(EPositionSpawn PosSpawn, AAreaZombieSpawn* NewArea)
 
 FZoneSpawn::FZoneSpawn(AAreaZombieSpawn* NewArea)
 {
-	PositionSpawn = EPositionSpawn::Right;
+	PositionSpawn = EPositionSpawn::TopRight;
 	AreaZombieSpawn = NewArea;
 }

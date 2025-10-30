@@ -58,7 +58,8 @@ public:
 	FOnTurretEvent OnShoot;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnTurretEvent OnReload;
-	
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnTurretEvent OnAmmoEmpty;
 protected:
 
 	UPROPERTY(EditAnywhere, Category="OTHER")
@@ -140,6 +141,7 @@ private:
 	void InputChangeBulletType(const FInputActionValue& Value);
 	void InputQuitTurret(const FInputActionValue& Value);
 	void TestingFunction(const FInputActionValue& Value);
+	void Print(FString Message);
 
 	void UpdateTurretCanonRotation();
 
