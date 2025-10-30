@@ -49,6 +49,8 @@ void AAmmoDeposit::Interact(APlayerController* InstigatorPlayerController, ACraz
 		if (ReloadedAmmoBox)
 		{
 			ReloadedAmmoBox->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+			ReloadedAmmoBox->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
 			ReloadedAmmoBox->SetActorRotation(DepositPoint->GetComponentRotation());
 		}
 		CrazyCharacter->SetAmmoState(false);
@@ -70,7 +72,6 @@ void AAmmoDeposit::TurretAmmoEmpty()
 
 void AAmmoDeposit::Reload()
 {
-	// Logic de rechargement des munitions
 	LinkedTurretController->Reload();
 }
 

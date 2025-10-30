@@ -49,6 +49,7 @@ void ABulletBase::EnemyHit(IIEntity* Entity)
 void ABulletBase::EnemyHitBlueprint(AActor* EntityActor)
 {
 	IIEntity::Execute_ReceiveDamageBlueprint(EntityActor, damage);
+	Destroy();
 }
 
 float ABulletBase::GetBulletSpeed()
