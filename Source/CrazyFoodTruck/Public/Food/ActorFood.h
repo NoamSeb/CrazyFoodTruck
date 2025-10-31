@@ -33,6 +33,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ECuissonFood CurrentCuissonPile;
 
+	bool CanBurnedFace = true;
+	bool CanBurnPile = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* AttachePileForBread;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* AttacheFaceForBread;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -32,7 +32,7 @@ void AActorFood::Tick(float DeltaTime)
 			{
 				CurrentCuissonFace = ECuissonFood::Grilled;
 			}
-			else if (cuissonFace > TimeBurned)
+			else if (cuissonFace > TimeBurned && CanBurnedFace)
 			{
 				CurrentCuissonFace = ECuissonFood::Burned;
 				//Animation avant ?
@@ -50,7 +50,7 @@ void AActorFood::Tick(float DeltaTime)
 			{
 				CurrentCuissonPile = ECuissonFood::Grilled;
 			}
-			else if (cuissonPile > TimeBurned)
+			else if (cuissonPile > TimeBurned && CanBurnPile)
 			{
 				CurrentCuissonPile = ECuissonFood::Burned;
 				//Animation avant ?

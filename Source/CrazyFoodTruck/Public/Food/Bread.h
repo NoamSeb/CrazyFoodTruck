@@ -3,25 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Food/ActorFood.h"
+#include "ActorFood.h"
 #include "GameFramework/Actor.h"
-#include "ActorSteak.generated.h"
+#include "Bread.generated.h"
 
 UCLASS()
-class CRAZYFOODTRUCK_API AActorSteak : public AActorFood
+class CRAZYFOODTRUCK_API ABread : public AActorFood
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AActorSteak();
+	ABread();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool BreadOnFace;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool BreadOnPile;
-	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -29,5 +23,4 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 };
