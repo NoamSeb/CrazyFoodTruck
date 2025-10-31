@@ -27,5 +27,7 @@ struct FBulletStructure : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
 	float GravityScale;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
+	int Ammo;
 };
