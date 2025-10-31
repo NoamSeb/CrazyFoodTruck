@@ -8,6 +8,8 @@
 #include "AreaZombieSpawn.h"
 #include "FWaveStructure.h"
 
+#include "Vehicle/Vehicle.h"
+
 #include "Editor.h"
 #include "FZoneSpawn.h"
 #include "Engine/World.h"
@@ -28,6 +30,9 @@ class CRAZYFOODTRUCK_API AHordeManager : public AActor
 public:
 	// Sets default values for this actor's properties
 	AHordeManager();
+	
+	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Food Truck")
+    AVehicle* FoodTruck;
 
 #pragma region Rapport avec le zombie 
 	//mettre le BP du zombie dans le BP de la horde

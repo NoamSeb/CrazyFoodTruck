@@ -35,6 +35,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* QuitAction;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* ActionReturnSteak;
+	
+	void TriggerReturnSteak();
+	void CompleteReturnSteak();
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
