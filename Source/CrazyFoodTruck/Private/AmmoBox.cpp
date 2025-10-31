@@ -3,8 +3,6 @@
 
 #include "AmmoBox.h"
 
-
-// Sets default values
 AAmmoBox::AAmmoBox()
 {
 	PrimaryActorTick.bCanEverTick = true;
