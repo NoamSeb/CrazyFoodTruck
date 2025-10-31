@@ -13,11 +13,13 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	GENERATED_BODY()
 
 	
-	public:
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool InGame;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString LevelName;
 	UPROPERTY(VisibleAnywhere)
 	EPhaseGameCrazyFoodTruckState CurrentGamePhase;
+	UPROPERTY(EditAnywhere)
+	int Tickets;
 };
