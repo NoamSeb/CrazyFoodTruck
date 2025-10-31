@@ -10,13 +10,14 @@
 
 #include "Vehicle/Vehicle.h"
 
+#if WITH_EDITOR
 #include "Editor.h"
+#include "Editor/EditorEngine.h"
+#endif
 #include "FZoneSpawn.h"
 #include "Engine/World.h"
 #include "Engine/Level.h"
-#include "ScopedTransaction.h"
 
-#include "Editor/EditorEngine.h"
 #include "UObject/ConstructorHelpers.h"
 
 #include "HordeManager.generated.h"

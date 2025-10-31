@@ -14,6 +14,7 @@
 enum class ELocalMultiplayerInputMappingType;
 
 class UBoxComponent;
+class AAttachPoint;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractController, APlayerController*, InstigatorPlayerController);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCollision);

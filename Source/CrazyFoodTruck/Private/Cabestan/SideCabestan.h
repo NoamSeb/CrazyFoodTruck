@@ -62,7 +62,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	AInteractBox* InteractBox;
 
-	
+	UFUNCTION()
 	void PlayerInteracted(APlayerController* PlayerController);
 
 public:

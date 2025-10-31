@@ -3,7 +3,6 @@
 #include "Interactable/InteractBox.h"
 
 #include "LocalMultiplayerSubsystem.h"
-
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameMode/CrazyFoodTruckGameMode.h"
@@ -157,7 +156,6 @@ bool AInteractBox::IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerCon
 }
 
 
-#if WITH_EDITOR
 void AInteractBox::SpawnAttachPointInEditor()
 {
     UWorld* World = GetWorld();
@@ -180,7 +178,7 @@ void AInteractBox::SpawnAttachPointInEditor()
         if (NewPoint)
         {
             NewPoint->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-            NewPoint->SetActorLabel("AttachPoint");
+            //NewPoint->SetActorLabel("AttachPoint");
             NewPoint->Modify();
             AttachPoint = NewPoint;
             NewPoint->MarkPackageDirty();
@@ -199,7 +197,7 @@ void AInteractBox::SpawnAttachPointInEditor()
         if (NewPoint)
         {
             NewPoint->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-            NewPoint->SetActorLabel("ReleasePoint");
+            //NewPoint->SetActorLabel("ReleasePoint");
             NewPoint->Modify();
             ReleasePoint = NewPoint;
             NewPoint->MarkPackageDirty();
@@ -232,7 +230,6 @@ void AInteractBox::ClearAttachPoint()
 	ReleasePoint = nullptr;
 	MarkPackageDirty();
 }
-#endif // WITH_EDITOR
 
 
 

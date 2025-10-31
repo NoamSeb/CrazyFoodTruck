@@ -10,6 +10,7 @@ class ACrazyFoodTruckCharacter;
 class UCrazyFoodTruckCharacterInputData;
 
 class UInputMappingContext;
+class APlayerStart;
 
 UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckGameMode : public AGameModeBase

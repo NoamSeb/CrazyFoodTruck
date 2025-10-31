@@ -63,7 +63,7 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		BulletDamage = ActualBulletStructure->Damage;
 		BulletFireRate = ActualBulletStructure->FireRate;
 		AreaRangeSide = ActualBulletStructure->AreaSide;
-		AreaRangeDepht = ActualBulletStructure->AreaDepht;
+		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 	}
 	else
 	{

@@ -14,5 +14,5 @@ enum class EPositionSpawn : uint8
 	DownLeft,
 	DownRight,
 	MiddleRight,
-	MiddleLeft,
+	MiddleLeft
 };

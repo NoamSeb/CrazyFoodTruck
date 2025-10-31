@@ -22,8 +22,12 @@ void AHordeManager::AddSpawnArea()
 	
 	AAreaZombieSpawn* NewArea = GetWorld()->SpawnActor<AAreaZombieSpawn>(AreaZombieSpawn);
 	NewArea->InitArea(ListSpawnArea.Num(),this);
+
+	FZoneSpawn newZoneSpawn;
+	newZoneSpawn.PositionSpawn = EPositionSpawn::DownLeft;
+	newZoneSpawn.AreaZombieSpawn = NewArea;
 	
-	ListSpawnArea.Add(FZoneSpawn(NewArea));
+	ListSpawnArea.Add(newZoneSpawn);
 
 	#if WITH_EDITOR
 		if (GEditor && NewArea)
