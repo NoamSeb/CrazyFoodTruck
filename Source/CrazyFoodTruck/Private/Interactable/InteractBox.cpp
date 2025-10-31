@@ -44,7 +44,7 @@ bool AInteractBox::CanDetectOverlapp()
 		return false;
 	}else
 	{
-		overlappTimer = 0.14f;
+		overlappTimer = 0.1f;
 		return true;
 	}
 }

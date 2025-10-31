@@ -81,7 +81,6 @@ void AAmmunitionSpawner::Interact(APlayerController* InstigatorPlayerController,
 		AmmoBoxSpawned->SetActorLocation(CrazyCharacter->GetActorLocation());
 		AmmoBoxSpawned->AttachToActor(CrazyCharacter, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		AmmoBoxSpawned = nullptr;
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("GIVED AMMO"));
 	}
 }
 

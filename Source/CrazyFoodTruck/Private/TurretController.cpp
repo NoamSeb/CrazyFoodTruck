@@ -301,7 +301,6 @@ void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 
 void ATurretController::TestingFunction(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Testing Function Called"));
 }
 
 

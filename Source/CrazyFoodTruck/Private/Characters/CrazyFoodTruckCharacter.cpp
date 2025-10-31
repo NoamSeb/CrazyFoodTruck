@@ -169,7 +169,6 @@ void ACrazyFoodTruckCharacter::TryInteract()
     {
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Nothing to interact with here."));
         }
         
         return;
@@ -187,10 +186,6 @@ void ACrazyFoodTruckCharacter::TryInteract()
         return;
     }
 
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, FString::Printf(TEXT("Interacting with: %s"), *Object->GetName()));
-    }
 
     if (Object->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
     {

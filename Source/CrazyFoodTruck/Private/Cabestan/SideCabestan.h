@@ -35,13 +35,23 @@ protected:
 	UInputAction* YawAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* PushAction;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* BringAction;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* RollAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* QuitAction;
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	void StopPush(const FInputActionValue&);
+	void StopBring(const FInputActionValue& Value);
+	void Push(const FInputActionValue& Value);
 
+	void Bring(const FInputActionValue& Value);
 	void HandleYaw(const FInputActionValue& Value);
 	void HandleRoll(const FInputActionValue& Value);
 	void HandleQuit(const FInputActionValue& Value);
