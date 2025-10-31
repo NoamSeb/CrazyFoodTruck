@@ -7,8 +7,12 @@
 UENUM(BlueprintType)
 enum class EPositionSpawn : uint8
 {
-	Right = 0,
-	Left,
-	Forward,
-	Backward,
+	TopRight = 0,
+	TopLeft,
+	MiddleUp,
+	MiddleDown,
+	DownLeft,
+	DownRight,
+	MiddleRight,
+	MiddleLeft,
 };

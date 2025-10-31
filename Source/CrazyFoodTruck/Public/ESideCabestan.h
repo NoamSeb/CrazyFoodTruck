@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 UENUM(BlueprintType)
-enum class ESideCabestan : uint8
+ enum class ESideCabestan : uint8
 {
 	Toward,
 	Backward,
