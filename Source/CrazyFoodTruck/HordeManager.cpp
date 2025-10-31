@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Components/BoxComponent.h"
+#include "Vehicle/Vehicle.h"
 
 
 AHordeManager::AHordeManager()
@@ -115,7 +116,10 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 void AHordeManager::InitHordeZombies()
 {
 	//ajouter à la vitesse du camion
-	vitesseFinalZombie = DifferenceBetweenFoodTruck * KilometersToMetersConvertingValue;
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Food truck value : %f"), FoodTruck->TruckMaxSpeed));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Diff value : %f"), DifferenceBetweenFoodTruck * KilometersToMetersConvertingValue));
+	vitesseFinalZombie = (FoodTruck->TruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("zombie value : %f"), vitesseFinalZombie));
 	//TArray<TArray<UStaticMeshComponent*>> Components;
 
 	//c est moche faut pas voir ça
