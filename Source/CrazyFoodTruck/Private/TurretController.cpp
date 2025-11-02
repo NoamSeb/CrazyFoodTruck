@@ -17,6 +17,7 @@ void ATurretController::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	auto sceneComponents = K2_GetComponentsByClass(USceneComponent::StaticClass());
 	for (auto SceneComponent : sceneComponents)
 	{
