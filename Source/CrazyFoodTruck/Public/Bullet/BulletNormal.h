@@ -19,12 +19,11 @@ public:
 
 protected:
 
-	virtual void EnemyHitBlueprint(AActor* EntityActor) override;
+	
+	virtual void EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit) override;
 	virtual void BeginPlay() override;
-	virtual void GroundHit() override;
-	virtual void EnemyHit(IIEntity* Entity) override;
-
-	//UBoxComponent* _BoxCollider;
+	virtual void GroundHit(FVector LocationHit) override;
+	virtual void EnemyHit(IIEntity* Entity, FVector LocationHit) override;
 
 public:
 	virtual void Tick(float DeltaTime) override;

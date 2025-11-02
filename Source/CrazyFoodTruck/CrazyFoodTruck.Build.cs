@@ -17,7 +17,8 @@ public class CrazyFoodTruck : ModuleRules
 			"EnhancedInput",
 			"UMG",       // <--- add this
 			"Slate",     // <--- add this
-			"SlateCore"  // <--- add this
+			"SlateCore",
+			"Niagara" // <--- add this
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer" });

@@ -3,6 +3,7 @@
 
 #include "Bullet/BulletExplosive.h"
 
+#include "CrazyFoodTruck/GameInstanceCrazyFoodTruck.h"
 
 
 // Sets default values
@@ -11,22 +12,22 @@ ABulletExplosive::ABulletExplosive()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ABulletExplosive::EnemyHitBlueprint(AActor* EntityActor)
+void ABulletExplosive::EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit)
 {
-    SpawnExplosion();
+    SpawnExplosion(LocationHit);
 }
 
-void ABulletExplosive::EnemyHit(IIEntity* Entity)
+void ABulletExplosive::EnemyHit(IIEntity* Entity, FVector LocationHit)
 {
-    SpawnExplosion();
+    SpawnExplosion(LocationHit);
 }
 
-void ABulletExplosive::GroundHit()
+void ABulletExplosive::GroundHit(FVector LocationHit)
 {
-    SpawnExplosion();
+    SpawnExplosion(LocationHit);
 }
 
-void ABulletExplosive::SpawnExplosion()
+void ABulletExplosive::SpawnExplosion(FVector LocationHit)
 {
     if (bHasExploded){return;}
     bHasExploded = true;
@@ -64,24 +65,32 @@ void ABulletExplosive::SpawnExplosion()
 
     if (bHitSomething)
     {
-        for (const FHitResult& Hit : OutHits)
+        for (const FHitResult& Hit : OutHits) // HIT ZOMBIES
         {
             AActor* HitActor = Hit.GetActor();
             if (!HitActor) continue;
             if (HitActor->GetClass()->ImplementsInterface(UIEntity::StaticClass()))
             {
-                Super::EnemyHitBlueprint(HitActor);
+                Super::EnemyHitBlueprint(HitActor, Hit.ImpactPoint);
             }
             else
             {
                 IIEntity* Entity = Cast<IIEntity>(HitActor);
                 if (Entity)
                 {
-                    Super::EnemyHit(Entity);
+                    Super::EnemyHit(Entity, Hit.ImpactPoint);
                 }
             }
         }
     }
+
+    UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, LocationHit, FRotator::ZeroRotator);
+    UGameInstanceCrazyFoodTruck* GI = Cast<UGameInstanceCrazyFoodTruck>(GetGameInstance());
+    if (GI)
+    {
+        GI->PlayerCameraShake(Explosion);
+    }
+
 
     Destroy();
 }

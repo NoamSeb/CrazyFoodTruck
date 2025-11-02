@@ -24,7 +24,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Camera Shake")
 	TSubclassOf<UCameraShakeBase> FireBulletShake;
-
+	UPROPERTY(EditAnywhere, Category="Camera Shake")
+	TSubclassOf<UCameraShakeBase> ExplosionShake;
+	UPROPERTY(EditAnywhere, Category="Camera Shake")
+    TSubclassOf<UCameraShakeBase> ZombieHitShake;
+	
+	//
+	APlayerCameraManager* PlayerCameraManager;
 	private :
 	void CheckEachShakeReference();
 	 

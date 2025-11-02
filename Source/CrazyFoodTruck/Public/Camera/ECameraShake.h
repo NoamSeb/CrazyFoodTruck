@@ -9,6 +9,7 @@ enum ECameraShake : uint8
 {
 	FireBullet,
 	FireExplosion,
+	Explosion,
 	ZombieHit,
 	ObstacleHit,
 	ZombieCrush,

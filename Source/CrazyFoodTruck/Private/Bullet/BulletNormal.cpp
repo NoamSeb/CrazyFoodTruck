@@ -20,20 +20,20 @@ void ABulletNormal::Initialize(FBulletStructure* BulletStructure, const FVector&
 	Super::Initialize(BulletStructure, direction);
 }
 
-void ABulletNormal::EnemyHitBlueprint(AActor* EntityActor)
+void ABulletNormal::EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("DESTROY BULLET"));
-	Super::EnemyHitBlueprint(EntityActor); 
+	Super::EnemyHitBlueprint(EntityActor, LocationHit); 
 }
 
-void ABulletNormal::GroundHit()
+void ABulletNormal::GroundHit(FVector LocationHit)
 {
-	Super::GroundHit();
+	Super::GroundHit(LocationHit);
 }
 
-void ABulletNormal::EnemyHit(IIEntity* Entity)
+void ABulletNormal::EnemyHit(IIEntity* Entity, FVector LocationHit)
 {
-	Super::EnemyHit(Entity);
+	Super::EnemyHit(Entity, LocationHit);
 }
 
 void ABulletNormal::Tick(float DeltaTime)
