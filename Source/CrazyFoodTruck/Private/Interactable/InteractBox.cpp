@@ -44,7 +44,7 @@ bool AInteractBox::CanDetectOverlapp()
 		return false;
 	}else
 	{
-		overlappTimer = 0.1f;
+		overlappTimer = 0.04;
 		return true;
 	}
 }
@@ -279,14 +279,11 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 
 void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBo²dyIndex)
 {
-	if (!CanDetectOverlapp())
-	{
-		return;
-	}
+	if (!CanDetectOverlapp()){return;}
 	if (_IsPlayerControlling){return;}
+	
 	APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(OtherActor);
 	RemoveOverlappingPlayerController(LeavingPlayerController);
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Overlap EXIT "));
 
 	if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(OtherActor)) // PLAYER THAT WAS FIRST QUIT
 	{

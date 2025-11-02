@@ -46,11 +46,13 @@ void AAmmoDeposit::Interact(APlayerController* InstigatorPlayerController, ACraz
 		Reload();
 		CrazyCharacter->SetAmmoState(false);
 		ReloadedAmmoBox = CrazyCharacter->DepositAmmoBox();
+		
 		if (ReloadedAmmoBox)
 		{
 			ReloadedAmmoBox->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 			ReloadedAmmoBox->SetActorRotation(DepositPoint->GetComponentRotation());
 		}
+		
 		CrazyCharacter->SetAmmoState(false);
 		CrazyCharacter->SetInteractState(true);
 		LinkedAmmoSpawner->SetSpawnState(true);

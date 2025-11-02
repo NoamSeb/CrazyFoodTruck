@@ -11,6 +11,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Bullet/FBulletStructure.h"
+#include "CrazyFoodTruck/GameInstanceCrazyFoodTruck.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
 #include "Interactable/InteractBox.h"
@@ -130,7 +131,7 @@ private:
 	int GetBulletDamage() { return BulletDamage ;}
 	float GetBulletSpeed() { return BulletSpeed ;}
 	float GetBulletFireRate() { return BulletFireRate ;}
-	
+
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	// INPUT
