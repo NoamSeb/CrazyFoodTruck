@@ -8,6 +8,7 @@
 #include "GameFramework/Pawn.h"
 #include "Interactable/InteractBox.h"
 #include "EnhancedInputComponent.h"
+#include "InputMappingContext.h"
 
 #include "PlateSide.generated.h"
 

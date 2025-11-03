@@ -6,46 +6,50 @@
 
 #include "Components/WidgetComponent.h"
 
-ARepairProgressBillboard::ARepairProgressBillboard()
+URepairProgressBillboard::URepairProgressBillboard()
 {
-	PrimaryActorTick.bCanEverTick = true;
-
-	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("RepairWidget"));
-	SetRootComponent(WidgetComponent);
-
-	WidgetComponent->SetWidgetSpace(EWidgetSpace::World);
-	WidgetComponent->SetTwoSided(true);
-	WidgetComponent->SetDrawAtDesiredSize(true);
-	WidgetComponent->SetPivot(FVector2D(0.5f, 0.0f));
-	WidgetComponent->SetRelativeLocation(FVector(0.f, 0.f, BillboardOffsetZ));
-	WidgetComponent->SetDrawSize(FVector2D(280.f, 32.f));
-	WidgetComponent->SetVisibility(false);
+	// WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("RepairWidget"));
+	// SetRootComponent(WidgetComponent);
+	//
+	// WidgetComponent->SetWidgetSpace(EWidgetSpace::World);
+	// WidgetComponent->SetTwoSided(true);
+	// WidgetComponent->SetDrawAtDesiredSize(true);
+	// WidgetComponent->SetPivot(FVector2D(0.5f, 0.0f));
+	// WidgetComponent->SetRelativeLocation(FVector(0.f, 0.f, BillboardOffsetZ));
+	// WidgetComponent->SetDrawSize(FVector2D(280.f, 32.f));
+	// WidgetComponent->SetVisibility(false);
 }
 
-void ARepairProgressBillboard::BeginPlay()
+void URepairProgressBillboard::InitializeWidget(UWidgetComponent* InWidgetComponent)
+{
+	WidgetComponent = InWidgetComponent;
+}
+
+void URepairProgressBillboard::BeginPlay()
 {
 	Super::BeginPlay();
 	UpdateWidget();
 }
 
-bool ARepairProgressBillboard::IsDamaged() const
+bool URepairProgressBillboard::IsDamaged() const
 {
 	return RepairProgress < 1.f - KINDA_SMALL_NUMBER;
 }
 
-void ARepairProgressBillboard::SetDamaged(bool bDamaged)
+void URepairProgressBillboard::SetDamaged(bool bDamaged)
 {
 	RepairProgress = bDamaged ? 0.f : 1.f;
 	UpdateWidget();
 }
 
-void ARepairProgressBillboard::HandleRepairInput()
+void URepairProgressBillboard::HandleRepairInput()
 {
 	if (!IsDamaged()) return;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Repairing..."));
 	ApplyProgressStep(RepairFillPerPress);
 }
 
-void ARepairProgressBillboard::ApplyProgressStep(float Step)
+void URepairProgressBillboard::ApplyProgressStep(float Step)
 {
 	RepairProgress = FMath::Clamp(RepairProgress + Step, 0.f, 1.f);
 	UpdateWidget();
@@ -56,14 +60,14 @@ void ARepairProgressBillboard::ApplyProgressStep(float Step)
 	}
 }
 
-void ARepairProgressBillboard::FinishRepair()
+void URepairProgressBillboard::FinishRepair()
 {
 	RepairProgress = 1.f;
 	UpdateWidget();
 	OnRepaired.Broadcast();
 }
 
-void ARepairProgressBillboard::UpdateWidget()
+void URepairProgressBillboard::UpdateWidget()
 {
 	if (!WidgetComponent)
 		return;

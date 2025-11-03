@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/ActorComponent.h"
 #include "RepairProgressBillboard.generated.h"
 
 class URepairProgressWidget;
@@ -12,13 +12,13 @@ class UWidgetComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRepaired);
 
-UCLASS()
-class CRAZYFOODTRUCK_API ARepairProgressBillboard : public AActor
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+class CRAZYFOODTRUCK_API URepairProgressBillboard : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	ARepairProgressBillboard();
+	URepairProgressBillboard();
 
 	UFUNCTION(BlueprintCallable, Category = "Repair")
 	bool IsDamaged() const;
@@ -31,6 +31,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Repair|Events")
 	FOnRepaired OnRepaired;
+
+	UFUNCTION(BlueprintCallable, Category = "Repair")
+	void InitializeWidget(UWidgetComponent* InWidgetComponent);
 
 protected:
 	virtual void BeginPlay() override;

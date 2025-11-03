@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EInteractionType.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
@@ -10,7 +11,7 @@
 enum class ELocalMultiplayerInputMappingType;
 
 class ACrazyFoodTruckCharacter;
-class ARepairProgressBillboard;
+class URepairProgressBillboard;
 class AAttachPoint;
 
 class UBoxComponent;
@@ -28,7 +29,10 @@ class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
 public:
 	AInteractBox();
 
-	virtual void Interact(APlayerController* InstigatorPlayerController) override;
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
+	void TryInteractWithObject(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter);
+	void TryPossesPawn(APlayerController* InstigatorPlayerController);
 
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor, Category = "Interact|Editor")
@@ -37,11 +41,15 @@ public:
 	void ClearAttachPoint();
 #endif
 
+	bool _IsShowingInput;
+	
+	bool CanDetectOverlapp();
+
 	UFUNCTION(BlueprintCallable, Category = "Interact|State")
 	void UpdateVisibilityInput(bool bIsVisible);
 
 	UFUNCTION(BlueprintCallable, Category = "Interact|State")
-	bool GetInputVisibilityState() const { return bShowInputHint; }
+	bool GetInputVisibilityState() const { return _IsShowingInput; }
 
 	UFUNCTION(BlueprintCallable, Category = "Interact|State")
 	void SetFunctional(bool bNewFunctional);
@@ -61,6 +69,9 @@ public:
 	void PossessPawn(APlayerController* PlayerController);
 	void UnpossessPawn();
 
+	UFUNCTION(BlueprintCallable, Category = "Damage|Repair")
+	void SetRepairProgress(URepairProgressBillboard* RPB);
+
 	UPROPERTY(EditAnywhere, Category = "Damage|Repair")
 	bool bStartDamaged = false;
 
@@ -71,7 +82,7 @@ public:
 	bool bCanBreakWhilePossessed = false;
 
 	UPROPERTY(EditAnywhere, Category = "Damage|Repair")
-	TObjectPtr<ARepairProgressBillboard> RepairProgressBillboard = nullptr;
+	TObjectPtr<URepairProgressBillboard> RepairProgressBillboard = nullptr;
 
 	UPROPERTY(BlueprintAssignable, Category = "Damage|Repair")
 	FOnDamaged OnDamaged;
@@ -92,8 +103,14 @@ public:
 	TObjectPtr<APawn> PawnToPossess = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
+	EInteractionType InteractionType;
+	
+	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
 	ELocalMultiplayerInputMappingType MappingType = static_cast<ELocalMultiplayerInputMappingType>(0);
-
+	
+	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
+	AActor* InteractableObject;
+	
 	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
 	FOnInteractController OnInteractionStarted;
 
@@ -109,9 +126,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
 	FOnCollision OnPlayerQuit;
 
+
+
 protected:
 	virtual void BeginPlay() override;
-	// void FindSceneComponent();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interact|Components")
 	TObjectPtr<UBoxComponent> Box = nullptr;
@@ -124,9 +142,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Interact|State")
 	bool bPlayerIsControlling = false;
-
-	UPROPERTY(VisibleAnywhere, Category = "Interact|State")
-	bool bShowInputHint = false;
 
 	UPROPERTY(VisibleAnywhere, Category = "Interact|State")
 	bool bIsFunctional = true;
@@ -144,6 +159,8 @@ protected:
 	FRotator RotationControllerOnEnter = FRotator::ZeroRotator;
 
 private:
+
+	float OverlappTimer = 0.f;
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool bFromSweep, const FHitResult& Hit);
 
