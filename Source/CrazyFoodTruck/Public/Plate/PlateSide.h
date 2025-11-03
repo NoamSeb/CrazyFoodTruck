@@ -8,6 +8,7 @@
 #include "GameFramework/Pawn.h"
 #include "Interactable/InteractBox.h"
 #include "EnhancedInputComponent.h"
+#include "InputMappingContext.h"
 
 #include "PlateSide.generated.h"
 
@@ -35,6 +36,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* QuitAction;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* ActionReturnSteak;
+	
+	void TriggerReturnSteak();
+	void CompleteReturnSteak();
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 

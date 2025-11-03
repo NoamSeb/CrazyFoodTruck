@@ -64,7 +64,7 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		BulletDamage = ActualBulletStructure->Damage;
 		BulletFireRate = ActualBulletStructure->FireRate;
 		AreaRangeSide = ActualBulletStructure->AreaSide;
-		AreaRangeDepht = ActualBulletStructure->AreaDepht;
+		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 	}
 	else
 	{
@@ -250,7 +250,7 @@ void ATurretController::InputRoll(const FInputActionValue& Value) // MOVE ALONG 
 }
 
 
-void ATurretController::InputYaw(const FInputActionValue& Value) // X VALUE 
+void ATurretController::InputYaw(const FInputActionValue& Value) // X VALUE depht axis ^
 {
 	float valueToFloat = Value.Get<float>();
 	

@@ -87,8 +87,6 @@ void ABulletBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	
 	FVector impactPoint = SweepResult.ImpactPoint;
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.F, FColor::MakeRandomColor(), FString::Printf(TEXT("OVERLAP WITH: %s"), *OtherActor->GetName()));
-
 	if (OtherActor->GetClass()->ImplementsInterface(UIEntity::StaticClass()))
 	{
 		EnemyHitBlueprint(OtherActor, impactPoint);
@@ -120,8 +118,6 @@ void ABulletBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void ABulletBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,FVector NormalImpulse, const FHitResult& Hit)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.F, FColor::MakeRandomColor(), "HIT");
-
 	if (OtherActor == nullptr || OtherActor == this)
 	{
 		return;

@@ -22,7 +22,7 @@ class CRAZYFOODTRUCK_API IInteractable
 
 public:
 	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) = 0;
-	// virtual FOnInterfaceEvent OnInteractionStarted() = 0;
+
 	// virtual FOnInterfaceEvent OnInteractionEnded() = 0;
 	//
 	// virtual FOnInterfaceEvent OnObjectCanInteract() = 0;

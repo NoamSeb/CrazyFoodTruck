@@ -23,17 +23,53 @@ void APlateController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	float value = rightInput - leftInput;
-	MovePlate(value);
+	if (CanMove)
+	{
+		MovePlate(value);
+	}
+
+	if (rightSteak && leftSteak && !alreadyReturned)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Return Steak");
+		alreadyReturned = true;
+		ReturnSteak();
+	}
+
+	if (!rightSteak || !leftSteak)
+	{
+		alreadyReturned = false;
+	}
 }
 
-void APlateController::ReceiveInputRight(float value)
+void APlateController::ReceiveInputRightSteak(float value)
 {
 	rightInput = value;
 }
 
-void APlateController::ReceiveInputLeft(float value)
+void APlateController::ReceiveInputLeftSteak(float value)
 {
 	leftInput = value;
+}
+
+void APlateController::ReceiveInputRightSteak(bool value)
+{
+	rightSteak = value;
+}
+
+
+void APlateController::ReceiveInputLeftSteak(bool value)
+{
+	leftSteak = value;
+}
+
+void APlateController::ReturnSteak()
+{
+	if (Steak->IsReturn)
+	Steak->IsReturn = false;
+	else
+	{
+		Steak->IsReturn = true;
+	}
 }
 
 void APlateController::MovePlate(float value)

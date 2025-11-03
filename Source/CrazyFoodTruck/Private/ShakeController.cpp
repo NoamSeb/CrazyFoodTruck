@@ -2,7 +2,6 @@
 
 
 #include "ShakeController.h"
-
 #include "Kismet/GameplayStatics.h"
 
 
