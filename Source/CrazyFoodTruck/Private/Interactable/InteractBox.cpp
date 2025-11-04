@@ -163,12 +163,10 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPr
         OnCollisionExit.Broadcast();
         TryReleaseLockFromActor(Other);
     
-        // Clear cached references if the leaving was the controlled one
         CachedCharacter = nullptr;
         CachedPlayerController = nullptr;
         CachedPreviousPawn = nullptr;
 
-        // If someone else is still inside, detect them
         if (ACrazyFoodTruckCharacter* Still = DetectPlayerInside())
         {
             APlayerController* NewPlayerController = GetPlayerControllerFromActor(Still);
@@ -187,7 +185,6 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
     if (!bLockedByAnother && !bAnotherInside)
     {
         Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
-
         if (!CurrentInteractorPlayerController.IsValid())
         {
             OnCollisionEnter.Broadcast();
@@ -336,10 +333,13 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 void AInteractBox::UnpossessPawn()
 {
     OnPlayerQuit.Broadcast();
+    
     bPlayerIsControlling = false;
+    CurrentInteractorPlayerController = nullptr;
 
     if (!CachedPlayerController.IsValid())
         return;
+    
 
     const int32 PlayerIndex = GetPlayerIndexFromPlayerController(CachedPlayerController.Get());
     if (PlayerIndex != -1)
@@ -646,8 +646,6 @@ void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
     {
         return;
     }
-
-
     if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() == LeavingPlayerController)
     {
         CurrentInteractorPlayerController = nullptr;
