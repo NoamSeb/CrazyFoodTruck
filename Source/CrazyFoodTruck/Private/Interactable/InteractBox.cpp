@@ -177,6 +177,7 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPr
 
 void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
 {
+    if (!bPlayerIsControlling){return;}
     if (Character)
     {
         if (Character->GetFocusedInteractable().GetInterface() == static_cast<IInteractable*>(this))
@@ -361,7 +362,6 @@ void AInteractBox::UnpossessPawn()
 
     if (!CachedPlayerController.IsValid())
         return;
-    
 
     const int32 PlayerIndex = GetPlayerIndexFromPlayerController(CachedPlayerController.Get());
     if (PlayerIndex != -1)
