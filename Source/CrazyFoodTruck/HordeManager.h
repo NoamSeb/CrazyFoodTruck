@@ -8,20 +8,17 @@
 #include "AreaZombieSpawn.h"
 #include "FWaveStructure.h"
 
+#include "Vehicle/Vehicle.h"
+
+#if WITH_EDITOR
 #include "Editor.h"
+#include "Editor/EditorEngine.h"
+#endif
 #include "FZoneSpawn.h"
-#include "Engine/Selection.h"
 #include "Engine/World.h"
 #include "Engine/Level.h"
-#include "Engine/LevelScriptActor.h"
-#include "Engine/Selection.h"
-#include "ScopedTransaction.h"
 
-#include "Editor/EditorEngine.h"
 #include "UObject/ConstructorHelpers.h"
-#include "Engine/StaticMeshActor.h"
-
-#include "UnrealEd.h"
 
 #include "HordeManager.generated.h"
 
@@ -34,6 +31,9 @@ class CRAZYFOODTRUCK_API AHordeManager : public AActor
 public:
 	// Sets default values for this actor's properties
 	AHordeManager();
+	
+	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Food Truck")
+    AVehicle* FoodTruck;
 
 #pragma region Rapport avec le zombie 
 	//mettre le BP du zombie dans le BP de la horde
@@ -44,6 +44,7 @@ public:
 	float DifferenceBetweenFoodTruck = 5.f;
 	float KilometersToMetersConvertingValue = 27.777777777778;
 	float vitesseFinalZombie;
+	
 #pragma endregion
 
 #pragma region Actor to Follow

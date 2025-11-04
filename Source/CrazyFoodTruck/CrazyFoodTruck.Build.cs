@@ -17,10 +17,11 @@ public class CrazyFoodTruck : ModuleRules
 			"EnhancedInput",
 			"UMG",       // <--- add this
 			"Slate",     // <--- add this
-			"SlateCore"  // <--- add this
+			"SlateCore",
+			"Niagara" // <--- add this
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
@@ -29,6 +30,9 @@ public class CrazyFoodTruck : ModuleRules
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
 		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
-		PrivateDependencyModuleNames.AddRange(new string[]{"UnrealEd",});
+		if (Target.bBuildEditor)
+		{
+			PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd" });
+		}
 	}
 }

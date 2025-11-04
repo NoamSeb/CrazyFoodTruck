@@ -3,9 +3,6 @@
 
 #include "CrazyFoodTruck/Public/TurretController.h"
 
-#include "UTurretWidget.h"
-#include "Blueprint/UserWidget.h"
-#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -19,6 +16,7 @@ ATurretController::ATurretController()
 void ATurretController::BeginPlay()
 {
 	Super::BeginPlay();
+
 
 	auto sceneComponents = K2_GetComponentsByClass(USceneComponent::StaticClass());
 	for (auto SceneComponent : sceneComponents)
@@ -34,15 +32,11 @@ void ATurretController::BeginPlay()
 	}
 	
 	ResetCoolDown();
-	ResetAmmo();
-	AddInputMapping();
-	StartPossessTurret();
-
+	SwitchBulletType(EbulletType::BulletNormal);
 	Shoot();
 	UpdateTurretCanonRotation();
-	
 }
-	
+
 void ATurretController::SetBulletSpawnTransform(USceneComponent* Scp)
 {
 	_SpawnBulletTransform = Scp;
@@ -50,7 +44,7 @@ void ATurretController::SetBulletSpawnTransform(USceneComponent* Scp)
 
 void ATurretController::ResetCoolDown()
 {
-	_CurrentCoolDown = _BaseCoolDownShoot;
+	_CurrentCoolDown = GetCoolDownBetweenShoot();
 }
 
 void ATurretController::ResetAmmo()
@@ -58,65 +52,61 @@ void ATurretController::ResetAmmo()
 	_CurrentAmmo = _AmmoMax;
 }
 
-void ATurretController::AddInputMapping()
+void ATurretController::SwitchBulletType(EbulletType NewType)
 {
-	if (!TurretMappingContext){return;}
-
-	APlayerController* Pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (Pc)
-	{
-		if (ULocalPlayer* Lp = Pc->GetLocalPlayer())
-		{
-			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-			{
-				Subsystem->AddMappingContext(TurretMappingContext, mappingPriority);
-			}
-		}
-	}
-}
-
-void ATurretController::RemoveInputMapping()
-{
-	if (!TurretMappingContext){return;}
-
-	if (APlayerController* Pc = Cast<APlayerController>(GetController()))
-	{
-		if (ULocalPlayer* Lp = Pc->GetLocalPlayer())
-		{
-			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = Lp->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-			{
-				Subsystem->RemoveMappingContext(TurretMappingContext);
-			}
-		}
-	}
-}
-
-void ATurretController::StartPossessTurret()
-{
-	APlayerController* Pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	_actualBulletType = NewType;
 	
-	if (Pc){Pc->Possess(this);}
+	FString TargetName = GetRowNameFromBulletType(_actualBulletType);
+	ActualBulletStructure = BulletDataTable->FindRow<FBulletStructure>(FName(*TargetName), "", true);
+	if (ActualBulletStructure != nullptr)
+	{
+		BulletSpeed = ActualBulletStructure->Speed;
+		BulletDamage = ActualBulletStructure->Damage;
+		BulletFireRate = ActualBulletStructure->FireRate;
+		AreaRangeSide = ActualBulletStructure->AreaSide;
+		AreaRangeDepht = ActualBulletStructure->AreaDepth;
+	}
+	else
+	{
+		return;
+	}
+	
+	FString FullPath = FString::Printf(TEXT("/Game/Resources/Bullet/%s.%s_C"), *TargetName, *TargetName);
+	
+	UClass* LoadedClass = LoadClass<ABulletBase>(nullptr, *FullPath);
+	if (LoadedClass)
+	{
+		ActualBulletPrefab = LoadedClass;
+	}
+	else
+	{
+		ActualBulletPrefab = nullptr;
+	}
 }
 
-void ATurretController::PossessedBy(AController* NewController)
+FString ATurretController::GetRowNameFromBulletType(EbulletType Type)
 {
-	Super::PossessedBy(NewController);
-	AddInputMapping();
-}
-
-void ATurretController::UnPossessed()
-{
-	Super::UnPossessed();
-	RemoveInputMapping();
+	switch (Type)
+	{
+		case EbulletType::BulletNormal:
+			return FString("BulletNormal");
+		case EbulletType::BulletExplosive:
+			return FString("BulletExplosive");
+		case EbulletType::BulletFlamethrower:
+			return FString("BulletFlamethrower");
+		case EbulletType::BulletBouncy:
+			return FString("BulletBouncy");
+		default:
+			return FString("normal");
+	}
 }
 
 void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		if (ShootAction)
+		if (ShootAction) 
 		{
 			Eic->BindAction(ShootAction, ETriggerEvent::Triggered, this, &ATurretController::InputShootTriggered);
 		}
@@ -128,19 +118,16 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		{
 			Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ATurretController::InputRoll);
 		}
+		if (ChangeBulletAction)
+		{
+			Eic->BindAction(ChangeBulletAction, ETriggerEvent::Started, this, &ATurretController::InputChangeBulletType);
+		}
+		if (QuitTurret)
+		{
+			Eic->BindAction(QuitTurret, ETriggerEvent::Started, this, &ATurretController::InputQuitTurret);
+		}
 	}
 }
-
-
-
-
-
-
-void ATurretController::CanonKnockBackAnim()
-{
-}
-
-
 void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 {
 	_CurrentAmmo = NewAmmo;
@@ -159,15 +146,23 @@ void ATurretController::DecrementAmmo()
 	_CurrentAmmo -= 1;
 	if (_CurrentAmmo <= 0)
 	{
+		OnAmmoEmpty.Broadcast();
 		_CurrentAmmo = 0;
-		Reload();
 	}
 	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
 }
 
 float ATurretController::GetCoolDownBetweenShoot()
 {
-	return _BaseCoolDownShoot;
+	return BulletFireRate;
+}
+
+void ATurretController::AddRotationInput(float value)
+{
+	float targetSpeed = value * (TurretRotationSpeed * GetWorld()->GetDeltaSeconds());
+	FRotator CurrentRotation = GetActorRotation();
+	FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw + targetSpeed, CurrentRotation.Roll);
+	SetActorRotation(NewRotation);
 }
 
 
@@ -182,54 +177,105 @@ void ATurretController::Tick(float DeltaTime)
 
 void ATurretController::Shoot()
 {
-	if (!BulletPrefab) return;
+	if (!ActualBulletPrefab) return;
 	if (!_SpawnBulletTransform) return;
 	if (_CurrentCoolDown > 0) return; 
 	if (!HasAmmo()) return;
 
 	ResetCoolDown();
-	
-	CanonKnockBackAnim();
-
 	DecrementAmmo();
+	
 	FActorSpawnParameters bulletParams;
 	OnShoot.Broadcast();
 
-	AActor* bulletInstance = GetWorld()->SpawnActor<AActor>(BulletPrefab, _SpawnBulletTransform->GetComponentTransform(), bulletParams);
+	AActor* bulletInstance = GetWorld()->SpawnActor<AActor>(ActualBulletPrefab, _SpawnBulletTransform->GetComponentTransform(), bulletParams);
 	if (bulletInstance)
 	{
 		// CAST TO BULLET CONTROLLER
-		ABulletController* bulletController = Cast<ABulletController>(bulletInstance);
-		if (bulletController)
+		ABulletBase* BulletBase = Cast<ABulletBase>(bulletInstance);
+		if (BulletBase)
 		{
-			bulletController->Initialize(3000.f, 1.5f);
+			BulletBase->Initialize(ActualBulletStructure, _CanonToRotate->GetForwardVector());
 		}
 	}
 }
 
 // INPUT
 
+void ATurretController::InputChangeBulletType(const FInputActionValue& Value)
+{
+	EbulletType nextType = static_cast<EbulletType>((static_cast<int>(_actualBulletType) + 1));
+	if (nextType > EbulletType::BulletBouncy)
+	{
+		nextType = EbulletType::BulletNormal;
+	}
+	
+	SwitchBulletType(nextType);
+}
+
 void ATurretController::InputShootTriggered(const FInputActionValue& Value)
 {
 	Shoot();
 }
 
-void ATurretController::InputRoll(const FInputActionValue& Value)
+void ATurretController::InputRoll(const FInputActionValue& Value) // MOVE ALONG Y AXIS // side AXIS <->
 {
 	float valueToFloat = Value.Get<float>();
-
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("ROLL INPUT")));
-
 	if (_CursorJoint)
 	{
-		FVector CurrentLocation = _CursorJoint->GetRelativeLocation();
+		auto WoldDir = FVector::LeftVector;
+		auto worldDelta = WoldDir * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
 
-		CurrentLocation.Y += valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds());
-		CurrentLocation.Y = FMath::Clamp(CurrentLocation.Y,-AreaRangeDepht , AreaRangeDepht);
+		auto* ParentComp = _CursorJoint->GetAttachParent();
+		
+		if (!ParentComp)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
+			_CursorJoint->AddWorldOffset(worldDelta);
+			return;
+		}
 
-		_CursorJoint->SetRelativeLocation(CurrentLocation);
+		const FTransform parentTransform = ParentComp->GetComponentTransform();
+		FVector localDelta = parentTransform.InverseTransformVectorNoScale(worldDelta);
+
+		FVector CurrentRelative = _CursorJoint->GetRelativeLocation();
+		FVector NewRelative = CurrentRelative + localDelta;
+
+		NewRelative.Y = FMath::Clamp(NewRelative.Y,-AreaRangeSide , AreaRangeSide);
+		
+		_CursorJoint->SetRelativeLocation(NewRelative);
 
 		UpdateTurretCanonRotation(); 
+	}
+}
+
+
+void ATurretController::InputYaw(const FInputActionValue& Value) // X VALUE depht axis ^
+{
+	float valueToFloat = Value.Get<float>();
+	
+	if (_CursorJoint)
+	{
+		auto Fdir = FVector::BackwardVector;
+		auto worldDelta = Fdir * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
+
+		auto* ParentComp = _CursorJoint->GetAttachParent();
+		if (!ParentComp)
+		{
+			_CursorJoint->AddWorldOffset(worldDelta);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
+			return;
+		}
+		
+		const FTransform parentTransform = ParentComp->GetComponentTransform();
+		FVector localDelta = parentTransform.InverseTransformVectorNoScale(worldDelta);
+
+		FVector CurrentRelative = _CursorJoint->GetRelativeLocation();
+		FVector NewRelative = CurrentRelative + localDelta;
+		NewRelative.X = FMath::Clamp(NewRelative.X,-AreaRangeDepht , AreaRangeDepht);
+		
+		_CursorJoint->SetRelativeLocation(NewRelative);
+		UpdateTurretCanonRotation();
 	}
 }
 
@@ -237,7 +283,6 @@ void ATurretController::UpdateTurretCanonRotation()
 {
 	if (_CanonToRotate)
 	{
-		// LOOK AT TARGET
 		FVector cursorPosition = _CursorJoint->GetComponentLocation();
 		FVector TurretPosition = _CanonToRotate->GetComponentLocation();
 		FRotator lookAtRotator = UKismetMathLibrary::FindLookAtRotation(TurretPosition, cursorPosition);
@@ -245,20 +290,22 @@ void ATurretController::UpdateTurretCanonRotation()
 	}
 }
 
-void ATurretController::InputYaw(const FInputActionValue& Value)
+
+
+void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
-	float valueToFloat = Value.Get<float>();
-
-	if (_CursorJoint)
+	if (InteractBox)
 	{
-		FVector CurrentLocation = _CursorJoint->GetRelativeLocation();
-
-		CurrentLocation.X += valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds());
-		CurrentLocation.X = FMath::Clamp(CurrentLocation.X,-AreaRangeSide , AreaRangeSide);
-
-		_CursorJoint->SetRelativeLocation(CurrentLocation);
-
-		UpdateTurretCanonRotation(); 
+		InteractBox->UnpossessPawn();
 	}
 }
 
+void ATurretController::TestingFunction(const FInputActionValue& Value)
+{
+}
+
+
+void ATurretController::Print(FString Message)
+{
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, Message);
+}

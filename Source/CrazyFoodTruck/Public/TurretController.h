@@ -3,14 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BulletController.h"
+#include "Bullet/BulletBase.h"
+#include "Bullet/EBulletType.h"
+#include "InputMappingContext.h"
+#include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "ITurretWidget.h"
-#include "UTurretWidget.h"
-#include "Components/WidgetComponent.h"
+#include "Bullet/FBulletStructure.h"
+#include "CrazyFoodTruck/GameInstanceCrazyFoodTruck.h"
 #include "GameFramework/Actor.h"
+#include "Interactable/Interactable.h"
+#include "Interactable/InteractBox.h"
 #include "TurretController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShootSignature, int32, AmmoLeft, int32, AmmoMax); 
@@ -24,8 +28,17 @@ class CRAZYFOODTRUCK_API ATurretController : public APawn
 public:
 	
 	ATurretController();
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ABulletController> BulletPrefab;
+	
+	TSubclassOf<ABulletBase> ActualBulletPrefab;
+
+	UPROPERTY(EditAnywhere, Category="Data")
+	UDataTable* BulletDataTable;
+
+	UPROPERTY(EditAnywhere, Category="Variable")
+	AInteractBox* InteractBox;
+
+	APlayerController* ActualPlayerController;
+	APawn* ActualPawn;
 	
 	int GetAmmo() const { return _CurrentAmmo;}
 	int GetAmmoMax() const { return _AmmoMax;}
@@ -34,8 +47,11 @@ public:
 	void DecrementAmmo();
 	bool HasAmmo() const { return _CurrentAmmo > 0; }
 
+
 	UFUNCTION(BlueprintCallable)
 	float GetCoolDownBetweenShoot();
+
+	void AddRotationInput(float value);
 
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnShootSignature OnAmmoChanged;
@@ -43,7 +59,8 @@ public:
 	FOnTurretEvent OnShoot;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnTurretEvent OnReload;
-	
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnTurretEvent OnAmmoEmpty;
 protected:
 
 	UPROPERTY(EditAnywhere, Category="OTHER")
@@ -61,35 +78,42 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* RollAction;
 
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* ChangeBulletAction;
+
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	UInputAction* QuitTurret;
+	
 	UPROPERTY(EditDefaultsOnly, Category="Component Mesh")
 	USceneComponent* _CanonToRotate;
 	
 	virtual void BeginPlay() override;
 
 public:
+	
 	virtual void Tick(float DeltaTime) override;
 
 private:
 
+	EbulletType _actualBulletType;
+	FBulletStructure* ActualBulletStructure;
+
 	int32 _CurrentAmmo = 0;
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	int32 _AmmoMax = 10;
-
+	int32 _AmmoMax = 25;
+	
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float _BaseCoolDownShoot = 0.f;
+	float TurretRotationSpeed = 10.f;
 
-	UPROPERTY(EditAnywhere, Category="Turret Parameters")
 	float _CurrentCoolDown = 0.f;
 
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float _CursorSpeed = 5.f;
+	float _CursorSpeed = 300.f;
 	
-	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float AreaRangeSide = 200.f;
+	float AreaRangeSide;
+	float AreaRangeDepht;
 	
-	UPROPERTY(EditAnywhere, Category="Turret Parameters")
-	float AreaRangeDepht = 200.f;
-
 	void Shoot();
 	UFUNCTION(BlueprintCallable)
 	void SetBulletSpawnTransform(USceneComponent* Scp);
@@ -97,14 +121,17 @@ private:
 	
 	void ResetCoolDown();
 	void ResetAmmo();
-	void AddInputMapping();
-	void RemoveInputMapping();
-	void StartPossessTurret();
+	void SwitchBulletType(EbulletType NewType);
+	FString GetRowNameFromBulletType(EbulletType Type);
 
-	// VIRTUAL
+	int BulletDamage;
+	float BulletSpeed;
+	float BulletFireRate;
+	
+	int GetBulletDamage() { return BulletDamage ;}
+	float GetBulletSpeed() { return BulletSpeed ;}
+	float GetBulletFireRate() { return BulletFireRate ;}
 
-	virtual void PossessedBy(AController* NewController) override;
-	virtual void UnPossessed() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	// INPUT
@@ -112,10 +139,15 @@ private:
 	void InputShootTriggered(const FInputActionValue& Value);
 	void InputYaw(const FInputActionValue& Value);
 	void InputRoll(const FInputActionValue& Value);
+	void InputChangeBulletType(const FInputActionValue& Value);
+	void InputQuitTurret(const FInputActionValue& Value);
+	void TestingFunction(const FInputActionValue& Value);
+	void Print(FString Message);
+
 	void UpdateTurretCanonRotation();
 
 	int32 mappingPriority = 0;
 
-	void CanonKnockBackAnim();
-
 };
+
+

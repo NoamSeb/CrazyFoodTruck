@@ -1,50 +1,127 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "CrazyFoodTruck/Public/Vehicle/Vehicle.h"
 
-#include "AI/NavigationSystemBase.h"
+#include "Interactable/InteractBox.h"
+#include "TurretController.h"
 
-// Sets default values
+#include "LocalMultiplayerSettings.h"
+
+#include "Components/BoxComponent.h"
+#include "Components/PrimitiveComponent.h"
+
+#include "GameFramework/FloatingPawnMovement.h"
+
+#include "Kismet/GameplayStatics.h"
+
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+
 AVehicle::AVehicle()
 {
-	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
 void AVehicle::BeginPlay()
 {
 	Super::BeginPlay();
-	MovementComponent = Cast<UFloatingPawnMovement>(this->GetMovementComponent());
+
+	MovementComponent = Cast<UFloatingPawnMovement>(GetMovementComponent());
 	MovementComponent->MaxSpeed = TruckMaxSpeed * KilometersToMetersConvertingValue;
-	GetWorld()->GetFirstPlayerController()->Possess(this);
+
+	if (!MovementComponent->UpdatedComponent)
+	{
+		MovementComponent->SetUpdatedComponent(RootComponent);
+	}
+	
+	MovementComponent->bUpdateOnlyIfRendered = false;
+	MovementComponent->Activate(true);
+
+	MovementComponent->SetPlaneConstraintEnabled(true);
+	MovementComponent->SetPlaneConstraintNormal(FVector::UpVector);
+	MovementComponent->SetPlaneConstraintOrigin(FVector::ZeroVector);
 }
 
-// Called every frame
+void AVehicle::PossessedBy(AController* NewController)
+{
+	if (MovementComponent)
+	{
+		SavedLinearVelocity = MovementComponent->Velocity;
+		PossessKeepVelocity = SavedLinearVelocity;
+	}
+	
+	Super::PossessedBy(NewController);
+
+	if (MovementComponent)
+	{
+		MovementComponent->Velocity = PossessKeepVelocity;
+		MovementComponent->UpdateComponentVelocity();
+
+		bHoldSpeedAfterPossess = true;
+		HoldSpeedTimer = HoldSpeedDuration;
+	}
+}
+
+void AVehicle::UnPossessed()
+{
+	if (MovementComponent)
+	{
+		SavedLinearVelocity = MovementComponent->Velocity;
+	}
+	
+	Super::UnPossessed();
+
+	if (MovementComponent)
+	{
+		MovementComponent->Velocity = SavedLinearVelocity;
+		MovementComponent->UpdateComponentVelocity();
+	}
+}
+
 void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	MoveForward();
+
+	if (bHoldSpeedAfterPossess)
+	{
+		const float Speed = PossessKeepVelocity.Size();
+		const FVector Fwd2D = FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0.f).GetSafeNormal();
+		PossessKeepVelocity = Fwd2D * Speed;
+
+		MovementComponent->Velocity = PossessKeepVelocity;
+		MovementComponent->UpdateComponentVelocity();
+
+		AddMovementInput(Fwd2D, 1.f, true);
+
+		HoldSpeedTimer -= DeltaTime;
+		if (HoldSpeedTimer <= 0.f)
+		{
+			bHoldSpeedAfterPossess = false;
+		}
+	}
 
 	switch (TruckState)
 	{
-		case VehicleStates::Idle:
-			ResetTruckTilt(DeltaTime);
-			break;
-		case VehicleStates::Rotating:
-			RotateTruck(DeltaTime);
-			break;
-		default:
-			break;
+	case VehicleStates::Idle:
+		ResetTruckTilt(DeltaTime);
+		break;
+	case VehicleStates::Rotating:
+		RotateTruck(DeltaTime);
+		break;
+	default:
+		break;
 	}
 
 	if (bRecoveringSpeed)
 	{
 		ElapsedTime += DeltaTime;
-		float Alpha = FMath::Clamp(ElapsedTime / SpeedRecoveryDuration, 0.f, 1.f);
-		
-		MovementComponent->MaxSpeed = FMath::Lerp(TruckMaxSpeed * KilometersToMetersConvertingValue - TruckLossSpeed * KilometersToMetersConvertingValue, TruckMaxSpeed * KilometersToMetersConvertingValue, Alpha);
+		const float Alpha = FMath::Clamp(ElapsedTime / SpeedRecoveryDuration, 0.f, 1.f);
+
+		const float VMin = (TruckMaxSpeed - TruckLossSpeed) * KilometersToMetersConvertingValue;
+		const float VMax = TruckMaxSpeed * KilometersToMetersConvertingValue;
+		MovementComponent->MaxSpeed = FMath::Lerp(VMin, VMax, Alpha);
 
 		if (Alpha >= 1.0f)
 		{
@@ -57,26 +134,55 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	OtherActor->Destroy(true);
-	ReduceSpeed();
+	if (!OtherActor) return;
+
+	if (OtherActor->Tags.Contains("Obstacle"))
+	{
+		OtherActor->Destroy();
+		ReduceSpeed();
+	}
+	else if (OtherActor->Tags.Contains("MapSwitch"))
+	{
+		ChangeMap();
+	}
 }
 
 void AVehicle::MoveForward()
 {
-	AddMovementInput(GetActorForwardVector(),1);
+	const FVector Fwd2D = FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0.f).GetSafeNormal();
+
+	if (Controller)
+	{
+		AddMovementInput(Fwd2D, 1.f, true);
+		return;
+	}
+
+	if (MovementComponent && MovementComponent->UpdatedComponent)
+	{
+		MovementComponent->ConsumeInputVector();
+		MovementComponent->Velocity = Fwd2D * MovementComponent->MaxSpeed;
+		MovementComponent->UpdateComponentVelocity();
+
+		const float DT = (GetWorld() ? GetWorld()->GetDeltaSeconds() : 1.f / 60.f);
+		AddActorWorldOffset(Fwd2D * MovementComponent->MaxSpeed * DT, true);
+	}
 }
 
-#pragma region Input
 void AVehicle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
-	SetupMappingContextIntoController();
 
-	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if (EnhancedInputComponent == nullptr) return;
+	// SetupMappingContextIntoController();
 
-	BindInputRotateZAxisAndActions(EnhancedInputComponent);
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		BindInputRotateZAxisAndActions(EnhancedInputComponent);
+
+		if (QuitTruckAction)
+		{
+			EnhancedInputComponent->BindAction(QuitTruckAction, ETriggerEvent::Started, this, &AVehicle::InputQuitTruck);
+		}
+	}
 }
 
 void AVehicle::SetupMappingContextIntoController() const
@@ -90,13 +196,8 @@ void AVehicle::SetupMappingContextIntoController() const
 	UEnhancedInputLocalPlayerSubsystem* InputSystem = Player->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	if (InputSystem == nullptr) return;
 
-	// replace 0 by the player who takes control of the FoodTruck
 	InputSystem->AddMappingContext(FoodTruckInputMappingContext, 0);
 }
-
-#pragma endregion
-
-#pragma region Input Rotate Truck
 
 void AVehicle::BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)
 {
@@ -109,19 +210,27 @@ void AVehicle::BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedI
 	}
 }
 
-#pragma region Truck States
+void AVehicle::InputQuitTruck(const FInputActionValue& InputActionValue)
+{
+	if (InteractBox)
+	{
+		InteractBox->UnpossessPawn();
+	}
+}
+
 void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 {
-	
 	TruckState = VehicleStates::Rotating;
 	InputRotatingValue = InputActionValue.Get<float>();
+	
 	if (!AlreadyPassed)
 	{
 		RotationTimer = 0.f;
 		StartRotationYaw = GetActorRotation().Yaw;
 		StartRotationRoll = GetActorRotation().Roll;
 	}
-	if (InputRotatingValue > 0 )
+	
+	if (InputRotatingValue > 0)
 	{
 		TruckOrientation = VehicleOrientation::Right;
 	}
@@ -129,6 +238,7 @@ void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 	{
 		TruckOrientation = VehicleOrientation::Left;
 	}
+	
 	AlreadyPassed = true;
 }
 
@@ -139,61 +249,63 @@ void AVehicle::SetTruckIdleStates()
 	StartRotationRoll = GetActorRotation().Roll;
 	AlreadyPassed = false;
 }
-#pragma endregion
 
 void AVehicle::RotateTruck(float DeltaTime)
 {
 	destinationRotation.Yaw += (InputRotatingValue * TruckAngleSpeed) * DeltaTime;
 	destinationRotation.Yaw = FMath::Clamp(destinationRotation.Yaw, -TruckMaxRotation, TruckMaxRotation);
 
-	destinationRotation.Roll += ((InputRotatingValue * TruckAngleSpeed)/2) * DeltaTime;
+	destinationRotation.Roll += ((InputRotatingValue * TruckAngleSpeed) / 2) * DeltaTime;
 	destinationRotation.Roll = FMath::Clamp(destinationRotation.Roll, -TruckMaxTilt, TruckMaxTilt);
-	
+
 	UpdateRotationTruck(destinationRotation, DeltaTime);
 }
 
 void AVehicle::UpdateRotationTruck(FRotator TargetRotation, float DeltaTime)
 {
-	if(RotationAnimCurve == nullptr) return;
-	
-	if(RotationTimer < TruckInterpolationDuration)
+	if (RotationAnimCurve == nullptr) return;
+
+	if (RotationTimer < TruckInterpolationDuration)
 		RotationTimer += DeltaTime;
 
 	float RotationPercent = RotationTimer / TruckInterpolationDuration;
-	
 	RotationPercent = RotationAnimCurve->GetFloatValue(RotationPercent);
-	
-	FRotator actorRotation = GetActorRotation();
-	actorRotation.Yaw = FMath::Lerp(StartRotationYaw, TargetRotation.Yaw, RotationPercent);
-	actorRotation.Roll = FMath::Lerp(StartRotationRoll, TargetRotation.Roll, RotationPercent);
 
-	SetActorRotation(actorRotation);
+	FRotator ActorRot = GetActorRotation();
+	ActorRot.Yaw = FMath::Lerp(StartRotationYaw, TargetRotation.Yaw, RotationPercent);
+	ActorRot.Roll = FMath::Lerp(StartRotationRoll, TargetRotation.Roll, RotationPercent);
+
+	ActorRot.Pitch = 0.f;
+
+	SetActorRotation(ActorRot);
 }
 
 void AVehicle::ResetTruckTilt(float DeltaTime)
 {
-	if(TiltAnimCurve == nullptr) return;
-	
-	if(TiltTimer < TruckInterpolationTilt)
+	if (TiltAnimCurve == nullptr) return;
+
+	if (TiltTimer < TruckInterpolationTilt)
+	{
 		TiltTimer += DeltaTime;
+	}
 
 	float TiltPercent = TiltTimer / TruckInterpolationTilt;
-	
 	TiltPercent = TiltAnimCurve->GetFloatValue(TiltPercent);
-	
-	FRotator actorRotation = GetActorRotation();
-	actorRotation.Roll = FMath::Lerp(StartRotationRoll, 0.f, TiltPercent);
-	
-	SetActorRotation(actorRotation);
-}
-#pragma endregion
 
-#pragma region Truck Speed Management
+	FRotator ActorRot = GetActorRotation();
+	ActorRot.Roll = FMath::Lerp(StartRotationRoll, 0.f, TiltPercent);
+	ActorRot.Pitch = 0.f;
+
+	SetActorRotation(ActorRot);
+}
+
 void AVehicle::ReduceSpeed()
 {
+	if (!MovementComponent) return;
+
 	StartSpeed = MovementComponent->MaxSpeed;
 	MovementComponent->MaxSpeed -= KilometersToMetersConvertingValue;
-	
+
 	GetWorld()->GetTimerManager().SetTimer(
 		SpeedRecoveryHandle,
 		this,
@@ -201,7 +313,6 @@ void AVehicle::ReduceSpeed()
 		0.5f,
 		false
 	);
-	
 }
 
 void AVehicle::StartSpeedRecovery()
@@ -209,4 +320,3 @@ void AVehicle::StartSpeedRecovery()
 	bRecoveringSpeed = true;
 	ElapsedTime = 0.0f;
 }
-#pragma endregion

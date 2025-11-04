@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "IEntity.h"
+#include "Interface/IEntity.h"
 #include "GameFramework/Actor.h"
 #include "EntityTest.generated.h"
 

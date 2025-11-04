@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Local Multiplayer",
+	"Description": "Local multiplayer input routing for keyboard and multiple gamepads using Enhanced Input.",
+	"Category": "Input",
+	"CreatedBy": "Maxime Desnoues",
+	"CreatedByURL": "https://maximedesnoues.alwaysdata.net/",
+	"EnabledByDefault": false,
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "LocalMultiplayer",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		}
+	]
+}

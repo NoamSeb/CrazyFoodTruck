@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Components/BoxComponent.h"
+#include "Vehicle/Vehicle.h"
 
 
 AHordeManager::AHordeManager()
@@ -21,8 +22,12 @@ void AHordeManager::AddSpawnArea()
 	
 	AAreaZombieSpawn* NewArea = GetWorld()->SpawnActor<AAreaZombieSpawn>(AreaZombieSpawn);
 	NewArea->InitArea(ListSpawnArea.Num(),this);
+
+	FZoneSpawn newZoneSpawn;
+	newZoneSpawn.PositionSpawn = EPositionSpawn::DownLeft;
+	newZoneSpawn.AreaZombieSpawn = NewArea;
 	
-	ListSpawnArea.Add(FZoneSpawn(NewArea));
+	ListSpawnArea.Add(newZoneSpawn);
 
 	#if WITH_EDITOR
 		if (GEditor && NewArea)
@@ -92,17 +97,17 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 				NewZombie->MainActorToFollower = MainActorToFollow;
 				switch (differentePos)
 				{
-					case EPositionSpawn::Right:
-						NewZombie->FirstActorToFollower = RightActorToFollow;
-					break;
-					case EPositionSpawn::Left:
-						NewZombie->FirstActorToFollower = LeftActorToFollow;
-					break;
-					case EPositionSpawn::Forward:
+					case EPositionSpawn::MiddleUp:
 						NewZombie->FirstActorToFollower = ForwardActorToFollow;
 					break;
-					case EPositionSpawn::Backward:
+					case EPositionSpawn::DownLeft:
+						NewZombie->FirstActorToFollower = LeftActorToFollow;
+					break;
+					case EPositionSpawn::DownRight:
 						NewZombie->FirstActorToFollower = RightActorToFollow;
+					break;
+					case EPositionSpawn::MiddleDown:
+						NewZombie->FirstActorToFollower = MainActorToFollow;
 					break;
 				}
 				
@@ -115,7 +120,10 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 void AHordeManager::InitHordeZombies()
 {
 	//ajouter à la vitesse du camion
-	vitesseFinalZombie = DifferenceBetweenFoodTruck * KilometersToMetersConvertingValue;
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Food truck value : %f"), FoodTruck->TruckMaxSpeed));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Diff value : %f"), DifferenceBetweenFoodTruck * KilometersToMetersConvertingValue));
+	vitesseFinalZombie = (FoodTruck->TruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("zombie value : %f"), vitesseFinalZombie));
 	//TArray<TArray<UStaticMeshComponent*>> Components;
 
 	//c est moche faut pas voir ça

@@ -7952,6 +7952,18 @@
 		{
 			"Path": "$(ProjectDir)/Binaries/Win64/UnrealEditor.modules",
 			"Type": "RequiredResource"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor.modules",
+			"Type": "RequiredResource"
 		}
 	],
 	"RuntimeDependencies": [
@@ -33682,6 +33694,10 @@
 		{
 			"Path": "$(ProjectDir)/CrazyFoodTruck.uproject",
 			"Type": "UFS"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/LocalMultiplayer/LocalMultiplayer.uplugin",
+			"Type": "UFS"
 		}
 	],
 	"BuildPlugins": [
@@ -33791,6 +33807,7 @@
 		"LightMixer",
 		"LinuxDeviceProfileSelector",
 		"LiveLink",
+		"LocalMultiplayer",
 		"LocalizableMessage",
 		"LocationServicesBPLibrary",
 		"MacGraphicsSwitching",

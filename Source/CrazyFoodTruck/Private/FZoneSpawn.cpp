@@ -3,14 +3,14 @@
 
 #include "FZoneSpawn.h"
 
-FZoneSpawn::FZoneSpawn(EPositionSpawn PosSpawn, AAreaZombieSpawn* NewArea)
-{
-	PositionSpawn = PosSpawn;
-	AreaZombieSpawn = NewArea;
-}
-
-FZoneSpawn::FZoneSpawn(AAreaZombieSpawn* NewArea)
-{
-	PositionSpawn = EPositionSpawn::Right;
-	AreaZombieSpawn = NewArea;
-}
+//FZoneSpawn::FZoneSpawn(EPositionSpawn PosSpawn, AAreaZombieSpawn* NewArea)
+//{
+//	PositionSpawn = PosSpawn;
+//	AreaZombieSpawn = NewArea;
+//}
+//
+//FZoneSpawn::FZoneSpawn(AAreaZombieSpawn* NewArea)
+//{
+//	PositionSpawn = EPositionSpawn::TopRight;
+//	AreaZombieSpawn = NewArea;
+//}
