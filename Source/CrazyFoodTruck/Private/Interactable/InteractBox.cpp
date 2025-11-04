@@ -51,6 +51,22 @@ void AInteractBox::Tick(float DeltaSeconds)
     if (OverlappTimer > 0.f)
     {
         OverlappTimer -= DeltaSeconds;
+        if (OverlappTimer <= 0.f)
+        {
+           ACrazyFoodTruckCharacter* playerInsidfe = DetectPlayerInside();
+            if (playerInsidfe == nullptr)
+            {
+                if (!EnteringCharacter){return;}
+                GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("No player inside"));
+                TryExitPlayer(EnteringCharacter);
+            }
+            else if (playerInsidfe != EnteringCharacter)
+            {
+                APlayerController* PC = GetPlayerControllerFromActor(playerInsidfe);
+                TryDetectPlayer(PC, playerInsidfe);
+                GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Same player inside"));
+            }
+        }
     }
 }
 
@@ -60,7 +76,7 @@ bool AInteractBox::CanDetectOverlapp()
     {
         return false;
     }
-    OverlappTimer = 0.04f;
+    OverlappTimer = BaseOverlappTimer;
     return true;
 }
 
@@ -140,6 +156,7 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, U
 
     if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Other))
     {
+        EnteringCharacter = Character;
         TryDetectPlayer(EnteringPlayerController, Character);
     }
 }
@@ -150,34 +167,39 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPr
     if (bPlayerIsControlling) return;
 
     APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(Other);
-    RemoveOverlappingPlayerController(LeavingPlayerController);
+    ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Other);
 
-    if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Other))
+    RemoveOverlappingPlayerController(LeavingPlayerController);
+    GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player exited overlap box."));
+    TryExitPlayer(Character);
+}
+
+
+void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
+{
+    if (Character)
     {
-        // Clear focused interactable if it was this
         if (Character->GetFocusedInteractable().GetInterface() == static_cast<IInteractable*>(this))
         {
             Character->SetFocusedInteractable(TScriptInterface<IInteractable>(nullptr));
         }
 
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player exited interact box."));
         OnCollisionExit.Broadcast();
-        TryReleaseLockFromActor(Other);
-    
+        CurrentInteractorPlayerController = nullptr;
         CachedCharacter = nullptr;
         CachedPlayerController = nullptr;
         CachedPreviousPawn = nullptr;
-
-        if (ACrazyFoodTruckCharacter* Still = DetectPlayerInside())
-        {
-            APlayerController* NewPlayerController = GetPlayerControllerFromActor(Still);
-            TryDetectPlayer(NewPlayerController, Still);
-        }
+        EnteringCharacter = nullptr;
+    }else
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("No character to exit."));
     }
 }
-
 void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character)
 {
     if (!Character) return;
+    if (!PlayerController) return;
 
     const bool bLockedByAnother = CurrentInteractorPlayerController.IsValid() && PlayerController && (CurrentInteractorPlayerController.Get() != PlayerController);
     const bool bAnotherInside = IsAnotherPlayerAlreadyInside(PlayerController);
@@ -396,6 +418,7 @@ void AInteractBox::UnpossessPawn()
     CachedPlayerController = nullptr;
     CachedCharacter = nullptr;
     CachedPreviousPawn = nullptr;
+    EnteringCharacter = nullptr;
 }
 
 void AInteractBox::SetRepairProgress(URepairProgressBillboard* RPB)
@@ -639,9 +662,8 @@ void AInteractBox::OnRepairCompleted()
     OnRestored.Broadcast();
 }
 
-void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
+void AInteractBox::TryReleaseLockFromActor(APlayerController* LeavingPlayerController)
 {
-    APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(LeavingActor);
     if (!LeavingPlayerController)
     {
         return;
@@ -649,12 +671,12 @@ void AInteractBox::TryReleaseLockFromActor(AActor* LeavingActor)
     if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() == LeavingPlayerController)
     {
         CurrentInteractorPlayerController = nullptr;
-        OnInteractionEnded.Broadcast(LeavingPlayerController);
-        if (GEngine)
-        {
-            const FColor PlayerColor = GetPlayerColorFromPlayerController(LeavingPlayerController);
-            const int32 PlayerIndex = GetPlayerIndexFromPlayerController(LeavingPlayerController);
-            const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-        }
+       // OnInteractionEnded.Broadcast(LeavingPlayerController);
     }
+        // if (GEngine)
+        // {
+        //     const FColor PlayerColor = GetPlayerColorFromPlayerController(LeavingPlayerController);
+        //     const int32 PlayerIndex = GetPlayerIndexFromPlayerController(LeavingPlayerController);
+        //     const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
+        // }
 }

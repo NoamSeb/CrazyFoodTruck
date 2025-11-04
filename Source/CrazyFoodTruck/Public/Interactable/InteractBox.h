@@ -130,7 +130,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	
+	float OverlappTimer = 0.f;
+	
+	UPROPERTY(EditAnywhere, Category = "Interact|State")
+	float BaseOverlappTimer = 0.01f;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interact|Components")
 	TObjectPtr<UBoxComponent> Box = nullptr;
 
@@ -150,6 +155,9 @@ protected:
 	TWeakObjectPtr<APlayerController> CachedPlayerController;
 
 	UPROPERTY()
+	ACrazyFoodTruckCharacter* EnteringCharacter;
+	
+	UPROPERTY()
 	TWeakObjectPtr<ACrazyFoodTruckCharacter> CachedCharacter;
 
 	UPROPERTY()
@@ -160,15 +168,16 @@ protected:
 
 private:
 
-	float OverlappTimer = 0.f;
+
 	UFUNCTION()
 	void OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool bFromSweep, const FHitResult& Hit);
 
 	UFUNCTION()
 	void OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex);
+	void TryExitPlayer(ACrazyFoodTruckCharacter* CharacterController);
 
 	void TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character);
-	void TryReleaseLockFromActor(AActor* LeavingActor);
+	void TryReleaseLockFromActor(APlayerController* LeavingPlayerController);
 	bool PlayerStillInsideCheck(ACrazyFoodTruckCharacter* TargetCharacter);
 	ACrazyFoodTruckCharacter* DetectPlayerInside();
 
