@@ -82,7 +82,10 @@ void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	MoveForward();
+	if(MovementEnable)
+	{
+		MoveForward();
+	}
 
 	if (bHoldSpeedAfterPossess)
 	{

@@ -83,7 +83,7 @@ public:
 	UPROPERTY(EditAnywhere, meta=(Tooltip="Represent the time the truck need to recover his full speed", Units="seconds"), Category="Vehicle Settings | Speed")
 	float SpeedRecoveryDuration = 2.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Vehicle Settings | Speed", meta = (ToolTip = "Durée de maintien de la vitesse après Possess (s)", Units = "seconds"))
+	UPROPERTY(EditAnywhere, Category = "Vehicle Settings | Speed", meta = (ToolTip = "Durï¿½e de maintien de la vitesse aprï¿½s Possess (s)", Units = "seconds"))
 	float HoldSpeedDuration = 0.08f;
 	
 	// Rotation (Yaw)
@@ -109,6 +109,8 @@ public:
 	UPROPERTY(EditAnywhere, Category="Vehicle Settings | Tilt")
 	TObjectPtr<UCurveFloat> TiltAnimCurve;
 
+	UPROPERTY(EditAnywhere)
+	bool MovementEnable;
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
