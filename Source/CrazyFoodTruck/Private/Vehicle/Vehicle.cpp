@@ -5,14 +5,23 @@
 #include "Interactable/InteractBox.h"
 #include "TurretController.h"
 
+#include "Widget/ForwardCamWidget.h"
+
 #include "LocalMultiplayerSettings.h"
 
 #include "Components/BoxComponent.h"
 #include "Components/PrimitiveComponent.h"
+#include "Components/SceneComponent.h"
+#include "Components/SceneCaptureComponent2D.h"
 
 #include "GameFramework/FloatingPawnMovement.h"
 
+#include "Engine/TextureRenderTarget2D.h"
+
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetRenderingLibrary.h"
+
+#include "Blueprint/UserWidget.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -20,6 +29,22 @@
 AVehicle::AVehicle()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	if (!RootComponent)
+	{
+		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	}
+
+	ForwardCamRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ForwardCamRoot"));
+	ForwardCamRoot->SetupAttachment(RootComponent);
+
+	ForwardCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("ForwardCapture"));
+	ForwardCapture->SetupAttachment(ForwardCamRoot);
+
+	ForwardCapture->FOVAngle = ForwardCamFOV;
+	ForwardCapture->bCaptureEveryFrame = bForwardCaptureEveryFrame;
+	ForwardCapture->bCaptureOnMovement = false;
+	ForwardCapture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
 }
 
 void AVehicle::BeginPlay()
@@ -40,6 +65,10 @@ void AVehicle::BeginPlay()
 	MovementComponent->SetPlaneConstraintEnabled(true);
 	MovementComponent->SetPlaneConstraintNormal(FVector::UpVector);
 	MovementComponent->SetPlaneConstraintOrigin(FVector::ZeroVector);
+
+	CreateAndAssignForwardRenderTarget();
+
+	ForwardCamWidget = nullptr;
 }
 
 void AVehicle::PossessedBy(AController* NewController)
@@ -60,6 +89,20 @@ void AVehicle::PossessedBy(AController* NewController)
 		bHoldSpeedAfterPossess = true;
 		HoldSpeedTimer = HoldSpeedDuration;
 	}
+
+	if (!ForwardCamWidget && ForwardCamWidgetClass && ForwardRT)
+	{
+		if (APlayerController* PC = Cast<APlayerController>(NewController))
+		{
+			ForwardCamWidget = CreateWidget<UForwardCamWidget>(PC, ForwardCamWidgetClass);
+			if (ForwardCamWidget)
+			{
+				ForwardCamWidget->AddToViewport(50);
+				ForwardCamWidget->SetForwardTexture(ForwardRT);
+				ForwardCamWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+			}
+		}
+	}
 }
 
 void AVehicle::UnPossessed()
@@ -75,6 +118,12 @@ void AVehicle::UnPossessed()
 	{
 		MovementComponent->Velocity = SavedLinearVelocity;
 		MovementComponent->UpdateComponentVelocity();
+	}
+
+	if (ForwardCamWidget)
+	{
+		ForwardCamWidget->RemoveFromParent();
+		ForwardCamWidget = nullptr;
 	}
 }
 
@@ -319,4 +368,29 @@ void AVehicle::StartSpeedRecovery()
 {
 	bRecoveringSpeed = true;
 	ElapsedTime = 0.0f;
+}
+
+void AVehicle::CreateAndAssignForwardRenderTarget()
+{
+	if (!ForwardRT)
+	{
+		ForwardRT = UKismetRenderingLibrary::CreateRenderTarget2D(this, ForwardRT_Width, ForwardRT_Height, RTF_RGBA8);
+		if (ForwardRT)
+		{
+			ForwardRT->bAutoGenerateMips = false;
+			ForwardRT->ClearColor = FLinearColor::Black;
+		}
+	}
+
+	if (ForwardCapture)
+	{
+		ForwardCapture->FOVAngle = ForwardCamFOV;
+		ForwardCapture->bCaptureEveryFrame = bForwardCaptureEveryFrame;
+		ForwardCapture->TextureTarget = ForwardRT;
+
+		if (!bForwardCaptureEveryFrame)
+		{
+			ForwardCapture->CaptureScene();
+		}
+	}
 }
