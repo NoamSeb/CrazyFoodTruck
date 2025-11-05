@@ -61,7 +61,7 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	}
 }
 
-void ASideCabestan::StopPush(const FInputActionValue& Value)
+void ASideCabestan::StopPush()
 {
 	switch (_Side)
 	{
@@ -181,6 +181,7 @@ void ASideCabestan::HandleQuit(const FInputActionValue& Value)
 {
 	if (InteractBox)
 	{
+		StopPush();
 		InteractBox->UnpossessPawn();
 	}
 }

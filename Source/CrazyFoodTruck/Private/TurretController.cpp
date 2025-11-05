@@ -297,6 +297,7 @@ void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 	if (InteractBox)
 	{
 		InteractBox->UnpossessPawn();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player quit turret."));
 	}
 }
 
