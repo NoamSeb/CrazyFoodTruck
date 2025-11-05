@@ -47,8 +47,7 @@ protected:
 	UInputAction* QuitAction;
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	void StopPush(const FInputActionValue&);
-	void StopBring(const FInputActionValue& Value);
+	void StopPush();
 	void Push(const FInputActionValue& Value);
 
 	void Bring(const FInputActionValue& Value);
