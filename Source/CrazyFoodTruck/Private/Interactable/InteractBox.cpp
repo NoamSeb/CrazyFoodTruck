@@ -177,7 +177,7 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPr
 
 void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
 {
-    if (!bPlayerIsControlling){return;}
+    if (bPlayerIsControlling){return;}
     if (Character)
     {
         if (Character->GetFocusedInteractable().GetInterface() == static_cast<IInteractable*>(this))
