@@ -30,21 +30,8 @@ AVehicle::AVehicle()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	if (!RootComponent)
-	{
-		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	}
-
-	ForwardCamRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ForwardCamRoot"));
-	ForwardCamRoot->SetupAttachment(RootComponent);
-
-	ForwardCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("ForwardCapture"));
-	ForwardCapture->SetupAttachment(ForwardCamRoot);
-
-	ForwardCapture->FOVAngle = ForwardCamFOV;
-	ForwardCapture->bCaptureEveryFrame = bForwardCaptureEveryFrame;
-	ForwardCapture->bCaptureOnMovement = false;
-	ForwardCapture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
+	Root = CreateDefaultSubobject<UBoxComponent>(TEXT("Root"));
+	Root->SetCollisionProfileName(TEXT("Vehicle"));
 }
 
 void AVehicle::BeginPlay()
@@ -54,6 +41,31 @@ void AVehicle::BeginPlay()
 	MovementComponent = Cast<UFloatingPawnMovement>(GetMovementComponent());
 	MovementComponent->MaxSpeed = TruckMaxSpeed * KilometersToMetersConvertingValue;
 
+	auto sceneComponents = K2_GetComponentsByClass(USceneComponent::StaticClass());
+	for (auto SceneComponent : sceneComponents)
+	{
+		if (SceneComponent->GetName() == "ForwardCamRoot")
+		{
+			ForwardCamRoot = Cast<USceneComponent>(SceneComponent);
+			
+		}
+	}
+	auto sceneCaptureComponents = K2_GetComponentsByClass(USceneCaptureComponent2D::StaticClass());
+	for (auto SceneCaptureComponent : sceneCaptureComponents)
+	{
+		if (SceneCaptureComponent->GetName() == "ForwardCapture")
+		{
+			ForwardCapture = Cast<USceneCaptureComponent2D>(SceneCaptureComponent);
+			ForwardCapture->SetupAttachment(ForwardCamRoot);
+			
+		}
+	}
+
+	ForwardCapture->FOVAngle = ForwardCamFOV;
+	ForwardCapture->bCaptureEveryFrame = bForwardCaptureEveryFrame;
+	ForwardCapture->bCaptureOnMovement = false;
+	ForwardCapture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
+	
 	if (!MovementComponent->UpdatedComponent)
 	{
 		MovementComponent->SetUpdatedComponent(RootComponent);
