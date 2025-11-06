@@ -82,6 +82,8 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 	{
 		ActualBulletPrefab = nullptr;
 	}
+	
+	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);
 }
 
 FString ATurretController::GetRowNameFromBulletType(EbulletType Type)

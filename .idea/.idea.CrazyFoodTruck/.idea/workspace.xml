@@ -15,18 +15,32 @@
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_LifeDiegetic.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_LifeDiegetic.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/5/Z3/4N9PRYNBDEEX52JBU11PD1.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/5/Z3/4N9PRYNBDEEX52JBU11PD1.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Zombie.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Zombie.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/C/FO/KZL89VQX22PTLW6JDLEKUV.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/C/FO/KZL89VQX22PTLW6JDLEKUV.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/D/MQ/IPSNYQK3LE4BS9FWMR40DO.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/D/MQ/IPSNYQK3LE4BS9FWMR40DO.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxFrontCamera/4/V1/S72OD623VJ4P9ZY5IWD7TS.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxFrontCamera/4/V1/S72OD623VJ4P9ZY5IWD7TS.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/0/DJ/C2D8PEI8AJ82UCU9WZWDXR.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/0/DJ/C2D8PEI8AJ82UCU9WZWDXR.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/NM/FOVB1CNW6XUP5WUGGSF8IS.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/NM/FOVB1CNW6XUP5WUGGSF8IS.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/5/L7/DLBCCY3E0E1M9P3895F9Y5.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/5/L7/DLBCCY3E0E1M9P3895F9Y5.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/05/5R2F8VBA7KYX042JW3QS2Q.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/05/5R2F8VBA7KYX042JW3QS2Q.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/3T/OVIJ6XI1T4ZA9D8GKZCIY7.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/3T/OVIJ6XI1T4ZA9D8GKZCIY7.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/BH/JP3C8GC594SETBTEL6658Q.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/BH/JP3C8GC594SETBTEL6658Q.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/7/L8/GDE7F7FLQL7GYRGAZ8YKOJ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/7/L8/GDE7F7FLQL7GYRGAZ8YKOJ.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/7/LN/AYETYBD2UIHCECV43QOGFE.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/7/LN/AYETYBD2UIHCECV43QOGFE.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/8/TZ/XTBXCSZ70O27KA688W4FSG.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/8/TZ/XTBXCSZ70O27KA688W4FSG.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/A/1C/C8US1T3JY9ZLGMXKHZ9L5F.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/A/1C/C8US1T3JY9ZLGMXKHZ9L5F.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/A/J9/OP9FCNDMP6MQWI0A64HLKL.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/A/J9/OP9FCNDMP6MQWI0A64HLKL.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/XS/PBXQNL0CTLV8MHL5S4NFKN.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/XS/PBXQNL0CTLV8MHL5S4NFKN.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/B/ZV/IAT3QTDJ4WI8NG64LRFE8O.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/B/ZV/IAT3QTDJ4WI8NG64LRFE8O.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/C/G4/RW422DH58SBXDTHBUV4BKV.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/C/G4/RW422DH58SBXDTHBUV4BKV.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/Q3/G688RIRF5XAATUP767KMRV.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/Q3/G688RIRF5XAATUP767KMRV.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/V4/SB6L4IBUINWXLUMK54CT0N.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/V4/SB6L4IBUINWXLUMK54CT0N.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/E/C6/TH80DM7FRA9O4ENSEX1AL9.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/E/C6/TH80DM7FRA9O4ENSEX1AL9.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/E/L4/9LTUW2HFIMPYNX32DFQZJZ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/E/L4/9LTUW2HFIMPYNX32DFQZJZ.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3L/71ZSO7YNYLISTQLB5MLRWT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3L/71ZSO7YNYLISTQLB5MLRWT.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3X/492VTXUW2SXNG43WL7UMGZ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3X/492VTXUW2SXNG43WL7UMGZ.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TurretController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TurretController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/TurretController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/TurretController.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +86,7 @@
     "C/C++ Project.CrazyFoodTruck.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Develop",
+    "git-widget-placeholder": "GameFeel",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -215,6 +229,7 @@
       <workItem from="1761898756511" duration="5590000" />
       <workItem from="1761907101792" duration="574000" />
       <workItem from="1762260707073" duration="1018000" />
+      <workItem from="1762420937418" duration="593000" />
     </task>
     <servers />
   </component>

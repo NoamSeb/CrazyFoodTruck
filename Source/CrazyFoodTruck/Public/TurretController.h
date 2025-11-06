@@ -17,7 +17,8 @@
 #include "Interactable/InteractBox.h"
 #include "TurretController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShootSignature, int32, AmmoLeft, int32, AmmoMax); 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShootSignature, int32, AmmoLeft, int32, AmmoMax);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAmmoTypeEvent, float, AreaSide, float, AreaDepht);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTurretEvent);
 
 UCLASS()
@@ -52,7 +53,9 @@ public:
 	float GetCoolDownBetweenShoot();
 
 	void AddRotationInput(float value);
-
+	
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnAmmoTypeEvent OnAmmoTypeChanged;;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnShootSignature OnAmmoChanged;
 	UPROPERTY(BlueprintAssignable, Category="Events")
