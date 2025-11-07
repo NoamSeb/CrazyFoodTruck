@@ -71,6 +71,7 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite , Category = "Horde Manager | Spawn Horde")
 	UDataTable* DataWave;
 
+
 #pragma region Spawn Horde Zombie
 	
 	//garder les zombies dans la liste
@@ -113,4 +114,8 @@ public:
 
 	// UFUNCTION(BlueprintCallable)
 	// UDataTable GetDataTable(){return DataWave;}
+
+	
+private:
+	bool bCanSpawnHorde = true;
 };
