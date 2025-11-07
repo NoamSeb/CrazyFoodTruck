@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "PhaseGameFoodFoodTruck.h"
 #include "Camera/CameraShakeManager.h"
+#include "FoodTruckDataSubSystem.h"
+#include "GameDataSubSystem.h"
+#include "ZombieDataSubSystem.h"
 #include "GameInstanceCrazyFoodTruck.generated.h"
 
 UCLASS()
@@ -25,13 +27,10 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	void SetCameraShakeManager(ACameraShakeManager* NewCameraShakeManager);
 	void PlayerCameraShake(ECameraShake ShakeType);
 
-	// VARIABLE 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool InGame;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString LevelName;
-	UPROPERTY(VisibleAnywhere)
-	EPhaseGameCrazyFoodTruckState CurrentGamePhase;
+	TObjectPtr<UFoodTruckDataSubSystem> FoodTruckData;
+	TObjectPtr<UGameDataSubSystem> GameData;
+	TObjectPtr<UZombieDataSubSystem> ZombieData;
+
 
 private:
 	ACameraShakeManager* CameraShakeManager;

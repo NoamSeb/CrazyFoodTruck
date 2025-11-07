@@ -11,7 +11,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Bullet/FBulletStructure.h"
-#include "CrazyFoodTruck/GameInstanceCrazyFoodTruck.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
 #include "Interactable/InteractBox.h"
