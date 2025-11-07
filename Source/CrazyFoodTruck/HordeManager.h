@@ -43,7 +43,7 @@ public:
 	UPROPERTY(EditAnywhere, meta=(ToolTip="Variable in kilometers per hour", ForceUnits="km/h"), Category= "Horde Manager | BP Zombie")
 	float DifferenceBetweenFoodTruck = 5.f;
 	float KilometersToMetersConvertingValue = 27.777777777778;
-	float vitesseFinalZombie;
+	float FinalZombieSpeed;
 	
 #pragma endregion
 
