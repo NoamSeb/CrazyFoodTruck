@@ -29,6 +29,7 @@
 AVehicle::AVehicle()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickGroup = TG_PostUpdateWork;
 
 	if (!RootComponent)
 	{
@@ -42,9 +43,10 @@ AVehicle::AVehicle()
 	ForwardCapture->SetupAttachment(ForwardCamRoot);
 
 	ForwardCapture->FOVAngle = ForwardCamFOV;
-	ForwardCapture->bCaptureEveryFrame = bForwardCaptureEveryFrame;
-	ForwardCapture->bCaptureOnMovement = false;
 	ForwardCapture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
+	ForwardCapture->bCaptureEveryFrame = false;
+	ForwardCapture->bCaptureOnMovement = false;
+	ForwardCapture->TextureTarget = nullptr;
 }
 
 void AVehicle::BeginPlay()
@@ -67,8 +69,13 @@ void AVehicle::BeginPlay()
 	MovementComponent->SetPlaneConstraintOrigin(FVector::ZeroVector);
 
 	CreateAndAssignForwardRenderTarget();
+	ConfigureForwardCaptureQuality();
+	StopForwardCapture();
 
 	ForwardCamWidget = nullptr;
+
+	ForwardCaptureInterval = (ForwardCaptureFPS > 0.f) ? (1.f / ForwardCaptureFPS) : (1.f / 30.f);
+	ForwardCaptureTimer = 0.f;
 }
 
 void AVehicle::PossessedBy(AController* NewController)
@@ -103,6 +110,15 @@ void AVehicle::PossessedBy(AController* NewController)
 			}
 		}
 	}
+
+	if (bLiveCaptureWhilePossessed)
+	{
+		StartForwardCapture();
+	}
+	else
+	{
+		CaptureForwardOnce();
+	}
 }
 
 void AVehicle::UnPossessed()
@@ -119,6 +135,8 @@ void AVehicle::UnPossessed()
 		MovementComponent->Velocity = SavedLinearVelocity;
 		MovementComponent->UpdateComponentVelocity();
 	}
+
+	StopForwardCapture();
 
 	if (ForwardCamWidget)
 	{
@@ -177,6 +195,14 @@ void AVehicle::Tick(float DeltaTime)
 			bRecoveringSpeed = false;
 		}
 	}
+
+	if (ForwardCapture && ForwardCapture->bEnableClipPlane)
+	{
+		ForwardCapture->ClipPlaneBase = ForwardCapture->GetComponentLocation();
+		ForwardCapture->ClipPlaneNormal = ForwardCapture->GetForwardVector();
+	}
+
+	UpdateForwardCapture(DeltaTime);
 }
 
 void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -379,18 +405,111 @@ void AVehicle::CreateAndAssignForwardRenderTarget()
 		{
 			ForwardRT->bAutoGenerateMips = false;
 			ForwardRT->ClearColor = FLinearColor::Black;
+			ForwardRT->TargetGamma = 2.2f;
 		}
 	}
 
 	if (ForwardCapture)
 	{
 		ForwardCapture->FOVAngle = ForwardCamFOV;
-		ForwardCapture->bCaptureEveryFrame = bForwardCaptureEveryFrame;
-		ForwardCapture->TextureTarget = ForwardRT;
-
-		if (!bForwardCaptureEveryFrame)
-		{
-			ForwardCapture->CaptureScene();
-		}
+		ForwardCapture->bCaptureEveryFrame = false;
+		ForwardCapture->bCaptureOnMovement = false;
+		ForwardCapture->TextureTarget = nullptr;
+		ForwardCapture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
 	}
+}
+
+void AVehicle::ConfigureForwardCaptureQuality()
+{
+	if (!ForwardCapture) return;
+
+	auto& SF = ForwardCapture->ShowFlags;
+
+	SF.SetLighting(true);
+	SF.SetPostProcessing(true);
+	SF.SetTemporalAA(true);
+
+	SF.SetAtmosphere(false);
+	SF.SetFog(false);
+
+	SF.SetScreenSpaceReflections(false);
+	SF.SetAmbientOcclusion(false);
+	SF.SetMotionBlur(false);
+	SF.SetBloom(false);
+
+	SF.SetMaterials(true);
+	SF.SetTranslucency(true);
+
+	//ForwardCapture->PostProcessBlendWeight = 0.f;
+	//ForwardCapture->PostProcessSettings = FPostProcessSettings{};
+	//ForwardCapture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
+	//ForwardCapture->MaxViewDistanceOverride = 50000.f;
+	//ForwardCapture->LODDistanceFactor = 2.f;
+
+	ForwardCapture->bEnableClipPlane = true;
+	ForwardCapture->ClipPlaneBase = ForwardCapture->GetComponentLocation();
+	ForwardCapture->ClipPlaneNormal = ForwardCapture->GetForwardVector();
+}
+
+void AVehicle::StartForwardCapture()
+{
+	if (!ForwardCapture || !ForwardRT) return;
+
+	ForwardCapture->FOVAngle = ForwardCamFOV;
+	ForwardCapture->TextureTarget = ForwardRT;
+	ForwardCapture->bCaptureOnMovement = false;
+	ForwardCapture->bCaptureEveryFrame = false;
+	ForwardCapture->Activate(true);
+
+	bForwardCaptureActive = true;
+	ForwardCaptureTimer = 0.f;
+}
+
+void AVehicle::StopForwardCapture()
+{
+	if (!ForwardCapture) return;
+
+	bForwardCaptureActive = false;
+	ForwardCaptureTimer = 0.f;
+
+	ForwardCapture->bCaptureEveryFrame = false;
+	ForwardCapture->bCaptureOnMovement = false;
+	ForwardCapture->Deactivate();
+	ForwardCapture->TextureTarget = nullptr;
+}
+
+void AVehicle::CaptureForwardOnce()
+{
+	if (!ForwardCapture || !ForwardRT) return;
+
+	ForwardCapture->FOVAngle = ForwardCamFOV;
+	ForwardCapture->TextureTarget = ForwardRT;
+	ForwardCapture->bCaptureEveryFrame = false;
+	ForwardCapture->bCaptureOnMovement = false;
+
+	ForwardCapture->CaptureScene();
+	ForwardCapture->Deactivate();
+	ForwardCapture->TextureTarget = nullptr;
+}
+
+void AVehicle::UpdateForwardCapture(float DeltaTime)
+{
+	if (!bForwardCaptureActive || !ForwardCapture || !ForwardRT) return;
+	if (!ShouldCaptureForward()) return;
+
+	ForwardCaptureTimer += DeltaTime;
+	if (ForwardCaptureTimer < ForwardCaptureInterval) return;
+
+	ForwardCaptureTimer = 0.f;
+	ForwardCapture->CaptureScene();
+}
+
+bool AVehicle::ShouldCaptureForward() const
+{
+	if (!bLiveCaptureWhilePossessed && Controller == nullptr)
+	{
+		return false;
+	}
+	
+	return true;
 }
