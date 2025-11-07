@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
+﻿
 #include "Cabestan/CabestanController.h"
 
 
@@ -12,7 +10,6 @@ ACabestanController::ACabestanController()
 void ACabestanController::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ACabestanController::Tick(float DeltaTime)
@@ -39,7 +36,8 @@ void ACabestanController::ReceiveInputBackward(float value)
 void ACabestanController::AddRotationInput(float value)
 {
 	FRotator CurrentRotation = GetActorRotation();
-	FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw + value, CurrentRotation.Roll);
+	float turnValue = value * RotationSpeed * GetWorld()->GetDeltaSeconds();
+	FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw + turnValue, CurrentRotation.Roll);
 	SetActorRotation(NewRotation);
 }
 

@@ -25,12 +25,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+
 public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
 
 	USceneComponent* RootCabestan;
+	float RotationSpeed = 10.f;
 
 	
 	float towardInput = 0.f;
