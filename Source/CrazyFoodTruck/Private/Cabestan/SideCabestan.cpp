@@ -162,7 +162,6 @@ void ASideCabestan::PlayerInteracted(APlayerController* PlayerController)
 void ASideCabestan::HandleRoll(const FInputActionValue& Value)
 {
 	float RollValue = Value.Get<float>();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Roll Value: %f"), RollValue));
 	switch (_Side)
 	{
 	case ESideCabestan::Toward:
