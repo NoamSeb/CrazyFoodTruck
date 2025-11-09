@@ -45,6 +45,8 @@ void AHordeManager::AddSpawnArea()
 	#endif
 }
 
+
+
 void AHordeManager::ClearSpawnArea()
 {
 	for (FZoneSpawn Element : ListSpawnArea)
@@ -56,6 +58,7 @@ void AHordeManager::ClearSpawnArea()
 
 void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differentePos)
 {
+	if (!bCanSpawnHorde){return;}
 	if (ListSpawnArea.IsEmpty())
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, "Aucune Zone de Spawn definis");
@@ -119,6 +122,7 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 
 void AHordeManager::InitHordeZombies()
 {
+	if (!bCanSpawnHorde){return;}
 	//ajouter à la vitesse du camion
 	FinalZombieSpeed = (FoodTruck->TruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
 
@@ -133,26 +137,31 @@ void AHordeManager::InitHordeZombies()
 	MainActorToFollow->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
+		if (!Component){return;}
 		Component->SetCanEverAffectNavigation(false);
 	}
 	RightActorToFollow->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
+		if (!Component){return;}
 		Component->SetCanEverAffectNavigation(false);
 	}
 	LeftActorToFollow->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
+		if (!Component){return;}
 		Component->SetCanEverAffectNavigation(false);
 	}
 	ForwardActorToFollow->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
+		if (!Component){return;}
 		Component->SetCanEverAffectNavigation(false);
 	}
 	BackwardActorToFollow->GetComponents<UStaticMeshComponent>(Components);
 	for (auto Component : Components)
 	{
+		if (!Component){return;}
 		Component->SetCanEverAffectNavigation(false);
 	}
 #pragma endregion
@@ -162,6 +171,34 @@ void AHordeManager::InitHordeZombies()
 void AHordeManager::BeginPlay()
 {
 	Super::BeginPlay();
+	if (!RightActorToFollow)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : RightActorToFollow is not assigned !"));
+		bCanSpawnHorde = false;
+		Destroy();
+	}
+	if (!LeftActorToFollow)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : LeftActorToFollow is not assigned !"));
+		bCanSpawnHorde = false;
+		Destroy();
+
+	}
+	if (!MainActorToFollow)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : MainActorToFollow is not assigned !"));
+		bCanSpawnHorde = false;
+		Destroy();
+
+	}
+	if (!ForwardActorToFollow)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : ForwardActorToFollow is not assigned !"));
+		bCanSpawnHorde = false;
+		Destroy();
+
+	}
+	
 }
 
 
