@@ -673,10 +673,4 @@ void AInteractBox::TryReleaseLockFromActor(APlayerController* LeavingPlayerContr
         CurrentInteractorPlayerController = nullptr;
        // OnInteractionEnded.Broadcast(LeavingPlayerController);
     }
-        // if (GEngine)
-        // {
-        //     const FColor PlayerColor = GetPlayerColorFromPlayerController(LeavingPlayerController);
-        //     const int32 PlayerIndex = GetPlayerIndexFromPlayerController(LeavingPlayerController);
-        //     const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
-        // }
 }
