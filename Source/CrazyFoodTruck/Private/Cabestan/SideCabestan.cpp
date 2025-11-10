@@ -61,7 +61,7 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	}
 }
 
-void ASideCabestan::StopPush(const FInputActionValue& Value)
+void ASideCabestan::StopPush()
 {
 	switch (_Side)
 	{
@@ -162,7 +162,6 @@ void ASideCabestan::PlayerInteracted(APlayerController* PlayerController)
 void ASideCabestan::HandleRoll(const FInputActionValue& Value)
 {
 	float RollValue = Value.Get<float>();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Roll Value: %f"), RollValue));
 	switch (_Side)
 	{
 	case ESideCabestan::Toward:
@@ -181,6 +180,7 @@ void ASideCabestan::HandleQuit(const FInputActionValue& Value)
 {
 	if (InteractBox)
 	{
+		StopPush();
 		InteractBox->UnpossessPawn();
 	}
 }

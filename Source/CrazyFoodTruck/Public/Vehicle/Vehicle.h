@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "InputMappingContext.h"
+#include "Interface/IVehicule.h"
 #include "Vehicle.generated.h"
 
+class UBoxComponent;
 class UCurveFloat;
 class UInputAction;
 class UEnhancedInputComponent;
@@ -32,7 +34,7 @@ enum class VehicleOrientation
 };
 
 UCLASS()
-class CRAZYFOODTRUCK_API AVehicle : public APawn
+class CRAZYFOODTRUCK_API AVehicle : public APawn, public IIVehicule
 {
 	GENERATED_BODY()
 
@@ -87,7 +89,7 @@ public:
 	UPROPERTY(EditAnywhere, meta=(Tooltip="Represent the time the truck need to recover his full speed", Units="seconds"), Category="Vehicle Settings | Speed")
 	float SpeedRecoveryDuration = 2.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Vehicle Settings | Speed", meta = (ToolTip = "Durée de maintien de la vitesse après Possess (s)", Units = "seconds"))
+	UPROPERTY(EditAnywhere, Category = "Vehicle Settings | Speed", meta = (ToolTip = "Durï¿½e de maintien de la vitesse aprï¿½s Possess (s)", Units = "seconds"))
 	float HoldSpeedDuration = 0.08f;
 	
 	// Rotation (Yaw)
@@ -163,6 +165,9 @@ public:
 	UTextureRenderTarget2D* GetForwardRenderTarget() const { return ForwardRT; }
 
 protected:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UBoxComponent> Root;
+	
 	UPROPERTY(VisibleAnywhere, Category = "ForwardCam")
 	TObjectPtr<USceneComponent> ForwardCamRoot = nullptr;
 

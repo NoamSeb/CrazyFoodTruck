@@ -3,6 +3,8 @@
 
 #include "GameModeCrazyFoodTruck.h"
 
+#include "Data/Public/GameDataSubSystem.h"
+
 AGameModeCrazyFoodTruck::AGameModeCrazyFoodTruck()
 {
 }
@@ -17,7 +19,7 @@ void AGameModeCrazyFoodTruck::BeginPlay()
 
 void AGameModeCrazyFoodTruck::ChangeGamePhase()
 {
-	switch (GetInstance->CurrentGamePhase)
+	switch (GetInstance->GameData->CurrentGamePhase)
 	{
 	case EPhaseGameCrazyFoodTruckState::Route:
 		GamePhaseBase();

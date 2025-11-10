@@ -1,7 +1,7 @@
 ﻿
 #include "CameraShakeManager.h"
 
-#include "CrazyFoodTruck/GameInstanceCrazyFoodTruck.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "Kismet/GameplayStatics.h"
 
 

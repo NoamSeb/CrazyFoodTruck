@@ -43,7 +43,7 @@ public:
 	UPROPERTY(EditAnywhere, meta=(ToolTip="Variable in kilometers per hour", ForceUnits="km/h"), Category= "Horde Manager | BP Zombie")
 	float DifferenceBetweenFoodTruck = 5.f;
 	float KilometersToMetersConvertingValue = 27.777777777778;
-	float vitesseFinalZombie;
+	float FinalZombieSpeed;
 	
 #pragma endregion
 
@@ -70,6 +70,7 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite , Category = "Horde Manager | Spawn Horde")
 	UDataTable* DataWave;
+
 
 #pragma region Spawn Horde Zombie
 	
@@ -113,4 +114,8 @@ public:
 
 	// UFUNCTION(BlueprintCallable)
 	// UDataTable GetDataTable(){return DataWave;}
+
+	
+private:
+	bool bCanSpawnHorde = true;
 };
