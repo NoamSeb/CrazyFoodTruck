@@ -13,19 +13,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Zombie.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Zombie.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/D/MQ/IPSNYQK3LE4BS9FWMR40DO.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/Cabestan/D/MQ/IPSNYQK3LE4BS9FWMR40DO.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxFrontCamera/4/0Z/OC335ID6GP6MWCXG742SLH.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxFrontCamera/4/0Z/OC335ID6GP6MWCXG742SLH.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/8/TZ/XTBXCSZ70O27KA688W4FSG.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/8/TZ/XTBXCSZ70O27KA688W4FSG.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3L/71ZSO7YNYLISTQLB5MLRWT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3L/71ZSO7YNYLISTQLB5MLRWT.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Cabestan/CabestanController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Cabestan/CabestanController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Cabestan/CabestanController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Cabestan/CabestanController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/ZombieIA.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/ZombieIA.h" afterDir="false" />
-    </list>
+    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -215,6 +203,8 @@
       <workItem from="1762260707073" duration="1018000" />
       <workItem from="1762420937418" duration="610000" />
       <workItem from="1762426081671" duration="1176000" />
+      <workItem from="1762705549995" duration="9000" />
+      <workItem from="1762708866141" duration="3000" />
     </task>
     <servers />
   </component>

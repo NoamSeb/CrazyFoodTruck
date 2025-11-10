@@ -8,21 +8,18 @@
 
 URepairProgressBillboard::URepairProgressBillboard()
 {
-	// WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("RepairWidget"));
-	// SetRootComponent(WidgetComponent);
-	//
-	// WidgetComponent->SetWidgetSpace(EWidgetSpace::World);
-	// WidgetComponent->SetTwoSided(true);
-	// WidgetComponent->SetDrawAtDesiredSize(true);
-	// WidgetComponent->SetPivot(FVector2D(0.5f, 0.0f));
-	// WidgetComponent->SetRelativeLocation(FVector(0.f, 0.f, BillboardOffsetZ));
-	// WidgetComponent->SetDrawSize(FVector2D(280.f, 32.f));
-	// WidgetComponent->SetVisibility(false);
 }
 
 void URepairProgressBillboard::InitializeWidget(UWidgetComponent* InWidgetComponent)
 {
 	WidgetComponent = InWidgetComponent;
+	if (UUserWidget* UserWidget = WidgetComponent->GetWidget())
+	{
+		if (URepairProgressWidget* RepairProgressWidget = Cast<URepairProgressWidget>(UserWidget))
+		{
+			RepairWidget = RepairProgressWidget;
+		}
+	}
 }
 
 void URepairProgressBillboard::BeginPlay()
@@ -73,12 +70,7 @@ void URepairProgressBillboard::UpdateWidget()
 		return;
 
 	WidgetComponent->SetVisibility(IsDamaged());
-	
-	if (UUserWidget* UserWidget = WidgetComponent->GetWidget())
-	{
-		if (URepairProgressWidget* RepairProgressWidget = Cast<URepairProgressWidget>(UserWidget))
-		{
-			RepairProgressWidget->SetRepairProgress(RepairProgress);
-		}
-	}
+	if (!RepairWidget)
+		return;
+	RepairWidget->SetRepairProgress(RepairProgress);
 }

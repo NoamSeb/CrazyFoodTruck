@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "InputMappingContext.h"
+#include "Interface/IVehicule.h"
 #include "Vehicle.generated.h"
 
 class UBoxComponent;
@@ -33,7 +34,7 @@ enum class VehicleOrientation
 };
 
 UCLASS()
-class CRAZYFOODTRUCK_API AVehicle : public APawn
+class CRAZYFOODTRUCK_API AVehicle : public APawn, public IIVehicule
 {
 	GENERATED_BODY()
 

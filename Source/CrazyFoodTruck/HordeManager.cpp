@@ -58,6 +58,8 @@ void AHordeManager::ClearSpawnArea()
 
 void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differentePos)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Red, "TRRRY SPAWN ZOMBIE WAVE");
+
 	if (!bCanSpawnHorde){return;}
 	if (ListSpawnArea.IsEmpty())
 	{
@@ -65,6 +67,7 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 		return;
 	}
 	
+	GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Red, "SPAWN ZOMBIE WAVE");
 	nbrVague++;
 
 	for (FZoneSpawn Element : ListSpawnArea)
