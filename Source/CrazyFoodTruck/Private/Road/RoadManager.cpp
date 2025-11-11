@@ -3,10 +3,8 @@
 
 #include "Road/RoadManager.h"
 
-#include "MeshPaintVisualize.h"
 #include "AssetRegistry/AssetRegistryModule.h"
-#include "Engine/StreamableManager.h"
-#include "Engine/AssetManager.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "Road/Road.h"
 
 
@@ -34,9 +32,18 @@ void ARoadManager::SpawnRoadSegment()
 {
     RoadsSegments.Empty();
 
-    // --- Step 1: Build the DataTable path dynamically ---
-    FString VarName = TEXT("0"); // Change or make this dynamic depending on your level
-    FString DataTablePath = FString::Printf(TEXT("/Game/CrazyFoodTruck/Blueprint/Road/Levels/DT_Level_%s.DT_Level_%s"), *VarName, *VarName);
+    // --- Step 1: Get the Data Table from the given path ---
+    UGameInstanceCrazyFoodTruck* GI;
+   
+    if (GetGameInstance() != nullptr)
+    {
+        GI = Cast<UGameInstanceCrazyFoodTruck>(GetGameInstance());
+    }else
+    {
+        GI = nullptr;
+    }
+    int LevelNumber = GI->GameData->LevelNumber;
+    FString DataTablePath = FString::Printf(TEXT("/Game/CrazyFoodTruck/Blueprint/Road/Levels/DT_Level_%i.DT_Level_%i"), LevelNumber, LevelNumber);
 
     UDataTable* LevelDataTable = Cast<UDataTable>(StaticLoadObject(UDataTable::StaticClass(), nullptr, *DataTablePath));
     if (!LevelDataTable)
@@ -44,8 +51,7 @@ void ARoadManager::SpawnRoadSegment()
         UE_LOG(LogTemp, Error, TEXT("DataTable not found at path: %s"), *DataTablePath);
         return;
     }
-
-    // --- Step 2: Get rows ---
+    
     TArray<FName> RowNames = LevelDataTable->GetRowNames();
     if (RowNames.Num() == 0)
     {
@@ -56,7 +62,7 @@ void ARoadManager::SpawnRoadSegment()
     FVector SpawnLocation = FVector::ZeroVector;
     FRotator SpawnRotation = FRotator::ZeroRotator;
 
-    // --- Step 3: Iterate through rows in order ---
+    // --- Step 3: Fetch the Data Table and get the Road Segment from the row ---
     for (int32 i = 0; i < RowNames.Num(); ++i)
     {
         uint8* RowData = LevelDataTable->FindRowUnchecked(RowNames[i]);
@@ -67,7 +73,7 @@ void ARoadManager::SpawnRoadSegment()
         
        GetRoadSegmentFromLevelDataTable(RoadClass, LevelDataTable, RowData);
 
-        // --- Step 5: Spawn the Road segment ---
+        // --- Step 5: Spawn the selected Road segment ---
         ARoad* CurrentRoad = GetWorld()->SpawnActor<ARoad>(RoadClass, SpawnLocation, SpawnRotation);
         if (CurrentRoad)
         {
@@ -81,7 +87,9 @@ void ARoadManager::SpawnRoadSegment()
    
 }
 
-
+/// Place correctly the road segments to make the start point's position equal to previous end point's position
+/// @param RoadToMove
+/// @param LoopStep 
 void ARoadManager::RegulateRoadSegmentsPosition(TObjectPtr<ARoad> RoadToMove, int LoopStep)
 {
 	TObjectPtr<ARoad> PreviousRoadSegment = RoadsSegments[LoopStep-1];
@@ -92,6 +100,9 @@ void ARoadManager::RegulateRoadSegmentsPosition(TObjectPtr<ARoad> RoadToMove, in
 	RoadToMove->StartPoint->SetWorldLocation(TargetStartPointLocation);
 }
 
+/// After all the segments were spawned, spawn teh Survivor Camp to go next game phase
+/// @param Location 
+/// @param Rotation 
 void ARoadManager::SpawnTileToSurvivorCamp(FVector Location, FRotator Rotation)
 {
     const FString TargetName = TEXT("BP_SurvivorCamp");
@@ -122,9 +133,12 @@ void ARoadManager::SpawnTileToSurvivorCamp(FVector Location, FRotator Rotation)
     }
 }
 
+/// Get the correct Road Segment from the Data Table
+/// @param RoadClass 
+/// @param LevelDataTable 
+/// @param RowData 
 void ARoadManager::GetRoadSegmentFromLevelDataTable(UClass* &RoadClass, UDataTable* &LevelDataTable, uint8* &RowData)
 {
-    // --- Step 4: Find the first Class or Object property dynamically ---
     auto* RowStruct = LevelDataTable->GetRowStruct();
     FProperty* ClassProp = nullptr;
 
