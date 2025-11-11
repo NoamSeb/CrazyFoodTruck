@@ -93,9 +93,12 @@ void UInputAmeliorationCharacters::MoveOnSkip(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::Validate(const FInputActionValue& Value)
 {
-	IsValidate = true;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "coucou");
-	UpgradeUserWidget->Validate(indexPlayerController, indexPosition, OnSkip);
+	if (!IsValidate)
+	{
+		IsValidate = true;
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "coucou");
+		UpgradeUserWidget->Validate(indexPlayerController, indexPosition, OnSkip);
+	}
 }
 
 void UInputAmeliorationCharacters::RemoveValidate()
