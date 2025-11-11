@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
 #include "PhaseGameFoodFoodTruck.h"
-#include "GameInstanceCrazyFoodTruck.h"
+#include "Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "GameModeCrazyFoodTruck.generated.h"
 
 /**

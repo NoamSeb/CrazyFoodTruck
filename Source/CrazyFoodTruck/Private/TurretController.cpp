@@ -82,6 +82,8 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 	{
 		ActualBulletPrefab = nullptr;
 	}
+	
+	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);
 }
 
 FString ATurretController::GetRowNameFromBulletType(EbulletType Type)
@@ -297,6 +299,7 @@ void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 	if (InteractBox)
 	{
 		InteractBox->UnpossessPawn();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player quit turret."));
 	}
 }
 

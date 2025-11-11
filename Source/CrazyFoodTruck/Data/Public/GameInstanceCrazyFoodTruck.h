@@ -1,0 +1,37 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Engine/GameInstance.h"
+#include "Camera/CameraShakeManager.h"
+#include "FoodTruckDataSubSystem.h"
+#include "GameDataSubSystem.h"
+#include "ZombieDataSubSystem.h"
+#include "GameInstanceCrazyFoodTruck.generated.h"
+
+UCLASS()
+class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
+{
+	GENERATED_BODY()
+
+	
+
+	virtual void Init() override;
+
+	
+	public:
+
+	// FUNCTION
+
+	void SetCameraShakeManager(ACameraShakeManager* NewCameraShakeManager);
+	void PlayerCameraShake(ECameraShake ShakeType);
+
+	TObjectPtr<UFoodTruckDataSubSystem> FoodTruckData;
+	TObjectPtr<UGameDataSubSystem> GameData;
+	TObjectPtr<UZombieDataSubSystem> ZombieData;
+
+
+private:
+	ACameraShakeManager* CameraShakeManager;
+};

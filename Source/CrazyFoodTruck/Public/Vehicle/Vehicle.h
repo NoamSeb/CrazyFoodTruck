@@ -5,14 +5,20 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "InputMappingContext.h"
+#include "Interface/IVehicule.h"
 #include "Vehicle.generated.h"
 
+class UBoxComponent;
 class UCurveFloat;
 class UInputAction;
 class UEnhancedInputComponent;
 class UEnhancedInputLocalPlayerSubsystem;
 class UFloatingPawnMovement;
+class USceneComponent;
+class USceneCaptureComponent2D;
+class UTextureRenderTarget2D;
 class AInteractBox;
+class UForwardCamWidget;
 
 UENUM()
 enum class VehicleStates
@@ -28,7 +34,7 @@ enum class VehicleOrientation
 };
 
 UCLASS()
-class CRAZYFOODTRUCK_API AVehicle : public APawn
+class CRAZYFOODTRUCK_API AVehicle : public APawn, public IIVehicule
 {
 	GENERATED_BODY()
 
@@ -155,4 +161,42 @@ private:
 
 	void ReduceSpeed();
 	void StartSpeedRecovery();
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
+	UTextureRenderTarget2D* GetForwardRenderTarget() const { return ForwardRT; }
+
+protected:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UBoxComponent> Root;
+	
+	UPROPERTY(VisibleAnywhere, Category = "ForwardCam")
+	TObjectPtr<USceneComponent> ForwardCamRoot = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "ForwardCam")
+	TObjectPtr<USceneCaptureComponent2D> ForwardCapture = nullptr;
+
+	UPROPERTY(Transient, VisibleAnywhere, Category = "ForwardCam")
+	TObjectPtr<UTextureRenderTarget2D> ForwardRT = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	int32 ForwardRT_Width = 1024;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	int32 ForwardRT_Height = 512;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	float ForwardCamFOV = 90.f;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bForwardCaptureEveryFrame = true;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|UI")
+	TSubclassOf<UForwardCamWidget> ForwardCamWidgetClass;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UForwardCamWidget> ForwardCamWidget = nullptr;
+
+private:
+	void CreateAndAssignForwardRenderTarget();
 };

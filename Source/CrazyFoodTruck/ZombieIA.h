@@ -21,8 +21,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void CallRound();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float vitesseZombie;
-
+	float ZombieSpeed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float BaseZombieSpeed;
 
 protected:
 	// Called when the game starts or when spawned

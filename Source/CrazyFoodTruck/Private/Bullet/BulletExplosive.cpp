@@ -3,7 +3,7 @@
 
 #include "Bullet/BulletExplosive.h"
 
-#include "CrazyFoodTruck/GameInstanceCrazyFoodTruck.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 
 
 // Sets default values

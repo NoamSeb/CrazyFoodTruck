@@ -31,7 +31,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Repair|Events")
 	FOnRepaired OnRepaired;
-
+	
+	UPROPERTY(BlueprintAssignable, Category = "Repair|Events")
+	FOnRepaired OnBroked;
 	UFUNCTION(BlueprintCallable, Category = "Repair")
 	void InitializeWidget(UWidgetComponent* InWidgetComponent);
 
@@ -50,6 +52,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Repair|Visual")
 	TObjectPtr<UWidgetComponent> WidgetComponent = nullptr;
+
+	TObjectPtr<URepairProgressWidget> RepairWidget = nullptr;
 
 	void ApplyProgressStep(float Step);
 	void FinishRepair();

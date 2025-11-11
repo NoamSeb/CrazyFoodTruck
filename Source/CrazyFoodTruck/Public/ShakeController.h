@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "CrazyFoodTruck/GameInstanceCrazyFoodTruck.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "ShakeController.generated.h"
 
 
