@@ -8,6 +8,7 @@
 #include "Interactable/Interactable.h"
 #include "InputMappingContext.h"
 #include "Interface/IPlayer.h"
+#include "InputCharacterAmelioration/InputAmeliorationCharacters.h"
 #include "CrazyFoodTruckCharacter.generated.h"
 
 class UCrazyFoodTruckCharacterInputData;
@@ -80,6 +81,8 @@ private:
 public:
 	void SetInputData(UCrazyFoodTruckCharacterInputData* InInputData);
 	void SetInputMappingContext(UInputMappingContext* InInputMappingContext);
+
+	void AddMappingContext(UInputMappingContext* InputMappingContext, int8 Priority);
 
 protected:
 	UPROPERTY()

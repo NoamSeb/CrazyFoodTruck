@@ -23,6 +23,9 @@ UInputMappingContext* FLocalMultiplayerProfileData::GetIMCFromType(ELocalMultipl
 		return IMCCabestan;
 	case ELocalMultiplayerInputMappingType::Plate:
 		return IMCPlate;
+	case ELocalMultiplayerInputMappingType::Upgrade:
+		return IMCUpgrade;
+	
 	default:
 		return nullptr;
 	}

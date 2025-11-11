@@ -49,6 +49,12 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
         BindInputMoveAction(EnhancedInputComponent);
         BindInputInteractAction(EnhancedInputComponent);
     }
+
+    if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    {
+        AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+        InputAmeliorationComp->SetupPlayerInput(PlayerInputComponent);
+    }
 }
 
 int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
@@ -122,6 +128,26 @@ void ACrazyFoodTruckCharacter::SetupMappingContextIntoController() const
     if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
     {
         EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContext, 0);
+    }
+}
+
+void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMappingContextParam, int8 Priority)
+{
+    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController)
+    {
+        return;
+    }
+
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    if (!LocalPlayer)
+    {
+        return;
+    }
+
+    if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+    {
+        EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
     }
 }
 
@@ -235,4 +261,3 @@ bool ACrazyFoodTruckCharacter::HasAmmo()
 {
     return _hasAmmo;
 }
-

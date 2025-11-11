@@ -14,13 +14,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/PawnUpgrade.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/InputCharacterAmelioration/InputAmeliorationCharacters.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/UpgradePhase/AmeliorationWidget.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/UpgradePhase/UpgradePhase.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Characters/PawnUpgrade.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/InputCharacterAmelioration/InputAmeliorationCharacters.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/UpgradePhase/AmeliorationWidget.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/UpgradePhase/UpgradePhase.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/B/WE/X4LHCLELIBW5RVP8RMH0QQ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/B/WE/X4LHCLELIBW5RVP8RMH0QQ.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor.modules" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor.modules" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_SpawnSteak.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_SpawnSteak.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/BP_SurvivorCampCameraManager.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/BP_SurvivorCampCameraManager.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Camera/BP_CrazyFoodTruckCameraActor.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Camera/BP_CrazyFoodTruckCameraActor.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter1.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter1.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter2.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter3.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter3.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter4.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter4.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/GM_UpgradePhase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/GM_UpgradePhase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/GameMode/BP_CrazyFoodTruckGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/GameMode/BP_CrazyFoodTruckGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/SurvivorCamp.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/SurvivorCamp.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_Upgrade.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_Upgrade.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CrazyFoodTruck.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/CrazyFoodTruck.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Source/LocalMultiplayer/Private/LocalMultiplayerSettings.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Source/LocalMultiplayer/Private/LocalMultiplayerSettings.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Source/LocalMultiplayer/Public/LocalMultiplayerSettings.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Source/LocalMultiplayer/Public/LocalMultiplayerSettings.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Source/LocalMultiplayer/Public/LocalMultiplayerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Source/LocalMultiplayer/Public/LocalMultiplayerSubsystem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Camera/CrazyFoodTruckCameraActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Camera/CrazyFoodTruckCameraActor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Characters/CrazyFoodTruckCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Characters/CrazyFoodTruckCharacter.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,23 +60,36 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Core/Public/Containers/UnrealString.h.inl" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/GameFramework/Controller.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/GameFramework/GameModeBase.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/GameFramework/PlayerController.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Private/GameplayStatics.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/PawnUpgrade.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Client/Client.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/ActorFood.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/Bread.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/SpawnBread.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Grille/Grille.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/InputCharacterAmelioration/InputAmeliorationCharacters.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Steak/ActorSteak.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Steak/SpawnSteak.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/UpgradePhase/AmeliorationWidget.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/UpgradePhase/UpgradePhase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/AmmoDeposit.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/AmmunitionSpawner.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Characters/PawnUpgrade.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Client/Client.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Food/ActorFood.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Food/Bread.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Food/CuissonFood.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Food/SpawnBread.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Grille/Grille.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/InputCharacterAmelioration/InputAmeliorationCharacters.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Steak/ActorSteak.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Steak/SpawnSteak.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/UpgradePhase/AmeliorationWidget.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/UpgradePhase/UpgradePhase.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -66,7 +104,7 @@
     &quot;C/C++ Project.CrazyFoodTruck.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/Cuisine&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/Vehicle&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -219,6 +257,20 @@
       <workItem from="1761898364327" duration="340000" />
       <workItem from="1761898756511" duration="5590000" />
       <workItem from="1761907101792" duration="574000" />
+      <workItem from="1762271318371" duration="335000" />
+      <workItem from="1762271711432" duration="250000" />
+      <workItem from="1762331288577" duration="2226000" />
+      <workItem from="1762373157565" duration="670000" />
+      <workItem from="1762417099468" duration="2603000" />
+      <workItem from="1762419808484" duration="2205000" />
+      <workItem from="1762424538024" duration="148000" />
+      <workItem from="1762424715342" duration="127000" />
+      <workItem from="1762425136256" duration="4000" />
+      <workItem from="1762425193496" duration="25672000" />
+      <workItem from="1762627854728" duration="1716000" />
+      <workItem from="1762699194482" duration="129000" />
+      <workItem from="1762703695114" duration="8169000" />
+      <workItem from="1762769932202" duration="10243000" />
     </task>
     <servers />
   </component>
@@ -228,5 +280,16 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp</url>
+          <line>2</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
