@@ -3,120 +3,195 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AttachPoint.h"
 #include "EInteractionType.h"
-#include "LocalMultiplayerSettings.h"
-#include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
 enum class ELocalMultiplayerInputMappingType;
 
+class ACrazyFoodTruckCharacter;
+class URepairProgressBillboard;
+class AAttachPoint;
+
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractController, APlayerController*, InstigatorPlayerController);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCollision);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDamaged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRestored);
 
 UCLASS()
 class CRAZYFOODTRUCK_API AInteractBox : public AActor, public IInteractable
 {
 	GENERATED_BODY()
-	
-public:	
-	AInteractBox();
-
-protected:
-
-	virtual void Tick(float DeltaSeconds) override;
-	bool CanDetectOverlapp();
-	virtual void BeginPlay() override;
-	void FindSceneComponent();
 
 public:
+	AInteractBox();
 
-	
-	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
-	FOnInteractController OnInteractionStarted;
-
-	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
-	FOnInteractController OnInteractionEnded;
-
-	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
-	FOnCollision OnCollisionEnter;
-
-	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
-	FOnCollision OnCollisionExit;
-	
-	UPROPERTY(BlueprintAssignable, Category="Interact|Events")
-	FOnCollision OnPlayerQuit;
-
-	UPROPERTY(EditAnywhere, Category="Interact|Possess")
-	EInteractionType InteractionType = EInteractionType::Possess;
-	
-	UPROPERTY(EditAnywhere, Category="Interact|Possess")
-	APawn* PawnToPossess = nullptr;
-
-	UPROPERTY(EditAnywhere, Category="Interact|Possess")
-	AActor* InteractableObject = nullptr;
-	
-	UPROPERTY(EditAnywhere, Category="Interact|Possess")
-	ELocalMultiplayerInputMappingType MappingType;
-
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
+	void TryInteractWithObject(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter);
+	void TryPossesPawn(APlayerController* InstigatorPlayerController);
+
+#if WITH_EDITOR
+	UFUNCTION(CallInEditor, Category = "Interact|Editor")
+	void SpawnAttachPointInEditor();
+	UFUNCTION(CallInEditor, Category = "Interact|Editor")
+	void ClearAttachPoint();
+#endif
+
+	bool _IsShowingInput;
+	
+	bool CanDetectOverlapp();
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	void UpdateVisibilityInput(bool bIsVisible);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	void SetInteractableObject(AActor* NewInteractableObject);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	AActor* GetInteractableObject() const { return InteractableObject; }
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	void SetPawnToPossess(APawn* NewPawnToPossess);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	APawn* GetPawnToPossess() const { return PawnToPossess; }
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	bool GetInputVisibilityState() const { return _IsShowingInput; }
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	void SetFunctional(bool bNewFunctional);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	bool IsFunctional() const { return bIsFunctional; }
+
+	UFUNCTION(BlueprintPure, Category = "Damage|Repair")
+	bool IsDamaged() const { return bBreakable && !bIsFunctional; }
+
+	UFUNCTION(BlueprintPure, Category = "Damage|Repair")
+	bool CanBeBrokenNow() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Damage|Repair")
+	bool TryBreakModule();
 
 	void PossessPawn(APlayerController* PlayerController);
 	void UnpossessPawn();
 
-	void TryPossesPawn(APlayerController* InstigatorPlayerController);
-	void TryInteractWithObject(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter);
+	UFUNCTION(BlueprintCallable, Category = "Damage|Repair")
+	void SetRepairProgress(URepairProgressBillboard* RPB);
 
-	UFUNCTION(BlueprintCallable, Category="Interact|State")
-	void UpdateVisibilityInput(bool bIsVisible);
-	void TeleportAndAttachPlayer(APlayerController* PlayerController);
-	void TeleportBackAndDetachPlayer(APlayerController* PlayerController);
+	UPROPERTY(EditAnywhere, Category = "Damage|Repair")
+	bool bStartDamaged = false;
 
+	UPROPERTY(EditAnywhere, Category = "Damage|Repair")
+	bool bBreakable = true;
 
-	UFUNCTION(BlueprintCallable, Category="Interact|State")
-	bool GetInputVisibilityState() const { return _IsShowingInput; }
+	UPROPERTY(EditAnywhere, Category = "Damage|Repair")
+	bool bCanBreakWhilePossessed = false;
 
-	UPROPERTY(EditAnywhere, Category="Interact|Components")
-	AAttachPoint* AttachPoint;
-	UPROPERTY(EditAnywhere, Category="Interact|Components")
-	AAttachPoint* ReleasePoint;
+	UPROPERTY(EditAnywhere, Category = "Damage|Repair")
+	TObjectPtr<URepairProgressBillboard> RepairProgressBillboard = nullptr;
 
-	UFUNCTION(CallInEditor)
-	void SpawnAttachPointInEditor();
+	UPROPERTY(BlueprintAssignable, Category = "Damage|Repair")
+	FOnDamaged OnDamaged;
 
-	UFUNCTION(CallInEditor)
-	void ClearAttachPoint();
+	UPROPERTY(BlueprintAssignable, Category = "Damage|Repair")
+	FOnRestored OnRestored;
 
+	UFUNCTION(BlueprintCallable, Category = "Damage|Repair")
+	void TryForceBreak();
+
+	UPROPERTY(EditAnywhere, Category = "Interact|Components")
+	TObjectPtr<AAttachPoint> AttachPoint = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Interact|Components")
+	TObjectPtr<AAttachPoint> ReleasePoint = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
+	TObjectPtr<APawn> PawnToPossess = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
+	EInteractionType InteractionType;
 	
-
-	UPROPERTY()
-	FRotator RotationActorOnEnter;
-	UPROPERTY()
-	FRotator RotationControllerOnEnter;
+	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
+	ELocalMultiplayerInputMappingType MappingType = static_cast<ELocalMultiplayerInputMappingType>(0);
 	
+	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
+	AActor* InteractableObject;
+	
+	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
+	FOnInteractController OnInteractionStarted;
+
+	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
+	FOnInteractController OnInteractionEnded;
+
+	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
+	FOnCollision OnCollisionEnter;
+
+	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
+	FOnCollision OnCollisionExit;
+
+	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
+	FOnCollision OnPlayerQuit;
+
+
+
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interact")
+	virtual void BeginPlay() override;
+	
+	float OverlappTimer = 0.f;
+	
+	UPROPERTY(EditAnywhere, Category = "Interact|State")
+	float BaseOverlappTimer = 0.01f;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interact|Components")
 	TObjectPtr<UBoxComponent> Box = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category="Interact|State")
+	UPROPERTY(VisibleAnywhere, Category = "Interact|State")
 	TWeakObjectPtr<APlayerController> CurrentInteractorPlayerController;
 
-	UPROPERTY(VisibleAnywhere, Category="Interact|State")
+	UPROPERTY(VisibleAnywhere, Category = "Interact|State")
 	TSet<TWeakObjectPtr<APlayerController>> OverlappingPlayerControllers;
 
-private:
-	
-	UFUNCTION()
-	void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	void TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character);
-	UFUNCTION()
-	void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UPROPERTY(VisibleAnywhere, Category = "Interact|State")
+	bool bPlayerIsControlling = false;
 
-	void TryReleaseLockFromActor(AActor* LeavingActor);
+	UPROPERTY(VisibleAnywhere, Category = "Interact|State")
+	bool bIsFunctional = true;
+
+	UPROPERTY()
+	TWeakObjectPtr<APlayerController> CachedPlayerController;
+
+	UPROPERTY()
+	ACrazyFoodTruckCharacter* EnteringCharacter;
+	
+	UPROPERTY()
+	TWeakObjectPtr<ACrazyFoodTruckCharacter> CachedCharacter;
+
+	UPROPERTY()
+	TWeakObjectPtr<APawn> CachedPreviousPawn;
+	
+	FRotator RotationActorOnEnter = FRotator::ZeroRotator;
+	FRotator RotationControllerOnEnter = FRotator::ZeroRotator;
+
+private:
+
+
+	UFUNCTION()
+	void OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool bFromSweep, const FHitResult& Hit);
+
+	UFUNCTION()
+	void OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex);
+	void TryExitPlayer(ACrazyFoodTruckCharacter* CharacterController);
+
+	void TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character);
+	void TryReleaseLockFromActor(APlayerController* LeavingPlayerController);
+	bool PlayerStillInsideCheck(ACrazyFoodTruckCharacter* TargetCharacter);
+	ACrazyFoodTruckCharacter* DetectPlayerInside();
 
 	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
@@ -126,17 +201,9 @@ private:
 	void RemoveOverlappingPlayerController(APlayerController* PlayerController);
 	bool IsAnotherPlayerAlreadyInside(APlayerController* ThisPlayerController) const;
 
-	bool PlayerStillInsideCheck(ACrazyFoodTruckCharacter* TargetCharacter);
-	ACrazyFoodTruckCharacter* DetectPlayerInside();
+	void TeleportAndAttachPlayer(APlayerController* PlayerController);
+	void TeleportBackAndDetachPlayer(APlayerController* PlayerController);
 
-	float overlappTimer = 0.f;
-	
-	APlayerController* CachedPlayerController = nullptr;
-	ACrazyFoodTruckCharacter* CachedCharacter = nullptr;
-	APawn* CachedPreviousPawn = nullptr;
-
-	bool _IsPlayerControlling = false;
-	bool _IsPlayerControllerIn = false;
-	bool _IsShowingInput = false;
-
+	UFUNCTION()
+	void OnRepairCompleted();
 };

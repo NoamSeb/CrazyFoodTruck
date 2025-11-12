@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "FBulletStructure.h"
 #include "Interface/IEntity.h"
+#include "NiagaraFunctionLibrary.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -22,10 +23,10 @@ public:
 protected:
 	
 	virtual void BeginPlay() override;
-	virtual void GroundHit();
+	virtual void GroundHit(FVector LocationHit);
 	
-	virtual void EnemyHit(IIEntity *Entity);
-	virtual void EnemyHitBlueprint(AActor* EntityActor);
+	virtual void EnemyHit(IIEntity *Entity, FVector LocationHit);
+	virtual void EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit);
 	float GetBulletSpeed();
 	int GetBulletDamage();
 	
@@ -42,7 +43,23 @@ protected:
 	bool bFromSweep,
 	const FHitResult& SweepResult);
 
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse,
+	const FHitResult& Hit);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="EFFECT", meta=(AllowPrivateAccess="true"))
+	UNiagaraSystem* GroundImpact;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="EFFECT")
+	UNiagaraSystem* ZombieImpact;
+
+	
 	UBoxComponent* _BoxCollider;
+
+
 
 	int damage;
 	float bulletSpeed;

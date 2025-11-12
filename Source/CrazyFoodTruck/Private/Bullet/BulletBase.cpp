@@ -12,6 +12,8 @@ ABulletBase::ABulletBase()
 	PrimaryActorTick.bCanEverTick = true;
 	_BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Coll_Box"));
 	_BoxCollider->SetGenerateOverlapEvents(true);
+	//_BoxCollider->SetNotifyRigidBodyCollision(true); // c le generate hit event wtf
+	//_BoxCollider->OnComponentHit.AddDynamic(this, &ABulletBase::OnHit);
 	_BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &ABulletBase::OnOverlapBegin);
 }
 
@@ -36,19 +38,32 @@ void ABulletBase::Initialize(FBulletStructure* BulletStructure, const FVector& d
 	}
 }
 
-void ABulletBase::GroundHit()
+void ABulletBase::GroundHit(FVector LocationHit)
 {
+	if (GroundImpact)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), GroundImpact, LocationHit, GetActorRotation());
+	}
 	Destroy();
 }
 
-void ABulletBase::EnemyHit(IIEntity* Entity)
+void ABulletBase::EnemyHit(IIEntity* Entity, FVector LocationHit)
 {
+	if (ZombieImpact)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ZombieImpact, LocationHit, GetActorRotation());
+	}
 	Destroy();
 }
 
-void ABulletBase::EnemyHitBlueprint(AActor* EntityActor)
+void ABulletBase::EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit)
 {
 	IIEntity::Execute_ReceiveDamageBlueprint(EntityActor, damage);
+	if (ZombieImpact)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ZombieImpact, LocationHit, GetActorRotation());
+	}
+	Destroy();
 }
 
 float ABulletBase::GetBulletSpeed()
@@ -70,9 +85,11 @@ void ABulletBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		return;
 	}
 	
+	FVector impactPoint = SweepResult.ImpactPoint;
+
 	if (OtherActor->GetClass()->ImplementsInterface(UIEntity::StaticClass()))
 	{
-		EnemyHitBlueprint(OtherActor);
+		EnemyHitBlueprint(OtherActor, impactPoint);
 		IIEntity* EntityInterface = Cast<IIEntity>(OtherActor);
 		
 		if (EntityInterface)
@@ -82,21 +99,30 @@ void ABulletBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 				return;
 			}
 			EntityInterface->ReceiveDamage(damage);
-			EnemyHit(EntityInterface);
+			EnemyHit(EntityInterface, impactPoint);
 		}
 	}
-	
-	auto tag = OtherActor->Tags;
 
+		
+	auto tag = OtherActor->Tags;
 	
 	if (tag.Num() > 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Bullet hit tag: %s"), *tag[0].ToString()));
 		if (tag.Contains("Ground"))
 		{
-			GroundHit();
+			GroundHit(impactPoint);
 		}
 	}
+
+}
+
+void ABulletBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor == nullptr || OtherActor == this)
+	{
+		return;
+	}
+
 }
 
 // Called every frame

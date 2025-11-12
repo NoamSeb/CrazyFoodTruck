@@ -17,6 +17,7 @@ void ATurretController::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	auto sceneComponents = K2_GetComponentsByClass(USceneComponent::StaticClass());
 	for (auto SceneComponent : sceneComponents)
 	{
@@ -63,7 +64,7 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		BulletDamage = ActualBulletStructure->Damage;
 		BulletFireRate = ActualBulletStructure->FireRate;
 		AreaRangeSide = ActualBulletStructure->AreaSide;
-		AreaRangeDepht = ActualBulletStructure->AreaDepht;
+		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 	}
 	else
 	{
@@ -81,6 +82,8 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 	{
 		ActualBulletPrefab = nullptr;
 	}
+	
+	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);
 }
 
 FString ATurretController::GetRowNameFromBulletType(EbulletType Type)
@@ -249,7 +252,7 @@ void ATurretController::InputRoll(const FInputActionValue& Value) // MOVE ALONG 
 }
 
 
-void ATurretController::InputYaw(const FInputActionValue& Value) // X VALUE 
+void ATurretController::InputYaw(const FInputActionValue& Value) // X VALUE depht axis ^
 {
 	float valueToFloat = Value.Get<float>();
 	
@@ -296,12 +299,12 @@ void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 	if (InteractBox)
 	{
 		InteractBox->UnpossessPawn();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player quit turret."));
 	}
 }
 
 void ATurretController::TestingFunction(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Testing Function Called"));
 }
 
 

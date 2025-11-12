@@ -58,6 +58,7 @@ Binaries/Win64/*
 !Binaries/Win64/UnrealEditor.modules
 !Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll
 !Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll
+!Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor.modules
 
 # Builds
 Build/*
@@ -82,3 +83,4 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+.idea/.idea.CrazyFoodTruck.dir/.idea/workspace.xml

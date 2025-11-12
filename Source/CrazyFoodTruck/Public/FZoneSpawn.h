@@ -11,14 +11,15 @@ USTRUCT(BlueprintType)
 struct FZoneSpawn : public FTableRowBase
 {
 	GENERATED_BODY()
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Zone")
 	EPositionSpawn PositionSpawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Zone")
 	AAreaZombieSpawn* AreaZombieSpawn;
 	
-	FZoneSpawn() = default;
-	FZoneSpawn(EPositionSpawn PosSpawn, AAreaZombieSpawn* NewArea);
-	FZoneSpawn(AAreaZombieSpawn* NewArea);
+	FZoneSpawn()
+		:PositionSpawn(EPositionSpawn::DownLeft)
+		,AreaZombieSpawn(nullptr)
+	{}
 };
