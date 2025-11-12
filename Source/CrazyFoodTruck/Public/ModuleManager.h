@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EModuleSide.h"
 #include "ModuleBase.h"
 #include "Components/ActorComponent.h"
 #include "Interactable/InteractBox.h"
@@ -17,23 +18,30 @@ class CRAZYFOODTRUCK_API UModuleManager : public UActorComponent
 public:
 	UModuleManager();
 
-	void AddModule(FString ModuleID, EModuleSide ModuleSide);
-	TSubclassOf<AModuleBase> GetModule(FString ModuleID);
-	TArray<AModuleBase*> AllModules;
-	void SetPosition();
+	UFUNCTION(BlueprintCallable, Category="Module")
+	AModuleBase* AddModule(FString ModuleID, EModuleSide ModuleSide);
+	
+	UFUNCTION(BlueprintCallable, Category="Module")
+	void Initialize(FVector LeftPos, FVector RightPos);
 
+	UFUNCTION(BlueprintCallable, Category="Module")
+	void ResetAllModules();
 
 protected:
 	virtual void BeginPlay() override;
-	void SetPosition(FVector LeftPos, FVector RightPos);
 
 private:
-	FVector* LeftPosition;
-	FVector* RightPosition;
+	UPROPERTY()
+	FVector LeftPosition;
+	UPROPERTY()
+	FVector RightPosition;
 
+	UPROPERTY()
 	AInteractBox* LeftInteractBox;
+	UPROPERTY()
 	AInteractBox* RightInteractBox;
-public:
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+	UPROPERTY()
+	TArray<AModuleBase*> AllModules;
+	
+	TSubclassOf<AModuleBase> GetModuleByID(FString ModuleID);
 };

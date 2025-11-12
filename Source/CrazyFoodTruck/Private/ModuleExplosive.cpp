@@ -11,24 +11,23 @@
 // Sets default values
 AModuleExplosive::AModuleExplosive()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void AModuleExplosive::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AModuleExplosive::Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter)
 {
+    if (!CanInteractWithModule()){return;}
 	Explode();
+    Super::Interact(InstigatorPlayerController, CrazyCharacter);
 }
 
 void AModuleExplosive::Explode()
 {
-	if (!bCanExplode){return;}
-    
     const FVector TraceStart = GetActorLocation();
     const FVector TraceEnd = TraceStart;
 
@@ -87,11 +86,12 @@ void AModuleExplosive::Explode()
         GI->PlayerCameraShake(Explosion);
     }
 
-    bCanExplode = false;
 }
 
-void AModuleExplosive::Tick(float DeltaTime)
+void AModuleExplosive::Tick(float DeltaSeconds)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaSeconds);
+
 }
+
 

@@ -85,6 +85,16 @@ void AInteractBox::UpdateVisibilityInput(bool bIsVisible)
     _IsShowingInput = bIsVisible;
 }
 
+void AInteractBox::SetInteractableObject(AActor* NewInteractableObject)
+{
+    InteractableObject = NewInteractableObject;
+}
+
+void AInteractBox::SetPawnToPossess(APawn* NewPawnToPossess)
+{
+    PawnToPossess = NewPawnToPossess;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Editor helpers (spawn attach points)
 

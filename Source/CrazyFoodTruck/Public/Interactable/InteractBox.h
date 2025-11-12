@@ -49,6 +49,18 @@ public:
 	void UpdateVisibilityInput(bool bIsVisible);
 
 	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	void SetInteractableObject(AActor* NewInteractableObject);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	AActor* GetInteractableObject() const { return InteractableObject; }
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	void SetPawnToPossess(APawn* NewPawnToPossess);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	APawn* GetPawnToPossess() const { return PawnToPossess; }
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
 	bool GetInputVisibilityState() const { return _IsShowingInput; }
 
 	UFUNCTION(BlueprintCallable, Category = "Interact|State")

@@ -14,8 +14,9 @@ class CRAZYFOODTRUCK_API AModuleExplosive : public AModuleBase
 public:
 	AModuleExplosive();
 
-	UPROPERTY(EditAnywhere)
-	float ExplosionRadius = 300.f;
+	UPROPERTY(EditAnywhere, Category = "Module|Parameters")
+	float ExplosionRadius = 400.f;
+	UPROPERTY(EditAnywhere, Category ="Module|Parameters")
 	int ExplosionDamage = 10;
 	
 protected:
@@ -24,8 +25,7 @@ protected:
 
 private:
 	void Explode();
-	bool bCanExplode = true;
+	virtual void Tick(float DeltaSeconds) override;
 
 public:
-	virtual void Tick(float DeltaTime) override;
 };

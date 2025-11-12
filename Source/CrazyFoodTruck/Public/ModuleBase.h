@@ -14,13 +14,16 @@ class CRAZYFOODTRUCK_API AModuleBase : public AActor, public IInteractable
 
 public:
 	AModuleBase();
-	
 
+	void ResetModule();
 protected:
 	virtual void BeginPlay() override;
 	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
-	
+	bool CanInteractWithModule() const ;
 
+	UPROPERTY(EditAnywhere, Category="Module|Cooldown")
+	float BaseCooldown;
+	float ActualCooldown;
 public:
 	virtual void Tick(float DeltaTime) override;
 };

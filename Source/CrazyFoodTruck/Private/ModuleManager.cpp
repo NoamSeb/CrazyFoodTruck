@@ -6,50 +6,41 @@
 #include "EModuleSide.h"
 
 
-// Sets default values for this component's properties
 UModuleManager::UModuleManager()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
-void UModuleManager::AddModule(FString ModuleID, EModuleSide ModuleSide)
+AModuleBase* UModuleManager::AddModule(FString ModuleID, EModuleSide ModuleSide)
 {
-	auto CurrentModule = GetModule(ModuleID);
-	if (CurrentModule)
+	auto CurrentModule = GetModuleByID(ModuleID);
+	if (!CurrentModule){return nullptr;}
+
+	// SPAWN MODULE
+	FVector SpawnLocation = FVector::ZeroVector;
+	switch (ModuleSide)
 	{
-		// SPAWN MODULE
-		FVector SpawnLocation = FVector::ZeroVector;
-		switch (ModuleSide)
-		{
-			case EModuleSide::Left:
-				if (LeftPosition)
-				{
-					SpawnLocation = *LeftPosition;
-				}
-				break;
-			case EModuleSide::Right:
-				if (RightPosition)
-				{
-					SpawnLocation = *RightPosition;
-				}
-			break;
-			default:
-				break;
-		}
-		
-		AModuleBase* ModuleInstance = GetWorld()->SpawnActor<AModuleBase>(CurrentModule, SpawnLocation, FRotator::ZeroRotator);
-		AllModules.Add(ModuleInstance);
+	case EModuleSide::Left:
+		SpawnLocation = LeftPosition;
+		break;
+	case EModuleSide::Right:
+		SpawnLocation = RightPosition;
+		break;
+	default:
+		break;
 	}
+		
+	AModuleBase* ModuleInstance = GetWorld()->SpawnActor<AModuleBase>(CurrentModule, SpawnLocation, FRotator::ZeroRotator);
+	ModuleInstance->AttachToActor(GetOwner(), FAttachmentTransformRules::KeepWorldTransform);
+	AllModules.Add(ModuleInstance);
+
+	return ModuleInstance;
 }
 
-TSubclassOf<AModuleBase> UModuleManager::GetModule(FString ModuleID)
+TSubclassOf<AModuleBase> UModuleManager::GetModuleByID(FString ModuleID)
 {
 
-	FString FullPath = FString::Printf(TEXT("/Game/Resources/Module/%s.%s_C"), ModuleID, ModuleID);
+	FString FullPath = FString::Printf(TEXT("/Game/Resources/Module/%s.%s_C"), *ModuleID, *ModuleID);
 	
 	UClass* LoadedClass = LoadClass<AModuleBase>(nullptr, *FullPath);
 	if (LoadedClass)
@@ -66,18 +57,18 @@ void UModuleManager::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UModuleManager::SetPosition(FVector LeftPos, FVector RightPos)
+void UModuleManager::Initialize(FVector LeftPos, FVector RightPos)
 {
-	LeftPosition = &LeftPos;
-	RightPosition = &RightPos;
+	LeftPosition = LeftPos;
+	GEngine->AddOnScreenDebugMessage(-1,7.f, FColor::Black, TEXT("Left Position Set" + LeftPosition.ToString()));
+	RightPosition = RightPos;
 }
 
-
-// Called every frame
-void UModuleManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UModuleManager::ResetAllModules()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	for (auto mod : AllModules)
+	{
+		mod->ResetModule();
+	}
 }
 
