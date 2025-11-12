@@ -31,10 +31,8 @@ AVehicle::AVehicle()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickGroup = TG_PostUpdateWork;
 
-	if (!RootComponent)
-	{
-		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	}
+	Root = CreateDefaultSubobject<UBoxComponent>(TEXT("Root"));
+    Root->SetCollisionProfileName(TEXT("Vehicle"));
 
 	ForwardCamRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ForwardCamRoot"));
 	ForwardCamRoot->SetupAttachment(RootComponent);
