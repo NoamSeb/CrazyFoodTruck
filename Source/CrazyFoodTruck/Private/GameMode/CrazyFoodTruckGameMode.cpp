@@ -21,6 +21,9 @@ void ACrazyFoodTruckGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
+    UGameInstance* GI = GetGameInstance();
+    if (!GI) return;
+
     CreateAndInitPlayers();
 
     TArray<APlayerStart*> PlayerStartsPoints;
@@ -34,6 +37,11 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     GlobalViewTarget = ViewTarget;
 
     ConfigureMovementFrameForAllCharacters(Vehicle);
+
+    if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
+    {
+        LMS->EnsurePlayerIMCs(ELocalMultiplayerInputMappingType::Player);
+    }
 
     ApplyGlobalViewToAllPlayers();
 }
