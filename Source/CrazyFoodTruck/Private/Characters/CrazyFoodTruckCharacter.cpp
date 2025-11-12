@@ -3,12 +3,16 @@
 #include "Characters/CrazyFoodTruckCharacter.h"
 
 #include "Characters/CrazyFoodTruckCharacterInputData.h"
+#include "AmmoBox.h"
+#include "LocalMultiplayerSettings.h"
 
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
+#include "Kismet/GameplayStatics.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "LocalMultiplayerSettings.h"
 
 // Sets default values
 ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
@@ -16,8 +20,12 @@ ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
  	// Set this character to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0, 540.f, 0);
+    if (UCharacterMovementComponent* Move = GetCharacterMovement())
+    {
+        Move->bOrientRotationToMovement = true;
+        Move->RotationRate = FRotator(0.f, 540.f, 0.f);
+        Move->MaxWalkSpeed = MovementSpeed;
+    }
 }
 
 // Called when the game starts or when spawned
@@ -53,14 +61,11 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
 
 int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
 {
-    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
-    if (!PlayerController)
-    {
-        return -1;
-    }
+    const APlayerController* PC = Cast<APlayerController>(Controller);
+    if (!PC) return -1;
 
-    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
-    return LocalPlayer ? LocalPlayer->GetControllerId() : -1;
+    const ULocalPlayer* LP = PC->GetLocalPlayer();
+    return LP ? LP->GetControllerId() : -1;
 }
 
 FLinearColor ACrazyFoodTruckCharacter::GetPlayerColor() const
@@ -125,39 +130,62 @@ void ACrazyFoodTruckCharacter::SetupMappingContextIntoController() const
     }
 }
 
+static void BasisFromYaw(const float YawDeg, FVector& OutForward, FVector& OutRight)
+{
+    const FRotator Flat(0.f, YawDeg, 0.f);
+    const FRotationMatrix RM(Flat);
+    OutForward = RM.GetUnitAxis(EAxis::X);
+    OutRight = RM.GetUnitAxis(EAxis::Y);
+}
+
+void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionValue)
+{
+    if (InputActionValue.GetValueType() != EInputActionValueType::Axis2D) return;
+
+    const FVector2D Raw = InputActionValue.Get<FVector2D>();
+
+    constexpr float Deadzone = 0.20f;
+    if (Raw.SizeSquared() < Deadzone * Deadzone) return;
+
+    const float X = Raw.X;
+    const float Y = Raw.Y;
+
+    FVector Forward, Right;
+
+    switch (MovementFrame)
+    {
+    case EMovementFrame::Vehicle:
+    {
+        if (!VehicleRefActor.IsValid()) return;
+        const float Yaw = VehicleRefActor->GetActorRotation().Yaw + MovementYawOffsetDegrees;
+        BasisFromYaw(Yaw, Forward, Right);
+        break;
+    }
+    case EMovementFrame::World:
+    default:
+    {
+        const APlayerController* PC = Cast<APlayerController>(Controller);
+        const float Yaw = (PC ? PC->GetControlRotation().Yaw : GetActorRotation().Yaw) + MovementYawOffsetDegrees;
+        BasisFromYaw(Yaw, Forward, Right);
+        break;
+    }
+    }
+
+    AddMovementInput(Forward, Y);
+    AddMovementInput(Right, X);
+}
+
 void ACrazyFoodTruckCharacter::BindInputMoveAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-    if (InputData->InputActionMove)
+    if (InputData && InputData->InputActionMove)
     {
         EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::OnInputMove);
     }
 }
 
-void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionValue)
-{
-    if (InputActionValue.GetValueType() == EInputActionValueType::Axis2D)
-    {
-        FVector2D Axis = InputActionValue.Get<FVector2D>();
-
-        constexpr float Deadzone = 0.20f;
-        if (Axis.SizeSquared() < Deadzone * Deadzone)
-        {
-            return;
-        }
-
-        const FRotator ControlRot(0.f, GetControlRotation().Yaw, 0.f);
-        
-        const FVector Forward = FRotationMatrix(ControlRot).GetUnitAxis(EAxis::X);
-        const FVector Right = FRotationMatrix(ControlRot).GetUnitAxis(EAxis::Y);
-
-        AddMovementInput(Forward, Axis.Y);
-        AddMovementInput(Right, Axis.X);
-    }
-}
-
 void ACrazyFoodTruckCharacter::BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-    if (InputData->InputActionInteract)
+    if (InputData && InputData->InputActionInteract)
     {
         EnhancedInputComponent->BindAction(InputData->InputActionInteract, ETriggerEvent::Started, this, &ACrazyFoodTruckCharacter::TryInteract);
     }
@@ -165,37 +193,67 @@ void ACrazyFoodTruckCharacter::BindInputInteractAction(UEnhancedInputComponent* 
 
 void ACrazyFoodTruckCharacter::TryInteract()
 {
-    if (!FocusedInteractable)
-    {
-        if (GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Nothing to interact with here."));
-        }
-        
-        return;
-    }
+    if (!FocusedInteractable) return;
 
-    UObject* Object = FocusedInteractable.GetObject();
-    if (!Object)
-    {
-        return;
-    }
+    UObject* Obj = FocusedInteractable.GetObject();
+    if (!Obj) return;
 
-    APlayerController* PlayerController = Cast<APlayerController>(Controller);
-    if (!PlayerController)
-    {
-        return;
-    }
+    APlayerController* PC = Cast<APlayerController>(Controller);
+    if (!PC) return;
 
-    if (GEngine)
+    if (Obj->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, FString::Printf(TEXT("Interacting with: %s"), *Object->GetName()));
+        FocusedInteractable->Interact(PC, this);
     }
+}
 
-    if (Object->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
-    {
-        FocusedInteractable->Interact(PlayerController, this);
-    }
+void ACrazyFoodTruckCharacter::SetInteractState(bool bCanInteract)
+{
+    bCanInteractInternal = bCanInteract;
+}
+
+bool ACrazyFoodTruckCharacter::CanInteract()
+{
+    return bCanInteractInternal;
+}
+
+
+void ACrazyFoodTruckCharacter::SetAmmoState(bool bHasAmmo)
+{
+    bHasAmmoInternal = bHasAmmo;
+}
+
+bool ACrazyFoodTruckCharacter::HasAmmo()
+{
+    return bHasAmmoInternal;
+}
+
+void ACrazyFoodTruckCharacter::TakeAmmoBox(AAmmoBox* AmmoBox)
+{
+    CarriedAmmoBox = AmmoBox;
+    SetAmmoState(true);
+}
+
+AAmmoBox* ACrazyFoodTruckCharacter::DepositAmmoBox()
+{
+    return CarriedAmmoBox;
+}
+
+void ACrazyFoodTruckCharacter::SetVehicleMovementRef(AActor* InVehicleActor)
+{
+    VehicleRefActor = InVehicleActor;
+}
+
+void ACrazyFoodTruckCharacter::UseWorldFrame()
+{
+    MovementFrame = EMovementFrame::World;
+    VehicleRefActor = nullptr;
+}
+
+void ACrazyFoodTruckCharacter::UseVehicleFrame(AActor* InVehicle)
+{
+    MovementFrame = EMovementFrame::Vehicle;
+    VehicleRefActor = InVehicle;
 }
 
 const TScriptInterface<IInteractable>& ACrazyFoodTruckCharacter::GetFocusedInteractable() const
@@ -207,37 +265,3 @@ void ACrazyFoodTruckCharacter::SetFocusedInteractable(const TScriptInterface<IIn
 {
     FocusedInteractable = NewTarget;
 }
-
-// INTERFACE
-void ACrazyFoodTruckCharacter::SetInteractState(bool bCanInteract)
-{
-    _canInteract = bCanInteract;
-}
-
-bool ACrazyFoodTruckCharacter::CanInteract()
-{
-    return _canInteract;
-}
-
-void ACrazyFoodTruckCharacter::SetAmmoState(bool bHasAmmo)
-{
-    _hasAmmo = bHasAmmo;
-}
-
-void ACrazyFoodTruckCharacter::TakeAmmoBox(AAmmoBox* AmmoBox)
-{
-    _carriedAmmoBox = AmmoBox;
-    SetAmmoState(true);
-}
-
-AAmmoBox* ACrazyFoodTruckCharacter::DepositAmmoBox()
-{
-    return  _carriedAmmoBox;
-}
-
-
-bool ACrazyFoodTruckCharacter::HasAmmo()
-{
-    return _hasAmmo;
-}
-

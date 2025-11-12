@@ -10,6 +10,16 @@ struct FBulletStructure : public FTableRowBase
 {
 	GENERATED_BODY()
 
+	FBulletStructure()
+	: Damage(1)
+	, Speed(3000.f)
+	, FireRate(0.5f)
+	, AreaSide(0.f)
+	, AreaDepth(0.f)
+	, GravityScale(0.f)
+	, Ammo(0)
+	{}
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
 	int32 Damage;
 
@@ -23,9 +33,11 @@ struct FBulletStructure : public FTableRowBase
 	float AreaSide;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
-	float AreaDepht;
+	float AreaDepth;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
 	float GravityScale;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
+	int32 Ammo;
 };

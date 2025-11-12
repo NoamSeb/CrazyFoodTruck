@@ -8,13 +8,16 @@
 #include "AreaZombieSpawn.h"
 #include "FWaveStructure.h"
 
+#include "Vehicle/Vehicle.h"
+
+#if WITH_EDITOR
 #include "Editor.h"
+#include "Editor/EditorEngine.h"
+#endif
 #include "FZoneSpawn.h"
 #include "Engine/World.h"
 #include "Engine/Level.h"
-#include "ScopedTransaction.h"
 
-#include "Editor/EditorEngine.h"
 #include "UObject/ConstructorHelpers.h"
 
 #include "HordeManager.generated.h"
@@ -28,6 +31,9 @@ class CRAZYFOODTRUCK_API AHordeManager : public AActor
 public:
 	// Sets default values for this actor's properties
 	AHordeManager();
+	
+	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Food Truck")
+    AVehicle* FoodTruck;
 
 #pragma region Rapport avec le zombie 
 	//mettre le BP du zombie dans le BP de la horde
@@ -37,7 +43,7 @@ public:
 	UPROPERTY(EditAnywhere, meta=(ToolTip="Variable in kilometers per hour", ForceUnits="km/h"), Category= "Horde Manager | BP Zombie")
 	float DifferenceBetweenFoodTruck = 5.f;
 	float KilometersToMetersConvertingValue = 27.777777777778;
-	float vitesseFinalZombie;
+	float FinalZombieSpeed;
 	
 #pragma endregion
 
@@ -64,6 +70,7 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite , Category = "Horde Manager | Spawn Horde")
 	UDataTable* DataWave;
+
 
 #pragma region Spawn Horde Zombie
 	
@@ -107,4 +114,8 @@ public:
 
 	// UFUNCTION(BlueprintCallable)
 	// UDataTable GetDataTable(){return DataWave;}
+
+	
+private:
+	bool bCanSpawnHorde = true;
 };

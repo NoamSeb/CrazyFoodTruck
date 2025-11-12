@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SideCabestan.h"
+#include "Cabestan/SideCabestan.h"
 
 #include "InputActionValue.h"
 
@@ -34,17 +34,25 @@ void ASideCabestan::Tick(float DeltaTime)
 void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		if (PushAction)
+		{
+			Eic->BindAction(PushAction, ETriggerEvent::Triggered, this, &ASideCabestan::Push);
+			Eic->BindAction(PushAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
+		}
+		if (BringAction)
+        {
+            Eic->BindAction(BringAction, ETriggerEvent::Triggered, this, &ASideCabestan::Bring);
+			Eic->BindAction(BringAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
+        }
 		if (YawAction) // X
 		{
-			//
 		}
 		if (RollAction) // Y
 		{
-			Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::HandleRoll);
-			Eic->BindAction(RollAction, ETriggerEvent::Completed, this, &ASideCabestan::DropRollInput);
+			// Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::HandleRoll);
+			// Eic->BindAction(RollAction, ETriggerEvent::Completed, this, &ASideCabestan::DropRollInput);
 		}
 		if (QuitAction)
 		{
@@ -53,10 +61,55 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	}
 }
 
+void ASideCabestan::StopPush()
+{
+	switch (_Side)
+	{
+	case ESideCabestan::Toward:
+		_CabestanController->ReceiveInputToward(0);
+		break;
+	case ESideCabestan::Backward:
+		_CabestanController->ReceiveInputBackward(0);
+		break;
+	default:
+		break;
+	}
+}
+
+void ASideCabestan::Push(const FInputActionValue& Value)
+{
+	switch (_Side)
+	{
+	case ESideCabestan::Toward:
+		_CabestanController->ReceiveInputToward(1);
+		break;
+	case ESideCabestan::Backward:
+		_CabestanController->ReceiveInputBackward(-1);
+		break;
+	default:
+		break;
+	}
+}
+
+void ASideCabestan::Bring(const FInputActionValue& Value)
+{
+	switch (_Side)
+	{
+	case ESideCabestan::Toward:
+		_CabestanController->ReceiveInputToward(-1);
+		break;
+	case ESideCabestan::Backward:
+		_CabestanController->ReceiveInputBackward(1);
+		break;
+	default:
+		break;
+	}
+}
+
 void ASideCabestan::HandleYaw(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, "Handle Yaw");
 	float YawValue = Value.Get<float>();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Yaw Value: %f"), YawValue));
 	switch (_Side)
 	{
 	case ESideCabestan::Toward:
@@ -127,7 +180,7 @@ void ASideCabestan::HandleQuit(const FInputActionValue& Value)
 {
 	if (InteractBox)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, "UnPossessed");
+		StopPush();
 		InteractBox->UnpossessPawn();
 	}
 }

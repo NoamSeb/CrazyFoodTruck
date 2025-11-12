@@ -162,6 +162,29 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex, ELoc
 	}
 }
 
+void ULocalMultiplayerSubsystem::EnsurePlayerIMCs(ELocalMultiplayerInputMappingType MappingType)
+{
+	UGameInstance* GI = GetGameInstance();
+	if (!GI) return;
+
+	const TArray<ULocalPlayer*>& LPs = GI->GetLocalPlayers();
+	for (int32 PlayerIndex = 0; PlayerIndex < LPs.Num(); ++PlayerIndex)
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* EIS = GetEISForPlayerIndex(PlayerIndex))
+		{
+			if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
+			{
+				if (!EIS->HasMappingContext(IMC))
+				{
+					FModifyContextOptions Options;
+					Options.bForceImmediately = true;
+					EIS->AddMappingContext(IMC, 0, Options);
+				}
+			}
+		}
+	}
+}
+
 APlayerController* ULocalMultiplayerSubsystem::GetPlayerControllerForIndex(int32 PlayerIndex)
 {
 	ULocalPlayer* LP = GetLocalPlayerForIndex(PlayerIndex);

@@ -20,12 +20,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Trace")
 	float FloatTraceRadius = 600.f;
-
-	virtual void EnemyHitBlueprint(AActor* EntityActor) override;
-	virtual void EnemyHit(IIEntity* Entity) override;
-	virtual void GroundHit() override;
 	
-	void SpawnExplosion();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="EFFECT", meta=(AllowPrivateAccess="true"))
+	UNiagaraSystem* ExplosionEffect;
+	
+	virtual void EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit) override;
+	virtual void EnemyHit(IIEntity* Entity, FVector LocationHit) override;
+	virtual void GroundHit(FVector LocationHit) override;
+	
+	void SpawnExplosion(FVector LocationHit);
 	
 	virtual void BeginPlay() override;
 public:
