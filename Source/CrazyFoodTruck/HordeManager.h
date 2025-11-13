@@ -22,8 +22,9 @@
 
 #include "HordeManager.generated.h"
 
-UCLASS()
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnyZombieDied, AZombieIA*, Zombie, AActor*, Killer);
 
+UCLASS()
 class CRAZYFOODTRUCK_API AHordeManager : public AActor
 {
 	GENERATED_BODY()
@@ -104,6 +105,19 @@ public:
 	
 #pragma endregion 
 
+#pragma region Counter
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	int32 ZombiesKilledTotal = 0;
+
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	int32 GetZombiesKilledCount() const { return ZombiesKilledTotal; }
+
+	UPROPERTY(BlueprintAssignable, Category = "Horde|Events")
+	FOnAnyZombieDied OnAnyZombieDied;
+
+#pragma endregion
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -114,8 +128,10 @@ public:
 
 	// UFUNCTION(BlueprintCallable)
 	// UDataTable GetDataTable(){return DataWave;}
-
 	
 private:
 	bool bCanSpawnHorde = true;
+
+	UFUNCTION()
+	void HandleZombieDied(AZombieIA* Zombie, AActor* Killer);
 };

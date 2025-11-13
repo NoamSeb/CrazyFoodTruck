@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "ZombieIA.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnZombieDied, class AZombieIA*, Zombie, AActor*, Killer);
+
 UCLASS()
 class CRAZYFOODTRUCK_API AZombieIA : public ACharacter
 {
@@ -14,20 +16,35 @@ class CRAZYFOODTRUCK_API AZombieIA : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AZombieIA();
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* MainActorToFollower;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* FirstActorToFollower;
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void CallRound();
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float ZombieSpeed;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float BaseZombieSpeed;
+
+	UPROPERTY(BlueprintAssignable, Category = "Zombie|Events")
+	FOnZombieDied OnZombieDied;
+
+	UFUNCTION(BlueprintCallable, Category = "Zombie")
+	void BroadcastDeath(AActor* Killer);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY()
+	bool bIsDead = false;
 
 public:
 	// Called every frame

@@ -8,6 +8,13 @@
 #include "Characters/CrazyFoodTruckCharacterSettings.h"
 #include "Characters/CrazyFoodTruckCharacterInputData.h"
 
+#include "GameState/CrazyFoodTruckGameState.h"
+
+#include "Timer/MatchTimerComponent.h"
+#include "Score/ScoreManagerComponent.h"
+
+#include "../HordeManager.h"
+
 #include "LocalMultiplayerSubsystem.h"
 
 #include "Components/SceneComponent.h"
@@ -16,6 +23,12 @@
 #include "GameFramework/PlayerController.h"
 
 #include "Kismet/GameplayStatics.h"
+
+ACrazyFoodTruckGameMode::ACrazyFoodTruckGameMode()
+{
+    GameStateClass = ACrazyFoodTruckGameState::StaticClass();
+    ScoreManager = CreateDefaultSubobject<UScoreManagerComponent>(TEXT("ScoreManager"));
+}
 
 void ACrazyFoodTruckGameMode::BeginPlay()
 {
@@ -44,6 +57,15 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     }
 
     ApplyGlobalViewToAllPlayers();
+
+    if (ACrazyFoodTruckGameState* GS = GetWorld() ? GetWorld()->GetGameState<ACrazyFoodTruckGameState>() : nullptr)
+    {
+        if (UMatchTimerComponent* Timer = GS->GetMatchTimer())
+        {
+            Timer->StartTimer(0.f);
+            Timer->OnTimerSecond.AddDynamic(this, &ACrazyFoodTruckGameMode::HandleTimerSecondPrint);
+        }
+    }
 }
 
 void ACrazyFoodTruckGameMode::CreateAndInitPlayers() const
@@ -200,4 +222,66 @@ void ACrazyFoodTruckGameMode::ApplyGlobalViewToAllPlayers() const
             ApplyGlobalViewTo(PC);
         }
     }
+}
+
+void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
+{
+    if (!GEngine) return;
+
+    static const int32 MsgKey = 99999;
+    const FString Text = FString::Printf(TEXT("Time: %s"), *FormatMMSS(ElapsedSeconds));
+    GEngine->AddOnScreenDebugMessage(MsgKey, 1.1f, FColor::Green, Text);
+
+    if (!bHasComputedFinalScore && ElapsedSeconds >= 30)
+    {
+        EvaluateFinalScore();
+    }
+}
+
+void ACrazyFoodTruckGameMode::EvaluateFinalScore()
+{
+    bHasComputedFinalScore = true;
+
+    UWorld* World = GetWorld();
+    if (!World || !ScoreManager) return;
+
+    ACrazyFoodTruckGameState* GS = World->GetGameState<ACrazyFoodTruckGameState>();
+    if (!GS || !GS->GetMatchTimer()) return;
+
+    const int32 TimeSeconds = GS->GetMatchTimer()->GetElapsedSeconds();
+
+    AHordeManager* HordeMgr = ResolveHordeManager();
+    const int32 Kills = HordeMgr ? HordeMgr->GetZombiesKilledCount() : 0;
+
+    int32 TimeScore = 0;
+    int32 KillScore = 0;
+    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, TimeScore, KillScore);
+
+    GS->SetScoreValues(FinalScore, TimeScore, KillScore);
+
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(
+            -1, 8.f, FColor::Yellow,
+            FString::Printf(TEXT("SCORE FINAL -> Total: %d | TimeScore: %d | KillScore: %d (Time=%ds, Kills=%d)"),
+                FinalScore, TimeScore, KillScore, TimeSeconds, Kills)
+        );
+    }
+}
+
+AHordeManager* ACrazyFoodTruckGameMode::ResolveHordeManager() const
+{
+    UWorld* World = GetWorld();
+    if (!World) return nullptr;
+
+    TArray<AActor*> Found;
+    UGameplayStatics::GetAllActorsOfClass(World, AHordeManager::StaticClass(), Found);
+    return (Found.Num() > 0) ? Cast<AHordeManager>(Found[0]) : nullptr;
+}
+
+FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
+{
+    const int32 Minutes = TotalSeconds / 60;
+    const int32 Seconds = TotalSeconds % 60;
+    return FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
 }

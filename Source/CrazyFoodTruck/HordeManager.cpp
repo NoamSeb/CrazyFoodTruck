@@ -7,7 +7,6 @@
 #include "Components/BoxComponent.h"
 #include "Vehicle/Vehicle.h"
 
-
 AHordeManager::AHordeManager()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -44,8 +43,6 @@ void AHordeManager::AddSpawnArea()
 		}
 	#endif
 }
-
-
 
 void AHordeManager::ClearSpawnArea()
 {
@@ -116,7 +113,9 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differe
 						NewZombie->FirstActorToFollower = MainActorToFollow;
 					break;
 				}
-				
+
+				NewZombie->OnZombieDied.AddDynamic(this, &AHordeManager::HandleZombieDied);
+
 				NewZombie->CallRound();
 			}
 		}
@@ -174,6 +173,7 @@ void AHordeManager::InitHordeZombies()
 void AHordeManager::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	if (!RightActorToFollow)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : RightActorToFollow is not assigned !"));
@@ -201,13 +201,18 @@ void AHordeManager::BeginPlay()
 		Destroy();
 
 	}
-	
 }
-
 
 void AHordeManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
+void AHordeManager::HandleZombieDied(AZombieIA* Zombie, AActor* Killer)
+{
+	++ZombiesKilledTotal;
 
+	ListHordeZombie.Remove(Zombie);
+
+	OnAnyZombieDied.Broadcast(Zombie, Killer);
+}
