@@ -11,6 +11,9 @@ AModuleBase::AModuleBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	ModuleWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("ModuleWidget"));
+	auto UC = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	SetRootComponent(UC);
+	ModuleWidgetComponent->SetupAttachment(RootComponent);
 }
 
 void AModuleBase::ResetModule()
@@ -30,7 +33,6 @@ void AModuleBase::BeginPlay()
 void AModuleBase::Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter)
 {
 	ActualCooldown = BaseCooldown;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Module Interacted"));
 }
 
 bool AModuleBase::CanInteractWithModule() const
@@ -44,12 +46,14 @@ bool AModuleBase::CanInteractWithModule() const
 
 void AModuleBase::Tick(float DeltaTime)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Green, "Y");
 	if (ActualCooldown > 0.f)
 	{
 		ActualCooldown -= DeltaTime;
-		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Green, "X");
-		IIUWModule::Execute_UpdateSliderCooldown(WidgetModuleClass, ActualCooldown);
+		IIUWModule::Execute_UpdateSliderCooldown(WidgetModuleClass, ActualCooldown, BaseCooldown);
+		if (ActualCooldown <= 0.f)
+        {
+            IIUWModule::Execute_CoolDownComplete(WidgetModuleClass);
+        }
 	}
 	Super::Tick(DeltaTime);
 }

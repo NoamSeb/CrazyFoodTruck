@@ -49,7 +49,7 @@ void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 			
 			BoxComponent->OnComponentBeginOverlap.RemoveDynamic(this, &ATriggerZombie::OnOverlapBegin);
 			bHasTriggered = true;
-			HordeManager->SpawnHordeZombie(WaveStructure.ZombieAmount, WaveStructure.PositionSpawn);
+			HordeManager->SpawnHordeZombie(WaveStructure.ZombieAmount, WaveStructure.ZoneSpawn, WaveStructure.TargetZombiePoint);
 		}
 	}
 }

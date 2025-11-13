@@ -19,7 +19,9 @@ class CRAZYFOODTRUCK_API IIUWModule
 public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void UpdateSliderCooldown(float CooldownPercent);
+	void UpdateSliderCooldown(float CooldownPercent, float BaseCooldown);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void CoolDownComplete();
 	
 public:
 };
