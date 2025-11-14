@@ -60,7 +60,6 @@ void UModuleManager::BeginPlay()
 void UModuleManager::Initialize(FVector LeftPos, FVector RightPos)
 {
 	LeftPosition = LeftPos;
-	GEngine->AddOnScreenDebugMessage(-1,7.f, FColor::Black, TEXT("Left Position Set" + LeftPosition.ToString()));
 	RightPosition = RightPos;
 }
 

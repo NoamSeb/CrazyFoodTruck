@@ -25,16 +25,29 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnyZombieDied, AZombieIA*, Zombie, AActor*, Killer);
 
 UCLASS()
+
 class CRAZYFOODTRUCK_API AHordeManager : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AHordeManager();
 	
 	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Food Truck")
     AVehicle* FoodTruck;
+
+#pragma region Counter
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	int32 ZombiesKilledTotal = 0;
+
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	int32 GetZombiesKilledCount() const { return ZombiesKilledTotal; }
+
+	UPROPERTY(BlueprintAssignable, Category = "Horde|Events")
+	FOnAnyZombieDied OnAnyZombieDied;
+
+#pragma endregion
 
 #pragma region Rapport avec le zombie 
 	//mettre le BP du zombie dans le BP de la horde
@@ -67,7 +80,7 @@ public:
 #pragma endregion
 
 	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Horde")
-	void SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differentePos);
+	void SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* ZoneSpawn, ETargetZombiePoint PositionSpawn);
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite , Category = "Horde Manager | Spawn Horde")
 	UDataTable* DataWave;
@@ -105,19 +118,6 @@ public:
 	
 #pragma endregion 
 
-#pragma region Counter
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
-	int32 ZombiesKilledTotal = 0;
-
-	UFUNCTION(BlueprintCallable, Category = "Stats")
-	int32 GetZombiesKilledCount() const { return ZombiesKilledTotal; }
-
-	UPROPERTY(BlueprintAssignable, Category = "Horde|Events")
-	FOnAnyZombieDied OnAnyZombieDied;
-
-#pragma endregion
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -128,10 +128,12 @@ public:
 
 	// UFUNCTION(BlueprintCallable)
 	// UDataTable GetDataTable(){return DataWave;}
+
 	
 private:
+	
 	bool bCanSpawnHorde = true;
-
+	
 	UFUNCTION()
 	void HandleZombieDied(AZombieIA* Zombie, AActor* Killer);
 };
