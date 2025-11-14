@@ -8,9 +8,14 @@
 #include "GameMode/CrazyFoodTruckGameMode.h"
 #include "LocalMultiplayerSubsystem.h"
 #include "Components/BoxComponent.h"
+#include "Components/Image.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interface/IVehicule.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMaterialLibrary.h"
+#include "Vehicle/Vehicle.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor / BeginPlay / Tick
@@ -350,6 +355,11 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
             if (PlayerIndex != -1 && PawnToPossess)
             {
                 LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType);
+                
+                if(Cast<AVehicle>(PawnToPossess))
+                {
+                    AddOutlineToForwardCamera(PlayerIndex);
+                }
             }
         }
     }
