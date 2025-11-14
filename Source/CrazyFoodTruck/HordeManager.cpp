@@ -202,9 +202,7 @@ void AHordeManager::BeginPlay()
 void AHordeManager::HandleZombieDied(AZombieIA* Zombie, AActor* Killer)
 {
 	++ZombiesKilledTotal;
-
 	ListHordeZombie.Remove(Zombie);
-
 	OnAnyZombieDied.Broadcast(Zombie, Killer);
 }
 

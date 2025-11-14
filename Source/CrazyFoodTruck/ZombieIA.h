@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "ZombieIA.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnZombieDied, class AZombieIA, Zombie, AActor, Killer);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnZombieDied, class AZombieIAµ, Zombie, AActor*, Killer);
 
 UCLASS()
 

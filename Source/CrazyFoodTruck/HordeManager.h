@@ -22,7 +22,7 @@
 
 #include "HordeManager.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnyZombieDied, AZombieIA, Zombie, AActor, Killer);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnyZombieDied, AZombieIA*, Zombie, AActor*, Killer);
 
 UCLASS()
 
@@ -131,7 +131,9 @@ public:
 
 	
 private:
+	
 	bool bCanSpawnHorde = true;
+	
 	UFUNCTION()
 	void HandleZombieDied(AZombieIA* Zombie, AActor* Killer);
 };
