@@ -68,7 +68,6 @@ void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 	{
 		if (OtherActor->GetClass()->ImplementsInterface(UIVehicule::StaticClass()))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Green, "Trigger Zombie Spawn Horde ");
 			// VEHICULE ENTER
 			if (!HordeManager)
 			{
@@ -81,6 +80,7 @@ void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 			
 			for (auto W : SpawnWaves)
 			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Green, "Trigger Zombie Spawn Horde ");
 				HordeManager->SpawnHordeZombie(W.ZombieAmount, W.ZoneSpawn, W.TargetZombiePoint);
 			}
 		}
