@@ -1,34 +1,31 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ModuleExplosive.h"
-
-#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
-#include "Interface/IEntity.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "MineExplosive.h"
 
 
-// Sets default values
-AModuleExplosive::AModuleExplosive()
+
+
+class UGameInstanceCrazyFoodTruck;
+
+AMineExplosive::AMineExplosive()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AModuleExplosive::BeginPlay()
+void AMineExplosive::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void AModuleExplosive::Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter)
+void AMineExplosive::Tick(float DeltaTime)
 {
-    if (!CanInteractWithModule()){return;}
-	Explode();
-    Super::Interact(InstigatorPlayerController, CrazyCharacter);
+	Super::Tick(DeltaTime);
 }
 
-void AModuleExplosive::Explode()
+void AMineExplosive::Explode()
 {
-    const FVector TraceStart = GetActorLocation();
+	const FVector TraceStart = GetActorLocation();
     const FVector TraceEnd = TraceStart;
 
     TArray<AActor*> ActorsToIgnore;
@@ -85,13 +82,4 @@ void AModuleExplosive::Explode()
     {
         GI->PlayerCameraShake(Explosion);
     }
-
 }
-
-void AModuleExplosive::Tick(float DeltaSeconds)
-{
-    Super::Tick(DeltaSeconds);
-
-}
-
-
