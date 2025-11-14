@@ -11,6 +11,10 @@ class UEnhancedInputLocalPlayerSubsystem;
 
 class UInputMappingContext;
 
+class UKismetMaterialLibrary;
+
+class AVehicle;
+
 /**
  * 
  */
