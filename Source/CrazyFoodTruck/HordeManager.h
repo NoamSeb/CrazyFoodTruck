@@ -82,8 +82,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Horde")
 	void SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* ZoneSpawn, ETargetZombiePoint PositionSpawn);
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite , Category = "Horde Manager | Spawn Horde")
-	UDataTable* DataWave;
 
 
 #pragma region Spawn Horde Zombie
