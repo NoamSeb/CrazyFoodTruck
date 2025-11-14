@@ -15,16 +15,12 @@ struct FWaveStructure : public FTableRowBase
 
 	FWaveStructure()
 		: ZombieAmount(0)
-		, TempSpawnBetweenWave(1.f)
 		, ZoneSpawn()
 	, TargetZombiePoint(ETargetZombiePoint::MiddleDown)
 	{}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Wave")
 	int32 ZombieAmount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Wave")
-	float TempSpawnBetweenWave;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Wave")
 	AAreaZombieSpawn* ZoneSpawn;
