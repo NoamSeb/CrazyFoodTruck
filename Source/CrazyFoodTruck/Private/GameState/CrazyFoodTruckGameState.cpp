@@ -9,9 +9,10 @@ ACrazyFoodTruckGameState::ACrazyFoodTruckGameState()
 	MatchTimer = CreateDefaultSubobject<UMatchTimerComponent>(TEXT("MatchTimer"));
 }
 
-void ACrazyFoodTruckGameState::SetScoreValues(int32 InFinal, int32 InTimeScore, int32 InKillScore)
+void ACrazyFoodTruckGameState::SetScoreValues(int32 InFinal, int32 InTimeScore, int32 InKillScore, EScoreGrade InGrade)
 {
 	FinalScore = InFinal;
 	TimeScore = InTimeScore;
 	KillScore = InKillScore;
+	FinalGrade = InGrade;
 }

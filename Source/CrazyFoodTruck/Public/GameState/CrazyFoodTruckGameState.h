@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
+#include "Score/ScoreManagerComponent.h"
 #include "CrazyFoodTruckGameState.generated.h"
 
 class UMatchTimerComponent;
@@ -31,6 +32,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Score")
 	int32 KillScore = 0;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Score")
+	EScoreGrade FinalGrade = EScoreGrade::F;
+
 	UFUNCTION(BlueprintCallable, Category = "Score")
-	void SetScoreValues(int32 InFinal, int32 InTimeScore, int32 InKillScore);
+	void SetScoreValues(int32 InFinal, int32 InTimeScore, int32 InKillScore, EScoreGrade InGrade);
 };

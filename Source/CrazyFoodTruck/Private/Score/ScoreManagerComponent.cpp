@@ -19,6 +19,17 @@ UScoreManagerComponent::UScoreManagerComponent()
 		FScoreTier K200; K200.Threshold = 200; K200.Score = 700;
 		KillScoreTiers = { K50, K100, K200 };
 	}
+
+	{
+		FScoreGradeTier G_F; G_F.Threshold = 0;    G_F.Grade = EScoreGrade::F;
+		FScoreGradeTier G_E; G_E.Threshold = 500;  G_E.Grade = EScoreGrade::E;
+		FScoreGradeTier G_D; G_D.Threshold = 1000; G_D.Grade = EScoreGrade::D;
+		FScoreGradeTier G_C; G_C.Threshold = 2000; G_C.Grade = EScoreGrade::C;
+		FScoreGradeTier G_B; G_B.Threshold = 3000; G_B.Grade = EScoreGrade::B;
+		FScoreGradeTier G_A; G_A.Threshold = 4000; G_A.Grade = EScoreGrade::A;
+		FScoreGradeTier G_S; G_S.Threshold = 5000; G_S.Grade = EScoreGrade::S;
+		GradeTiers = { G_F, G_E, G_D, G_C, G_B, G_A, G_S };
+	}
 }
 
 int32 UScoreManagerComponent::EvaluateFromTiers(const TArray<FScoreTier>& Tiers, int32 Value) const
@@ -40,9 +51,33 @@ int32 UScoreManagerComponent::EvaluateFromTiers(const TArray<FScoreTier>& Tiers,
 	return BestScore;
 }
 
+EScoreGrade UScoreManagerComponent::EvaluateGradeFromTiers(const TArray<FScoreGradeTier>& Tiers, int32 Score) const
+{
+	EScoreGrade BestGrade = EScoreGrade::F;
+
+	for (const FScoreGradeTier& Tier : Tiers)
+	{
+		if (Score >= Tier.Threshold)
+		{
+			BestGrade = Tier.Grade;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return BestGrade;
+}
+
 int32 UScoreManagerComponent::ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32& OutTimeScore, int32& OutKillScore) const
 {
 	OutTimeScore = EvaluateFromTiers(TimeScoreTiers, TimeSeconds);
 	OutKillScore = EvaluateFromTiers(KillScoreTiers, ZombiesKilled);
 	return OutTimeScore + OutKillScore;
+}
+
+EScoreGrade UScoreManagerComponent::GetGradeForScore(int32 TotalScore) const
+{
+	return EvaluateGradeFromTiers(GradeTiers, TotalScore);
 }

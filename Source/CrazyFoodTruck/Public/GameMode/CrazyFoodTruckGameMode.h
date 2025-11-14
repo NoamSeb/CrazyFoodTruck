@@ -39,10 +39,6 @@ private:
 
 	bool bHasComputedFinalScore = false;
 
-	AHordeManager* ResolveHordeManager() const;
-
-	void EvaluateFinalScore();
-
 	void CreateAndInitPlayers() const;
 	void FindPlayerStartActors(TArray<APlayerStart*>& ResultsActors) const;
 	void SpawnCharacters(const TArray<APlayerStart*>& SpawnPoints);
@@ -56,11 +52,14 @@ private:
 
 	void ConfigureMovementFrameForAllCharacters(AActor* Vehicle);
 
-private:
 	UFUNCTION()
 	void HandleTimerSecondPrint(int32 ElapsedSeconds);
 
 	static FString FormatMMSS(int32 TotalSeconds);
+
+	void EvaluateFinalScore();
+
+	AHordeManager* ResolveHordeManager() const;
 
 private:
 	UPROPERTY()

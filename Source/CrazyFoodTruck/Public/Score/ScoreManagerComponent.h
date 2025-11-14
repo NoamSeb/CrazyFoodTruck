@@ -6,6 +6,18 @@
 #include "Components/ActorComponent.h"
 #include "ScoreManagerComponent.generated.h"
 
+UENUM(BlueprintType)
+enum class EScoreGrade : uint8
+{
+	S UMETA(DisplayName = "S"),
+	A UMETA(DisplayName = "A"),
+	B UMETA(DisplayName = "B"),
+	C UMETA(DisplayName = "C"),
+	D UMETA(DisplayName = "D"),
+	E UMETA(DisplayName = "E"),
+	F UMETA(DisplayName = "F")
+};
+
 USTRUCT(BlueprintType)
 struct FScoreTier
 {
@@ -16,6 +28,18 @@ struct FScoreTier
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	int32 Score = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FScoreGradeTier
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	int32 Threshold = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	EScoreGrade Grade = EScoreGrade::F;
 };
 
 UCLASS(ClassGroup = (Game), meta = (BlueprintSpawnableComponent))
@@ -32,9 +56,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	TArray<FScoreTier> KillScoreTiers;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score|Grade")
+	TArray<FScoreGradeTier> GradeTiers;
+
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	int32 ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32& OutTimeScore, int32& OutKillScore) const;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Score|Grade")
+	EScoreGrade GetGradeForScore(int32 TotalScore) const;
+
 private:
 	int32 EvaluateFromTiers(const TArray<FScoreTier>& Tiers, int32 Value) const;
+
+	EScoreGrade EvaluateGradeFromTiers(const TArray<FScoreGradeTier>& Tiers, int32 Score) const;
 };

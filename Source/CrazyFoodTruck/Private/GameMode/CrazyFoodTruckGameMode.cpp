@@ -238,6 +238,13 @@ void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
     }
 }
 
+FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
+{
+    const int32 Minutes = TotalSeconds / 60;
+    const int32 Seconds = TotalSeconds % 60;
+    return FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
+}
+
 void ACrazyFoodTruckGameMode::EvaluateFinalScore()
 {
     bHasComputedFinalScore = true;
@@ -255,16 +262,36 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
 
     int32 TimeScore = 0;
     int32 KillScore = 0;
+    
     const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, TimeScore, KillScore);
+    const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
 
-    GS->SetScoreValues(FinalScore, TimeScore, KillScore);
+    GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
+
+    auto GradeToString = [](EScoreGrade G) -> FString
+        {
+            switch (G)
+            {
+            case EScoreGrade::S: return TEXT("S");
+            case EScoreGrade::A: return TEXT("A");
+            case EScoreGrade::B: return TEXT("B");
+            case EScoreGrade::C: return TEXT("C");
+            case EScoreGrade::D: return TEXT("D");
+            case EScoreGrade::E: return TEXT("E");
+            case EScoreGrade::F: default: return TEXT("F");
+            }
+        };
 
     if (GEngine)
     {
         GEngine->AddOnScreenDebugMessage(
             -1, 8.f, FColor::Yellow,
-            FString::Printf(TEXT("SCORE FINAL -> Total: %d | TimeScore: %d | KillScore: %d (Time=%ds, Kills=%d)"),
-                FinalScore, TimeScore, KillScore, TimeSeconds, Kills)
+            FString::Printf(
+                TEXT("FINAL SCORE -> Total: %d | TimeScore: %d | KillScore: %d | Grade: %s (Time=%ds, Kills=%d)"),
+                FinalScore, TimeScore, KillScore,
+                *GradeToString(Grade),
+                TimeSeconds, Kills
+            )
         );
     }
 }
@@ -277,11 +304,4 @@ AHordeManager* ACrazyFoodTruckGameMode::ResolveHordeManager() const
     TArray<AActor*> Found;
     UGameplayStatics::GetAllActorsOfClass(World, AHordeManager::StaticClass(), Found);
     return (Found.Num() > 0) ? Cast<AHordeManager>(Found[0]) : nullptr;
-}
-
-FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
-{
-    const int32 Minutes = TotalSeconds / 60;
-    const int32 Seconds = TotalSeconds % 60;
-    return FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
 }
