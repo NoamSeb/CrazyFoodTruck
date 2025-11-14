@@ -21,7 +21,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Zombie")
 	void BroadcastDeath(AActor* Killer);
-
 	
 	AZombieIA();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
