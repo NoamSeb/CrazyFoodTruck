@@ -42,3 +42,8 @@ TArray<FStructUpgrade> UGameInstanceCrazyFoodTruck::ListUpgradesToAdd(EZoneUpgra
 
 	return ListUpgradesToReturn;
 }
+
+void UGameInstanceCrazyFoodTruck::ClearUpgrades()
+{
+	ListUpgrades.Empty();
+}

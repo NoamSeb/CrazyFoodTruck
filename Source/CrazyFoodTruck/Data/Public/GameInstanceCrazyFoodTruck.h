@@ -42,6 +42,9 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	UFUNCTION(BlueprintCallable)
 	TArray<FStructUpgrade> ListUpgradesToAdd(EZoneUpgrade ZoneUpgrade);
 
+	UFUNCTION(BlueprintCallable)
+	void ClearUpgrades();
+
 private:
 	ACameraShakeManager* CameraShakeManager;
 };
