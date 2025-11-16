@@ -11,6 +11,10 @@ class UEnhancedInputLocalPlayerSubsystem;
 
 class UInputMappingContext;
 
+class UKismetMaterialLibrary;
+
+class AVehicle;
+
 /**
  * 
  */
@@ -31,6 +35,8 @@ public:
 
 	void AssignKeyboardInputMapping(int PlayerIndex, int KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const;
 	void AssignGamepadInputMapping(int PlayerIndex, ELocalMultiplayerInputMappingType MappingType) const;
+
+	void EnsurePlayerIMCs(ELocalMultiplayerInputMappingType MappingType);
 
 	APlayerController* GetPlayerControllerForIndex(int32 PlayerIndex);
 	ULocalPlayer* GetLocalPlayerForIndex(int32 PlayerIndex);

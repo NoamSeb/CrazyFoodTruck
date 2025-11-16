@@ -8,6 +8,7 @@
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
+class UWidgetComponent;
 enum class ELocalMultiplayerInputMappingType;
 
 class ACrazyFoodTruckCharacter;
@@ -34,6 +35,9 @@ public:
 	void TryInteractWithObject(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter);
 	void TryPossesPawn(APlayerController* InstigatorPlayerController);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetOutlineToPossesPawn(APlayerController* PlayerController, UMeshComponent* MeshComponent);
+
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor, Category = "Interact|Editor")
 	void SpawnAttachPointInEditor();
@@ -47,6 +51,18 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Interact|State")
 	void UpdateVisibilityInput(bool bIsVisible);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	void SetInteractableObject(AActor* NewInteractableObject);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	AActor* GetInteractableObject() const { return InteractableObject; }
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	void SetPawnToPossess(APawn* NewPawnToPossess);
+
+	UFUNCTION(BlueprintCallable, Category = "Interact|State")
+	APawn* GetPawnToPossess() const { return PawnToPossess; }
 
 	UFUNCTION(BlueprintCallable, Category = "Interact|State")
 	bool GetInputVisibilityState() const { return _IsShowingInput; }
@@ -111,6 +127,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
 	AActor* InteractableObject;
 	
+	
 	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
 	FOnInteractController OnInteractionStarted;
 
@@ -162,6 +179,9 @@ protected:
 
 	UPROPERTY()
 	TWeakObjectPtr<APawn> CachedPreviousPawn;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddOutlineToForwardCamera(int PlayerIndex);
 	
 	FRotator RotationActorOnEnter = FRotator::ZeroRotator;
 	FRotator RotationControllerOnEnter = FRotator::ZeroRotator;

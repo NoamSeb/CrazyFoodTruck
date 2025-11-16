@@ -1,8 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ZombieIA.h"
-
 
 // Sets default values
 AZombieIA::AZombieIA()
@@ -15,7 +13,6 @@ AZombieIA::AZombieIA()
 void AZombieIA::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -30,3 +27,9 @@ void AZombieIA::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void AZombieIA::BroadcastDeath(AActor* Killer)
+{
+	if (bIsDead) return;
+	bIsDead = true;
+	OnZombieDied.Broadcast(this, Killer);
+}

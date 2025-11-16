@@ -15,16 +15,11 @@ AHordeManager::AHordeManager()
 
 void AHordeManager::AddSpawnArea()
 {
-	//FActorSpawnParameters SpawnParams;
-	//std::string Name = "SpawnArea_" + std::to_string(ListSpawnArea.Num());
-	//SpawnParams.Name = Name.c_str();
-	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "SpawnArea_" + ListSpawnArea.Num());
-	
 	AAreaZombieSpawn* NewArea = GetWorld()->SpawnActor<AAreaZombieSpawn>(AreaZombieSpawn);
 	NewArea->InitArea(ListSpawnArea.Num(),this);
 
 	FZoneSpawn newZoneSpawn;
-	newZoneSpawn.PositionSpawn = EPositionSpawn::DownLeft;
+	newZoneSpawn.PositionSpawn = ETargetZombiePoint::MiddleDown;
 	newZoneSpawn.AreaZombieSpawn = NewArea;
 	
 	ListSpawnArea.Add(newZoneSpawn);
@@ -45,8 +40,6 @@ void AHordeManager::AddSpawnArea()
 	#endif
 }
 
-
-
 void AHordeManager::ClearSpawnArea()
 {
 	for (FZoneSpawn Element : ListSpawnArea)
@@ -56,70 +49,110 @@ void AHordeManager::ClearSpawnArea()
 	ListSpawnArea.Empty();
 }
 
-void AHordeManager::SpawnHordeZombie(int32 nombreZombies, EPositionSpawn differentePos)
+void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* ZoneSpawn, ETargetZombiePoint targetPoint)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Red, "TRRRY SPAWN ZOMBIE WAVE");
-
-	if (!bCanSpawnHorde){return;}
-	if (ListSpawnArea.IsEmpty())
+	if (!GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, "Aucune Zone de Spawn definis");
 		return;
 	}
-	
-	GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Red, "SPAWN ZOMBIE WAVE");
-	nbrVague++;
 
-	for (FZoneSpawn Element : ListSpawnArea)
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TRY SPAWN ZOMBIE WAVE"));
+
+	if (!bCanSpawnHorde)
 	{
-		if (Element.PositionSpawn == differentePos)
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("HordeManager: bCanSpawnHorde = false, abort."));
+		return;
+	}
+
+	if (!ZoneSpawn)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("HordeManager: ZoneSpawn is NULL !"));
+		return;
+	}
+
+	if (!ZoneSpawn->NewBoxAreaSpawn)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("HordeManager: ZoneSpawn->NewBoxAreaSpawn is NULL !"));
+		return;
+	}
+
+	if (ListSpawnArea.IsEmpty())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("HordeManager: ListSpawnArea is empty."));
+	}
+
+	if (!PawnZombie)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("HordeManager: PawnZombie is NOT set !"));
+		return;
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SPAWN ZOMBIE WAVE"));
+	++nbrVague;
+
+	const FVector BoxExtent = ZoneSpawn->NewBoxAreaSpawn->GetScaledBoxExtent();
+	const FVector BoxCenter = ZoneSpawn->NewBoxAreaSpawn->GetComponentLocation();
+
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("HordeManager: World is NULL !"));
+		return;
+	}
+
+	for (int32 i = 0; i < nombreZombies; ++i)
+	{
+		const FVector RandomOffset(
+			FMath::RandRange(-BoxExtent.X, BoxExtent.X),
+			FMath::RandRange(-BoxExtent.Y, BoxExtent.Y),
+			90.0f
+		);
+
+		const FVector SpawnLocation = BoxCenter + RandomOffset;
+		const FVector SpawnScale(1.0f, 1.0f, 1.0f);
+
+		FTransform NewTransform;
+		NewTransform.SetLocation(SpawnLocation);
+		NewTransform.SetScale3D(SpawnScale);
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		AZombieIA* NewZombie = World->SpawnActor<AZombieIA>(PawnZombie, NewTransform, SpawnParams);
+
+		if (!NewZombie)
 		{
-			TObjectPtr<UBoxComponent> SpawnCurrentArea = Element.AreaZombieSpawn->NewBoxAreaSpawn;
-			FVector BoxExtent = SpawnCurrentArea->GetScaledBoxExtent();
-			
-			for (int i = 0; i < nombreZombies; i++)
-			{
-				FVector SpawnLocation = SpawnCurrentArea->GetComponentLocation() + FVector(
-			FMath::RandRange(-BoxExtent.X, BoxExtent.X),FMath::RandRange(-BoxExtent.Y, BoxExtent.Y),90.0f);
-				FVector SpawnScale(1.0f, 1.0f, 1.0f);
-				
-				FTransform NewTransform;
-				NewTransform.SetLocation(SpawnLocation);
-			
-				NewTransform.SetScale3D(SpawnScale);
-				//définir comment les zombies spawn et leurs collision quand ils spawn
-				FActorSpawnParameters SpawnParams;
-				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-				
-				//faire spawn un character de la class PawnZombie remplis avant avec son transfom
-				AZombieIA* NewZombie = GetWorld()->SpawnActor<AZombieIA>(PawnZombie, NewTransform, SpawnParams);
-		
-				ListHordeZombie.Add(NewZombie);
-				//lui ajouté manuellement un controller sinon il ne bougera pas 
-				NewZombie->SpawnDefaultController();
-				NewZombie->ZombieSpeed = FinalZombieSpeed;
-				//NewZombie->SetFollower(CurrentObjArea->ActorFollower);
-		
-				NewZombie->MainActorToFollower = MainActorToFollow;
-				switch (differentePos)
-				{
-					case EPositionSpawn::MiddleUp:
-						NewZombie->FirstActorToFollower = ForwardActorToFollow;
-					break;
-					case EPositionSpawn::DownLeft:
-						NewZombie->FirstActorToFollower = LeftActorToFollow;
-					break;
-					case EPositionSpawn::DownRight:
-						NewZombie->FirstActorToFollower = RightActorToFollow;
-					break;
-					case EPositionSpawn::MiddleDown:
-						NewZombie->FirstActorToFollower = MainActorToFollow;
-					break;
-				}
-				
-				NewZombie->CallRound();
-			}
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("HordeManager: Failed to spawn Zombie !"));
+			continue;
 		}
+
+		ListHordeZombie.Add(NewZombie);
+
+		NewZombie->SpawnDefaultController();
+		NewZombie->ZombieSpeed = FinalZombieSpeed;
+
+		NewZombie->MainActorToFollower = MainActorToFollow;
+
+		switch (targetPoint)
+		{
+		case ETargetZombiePoint::Up:
+			NewZombie->FirstActorToFollower = ForwardActorToFollow;
+			break;
+		case ETargetZombiePoint::Left:
+			NewZombie->FirstActorToFollower = LeftActorToFollow;
+			break;
+		case ETargetZombiePoint::Right:
+			NewZombie->FirstActorToFollower = RightActorToFollow;
+			break;
+		case ETargetZombiePoint::MiddleDown:
+		default:
+			NewZombie->FirstActorToFollower = MainActorToFollow;
+			break;
+		}
+
+		NewZombie->OnZombieDied.AddDynamic(this, &AHordeManager::HandleZombieDied);
+
+		NewZombie->CallRound();
 	}
 }
 
@@ -168,7 +201,6 @@ void AHordeManager::InitHordeZombies()
 		Component->SetCanEverAffectNavigation(false);
 	}
 #pragma endregion
-	//SpawnHordeZombie();
 }
 
 void AHordeManager::BeginPlay()
@@ -199,15 +231,18 @@ void AHordeManager::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : ForwardActorToFollow is not assigned !"));
 		bCanSpawnHorde = false;
 		Destroy();
-
 	}
-	
 }
 
+void AHordeManager::HandleZombieDied(AZombieIA* Zombie, AActor* Killer)
+{
+	++ZombiesKilledTotal;
+	ListHordeZombie.Remove(Zombie);
+	OnAnyZombieDied.Broadcast(Zombie, Killer);
+}
 
 void AHordeManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
 
