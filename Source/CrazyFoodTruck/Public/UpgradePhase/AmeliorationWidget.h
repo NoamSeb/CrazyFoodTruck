@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "StructUpgrade.h"
 #include "Blueprint/UserWidget.h"
 #include "AmeliorationWidget.generated.h"
 
@@ -26,4 +27,14 @@ class CRAZYFOODTRUCK_API UAmeliorationWidget : public UUserWidget
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void RemoveValidate(int32 PlayerIndex, int32 PositionIndex, bool inSkip);
+
+	//UFUNCTION(BlueprintCallable, Category = "Inventory|Modifier")
+	//void AddItemToInventory(int32 ItemToAdd, bool& bSuccess, int32& InventorySlot);
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetWinnerIndex(const TArray<int32>& ListVote);
+	
+	UFUNCTION(BlueprintCallable)
+	FStructUpgrade CheckUpgradeChoose(const int32& Index, const TArray<FStructUpgrade>& ListUpgrade);
+
 };

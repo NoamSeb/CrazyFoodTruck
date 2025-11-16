@@ -50,7 +50,7 @@ public:
 		UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Plate"))
     	TObjectPtr<UInputMappingContext> IMCPlate = nullptr;
 
-	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Plate"))
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Upgrade"))
 	TObjectPtr<UInputMappingContext> IMCUpgrade = nullptr;
 	
     UInputMappingContext* GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const;

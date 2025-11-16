@@ -26,6 +26,9 @@ void UInputAmeliorationCharacters::BeginPlay()
 	APlayerController* PlayerController = GetPlayerControllerFromActor(SelfRef);
 	indexPlayerController = GetPlayerIndexFromPlayerController(PlayerController);
 	IndexCurrentCible = indexPlayerController;
+
+	IsValidate = false;
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "IndexCurrentCible");
 }
 
 
@@ -103,9 +106,12 @@ void UInputAmeliorationCharacters::Validate(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::RemoveValidate()
 {
-	IsValidate = false;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "1");
-	UpgradeUserWidget->RemoveValidate(indexPlayerController, indexPosition, OnSkip);
+	if (IsValidate)
+	{
+		IsValidate = false;
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "1");
+		UpgradeUserWidget->RemoveValidate(indexPlayerController, indexPosition, OnSkip);
+	}
 }
 
 int32 UInputAmeliorationCharacters::GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const

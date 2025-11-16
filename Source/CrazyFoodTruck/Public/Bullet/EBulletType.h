@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 
 
-
-enum EbulletType
+UENUM(BlueprintType)
+enum class EbulletType : uint8
 {
-	BulletNormal,
+	BulletNormal = 0,
 	BulletExplosive,
 	BulletFlamethrower,
 	BulletPierce,

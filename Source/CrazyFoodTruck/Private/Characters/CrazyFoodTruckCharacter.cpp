@@ -31,6 +31,11 @@ void ACrazyFoodTruckCharacter::BeginPlay()
     }
 
     UpdatePlayerColorFromController();
+
+    //if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    //{
+    //    AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+    //}
 }
 
 // Called every frame

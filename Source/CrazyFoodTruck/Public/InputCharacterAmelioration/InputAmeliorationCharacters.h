@@ -57,13 +57,19 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 IndexCurrentCible;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsValidate = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 indexPosition = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool OnSkip = false;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	int32 indexPosition = 0;
-	bool OnSkip = false;
-	bool IsValidate = false;
+	
 	UPROPERTY(VisibleAnywhere, Category="Input")
 	int32 indexPlayerController;
 	AActor* SelfRef;

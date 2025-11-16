@@ -29,5 +29,4 @@ public:
 
 private:
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
-
 };
