@@ -5,14 +5,10 @@
 #include "CoreMinimal.h"
 
 UENUM(BlueprintType)
-enum class EPositionSpawn : uint8
+enum class ETargetZombiePoint : uint8
 {
-	TopRight = 0,
-	TopLeft,
-	MiddleUp,
-	MiddleDown,
-	DownLeft,
-	DownRight,
-	MiddleRight,
-	MiddleLeft
+	MiddleDown = 0,
+	Left,
+	Right,
+	Up,
 };
