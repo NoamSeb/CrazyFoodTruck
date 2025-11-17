@@ -39,6 +39,11 @@ void ACrazyFoodTruckCharacter::BeginPlay()
     }
 
     UpdatePlayerColorFromController();
+
+    //if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    //{
+    //    AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+    //}
 }
 
 // Called every frame
@@ -57,6 +62,12 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
         BindInputMoveAction(EnhancedInputComponent);
         BindInputInteractAction(EnhancedInputComponent);
     }
+
+    //if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    //{
+    //    AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+    //    InputAmeliorationComp->SetupPlayerInput(PlayerInputComponent);
+    //}
 }
 
 int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
@@ -264,4 +275,25 @@ const TScriptInterface<IInteractable>& ACrazyFoodTruckCharacter::GetFocusedInter
 void ACrazyFoodTruckCharacter::SetFocusedInteractable(const TScriptInterface<IInteractable>& NewTarget)
 {
     FocusedInteractable = NewTarget;
+}
+
+
+void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMappingContextParam, int8 Priority)
+{
+    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController)
+    {
+        return;
+    }
+
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    if (!LocalPlayer)
+    {
+        return;
+    }
+
+    if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+    {
+        EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
+    }
 }

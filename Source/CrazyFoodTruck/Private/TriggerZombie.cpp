@@ -32,6 +32,35 @@ void ATriggerZombie::Initialize(AHordeManager* NewHordeManager)
 	HordeManager = NewHordeManager;
 }
 
+void ATriggerZombie::SpawnZone()
+{
+	AAreaZombieSpawn* NewArea = GetWorld()->SpawnActor<AAreaZombieSpawn>(AreaZombieSpawn, GetActorLocation(), GetActorRotation());
+	if (!NewArea){return;}
+	// for (auto W : SpawnWaves)
+	// {
+	// 	if (W.ZoneSpawn == nullptr)
+	// 	{
+	// 		W.ZoneSpawn = NewArea;
+	// 	}
+	// }
+
+#if WITH_EDITOR
+	if (GEditor && NewArea)
+	{
+		// Nettoyer la sélection précédente
+		GEditor->SelectNone(false, true, false);
+
+		// Sélectionner le nouvel acteur
+		GEditor->SelectActor(NewArea, true, true, true);
+
+		// Centrer la vue dessus
+		GEditor->MoveViewportCamerasToActor(*NewArea, false);
+			
+	}
+#endif
+
+}
+
 void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (bHasTriggered){return;}
@@ -39,7 +68,6 @@ void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 	{
 		if (OtherActor->GetClass()->ImplementsInterface(UIVehicule::StaticClass()))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Green, "Trigger Zombie Spawn Horde ");
 			// VEHICULE ENTER
 			if (!HordeManager)
 			{
@@ -49,7 +77,12 @@ void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 			
 			BoxComponent->OnComponentBeginOverlap.RemoveDynamic(this, &ATriggerZombie::OnOverlapBegin);
 			bHasTriggered = true;
-			HordeManager->SpawnHordeZombie(WaveStructure.ZombieAmount, WaveStructure.PositionSpawn);
+			
+			for (auto W : SpawnWaves)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Green, "Trigger Zombie Spawn Horde ");
+				HordeManager->SpawnHordeZombie(W.ZombieAmount, W.ZoneSpawn, W.TargetZombiePoint);
+			}
 		}
 	}
 }

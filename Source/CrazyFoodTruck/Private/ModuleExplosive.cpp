@@ -11,7 +11,7 @@
 // Sets default values
 AModuleExplosive::AModuleExplosive()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AModuleExplosive::BeginPlay()
