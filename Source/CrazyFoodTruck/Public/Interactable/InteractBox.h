@@ -8,6 +8,7 @@
 #include "Interactable/Interactable.h"
 #include "InteractBox.generated.h"
 
+class UWidgetComponent;
 enum class ELocalMultiplayerInputMappingType;
 
 class ACrazyFoodTruckCharacter;
@@ -33,6 +34,9 @@ public:
 	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
 	void TryInteractWithObject(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter);
 	void TryPossesPawn(APlayerController* InstigatorPlayerController);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetOutlineToPossesPawn(APlayerController* PlayerController, UMeshComponent* MeshComponent);
 
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor, Category = "Interact|Editor")
@@ -123,6 +127,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
 	AActor* InteractableObject;
 	
+	
 	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
 	FOnInteractController OnInteractionStarted;
 
@@ -174,6 +179,9 @@ protected:
 
 	UPROPERTY()
 	TWeakObjectPtr<APawn> CachedPreviousPawn;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddOutlineToForwardCamera(int PlayerIndex);
 	
 	FRotator RotationActorOnEnter = FRotator::ZeroRotator;
 	FRotator RotationControllerOnEnter = FRotator::ZeroRotator;

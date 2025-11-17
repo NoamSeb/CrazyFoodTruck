@@ -7,6 +7,7 @@
 #include "InputMappingContext.h"
 #include "Interactable/Interactable.h"
 #include "Interface/IPlayer.h"
+#include "InputCharacterAmelioration/InputAmeliorationCharacters.h"
 #include "CrazyFoodTruckCharacter.generated.h"
 
 class UCrazyFoodTruckCharacterInputData;
@@ -92,6 +93,8 @@ public:
 	const TScriptInterface<IInteractable>& GetFocusedInteractable() const;
 	void SetFocusedInteractable(const TScriptInterface<IInteractable>& NewTarget);
 
+	void AddMappingContext(UInputMappingContext* InputMappingContext, int8 Priority);
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Player")
 	FLinearColor PlayerColor = FLinearColor::White;
@@ -107,6 +110,7 @@ protected:
 
 	UPROPERTY()
 	TScriptInterface<IInteractable> FocusedInteractable;
+	
 
 private:
 	bool bCanInteractInternal = true;

@@ -13,13 +13,13 @@ struct FZoneSpawn : public FTableRowBase
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Zone")
-	EPositionSpawn PositionSpawn;
+	ETargetZombiePoint PositionSpawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Zone")
 	AAreaZombieSpawn* AreaZombieSpawn;
 	
 	FZoneSpawn()
-		:PositionSpawn(EPositionSpawn::DownLeft)
+		:PositionSpawn(ETargetZombiePoint::Left)
 		,AreaZombieSpawn(nullptr)
 	{}
 };
