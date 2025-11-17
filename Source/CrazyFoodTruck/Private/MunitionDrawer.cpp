@@ -42,6 +42,22 @@ void AMunitionDrawer::UpdateValueWithTurret(int AmmoLeft, int AmmoMax)
 	UpdateValue(valueChange, false);
 }
 
+void AMunitionDrawer::IncrementPlayerReloading()
+{
+	if (LinkedTurretController)
+	{
+		LinkedTurretController->IncrementPlayerReloading();
+	}
+}
+
+void AMunitionDrawer::DecrementPlayerReloading()
+{
+	if (LinkedTurretController)
+	{
+		LinkedTurretController->DecrementPlayerReloading();
+	}
+}
+
 void AMunitionDrawer::ReceiveInputOpen(float value)
 {
 	UpdateValue(value * _OpenSpeed * GetWorld()->GetDeltaSeconds(), true);

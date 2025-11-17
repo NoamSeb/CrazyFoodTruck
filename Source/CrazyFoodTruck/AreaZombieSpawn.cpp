@@ -34,7 +34,20 @@ void AAreaZombieSpawn::InitArea(int32 IdArea, AActor* ParentActor)
 void AAreaZombieSpawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	auto x = Get();
+	auto y = GetOwner();
 	
+
+	// PRINT NAME OF PARENT ACTOR
+	if (x)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("AreaZombieSpawn Parent Actor: %s"), *x->GetName()));
+	}
+	if (y)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("AreaZombieSpawn Owner Actor: %s"), *y->GetName()));
+	}
 }
 
 // Called every frame

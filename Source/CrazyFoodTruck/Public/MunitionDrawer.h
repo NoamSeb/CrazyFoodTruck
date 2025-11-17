@@ -15,8 +15,6 @@ class CRAZYFOODTRUCK_API AMunitionDrawer : public AActor
 
 public:
 	AMunitionDrawer();
-
-
 	
 	void UpdateMuntionCount(int change);
 
@@ -31,6 +29,8 @@ protected:
 
 public:
 
+	void IncrementPlayerReloading();
+    void DecrementPlayerReloading();
 	
 	void ReceiveInputOpen(float value);
 	void UpdateValue(float valueChange, bool giveAmmo);

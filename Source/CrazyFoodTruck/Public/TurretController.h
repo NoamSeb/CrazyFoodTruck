@@ -20,6 +20,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShootSignature, int32, AmmoLeft, int32, AmmoMax);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAmmoTypeEvent, float, AreaSide, float, AreaDepht);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTurretEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerReload, int32, CurrentReloadingPlayers);
 
 UCLASS()
 class CRAZYFOODTRUCK_API ATurretController : public APawn
@@ -45,7 +46,6 @@ public:
 	int GetAmmoMax() const { return _AmmoMax;}
 	void SetCurrentAmmo(int32 NewAmmo);
 	void SetMaxAmmo(int32 NewAmmo);
-//	void Reload();
 	void DecrementAmmo();
 	bool HasAmmo() const { return _CurrentAmmo > 0; }
 
@@ -72,10 +72,16 @@ public:
 	FOnTurretEvent OnReload;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnTurretEvent OnAmmoEmpty;
+
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnPlayerReload OnPlayerReload;
 protected:
 
 	UPROPERTY(EditAnywhere, Category="OTHER")
-	USceneComponent* _CursorJoint;
+	USceneComponent* _JointCursor;
+
+	UPROPERTY(EditAnywhere, Category="OTHER")
+	USceneComponent* _JointCanonTurret;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputMappingContext* TurretMappingContext;
@@ -102,10 +108,14 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	
+
+	void IncrementPlayerReloading();
+	void DecrementPlayerReloading();
 	virtual void Tick(float DeltaTime) override;
 
 private:
+
+	int _ActualPlayerReloading = 0;
 
 	EbulletType _actualBulletType;
 	FBulletStructure* ActualBulletStructure;

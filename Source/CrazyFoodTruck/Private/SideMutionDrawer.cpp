@@ -24,8 +24,7 @@ void ASideMutionDrawer::Tick(float DeltaTime)
 }
 
 void ASideMutionDrawer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("SideMutionDrawer SetupPlayerInputComponent"));
+{// PLAYER ENTERED
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
@@ -39,7 +38,10 @@ void ASideMutionDrawer::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 			Eic->BindAction(QuitAction, ETriggerEvent::Started, this, &ASideMutionDrawer::QuitDrawer);
 		}
 	}
-
+	if (LinkedMunitionDrawer)
+	{
+		LinkedMunitionDrawer->IncrementPlayerReloading();
+	}
 }
 
 void ASideMutionDrawer::QuitDrawer()
@@ -48,6 +50,12 @@ void ASideMutionDrawer::QuitDrawer()
 	{
 		InteractBox->UnpossessPawn();
 	}
+
+	if (LinkedMunitionDrawer)
+	{
+		LinkedMunitionDrawer->DecrementPlayerReloading();
+	}
+	
 }
 void ASideMutionDrawer::HandleOpen(const FInputActionValue& Value)
 {
