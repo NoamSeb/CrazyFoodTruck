@@ -276,3 +276,24 @@ void ACrazyFoodTruckCharacter::SetFocusedInteractable(const TScriptInterface<IIn
 {
     FocusedInteractable = NewTarget;
 }
+
+
+void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMappingContextParam, int8 Priority)
+{
+    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController)
+    {
+        return;
+    }
+
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    if (!LocalPlayer)
+    {
+        return;
+    }
+
+    if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+    {
+        EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
+    }
+}

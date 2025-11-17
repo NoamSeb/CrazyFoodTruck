@@ -110,6 +110,7 @@ protected:
 
 	UPROPERTY()
 	TScriptInterface<IInteractable> FocusedInteractable;
+	
 
 private:
 	bool bCanInteractInternal = true;
