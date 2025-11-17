@@ -63,11 +63,11 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
         BindInputInteractAction(EnhancedInputComponent);
     }
 
-    if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
-    {
-        AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
-        InputAmeliorationComp->SetupPlayerInput(PlayerInputComponent);
-    }
+    //if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    //{
+    //    AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+    //    InputAmeliorationComp->SetupPlayerInput(PlayerInputComponent);
+    //}
 }
 
 int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
