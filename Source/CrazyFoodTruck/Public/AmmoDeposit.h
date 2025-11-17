@@ -35,7 +35,7 @@ protected:
 	void TurretAmmoEmpty();
 
 private:
-	void Reload();
+	// void Reload();
 
 	USceneComponent* DepositPoint;
 

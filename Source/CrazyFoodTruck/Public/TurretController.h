@@ -44,10 +44,15 @@ public:
 	int GetAmmo() const { return _CurrentAmmo;}
 	int GetAmmoMax() const { return _AmmoMax;}
 	void SetCurrentAmmo(int32 NewAmmo);
-	void Reload();
+	void SetMaxAmmo(int32 NewAmmo);
+//	void Reload();
 	void DecrementAmmo();
 	bool HasAmmo() const { return _CurrentAmmo > 0; }
 
+	// TEST
+
+	UFUNCTION(BlueprintCallable)
+	void BlueprintShoot();
 
 	UFUNCTION(BlueprintCallable)
 	float GetCoolDownBetweenShoot();
@@ -58,6 +63,9 @@ public:
 	FOnAmmoTypeEvent OnAmmoTypeChanged;;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnShootSignature OnAmmoChanged;
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnShootSignature OnShootGetAmmo;
+	FOnShootSignature OnTypeChangedGetAmmo;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnTurretEvent OnShoot;
 	UPROPERTY(BlueprintAssignable, Category="Events")
@@ -144,7 +152,6 @@ private:
 	void InputRoll(const FInputActionValue& Value);
 	void InputChangeBulletType(const FInputActionValue& Value);
 	void InputQuitTurret(const FInputActionValue& Value);
-	void TestingFunction(const FInputActionValue& Value);
 	void Print(FString Message);
 
 	void UpdateTurretCanonRotation();

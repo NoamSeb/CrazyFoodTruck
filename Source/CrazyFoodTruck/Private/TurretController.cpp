@@ -65,6 +65,7 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		BulletFireRate = ActualBulletStructure->FireRate;
 		AreaRangeSide = ActualBulletStructure->AreaSide;
 		AreaRangeDepht = ActualBulletStructure->AreaDepth;
+		SetMaxAmmo(ActualBulletStructure->Ammo);
 	}
 	else
 	{
@@ -83,6 +84,8 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		ActualBulletPrefab = nullptr;
 	}
 	
+	OnAmmoChanged.Broadcast(GetAmmo(),_AmmoMax);
+	OnTypeChangedGetAmmo.Broadcast(GetAmmo(),_AmmoMax);
 	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);
 }
 
@@ -130,18 +133,26 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		}
 	}
 }
+
+
 void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 {
 	_CurrentAmmo = NewAmmo;
 	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
 }
 
-void ATurretController::Reload()
+void ATurretController::SetMaxAmmo(int32 NewAmmo)
 {
-	_CurrentAmmo = _AmmoMax;
+	_AmmoMax = NewAmmo;
 	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
-	OnReload.Broadcast();
 }
+
+// void ATurretController::Reload()
+// {
+// 	_CurrentAmmo = _AmmoMax;
+// 	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
+// 	OnReload.Broadcast();
+// }
 
 void ATurretController::DecrementAmmo()
 {
@@ -152,6 +163,11 @@ void ATurretController::DecrementAmmo()
 		_CurrentAmmo = 0;
 	}
 	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
+}
+
+void ATurretController::BlueprintShoot()
+{
+	Shoot();
 }
 
 float ATurretController::GetCoolDownBetweenShoot()
@@ -189,6 +205,7 @@ void ATurretController::Shoot()
 	
 	FActorSpawnParameters bulletParams;
 	OnShoot.Broadcast();
+	OnShootGetAmmo.Broadcast(GetAmmo(),_AmmoMax);
 
 	AActor* bulletInstance = GetWorld()->SpawnActor<AActor>(ActualBulletPrefab, _SpawnBulletTransform->GetComponentTransform(), bulletParams);
 	if (bulletInstance)
@@ -292,8 +309,6 @@ void ATurretController::UpdateTurretCanonRotation()
 	}
 }
 
-
-
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
 	if (InteractBox)
@@ -302,11 +317,6 @@ void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player quit turret."));
 	}
 }
-
-void ATurretController::TestingFunction(const FInputActionValue& Value)
-{
-}
-
 
 void ATurretController::Print(FString Message)
 {

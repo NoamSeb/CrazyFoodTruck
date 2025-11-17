@@ -25,6 +25,9 @@ protected:
 	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
 	void DropMine();
 
+	UFUNCTION(BlueprintCallable)
+	void DropTestMine();
+
 public:
 	virtual void Tick(float DeltaTime) override;
 

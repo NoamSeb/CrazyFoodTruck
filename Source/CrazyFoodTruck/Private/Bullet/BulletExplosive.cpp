@@ -17,7 +17,7 @@ void ABulletExplosive::EnemyHitBlueprint(AActor* EntityActor, FVector LocationHi
     SpawnExplosion(LocationHit);
 }
 
-void ABulletExplosive::EnemyHit(IIEntity* Entity, FVector LocationHit)
+void ABulletExplosive::EnemyHit(IIShootable* Entity, FVector LocationHit)
 {
     SpawnExplosion(LocationHit);
 }
@@ -75,10 +75,10 @@ void ABulletExplosive::SpawnExplosion(FVector LocationHit)
             }
             else
             {
-                IIEntity* Entity = Cast<IIEntity>(HitActor);
-                if (Entity)
+                IIShootable* ShootableEntity = Cast<IIShootable>(HitActor);
+                if (ShootableEntity)
                 {
-                    Super::EnemyHit(Entity, Hit.ImpactPoint);
+                    Super::EnemyHit(ShootableEntity, Hit.ImpactPoint);
                 }
             }
         }
