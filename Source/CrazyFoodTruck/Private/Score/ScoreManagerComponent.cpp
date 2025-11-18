@@ -7,9 +7,9 @@ UScoreManagerComponent::UScoreManagerComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	{
-		FScoreTier T30; T30.Threshold = 30; T30.Score = 100;
+		FScoreTier T30; T30.Threshold = 30; T30.Score = 400;
 		FScoreTier T60; T60.Threshold = 60; T60.Score = 250;
-		FScoreTier T90; T90.Threshold = 90; T90.Score = 400;
+		FScoreTier T90; T90.Threshold = 90; T90.Score = 100;
 		TimeScoreTiers = { T30, T60, T90 };
 	}
 
@@ -32,7 +32,7 @@ UScoreManagerComponent::UScoreManagerComponent()
 	}
 }
 
-int32 UScoreManagerComponent::EvaluateFromTiers(const TArray<FScoreTier>& Tiers, int32 Value) const
+int32 UScoreManagerComponent::EvaluateScore_Direct(const TArray<FScoreTier>& Tiers, int32 Value) const
 {
 	int32 BestScore = 0;
 
@@ -51,13 +51,26 @@ int32 UScoreManagerComponent::EvaluateFromTiers(const TArray<FScoreTier>& Tiers,
 	return BestScore;
 }
 
-EScoreGrade UScoreManagerComponent::EvaluateGradeFromTiers(const TArray<FScoreGradeTier>& Tiers, int32 Score) const
+int32 UScoreManagerComponent::EvaluateScore_Inverse(const TArray<FScoreTier>& Tiers, int32 Value) const
+{
+	for (const FScoreTier& Tier : Tiers)
+	{
+		if (Value <= Tier.Threshold)
+		{
+			return Tier.Score;
+		}
+	}
+
+	return 0;
+}
+
+EScoreGrade UScoreManagerComponent::EvaluateGrade(const TArray<FScoreGradeTier>& Tiers, int32 TotalScore) const
 {
 	EScoreGrade BestGrade = EScoreGrade::F;
 
 	for (const FScoreGradeTier& Tier : Tiers)
 	{
-		if (Score >= Tier.Threshold)
+		if (TotalScore >= Tier.Threshold)
 		{
 			BestGrade = Tier.Grade;
 		}
@@ -72,12 +85,12 @@ EScoreGrade UScoreManagerComponent::EvaluateGradeFromTiers(const TArray<FScoreGr
 
 int32 UScoreManagerComponent::ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32& OutTimeScore, int32& OutKillScore) const
 {
-	OutTimeScore = EvaluateFromTiers(TimeScoreTiers, TimeSeconds);
-	OutKillScore = EvaluateFromTiers(KillScoreTiers, ZombiesKilled);
+	OutTimeScore = EvaluateScore_Inverse(TimeScoreTiers, TimeSeconds);
+	OutKillScore = EvaluateScore_Direct(KillScoreTiers, ZombiesKilled);
 	return OutTimeScore + OutKillScore;
 }
 
 EScoreGrade UScoreManagerComponent::GetGradeForScore(int32 TotalScore) const
 {
-	return EvaluateGradeFromTiers(GradeTiers, TotalScore);
+	return EvaluateGrade(GradeTiers, TotalScore);
 }
