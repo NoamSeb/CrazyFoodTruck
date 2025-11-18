@@ -4,6 +4,7 @@
 #include "Bullet/BulletBase.h"
 
 #include "Bullet/FBulletStructure.h"
+#include "Interface/IShootable.h"
 #include "Math/UnitConversion.h"
 
 
@@ -47,7 +48,7 @@ void ABulletBase::GroundHit(FVector LocationHit)
 	Destroy();
 }
 
-void ABulletBase::EnemyHit(IIEntity* Entity, FVector LocationHit)
+void ABulletBase::EnemyHit(IIShootable* Entity, FVector LocationHit)
 {
 	if (ZombieImpact)
 	{
@@ -58,7 +59,7 @@ void ABulletBase::EnemyHit(IIEntity* Entity, FVector LocationHit)
 
 void ABulletBase::EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit)
 {
-	IIEntity::Execute_ReceiveDamageBlueprint(EntityActor, damage);
+	IIShootable::Execute_ReceiveDamageBlueprint(EntityActor, damage);
 	if (ZombieImpact)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ZombieImpact, LocationHit, GetActorRotation());
@@ -87,19 +88,19 @@ void ABulletBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	
 	FVector impactPoint = SweepResult.ImpactPoint;
 
-	if (OtherActor->GetClass()->ImplementsInterface(UIEntity::StaticClass()))
+	if (OtherActor->GetClass()->ImplementsInterface(UIShootable::StaticClass()))
 	{
 		EnemyHitBlueprint(OtherActor, impactPoint);
-		IIEntity* EntityInterface = Cast<IIEntity>(OtherActor);
+		IIShootable* ShootableEntity = Cast<IIShootable>(OtherActor);
 		
-		if (EntityInterface)
+		if (ShootableEntity)
 		{
-			if (EntityInterface == nullptr)
+			if (ShootableEntity == nullptr)
 			{
 				return;
 			}
-			EntityInterface->ReceiveDamage(damage);
-			EnemyHit(EntityInterface, impactPoint);
+			ShootableEntity->ReceiveDamage(damage);
+			EnemyHit(ShootableEntity, impactPoint);
 		}
 	}
 

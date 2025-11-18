@@ -5,7 +5,6 @@
 
 
 
-
 class UGameInstanceCrazyFoodTruck;
 
 AMineExplosive::AMineExplosive()
@@ -16,6 +15,14 @@ AMineExplosive::AMineExplosive()
 void AMineExplosive::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AMineExplosive::ReceiveDamage(int DamageAmount)
+{
+    if (bHasExploded){return;}
+    bHasExploded = true;
+    Explode();
+    Destroy();
 }
 
 void AMineExplosive::Tick(float DeltaTime)
@@ -62,16 +69,16 @@ void AMineExplosive::Explode()
         {
             AActor* HitActor = Hit.GetActor();
             if (!HitActor) continue;
-            if (HitActor->GetClass()->ImplementsInterface(UIEntity::StaticClass()))
+            if (HitActor->GetClass()->ImplementsInterface(UIShootable::StaticClass()))
             {
-                IIEntity::Execute_ReceiveDamageBlueprint(HitActor, ExplosionDamage);
+                IIShootable::Execute_ReceiveDamageBlueprint(HitActor, ExplosionDamage);
             }
             else
             {
-                IIEntity* Entity = Cast<IIEntity>(HitActor);
-                if (Entity)
+                IIShootable* EntityShootable = Cast<IIShootable>(HitActor);
+                if (EntityShootable)
                 {
-                    Entity->ReceiveDamage(ExplosionDamage);
+                    EntityShootable->ReceiveDamage(ExplosionDamage);
                 }
             }
         }

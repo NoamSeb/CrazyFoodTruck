@@ -14,11 +14,17 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
-// Sets default values
+static void BasisFromYaw(const float YawDeg, FVector& OutForward, FVector& OutRight)
+{
+    const FRotator Flat(0.f, YawDeg, 0.f);
+    const FRotationMatrix RM(Flat);
+    OutForward = RM.GetUnitAxis(EAxis::X);
+    OutRight = RM.GetUnitAxis(EAxis::Y);
+}
+
 ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
 {
- 	// Set this character to call Tick() every frame. You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
     if (UCharacterMovementComponent* Move = GetCharacterMovement())
     {
@@ -28,7 +34,6 @@ ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
     }
 }
 
-// Called when the game starts or when spawned
 void ACrazyFoodTruckCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -39,20 +44,8 @@ void ACrazyFoodTruckCharacter::BeginPlay()
     }
 
     UpdatePlayerColorFromController();
-
-    //if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
-    //{
-    //    AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
-    //}
 }
 
-// Called every frame
-void ACrazyFoodTruckCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-// Called to bind functionality to input
 void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -62,53 +55,23 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
         BindInputMoveAction(EnhancedInputComponent);
         BindInputInteractAction(EnhancedInputComponent);
     }
-
-    if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
-    {
-        AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
-        InputAmeliorationComp->SetupPlayerInput(PlayerInputComponent);
-    }
 }
 
-int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
+void ACrazyFoodTruckCharacter::SetVehicleMovementRef(AActor* InVehicleActor)
 {
-    const APlayerController* PC = Cast<APlayerController>(Controller);
-    if (!PC) return -1;
-
-    const ULocalPlayer* LP = PC->GetLocalPlayer();
-    return LP ? LP->GetControllerId() : -1;
+    VehicleRefActor = InVehicleActor;
 }
 
-FLinearColor ACrazyFoodTruckCharacter::GetPlayerColor() const
+void ACrazyFoodTruckCharacter::UseWorldFrame()
 {
-    return PlayerColor;
+    MovementFrame = EMovementFrame::World;
+    VehicleRefActor = nullptr;
 }
 
-void ACrazyFoodTruckCharacter::SetPlayerColor(FLinearColor NewColor)
+void ACrazyFoodTruckCharacter::UseVehicleFrame(AActor* InVehicle)
 {
-    PlayerColor = NewColor;
-}
-
-void ACrazyFoodTruckCharacter::UpdatePlayerColorFromController()
-{
-    switch (GetPlayerIndex())
-    {
-    case 0:
-        PlayerColor = FLinearColor(0.0f, 0.45f, 1.0f);
-        break;
-    case 1:
-        PlayerColor = FLinearColor(0.1f, 0.8f, 0.2f); 
-        break;
-    case 2:
-        PlayerColor = FLinearColor(1.0f, 0.1f, 0.1f); 
-        break;
-    case 3:
-        PlayerColor = FLinearColor(1.0f, 0.9f, 0.1f);
-        break;
-    default:
-        PlayerColor = FLinearColor::White;
-        break;
-    }
+    MovementFrame = EMovementFrame::Vehicle;
+    VehicleRefActor = InVehicle;
 }
 
 void ACrazyFoodTruckCharacter::SetInputData(UCrazyFoodTruckCharacterInputData* InInputData)
@@ -141,12 +104,12 @@ void ACrazyFoodTruckCharacter::SetupMappingContextIntoController() const
     }
 }
 
-static void BasisFromYaw(const float YawDeg, FVector& OutForward, FVector& OutRight)
+void ACrazyFoodTruckCharacter::BindInputMoveAction(UEnhancedInputComponent* EnhancedInputComponent)
 {
-    const FRotator Flat(0.f, YawDeg, 0.f);
-    const FRotationMatrix RM(Flat);
-    OutForward = RM.GetUnitAxis(EAxis::X);
-    OutRight = RM.GetUnitAxis(EAxis::Y);
+    if (InputData && InputData->InputActionMove)
+    {
+        EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::OnInputMove);
+    }
 }
 
 void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionValue)
@@ -167,9 +130,17 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
     {
     case EMovementFrame::Vehicle:
     {
-        if (!VehicleRefActor.IsValid()) return;
-        const float Yaw = VehicleRefActor->GetActorRotation().Yaw + MovementYawOffsetDegrees;
-        BasisFromYaw(Yaw, Forward, Right);
+        if (VehicleRefActor.IsValid())
+        {
+            const float Yaw = VehicleRefActor->GetActorRotation().Yaw + MovementYawOffsetDegrees;
+            BasisFromYaw(Yaw, Forward, Right);
+        }
+        else
+        {
+            const APlayerController* PC = Cast<APlayerController>(Controller);
+            const float Yaw = (PC ? PC->GetControlRotation().Yaw : GetActorRotation().Yaw) + MovementYawOffsetDegrees;
+            BasisFromYaw(Yaw, Forward, Right);
+        }
         break;
     }
     case EMovementFrame::World:
@@ -184,14 +155,6 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
 
     AddMovementInput(Forward, Y);
     AddMovementInput(Right, X);
-}
-
-void ACrazyFoodTruckCharacter::BindInputMoveAction(UEnhancedInputComponent* EnhancedInputComponent)
-{
-    if (InputData && InputData->InputActionMove)
-    {
-        EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::OnInputMove);
-    }
 }
 
 void ACrazyFoodTruckCharacter::BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent)
@@ -250,23 +213,6 @@ AAmmoBox* ACrazyFoodTruckCharacter::DepositAmmoBox()
     return CarriedAmmoBox;
 }
 
-void ACrazyFoodTruckCharacter::SetVehicleMovementRef(AActor* InVehicleActor)
-{
-    VehicleRefActor = InVehicleActor;
-}
-
-void ACrazyFoodTruckCharacter::UseWorldFrame()
-{
-    MovementFrame = EMovementFrame::World;
-    VehicleRefActor = nullptr;
-}
-
-void ACrazyFoodTruckCharacter::UseVehicleFrame(AActor* InVehicle)
-{
-    MovementFrame = EMovementFrame::Vehicle;
-    VehicleRefActor = InVehicle;
-}
-
 const TScriptInterface<IInteractable>& ACrazyFoodTruckCharacter::GetFocusedInteractable() const
 {
     return FocusedInteractable;
@@ -277,23 +223,43 @@ void ACrazyFoodTruckCharacter::SetFocusedInteractable(const TScriptInterface<IIn
     FocusedInteractable = NewTarget;
 }
 
-
-void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMappingContextParam, int8 Priority)
+int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
 {
-    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
-    if (!PlayerController)
-    {
-        return;
-    }
+    const APlayerController* PC = Cast<APlayerController>(Controller);
+    if (!PC) return -1;
 
-    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
-    if (!LocalPlayer)
-    {
-        return;
-    }
+    const ULocalPlayer* LP = PC->GetLocalPlayer();
+    return LP ? LP->GetControllerId() : -1;
+}
 
-    if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+FLinearColor ACrazyFoodTruckCharacter::GetPlayerColor() const
+{
+    return PlayerColor;
+}
+
+void ACrazyFoodTruckCharacter::SetPlayerColor(FLinearColor NewColor)
+{
+    PlayerColor = NewColor;
+}
+
+void ACrazyFoodTruckCharacter::UpdatePlayerColorFromController()
+{
+    switch (GetPlayerIndex())
     {
-        EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
+    case 0:
+        PlayerColor = FLinearColor(0.0f, 0.45f, 1.0f);
+        break;
+    case 1:
+        PlayerColor = FLinearColor(0.1f, 0.8f, 0.2f); 
+        break;
+    case 2:
+        PlayerColor = FLinearColor(1.0f, 0.1f, 0.1f); 
+        break;
+    case 3:
+        PlayerColor = FLinearColor(1.0f, 0.9f, 0.1f);
+        break;
+    default:
+        PlayerColor = FLinearColor::White;
+        break;
     }
 }

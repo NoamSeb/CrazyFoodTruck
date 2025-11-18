@@ -19,7 +19,7 @@ enum class ELocalMultiplayerInputMappingType
 	Turret,
 	Cabestan,
 	Plate,
-	Upgrade
+	AmmoDrawer,
 };
 
 USTRUCT()
@@ -47,11 +47,11 @@ public:
 	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Cabestan"))
 	TObjectPtr<UInputMappingContext> IMCCabestan = nullptr;
 
-		UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Plate"))
-    	TObjectPtr<UInputMappingContext> IMCPlate = nullptr;
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Plate"))
+	TObjectPtr<UInputMappingContext> IMCPlate = nullptr;
 
-	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Upgrade"))
-	TObjectPtr<UInputMappingContext> IMCUpgrade = nullptr;
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC DRAWER"))
+	TObjectPtr<UInputMappingContext> IMCDrawer = nullptr;
 	
     UInputMappingContext* GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const;
     bool ContainsKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;

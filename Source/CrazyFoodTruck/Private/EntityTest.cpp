@@ -14,16 +14,6 @@ void AEntityTest::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AEntityTest::ReceiveDamage(int DamageAmount)
-{
-	Health -= DamageAmount;
-	if (Health <= 0)
-	{
-		OnDeath.Broadcast();
-		Destroy();
-	}
-	OnLifeChange.Broadcast(Health);
-}
 
 void AEntityTest::CrushUnderTruck()
 {

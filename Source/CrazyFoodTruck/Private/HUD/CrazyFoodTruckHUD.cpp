@@ -3,9 +3,12 @@
 #include "HUD/CrazyFoodTruckHUD.h"
 
 #include "Widget/ZombieWidget.h"
+#include "Widget/ScoreResultWidget.h"
 #include "../HordeManager.h"
 
 #include "Blueprint/UserWidget.h"
+
+#include "GameFramework/PlayerController.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -13,20 +16,50 @@ void ACrazyFoodTruckHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!ZombieWidgetClass) return;
-
 	APlayerController* PC = GetOwningPlayerController();
 	if (!PC) return;
 
-	ZombieWidgetInstance = CreateWidget<UZombieWidget>(PC, ZombieWidgetClass);
-	if (!ZombieWidgetInstance) return;
-
-	if (AHordeManager* HM = ResolveHordeManager())
+	if (ZombieWidgetClass)
 	{
-		ZombieWidgetInstance->SetHordeManager(HM);
+		ZombieWidgetInstance = CreateWidget<UZombieWidget>(PC, ZombieWidgetClass);
+		if (ZombieWidgetInstance)
+		{
+			if (AHordeManager* HM = ResolveHordeManager())
+			{
+				ZombieWidgetInstance->SetHordeManager(HM);
+			}
+			
+			ZombieWidgetInstance->AddToViewport();
+		}
 	}
 
-	ZombieWidgetInstance->AddToViewport();
+	if (ScoreResultWidgetClass)
+	{
+		ScoreResultWidgetInstance = CreateWidget<UScoreResultWidget>(PC, ScoreResultWidgetClass);
+	}
+}
+
+void ACrazyFoodTruckHUD::ShowScoreResult(int32 FinalScore, int32 TimeScore, int32 KillScore, EScoreGrade Grade)
+{
+	APlayerController* PC = GetOwningPlayerController();
+	if (!PC) return;
+
+	if (!ScoreResultWidgetInstance && ScoreResultWidgetClass)
+	{
+		ScoreResultWidgetInstance = CreateWidget<UScoreResultWidget>(PC, ScoreResultWidgetClass);
+	}
+
+	if (!ScoreResultWidgetInstance)
+	{
+		return;
+	}
+
+	if (!ScoreResultWidgetInstance->IsInViewport())
+	{
+		ScoreResultWidgetInstance->AddToViewport(1);
+	}
+
+	ScoreResultWidgetInstance->SetScoreData(FinalScore, TimeScore, KillScore, Grade);
 }
 
 AHordeManager* ACrazyFoodTruckHUD::ResolveHordeManager() const

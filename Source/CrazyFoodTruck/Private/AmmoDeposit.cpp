@@ -43,7 +43,7 @@ void AAmmoDeposit::Interact(APlayerController* InstigatorPlayerController, ACraz
 	if (!CrazyCharacter){return;}
 	if (CrazyCharacter->HasAmmo())
 	{
-		Reload();
+		// Reload();
 		CrazyCharacter->SetAmmoState(false);
 		ReloadedAmmoBox = CrazyCharacter->DepositAmmoBox();
 		
@@ -70,10 +70,10 @@ void AAmmoDeposit::TurretAmmoEmpty()
 	}
 }
 
-void AAmmoDeposit::Reload()
-{
-	LinkedTurretController->Reload();
-}
+// void AAmmoDeposit::Reload()
+// {
+// 	LinkedTurretController->Reload();
+// }
 
 // Called every frame
 void AAmmoDeposit::Tick(float DeltaTime)
