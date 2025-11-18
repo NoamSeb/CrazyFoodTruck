@@ -24,7 +24,8 @@ void ASideMutionDrawer::Tick(float DeltaTime)
 }
 
 void ASideMutionDrawer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{// PLAYER ENTERED
+{
+	// PLAYER ENTERED
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
@@ -50,12 +51,10 @@ void ASideMutionDrawer::QuitDrawer()
 	{
 		InteractBox->UnpossessPawn();
 	}
-
 	if (LinkedMunitionDrawer)
 	{
 		LinkedMunitionDrawer->DecrementPlayerReloading();
 	}
-	
 }
 void ASideMutionDrawer::HandleOpen(const FInputActionValue& Value)
 {

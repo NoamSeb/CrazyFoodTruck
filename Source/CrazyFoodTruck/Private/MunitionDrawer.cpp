@@ -6,13 +6,6 @@ AMunitionDrawer::AMunitionDrawer()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// void AMunitionDrawer::UpdateTurretInfo(int AmmoLeft, int AmmoMax)
-// {
-// 	munitionMax = AmmoMax;
-// 	currentMunition = AmmoLeft;
-// 	TurretShoot(TODO, TODO);
-// }
-
 void AMunitionDrawer::UpdateMuntionCount(int change)
 {
 	currentMunition += change;
@@ -79,4 +72,3 @@ void AMunitionDrawer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-

@@ -14,9 +14,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/PlaceHolder/Turret/Turret_Barrel_UV_MeshOpti_Merge.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/PlaceHolder/Turret/Turret_Main_UV_MeshOpti_Merge.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/PlaceHolder/Turret/Turret_Platform_UV_MeshOpti_Merge.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/PlaceHolder/Turret/barrel.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_TurretWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_TurretWidget.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/0/DJ/C2D8PEI8AJ82UCU9WZWDXR.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/1/G4/OMZFY4FPQRUE0LTIO59IKS.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/RE/6LTLJ59O1W8I6VH7QFW90T.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/RP/UZF0I531W8T6BE42YDRENN.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/RP/UZF0I531W8T6BE42YDRENN.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/05/5R2F8VBA7KYX042JW3QS2Q.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/05/5R2F8VBA7KYX042JW3QS2Q.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/AreaZombieSpawn.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/AreaZombieSpawn.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/7/OJ/214GRYS70BEK5PWO5JBRYU.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/7/WL/SF478SZHO0YA6IBV9CFGWM.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/B/B8/IIIUW1J4B801RUTG7JV2HP.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3L/71ZSO7YNYLISTQLB5MLRWT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3L/71ZSO7YNYLISTQLB5MLRWT.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/MunitionDrawer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/MunitionDrawer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/SideMutionDrawer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/SideMutionDrawer.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,6 +230,7 @@
       <workItem from="1763415499588" duration="110000" />
       <workItem from="1763423003994" duration="599000" />
       <workItem from="1763457814595" duration="121000" />
+      <workItem from="1763461529381" duration="594000" />
     </task>
     <servers />
   </component>
