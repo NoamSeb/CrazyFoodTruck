@@ -14,31 +14,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_AreaZombieSpawn.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_AreaZombieSpawn.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_EntityTest2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_EntityTest2.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_TriggerZombie.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_TriggerZombie.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_TurretWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_TurretWidget.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/1/NL/YCF2T84USL67BPYYQ8HR95.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/1/NL/YCF2T84USL67BPYYQ8HR95.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/1J/OTH8JTD76PBPYQMIQFPH40.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/4/1J/OTH8JTD76PBPYQMIQFPH40.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/05/5R2F8VBA7KYX042JW3QS2Q.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/05/5R2F8VBA7KYX042JW3QS2Q.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/NF/VK5BV0JZE0OIEJYO6SJF0Z.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/6/NF/VK5BV0JZE0OIEJYO6SJF0Z.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/A/73/4LFMS3Z7JTAO4A6NDUBAC8.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/A/73/4LFMS3Z7JTAO4A6NDUBAC8.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/B/3H/BDKYTLOJMIF6WUQ2VTKQO5.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/Q3/G688RIRF5XAATUP767KMRV.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/Q3/G688RIRF5XAATUP767KMRV.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/RG/0I04Q6116UUIQ03OTTH5BL.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/D/RG/0I04Q6116UUIQ03OTTH5BL.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/E/C6/TH80DM7FRA9O4ENSEX1AL9.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/E/C6/TH80DM7FRA9O4ENSEX1AL9.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3L/71ZSO7YNYLISTQLB5MLRWT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/SandboxGab/F/3L/71ZSO7YNYLISTQLB5MLRWT.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/AreaZombieSpawn.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/AreaZombieSpawn.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/MunitionDrawer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/MunitionDrawer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/SideMutionDrawer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/SideMutionDrawer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TriggerZombie.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TriggerZombie.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TurretController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/TurretController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/MunitionDrawer.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/MunitionDrawer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/TurretController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/TurretController.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -236,6 +214,7 @@
       <workItem from="1763052997600" duration="541000" />
       <workItem from="1763415499588" duration="110000" />
       <workItem from="1763423003994" duration="599000" />
+      <workItem from="1763457814595" duration="121000" />
     </task>
     <servers />
   </component>
