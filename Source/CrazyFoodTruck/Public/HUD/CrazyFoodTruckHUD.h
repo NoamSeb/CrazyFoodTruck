@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "Score/ScoreManagerComponent.h"
 #include "CrazyFoodTruckHUD.generated.h"
 
 class UZombieWidget;
+class UScoreResultWidget;
+class AHordeManager;
 
 UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckHUD : public AHUD
@@ -16,13 +19,21 @@ class CRAZYFOODTRUCK_API ACrazyFoodTruckHUD : public AHUD
 public:
 	virtual void BeginPlay() override;
 
+	void ShowScoreResult(int32 FinalScore, int32 TimeScore, int32 KillScore, EScoreGrade Grade);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "HUD")
 	TSubclassOf<UZombieWidget> ZombieWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "HUD")
+	TSubclassOf<UScoreResultWidget> ScoreResultWidgetClass;
 
 private:
 	UPROPERTY()
 	UZombieWidget* ZombieWidgetInstance = nullptr;
 
-	class AHordeManager* ResolveHordeManager() const;
+	UPROPERTY()
+	UScoreResultWidget* ScoreResultWidgetInstance = nullptr;
+
+	AHordeManager* ResolveHordeManager() const;
 };

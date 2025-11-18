@@ -5,6 +5,7 @@
 
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "Interface/IEntity.h"
+#include "Interface/IShootable.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -67,14 +68,14 @@ void AModuleExplosive::Explode()
             if (!HitActor) continue;
             if (HitActor->GetClass()->ImplementsInterface(UIEntity::StaticClass()))
             {
-                IIEntity::Execute_ReceiveDamageBlueprint(HitActor, ExplosionDamage);
+                IIShootable::Execute_ReceiveDamageBlueprint(HitActor, ExplosionDamage);
             }
             else
             {
-                IIEntity* Entity = Cast<IIEntity>(HitActor);
-                if (Entity)
+                IIShootable* EntityShootable = Cast<IIShootable>(HitActor);
+                if (EntityShootable)
                 {
-                    Entity->ReceiveDamage(ExplosionDamage);
+                    EntityShootable->ReceiveDamage(ExplosionDamage);
                 }
             }
         }

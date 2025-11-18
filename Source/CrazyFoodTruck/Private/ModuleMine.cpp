@@ -17,7 +17,6 @@ AModuleMine::AModuleMine()
 void AModuleMine::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AModuleMine::Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter)
@@ -32,6 +31,14 @@ void AModuleMine::Interact(APlayerController* InstigatorPlayerController, ACrazy
 void AModuleMine::DropMine()
 {
 	auto Mine = GetWorld()->SpawnActor<AMineExplosive>(MinePrefab, SpawnMinePoint->GetComponentLocation(), FRotator::ZeroRotator);
+	auto PhysicsComponent = Mine->FindComponentByClass<UStaticMeshComponent>();
+	if (!PhysicsComponent){return;}
+	PhysicsComponent->AddAngularImpulseInDegrees(FVector(0.f, 0.f, 500.f), NAME_None, true);
+}
+
+void AModuleMine::DropTestMine()
+{
+	DropMine();
 }
 
 void AModuleMine::Tick(float DeltaTime)

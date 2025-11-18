@@ -23,7 +23,10 @@ public:
 	
 	void InitArea(int32 IdArea, AActor* ParentActor);
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Spawn")
+	ETargetZombiePoint PositionSpawn;
 
+    ETargetZombiePoint GetPositionSpawn () const { return PositionSpawn; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

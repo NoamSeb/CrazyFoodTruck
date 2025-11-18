@@ -3,6 +3,7 @@
 
 #include "Bullet/BulletController.h"
 
+#include "Interface/IShootable.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -58,8 +59,8 @@ UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHi
 	
 	if (OtherActor->GetClass()->ImplementsInterface(UIEntity::StaticClass()))
 	{
-		IIEntity::Execute_ReceiveDamageBlueprint(OtherActor, 1);
-		IIEntity* EntityInterface = Cast<IIEntity>(OtherActor);
+		IIShootable::Execute_ReceiveDamageBlueprint(OtherActor, 1);
+		IIShootable* EntityInterface = Cast<IIShootable>(OtherActor);
 
 		if (EntityInterface)
 		{

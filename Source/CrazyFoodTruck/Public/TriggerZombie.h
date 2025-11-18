@@ -15,9 +15,14 @@ class CRAZYFOODTRUCK_API ATriggerZombie : public AActor
 public:
 	ATriggerZombie();
 	virtual void Tick(float DeltaTime) override;
-	
+
 	UPROPERTY(EditAnywhere, Category="Trigger Zombie")
+	FWaveStructure DefaultWave;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trigger Zombie")
 	TArray<FWaveStructure> SpawnWaves;
+
+	UFUNCTION(BlueprintCallable, Category="Trigger Zombie")
+	TArray<FWaveStructure> GetSpawnWaves() const { return SpawnWaves; }
 
 protected:
 	virtual void BeginPlay() override;

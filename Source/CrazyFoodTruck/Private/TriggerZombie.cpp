@@ -3,6 +3,8 @@
 
 #include "TriggerZombie.h"
 
+#include <string>
+
 #include "Interface/IVehicule.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -19,12 +21,25 @@ ATriggerZombie::ATriggerZombie()
 
 void ATriggerZombie::BeginPlay()
 {
-	Super::BeginPlay();
-	if (!HordeManager)
-	{
-		auto hordeActor = UGameplayStatics::GetActorOfClass(GetWorld(), AHordeManager::StaticClass());
-		HordeManager = Cast<AHordeManager>(hordeActor);
-	}
+    Super::BeginPlay();
+
+    if (!HordeManager)
+    {
+        AActor* hordeActor = UGameplayStatics::GetActorOfClass(GetWorld(), AHordeManager::StaticClass());
+        HordeManager = Cast<AHordeManager>(hordeActor);
+    }
+
+	// Basic identity
+	FString me = GetName();
+	// List all components on THIS actor
+	TArray<UChildActorComponent*> Comps;
+	for (auto Comp : Comps)
+    {
+        FString compName = Comp->GetName();
+        FString compClass = Comp->GetClass()->GetName();
+        GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Cyan,
+            FString::Printf(TEXT(" - %s (%s)"), *compName, *compClass));
+    }
 }
 
 void ATriggerZombie::Initialize(AHordeManager* NewHordeManager)
@@ -36,13 +51,7 @@ void ATriggerZombie::SpawnZone()
 {
 	AAreaZombieSpawn* NewArea = GetWorld()->SpawnActor<AAreaZombieSpawn>(AreaZombieSpawn, GetActorLocation(), GetActorRotation());
 	if (!NewArea){return;}
-	// for (auto W : SpawnWaves)
-	// {
-	// 	if (W.ZoneSpawn == nullptr)
-	// 	{
-	// 		W.ZoneSpawn = NewArea;
-	// 	}
-	// }
+
 
 #if WITH_EDITOR
 	if (GEditor && NewArea)
