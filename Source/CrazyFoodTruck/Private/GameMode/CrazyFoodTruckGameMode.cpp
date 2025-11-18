@@ -15,6 +15,8 @@
 
 #include "../HordeManager.h"
 
+#include "HUD/CrazyFoodTruckHUD.h"
+
 #include "LocalMultiplayerSubsystem.h"
 
 #include "Components/SceneComponent.h"
@@ -195,8 +197,16 @@ void ACrazyFoodTruckGameMode::ConfigureMovementFrameForAllCharacters(AActor* Veh
     {
         if (!IsValid(C)) continue;
 
-        C->UseVehicleFrame(Vehicle);
-        C->MovementYawOffsetDegrees = 180.f;
+        if (Vehicle)
+        {
+            C->UseVehicleFrame(Vehicle);
+            C->MovementYawOffsetDegrees = 180.f;
+        }
+        else
+        {
+            C->UseWorldFrame();
+            C->MovementYawOffsetDegrees = 0.f;
+        }
     }
 }
 
@@ -230,6 +240,7 @@ void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
 
     static const int32 MsgKey = 99999;
     const FString Text = FString::Printf(TEXT("Time: %s"), *FormatMMSS(ElapsedSeconds));
+
     GEngine->AddOnScreenDebugMessage(MsgKey, 1.1f, FColor::Green, Text);
 
     if (!bHasComputedFinalScore && ElapsedSeconds >= 30)
@@ -268,31 +279,12 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
 
     GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
 
-    auto GradeToString = [](EScoreGrade G) -> FString
-        {
-            switch (G)
-            {
-            case EScoreGrade::S: return TEXT("S");
-            case EScoreGrade::A: return TEXT("A");
-            case EScoreGrade::B: return TEXT("B");
-            case EScoreGrade::C: return TEXT("C");
-            case EScoreGrade::D: return TEXT("D");
-            case EScoreGrade::E: return TEXT("E");
-            case EScoreGrade::F: default: return TEXT("F");
-            }
-        };
-
-    if (GEngine)
+    if (APlayerController* PC = World->GetFirstPlayerController())
     {
-        GEngine->AddOnScreenDebugMessage(
-            -1, 8.f, FColor::Yellow,
-            FString::Printf(
-                TEXT("FINAL SCORE -> Total: %d | TimeScore: %d | KillScore: %d | Grade: %s (Time=%ds, Kills=%d)"),
-                FinalScore, TimeScore, KillScore,
-                *GradeToString(Grade),
-                TimeSeconds, Kills
-            )
-        );
+        if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
+        {
+            HUD->ShowScoreResult(FinalScore, TimeScore, KillScore, Grade);
+        }
     }
 }
 

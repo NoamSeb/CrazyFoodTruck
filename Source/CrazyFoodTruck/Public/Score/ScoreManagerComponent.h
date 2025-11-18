@@ -66,7 +66,7 @@ public:
 	EScoreGrade GetGradeForScore(int32 TotalScore) const;
 
 private:
-	int32 EvaluateFromTiers(const TArray<FScoreTier>& Tiers, int32 Value) const;
-
-	EScoreGrade EvaluateGradeFromTiers(const TArray<FScoreGradeTier>& Tiers, int32 Score) const;
+	int32 EvaluateScore_Direct(const TArray<FScoreTier>& Tiers, int32 Value) const;
+	int32 EvaluateScore_Inverse(const TArray<FScoreTier>& Tiers, int32 Value) const;
+	EScoreGrade EvaluateGrade(const TArray<FScoreGradeTier>& Tiers, int32 TotalScore) const;
 };
