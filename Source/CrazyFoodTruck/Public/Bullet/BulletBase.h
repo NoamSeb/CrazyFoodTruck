@@ -9,6 +9,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Interface/IShootable.h"
 #include "BulletBase.generated.h"
 
 UCLASS()
@@ -25,7 +26,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void GroundHit(FVector LocationHit);
 	
-	virtual void EnemyHit(IIEntity *Entity, FVector LocationHit);
+	virtual void EnemyHit(IIShootable* Entity, FVector LocationHit);
 	virtual void EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit);
 	float GetBulletSpeed();
 	int GetBulletDamage();
@@ -56,6 +57,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="EFFECT")
 	UNiagaraSystem* ZombieImpact;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="EFFECT")
 	
 	UBoxComponent* _BoxCollider;
 
