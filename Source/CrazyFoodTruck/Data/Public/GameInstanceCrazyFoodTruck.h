@@ -45,6 +45,12 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	UFUNCTION(BlueprintCallable)
 	void ClearUpgrades();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EModuleUpgrade ModuleUpgradeLeft;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EModuleUpgrade ModuleUpgradeRight;
+
 private:
 	ACameraShakeManager* CameraShakeManager;
 };

@@ -49,6 +49,7 @@ void ACrazyFoodTruckCharacter::BeginPlay()
         AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
     }
 
+
     UpdatePlayerColorFromController();
 }
 
@@ -84,6 +85,9 @@ void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMapp
     }
 
     if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+    {
+        EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
+    }
 }
 
 
