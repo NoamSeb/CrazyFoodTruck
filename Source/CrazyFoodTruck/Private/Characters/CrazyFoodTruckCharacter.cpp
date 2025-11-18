@@ -13,6 +13,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "InputCharacterAmelioration/InputAmeliorationCharacters.h"
 
 static void BasisFromYaw(const float YawDeg, FVector& OutForward, FVector& OutRight)
 {
@@ -43,6 +44,11 @@ void ACrazyFoodTruckCharacter::BeginPlay()
         Move->MaxWalkSpeed = MovementSpeed;
     }
 
+    if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    {
+        AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+    }
+
     UpdatePlayerColorFromController();
 }
 
@@ -55,7 +61,31 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
         BindInputMoveAction(EnhancedInputComponent);
         BindInputInteractAction(EnhancedInputComponent);
     }
+
+    if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    {
+        AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+        InputAmeliorationComp->SetupPlayerInput(PlayerInputComponent);
+    }
 }
+
+void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMappingContextParam, int8 Priority)
+{
+    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController)
+    {
+        return;
+    }
+
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    if (!LocalPlayer)
+    {
+        return;
+    }
+
+    if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+}
+
 
 void ACrazyFoodTruckCharacter::SetVehicleMovementRef(AActor* InVehicleActor)
 {

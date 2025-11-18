@@ -101,6 +101,8 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<AAmmoBox> CarriedAmmoBox = nullptr;
 
+	void AddMappingContext(UInputMappingContext* InputMappingContext, int8 Priority);
+
 	void BindInputMoveAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent);
 
