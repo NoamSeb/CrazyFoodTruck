@@ -27,3 +27,23 @@ void UGameInstanceCrazyFoodTruck::PlayerCameraShake(ECameraShake ShakeType)
 		CameraShakeManager->PlayShake(ShakeType);
 	}
 }
+
+TArray<FStructUpgrade> UGameInstanceCrazyFoodTruck::ListUpgradesToAdd(EZoneUpgrade ZoneUpgrade)
+{
+	TArray<FStructUpgrade> ListUpgradesToReturn;
+	
+	for (FStructUpgrade Upgrade : ListUpgrades)
+	{
+		if (Upgrade.Zone == ZoneUpgrade)
+		{
+			ListUpgradesToReturn.Add(Upgrade);
+		}
+	}
+
+	return ListUpgradesToReturn;
+}
+
+void UGameInstanceCrazyFoodTruck::ClearUpgrades()
+{
+	ListUpgrades.Empty();
+}

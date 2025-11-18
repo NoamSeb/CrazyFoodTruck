@@ -8,6 +8,8 @@
 #include "FoodTruckDataSubSystem.h"
 #include "GameDataSubSystem.h"
 #include "ZombieDataSubSystem.h"
+#include "UpgradePhase/StructUpgrade.h"
+#include "UpgradePhase/EnumUpgrade/ZoneUpgrade.h"
 #include "GameInstanceCrazyFoodTruck.generated.h"
 
 UCLASS()
@@ -31,6 +33,17 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	TObjectPtr<UGameDataSubSystem> GameData;
 	TObjectPtr<UZombieDataSubSystem> ZombieData;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 nbrTickets;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FStructUpgrade> ListUpgrades;
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FStructUpgrade> ListUpgradesToAdd(EZoneUpgrade ZoneUpgrade);
+
+	UFUNCTION(BlueprintCallable)
+	void ClearUpgrades();
 
 private:
 	ACameraShakeManager* CameraShakeManager;

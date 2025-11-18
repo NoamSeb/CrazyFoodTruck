@@ -375,6 +375,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 
 void AInteractBox::UnpossessPawn()
 {
+    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "UnpossessPawn");
     OnPlayerQuit.Broadcast();
     
     bPlayerIsControlling = false;
