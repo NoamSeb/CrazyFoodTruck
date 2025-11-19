@@ -61,16 +61,10 @@ public:
 	bool IsValidate = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool CanMoveOnModule = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 indexPosition = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool OnSkip = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 indexPositionForModule = 0;
 
 protected:
 	// Called when the game starts
@@ -85,9 +79,6 @@ protected:
 	void MoveOnSkip(const FInputActionValue& Value);
 	void Validate(const FInputActionValue& Value);
 	void RemoveValidate();
-
-	void MoveInModule(const FInputActionValue& Value);
-	void ValidInModule(const FInputActionValue& Value);
 
 public:
 

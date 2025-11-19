@@ -52,21 +52,10 @@ void AVehicle::BeginPlay()
 {
 	Super::BeginPlay();
 
-#pragma region Upgrades
-	if (UGameInstance* GIBase = GetGameInstance())
-	{
-		GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
-	}
-	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
-
-	_CurrentTruckMaxSpeed = TruckMaxSpeed + TruckSubSystem->Speed;
-	_CurrentTruckAngleSpeed = TruckAngleSpeed + TruckSubSystem->TruckRotationSpeed;
-#pragma endregion
-
 	MovementComponent = Cast<UFloatingPawnMovement>(GetMovementComponent());
 	if (MovementComponent)
 	{
-		MovementComponent->MaxSpeed = _CurrentTruckMaxSpeed * KilometersToMetersConvertingValue;
+		MovementComponent->MaxSpeed = TruckMaxSpeed * KilometersToMetersConvertingValue;
 
 		if (!MovementComponent->UpdatedComponent)
 		{
@@ -232,8 +221,8 @@ void AVehicle::Tick(float DeltaTime)
 		ElapsedTime += DeltaTime;
 		const float Alpha = FMath::Clamp(ElapsedTime / SpeedRecoveryDuration, 0.f, 1.f);
 
-		const float VMin = (_CurrentTruckMaxSpeed - TruckLossSpeed) * KilometersToMetersConvertingValue;
-		const float VMax = _CurrentTruckMaxSpeed * KilometersToMetersConvertingValue;
+		const float VMin = (TruckMaxSpeed - TruckLossSpeed) * KilometersToMetersConvertingValue;
+		const float VMax = TruckMaxSpeed * KilometersToMetersConvertingValue;
 		MovementComponent->MaxSpeed = FMath::Lerp(VMin, VMax, Alpha);
 
 		if (Alpha >= 1.0f)
@@ -373,10 +362,10 @@ void AVehicle::SetTruckIdleStates()
 
 void AVehicle::RotateTruck(float DeltaTime)
 {
-	destinationRotation.Yaw += (InputRotatingValue * _CurrentTruckAngleSpeed) * DeltaTime;
+	destinationRotation.Yaw += (InputRotatingValue * TruckAngleSpeed) * DeltaTime;
 	destinationRotation.Yaw = FMath::Clamp(destinationRotation.Yaw, -TruckMaxRotation, TruckMaxRotation);
 
-	destinationRotation.Roll += ((InputRotatingValue * _CurrentTruckAngleSpeed) / 2) * DeltaTime;
+	destinationRotation.Roll += ((InputRotatingValue * TruckAngleSpeed) / 2) * DeltaTime;
 	destinationRotation.Roll = FMath::Clamp(destinationRotation.Roll, -TruckMaxTilt, TruckMaxTilt);
 
 	UpdateRotationTruck(destinationRotation, DeltaTime);
