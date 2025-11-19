@@ -115,7 +115,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Vehicle Settings | Tilt")
 	TObjectPtr<UCurveFloat> TiltAnimCurve;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool MovementEnable;
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
@@ -190,6 +190,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
 	bool bLiveCaptureWhilePossessed = true;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bForwardCamAlwaysOn = true;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bCreateForwardCamWidgetAtBeginPlay = true;
 
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|UI")
 	TSubclassOf<UForwardCamWidget> ForwardCamWidgetClass;

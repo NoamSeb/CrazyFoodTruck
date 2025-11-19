@@ -40,4 +40,7 @@ struct FBulletStructure : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
 	int32 Ammo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
+	float HapticsScale;
 };
