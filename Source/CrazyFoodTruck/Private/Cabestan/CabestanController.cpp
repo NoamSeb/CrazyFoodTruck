@@ -23,6 +23,26 @@ void ACabestanController::Tick(float DeltaTime)
 	}
 }
 
+bool ACabestanController::CanPush()
+{
+	FRotator CurrentRotation = GetActorRotation();
+	if (CurrentRotation.Yaw >= AngleMax)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool ACabestanController::CanBring()
+{
+	FRotator CurrentRotation = GetActorRotation();
+	if (CurrentRotation.Yaw <= AngleMin)
+	{
+		return false;
+	}
+	return true;
+}
+
 void ACabestanController::ReceiveInputToward(float value)
 {
 	towardInput = value;
@@ -40,4 +60,3 @@ void ACabestanController::AddRotationInput(float value)
 	FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw + turnValue, CurrentRotation.Roll);
 	SetActorRotation(NewRotation);
 }
-

@@ -17,7 +17,6 @@ void ASideCabestan::BeginPlay()
 	Super::BeginPlay();
 	if (!_CabestanController)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SideCabestan : CabestanController is not assigned !"));
 	}
 
 	if (InteractBox)
@@ -33,6 +32,7 @@ void ASideCabestan::Tick(float DeltaTime)
 
 void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	bPlayerIn = true;
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
@@ -51,8 +51,6 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		}
 		if (RollAction) // Y
 		{
-			// Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::HandleRoll);
-			// Eic->BindAction(RollAction, ETriggerEvent::Completed, this, &ASideCabestan::DropRollInput);
 		}
 		if (QuitAction)
 		{
@@ -78,6 +76,15 @@ void ASideCabestan::StopPush()
 
 void ASideCabestan::Push(const FInputActionValue& Value)
 {
+	if (!bPlayerIn){return;}
+
+	if (!_CabestanController->CanPush())
+	{
+		_CabestanController->ReceiveInputToward(0);
+		_CabestanController->ReceiveInputBackward(0);
+		return;
+	}
+
 	switch (_Side)
 	{
 	case ESideCabestan::Toward:
@@ -93,6 +100,14 @@ void ASideCabestan::Push(const FInputActionValue& Value)
 
 void ASideCabestan::Bring(const FInputActionValue& Value)
 {
+	if (!bPlayerIn){return;}
+	if (!_CabestanController->CanBring())
+	{
+		_CabestanController->ReceiveInputToward(0);
+		_CabestanController->ReceiveInputBackward(0);
+		return;
+	}
+
 	switch (_Side)
 	{
 	case ESideCabestan::Toward:
@@ -175,14 +190,13 @@ void ASideCabestan::HandleRoll(const FInputActionValue& Value)
 	}
 }
 
-
 void ASideCabestan::HandleQuit(const FInputActionValue& Value)
 {
 	if (InteractBox)
 	{
+		bPlayerIn = false;
 		StopPush();
 		InteractBox->UnpossessPawn();
 	}
 }
-
 
