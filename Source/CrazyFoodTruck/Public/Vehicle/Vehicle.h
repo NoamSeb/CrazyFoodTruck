@@ -189,6 +189,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
 	bool bLiveCaptureWhilePossessed = true;
 
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bForwardCamAlwaysOn = true;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bCreateForwardCamWidgetAtBeginPlay = true;
+
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|UI")
 	TSubclassOf<UForwardCamWidget> ForwardCamWidgetClass;
 
