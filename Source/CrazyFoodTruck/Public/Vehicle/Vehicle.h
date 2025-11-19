@@ -115,7 +115,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Vehicle Settings | Tilt")
 	TObjectPtr<UCurveFloat> TiltAnimCurve;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool MovementEnable;
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
