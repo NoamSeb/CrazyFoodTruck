@@ -10,6 +10,14 @@ ACabestanController::ACabestanController()
 void ACabestanController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (UGameInstance* GIBase = GetGameInstance())
+	{
+		GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
+	}
+	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
+
+	CurrentRotationSpeed = RotationSpeed + TruckSubSystem->RotationSpeed;
 }
 
 void ACabestanController::Tick(float DeltaTime)
@@ -56,7 +64,7 @@ void ACabestanController::ReceiveInputBackward(float value)
 void ACabestanController::AddRotationInput(float value)
 {
 	FRotator CurrentRotation = GetActorRotation();
-	float turnValue = value * RotationSpeed * GetWorld()->GetDeltaSeconds();
+	float turnValue = value * CurrentRotationSpeed * GetWorld()->GetDeltaSeconds();
 	FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw + turnValue, CurrentRotation.Roll);
 	SetActorRotation(NewRotation);
 }

@@ -6,6 +6,11 @@
 #include "GameFramework/Pawn.h"
 #include "InputMappingContext.h"
 #include "Interface/IVehicule.h"
+
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
+
 #include "Vehicle.generated.h"
 
 class UBoxComponent;
@@ -147,6 +152,15 @@ private:
 	FVector PossessKeepVelocity = FVector::ZeroVector;
 	bool bHoldSpeedAfterPossess = false;
 	float HoldSpeedTimer = 0.f;
+
+#pragma region Upgrades
+	UGameInstanceCrazyFoodTruck* GI;
+	UFoodTruckDataSubSystem* TruckSubSystem;
+
+	float _CurrentTruckMaxSpeed;
+	float _CurrentTruckAngleSpeed;
+		
+#pragma endregion
 
 private:
 	UFUNCTION()
