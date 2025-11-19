@@ -113,7 +113,13 @@ public:
 	void DecrementPlayerReloading();
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<APlayerController> PlayerController;
+	
+
 private:
+
+	float BulletHapticForce;
 
 	int _ActualPlayerReloading = 0;
 
@@ -152,6 +158,9 @@ private:
 	int GetBulletDamage() { return BulletDamage ;}
 	float GetBulletSpeed() { return BulletSpeed ;}
 	float GetBulletFireRate() { return BulletFireRate ;}
+	
+	UFUNCTION(BlueprintCallable)
+	float GetBulletHapticForce(){ return BulletHapticForce ;}
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
@@ -167,7 +176,7 @@ private:
 	void UpdateTurretCanonRotation();
 
 	int32 mappingPriority = 0;
-
+	
 };
 
 
