@@ -25,7 +25,7 @@ protected:
 	UNiagaraSystem* ExplosionEffect;
 	
 	virtual void EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit) override;
-	virtual void EnemyHit(IIEntity* Entity, FVector LocationHit) override;
+	virtual void EnemyHit(IIShootable* Entity, FVector LocationHit) override;
 	virtual void GroundHit(FVector LocationHit) override;
 	
 	void SpawnExplosion(FVector LocationHit);

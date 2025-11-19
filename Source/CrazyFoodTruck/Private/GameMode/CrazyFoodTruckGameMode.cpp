@@ -8,6 +8,15 @@
 #include "Characters/CrazyFoodTruckCharacterSettings.h"
 #include "Characters/CrazyFoodTruckCharacterInputData.h"
 
+#include "GameState/CrazyFoodTruckGameState.h"
+
+#include "Timer/MatchTimerComponent.h"
+#include "Score/ScoreManagerComponent.h"
+
+#include "../HordeManager.h"
+
+#include "HUD/CrazyFoodTruckHUD.h"
+
 #include "LocalMultiplayerSubsystem.h"
 
 #include "Components/SceneComponent.h"
@@ -17,9 +26,18 @@
 
 #include "Kismet/GameplayStatics.h"
 
+ACrazyFoodTruckGameMode::ACrazyFoodTruckGameMode()
+{
+    GameStateClass = ACrazyFoodTruckGameState::StaticClass();
+    ScoreManager = CreateDefaultSubobject<UScoreManagerComponent>(TEXT("ScoreManager"));
+}
+
 void ACrazyFoodTruckGameMode::BeginPlay()
 {
     Super::BeginPlay();
+
+    UGameInstance* GI = GetGameInstance();
+    if (!GI) return;
 
     CreateAndInitPlayers();
 
@@ -27,9 +45,29 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     FindPlayerStartActors(PlayerStartsPoints);
     SpawnCharacters(PlayerStartsPoints);
 
-    GlobalViewTarget = ResolveGlobalViewTarget();
+    AActor* Vehicle = ResolveVehicleActor();
+    VehicleActorRef = Vehicle;
+
+    AActor* ViewTarget = ResolveViewTargetActor();
+    GlobalViewTarget = ViewTarget;
+
+    ConfigureMovementFrameForAllCharacters(Vehicle);
+
+    if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
+    {
+        LMS->EnsurePlayerIMCs(ELocalMultiplayerInputMappingType::Player);
+    }
 
     ApplyGlobalViewToAllPlayers();
+
+    if (ACrazyFoodTruckGameState* GS = GetWorld() ? GetWorld()->GetGameState<ACrazyFoodTruckGameState>() : nullptr)
+    {
+        if (UMatchTimerComponent* Timer = GS->GetMatchTimer())
+        {
+            Timer->StartTimer(0.f);
+            Timer->OnTimerSecond.AddDynamic(this, &ACrazyFoodTruckGameMode::HandleTimerSecondPrint);
+        }
+    }
 }
 
 void ACrazyFoodTruckGameMode::CreateAndInitPlayers() const
@@ -128,48 +166,64 @@ TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruck
     }
 }
 
-AActor* ACrazyFoodTruckGameMode::ResolveGlobalViewTarget() const
+AActor* ACrazyFoodTruckGameMode::ResolveVehicleActor() const
 {
     UWorld* World = GetWorld();
-    if (!World)
-    {
-        return nullptr;
-    }
-    
+    if (!World) return nullptr;
+
     TArray<AActor*> Trucks;
     UGameplayStatics::GetAllActorsWithTag(World, FName("FoodTruck"), Trucks);
-    if (Trucks.Num() > 0)
+    return (Trucks.Num() > 0) ? Trucks[0] : nullptr;
+}
+
+AActor* ACrazyFoodTruckGameMode::ResolveViewTargetActor() const
+{
+    UWorld* World = GetWorld();
+    if (!World) return nullptr;
+
+    TArray<AActor*> Cams;
+    UGameplayStatics::GetAllActorsWithTag(World, FName("GlobalCamera"), Cams);
+    if (Cams.Num() > 0)
     {
-        return Trucks[0];
+        return Cams[0];
     }
 
-    return nullptr;
+    return ResolveVehicleActor();
+}
+
+void ACrazyFoodTruckGameMode::ConfigureMovementFrameForAllCharacters(AActor* Vehicle)
+{
+    for (ACrazyFoodTruckCharacter* C : Characters)
+    {
+        if (!IsValid(C)) continue;
+
+        if (Vehicle)
+        {
+            C->UseVehicleFrame(Vehicle);
+            C->MovementYawOffsetDegrees = 180.f;
+        }
+        else
+        {
+            C->UseWorldFrame();
+            C->MovementYawOffsetDegrees = 0.f;
+        }
+    }
 }
 
 void ACrazyFoodTruckGameMode::ApplyGlobalViewTo(APlayerController* PC) const
 {
-    if (!PC || !GlobalViewTarget.IsValid())
-    {
-        return;
-    }
+    if (!PC || !GlobalViewTarget.IsValid()) return;
 
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Applying global view to player controller: %s"), *PC->GetName()));
     PC->bAutoManageActiveCameraTarget = false;
     PC->SetViewTargetWithBlend(GlobalViewTarget.Get(), 0.f);
 }
 
 void ACrazyFoodTruckGameMode::ApplyGlobalViewToAllPlayers() const
 {
-    if (!GlobalViewTarget.IsValid())
-    {
-        return;
-    }
+    if (!GlobalViewTarget.IsValid()) return;
 
     UWorld* World = GetWorld();
-    if (!World)
-    {
-        return;
-    }
+    if (!World) return;
 
     for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
     {
@@ -178,4 +232,68 @@ void ACrazyFoodTruckGameMode::ApplyGlobalViewToAllPlayers() const
             ApplyGlobalViewTo(PC);
         }
     }
+}
+
+void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
+{
+    if (!GEngine) return;
+
+    static const int32 MsgKey = 99999;
+    const FString Text = FString::Printf(TEXT("Time: %s"), *FormatMMSS(ElapsedSeconds));
+
+    GEngine->AddOnScreenDebugMessage(MsgKey, 1.1f, FColor::Green, Text);
+
+    if (!bHasComputedFinalScore && ElapsedSeconds >= 30)
+    {
+        EvaluateFinalScore();
+    }
+}
+
+FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
+{
+    const int32 Minutes = TotalSeconds / 60;
+    const int32 Seconds = TotalSeconds % 60;
+    return FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
+}
+
+void ACrazyFoodTruckGameMode::EvaluateFinalScore()
+{
+    bHasComputedFinalScore = true;
+
+    UWorld* World = GetWorld();
+    if (!World || !ScoreManager) return;
+
+    ACrazyFoodTruckGameState* GS = World->GetGameState<ACrazyFoodTruckGameState>();
+    if (!GS || !GS->GetMatchTimer()) return;
+
+    const int32 TimeSeconds = GS->GetMatchTimer()->GetElapsedSeconds();
+
+    AHordeManager* HordeMgr = ResolveHordeManager();
+    const int32 Kills = HordeMgr ? HordeMgr->GetZombiesKilledCount() : 0;
+
+    int32 TimeScore = 0;
+    int32 KillScore = 0;
+    
+    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, TimeScore, KillScore);
+    const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
+
+    GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
+
+    if (APlayerController* PC = World->GetFirstPlayerController())
+    {
+        if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
+        {
+            HUD->ShowScoreResult(FinalScore, TimeScore, KillScore, Grade);
+        }
+    }
+}
+
+AHordeManager* ACrazyFoodTruckGameMode::ResolveHordeManager() const
+{
+    UWorld* World = GetWorld();
+    if (!World) return nullptr;
+
+    TArray<AActor*> Found;
+    UGameplayStatics::GetAllActorsOfClass(World, AHordeManager::StaticClass(), Found);
+    return (Found.Num() > 0) ? Cast<AHordeManager>(Found[0]) : nullptr;
 }

@@ -115,6 +115,8 @@ public:
 	UPROPERTY(EditAnywhere, Category="Vehicle Settings | Tilt")
 	TObjectPtr<UCurveFloat> TiltAnimCurve;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool MovementEnable;
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
@@ -178,16 +180,22 @@ protected:
 	TObjectPtr<UTextureRenderTarget2D> ForwardRT = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
-	int32 ForwardRT_Width = 1024;
+	int32 ForwardRT_Width = 512;
 
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
-	int32 ForwardRT_Height = 512;
+	int32 ForwardRT_Height = 256;
 
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
 	float ForwardCamFOV = 90.f;
 
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
-	bool bForwardCaptureEveryFrame = true;
+	bool bLiveCaptureWhilePossessed = true;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bForwardCamAlwaysOn = true;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bCreateForwardCamWidgetAtBeginPlay = true;
 
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|UI")
 	TSubclassOf<UForwardCamWidget> ForwardCamWidgetClass;
@@ -195,6 +203,27 @@ protected:
 	UPROPERTY(Transient)
 	TObjectPtr<UForwardCamWidget> ForwardCamWidget = nullptr;
 
+public:
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings", meta = (ClampMin = "1.0"))
+	float ForwardCaptureFPS = 24.f;
+
+protected:
+	UPROPERTY(VisibleAnywhere, Category = "ForwardCam|Runtime")
+	float ForwardCaptureInterval = 1.f / 30.f;
+
+	UPROPERTY(Transient, VisibleAnywhere, Category = "ForwardCam|Runtime")
+	float ForwardCaptureTimer = 0.f;
+
+	UPROPERTY(Transient, VisibleAnywhere, Category = "ForwardCam|Runtime")
+	bool bForwardCaptureActive = false;
+
 private:
 	void CreateAndAssignForwardRenderTarget();
+	void ConfigureForwardCaptureQuality();
+	void StartForwardCapture();
+	void StopForwardCapture();
+	void CaptureForwardOnce();
+
+	void UpdateForwardCapture(float DeltaTime);
+	bool ShouldCaptureForward() const;
 };

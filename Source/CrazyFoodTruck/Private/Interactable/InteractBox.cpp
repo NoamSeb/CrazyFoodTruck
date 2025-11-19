@@ -8,9 +8,14 @@
 #include "GameMode/CrazyFoodTruckGameMode.h"
 #include "LocalMultiplayerSubsystem.h"
 #include "Components/BoxComponent.h"
+#include "Components/Image.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interface/IVehicule.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMaterialLibrary.h"
+#include "Vehicle/Vehicle.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor / BeginPlay / Tick
@@ -83,6 +88,16 @@ bool AInteractBox::CanDetectOverlapp()
 void AInteractBox::UpdateVisibilityInput(bool bIsVisible)
 {
     _IsShowingInput = bIsVisible;
+}
+
+void AInteractBox::SetInteractableObject(AActor* NewInteractableObject)
+{
+    InteractableObject = NewInteractableObject;
+}
+
+void AInteractBox::SetPawnToPossess(APawn* NewPawnToPossess)
+{
+    PawnToPossess = NewPawnToPossess;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -340,6 +355,11 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
             if (PlayerIndex != -1 && PawnToPossess)
             {
                 LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType);
+                
+                if(Cast<AVehicle>(PawnToPossess))
+                {
+                    AddOutlineToForwardCamera(PlayerIndex);
+                }
             }
         }
     }
@@ -355,6 +375,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 
 void AInteractBox::UnpossessPawn()
 {
+    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "UnpossessPawn");
     OnPlayerQuit.Broadcast();
     
     bPlayerIsControlling = false;

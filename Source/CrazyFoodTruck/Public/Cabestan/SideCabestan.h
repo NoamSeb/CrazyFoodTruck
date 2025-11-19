@@ -68,10 +68,11 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 
+
 private:
 
+	bool bPlayerIn = false;
 	// VARIABLE
-
 
 	UPROPERTY(EditAnywhere, Category="Cabestan")
 	ACabestanController* _CabestanController = nullptr;

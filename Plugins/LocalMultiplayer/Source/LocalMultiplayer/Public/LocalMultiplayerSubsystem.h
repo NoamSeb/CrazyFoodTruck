@@ -11,6 +11,10 @@ class UEnhancedInputLocalPlayerSubsystem;
 
 class UInputMappingContext;
 
+class UKismetMaterialLibrary;
+
+class AVehicle;
+
 /**
  * 
  */
@@ -32,6 +36,8 @@ public:
 	void AssignKeyboardInputMapping(int PlayerIndex, int KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const;
 	void AssignGamepadInputMapping(int PlayerIndex, ELocalMultiplayerInputMappingType MappingType) const;
 
+	void EnsurePlayerIMCs(ELocalMultiplayerInputMappingType MappingType);
+
 	APlayerController* GetPlayerControllerForIndex(int32 PlayerIndex);
 	ULocalPlayer* GetLocalPlayerForIndex(int32 PlayerIndex);
 	int32 GetPlayerIndexFromController(APlayerController* PlayerController) const;
@@ -44,6 +50,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Local Multiplayer|Input")
 	void RemoveTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, bool bForceImmediately = true);
+
+	UInputMappingContext* GetGamepadIMC(ELocalMultiplayerInputMappingType MappingType) const;
 	
 protected:
 	UPROPERTY()
@@ -59,5 +67,4 @@ private:
 	UEnhancedInputLocalPlayerSubsystem* GetEISForPlayerIndex(int32 PlayerIndex) const;
 
 	UInputMappingContext* GetKeyboardIMC(int32 KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const;
-	UInputMappingContext* GetGamepadIMC(ELocalMultiplayerInputMappingType MappingType) const;
 };

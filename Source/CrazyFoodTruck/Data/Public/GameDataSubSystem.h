@@ -21,6 +21,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString LevelName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int LevelNumber = 0;
 	
 	UPROPERTY(VisibleAnywhere)
 	EPhaseGameCrazyFoodTruckState CurrentGamePhase;

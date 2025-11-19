@@ -13,7 +13,87 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="" />
+    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_MineExplosive.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_MineExplosive.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter1.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter1.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/DATA/DT_Bullets.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/DATA/DT_Bullets.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Resources/Module/ModuleMine.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Resources/Module/ModuleMine.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/StarterContent/Particles/Materials/m_flare_01.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Particles/Materials/m_flare_01.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/0/5E/UTL2LYEC5W5OWHSWWCT4D9.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/0/5E/UTL2LYEC5W5OWHSWWCT4D9.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/0/J8/XOMIB2DE78GFC0PKKMF2T1.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/0/JS/77PKKLS55M5WYST1QH0UHG.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/0/NK/3GWP1WZZV4UJBW733RBWH1.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/0/TN/148OVK4NBSVU0JO26HQN22.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/0/WD/TKPZYG6ZI4UJVALH46OIMQ.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/0/YB/WJ14RBYVUKZCK6MK54MJT1.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/1/0B/VHNC8EZ14OXKX4QOYUDMGO.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/1/ES/M6WLAGLS7GV5QVKS3TQCSV.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/1/IN/DYWHU18GNZB5QZ33HLVABL.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/1/IN/DYWHU18GNZB5QZ33HLVABL.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/2/00/V4M4AO26O8DX420PNK83LI.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/2/2R/DQCRIL03MZ777CUC5PX5Q3.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/2/G5/ZWQ4ZA7BLY2VCRTG2KZ2HF.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/2/XN/GTF9G51HB9EXJHVO11Q4PF.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/2/YK/EJ4PNK2RB34HC90EMSYRDU.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/2/YK/EJ4PNK2RB34HC90EMSYRDU.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/3/8K/3K8PDNWULTWE9WD5K8B7LD.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/4/57/YJH03MV7AE68WC377STGBN.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/4/71/DA453QZUK97ORRNW2AA6LH.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/4/7U/RMIQF49L6WA7IIJTSNNK1A.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/4/AN/GW0E7LH2PCE880U6VMI9I9.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/4/KG/0HRD0KIBV5Y210YUL8B4T2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/4/KG/0HRD0KIBV5Y210YUL8B4T2.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/4/P9/DB5K0C2QSWR99T1442ADR9.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/4/QT/CA4DYXHJCTFMHR18A8UJTU.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/5/0J/F28N3GNOTPQKP0EZ9L43VR.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/5/FU/IHZJGDLE5325QGN2IIQRST.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/5/FU/IHZJGDLE5325QGN2IIQRST.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/5/J9/B5RA6DKG198OYVJ13VSL1N.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/5/M1/CKCYNJ3HMNX7529O8QR5WD.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/5/M1/CKCYNJ3HMNX7529O8QR5WD.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/5/U0/HTRVC801EM7E9S368IWVHD.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/6/2I/UHC1VHQU4ZP6R9L6R9OJNN.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/6/A1/9PG4YNNJPDDVSJN8IJTBR5.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/6/A1/9PG4YNNJPDDVSJN8IJTBR5.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/6/UO/9O2YORL0O3Y3YTY9VBDV9P.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/CS/QMG96TB5IPL9KETPDWG6OO.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/I2/EZEFKJMDI7W59C75APFUYG.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/I2/EZEFKJMDI7W59C75APFUYG.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/JB/1L6NZ55VNQK0ORBO3ZUCM0.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/O9/VI1JP0TVOYUBKD4CM09FWS.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/SG/03E1LWC88EIO5F29NW4JMM.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/XI/LS78M98TU0166R8MUX6AQ8.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/XI/LS78M98TU0166R8MUX6AQ8.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/7/ZE/GXQH6TKN9ZTRLZATUN1KNZ.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/8/H9/TI09SSW0MOJZDIYG5NGOZ2.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/8/HP/WDC3EJJL14Y2OKQSY7COSW.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/8/IG/IE47U7D37OL10R1XONUIR0.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/8/QZ/807ALMDKZ7AAS9I0ZXCVZI.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/9/IC/T404V2Z4FD69XMY8HLAZ6H.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/9/KN/0QKC6SSG28GSB6F8C5K0O7.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/9/PC/3GQXCVZS94PTB1WZ15ZBBS.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/9/PC/3GQXCVZS94PTB1WZ15ZBBS.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/9/PR/TZ5DT5Y7OQL9QM2FOLXG1S.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/9/QH/0PXLLFEPGEY8DEIEOYVHBI.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/9/W6/85E576KTXMMORRI9R48LPT.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/9/W6/85E576KTXMMORRI9R48LPT.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/A/TG/BDXRW30FG6XIB6W83GNDSZ.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/A/Z2/BFLHIG368DT6Q66849TN9A.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/A/Z2/BFLHIG368DT6Q66849TN9A.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/1O/ALDCTD7UR54ZMIMMO9D3II.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/7F/19I8AS0ITU9GLY1SGC2ZVO.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/FF/VA59RXX5Y0K8VBZJQNSKWN.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/NL/BZN36LYS1B25AVOIHMKLDP.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/V1/POLDH40PNRNKR1X75QBPPQ.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/VV/JIRCF0EN85GEX66DV03H2M.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/VY/2F0U9VM5143NIIXT20UF6U.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/VY/2F0U9VM5143NIIXT20UF6U.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/WP/Q2MLCP51XQPT24A18KZ81M.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/C/8N/G7M8H3XFC660G3YWHMRRZP.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/C/U5/BS9Y5IU5JRSUQZTB4HK7H5.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/D/1I/EDH4N89IL5Q84ZDS17T4JO.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/D/G4/6HCG66BBNCYVGOVAIS1JAL.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/D/G4/6HCG66BBNCYVGOVAIS1JAL.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/D/I1/LE8D877HHLLVCB5MOX6ZU5.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/D/Z6/H7HM46P0B76FTD40SNY6GV.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/D/ZW/IUAF6JGOONRKGHKBT0PFH2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/D/ZW/IUAF6JGOONRKGHKBT0PFH2.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/E/K6/5NO3AFTCKMQ7O8BA0KHPLM.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/E/K6/GPJ67MFXIV2BXUUWD7M0LK.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/E/K6/GPJ67MFXIV2BXUUWD7M0LK.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/E/Z3/4AYYCB8751YQ9BTV82PRKO.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/E/Z3/4AYYCB8751YQ9BTV82PRKO.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Vehicle/Vehicle.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Vehicle/Vehicle.h" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,6 +107,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Core/Public/Containers/UnrealString.h.inl" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Private/KismetMaterialLibrary.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Client/Client.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/ActorFood.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/Bread.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -58,7 +139,7 @@
     &quot;C/C++ Project.CrazyFoodTruck.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;GameFeel&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Module&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -68,7 +149,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="C/C++ Project.CrazyFoodTruck">
+  <component name="RunManager" selected=".NET Launch Settings Profile.EpicGames.AspNet">
     <configuration name="CrazyFoodTruck" type="CppProject" factoryName="C++ Project">
       <configuration_1 setup="1">
         <option name="CONFIGURATION" value="Development_Editor" />
@@ -205,6 +286,15 @@
       <workItem from="1762426081671" duration="1176000" />
       <workItem from="1762705549995" duration="9000" />
       <workItem from="1762708866141" duration="3000" />
+      <workItem from="1763030153327" duration="1002000" />
+      <workItem from="1763052997600" duration="541000" />
+      <workItem from="1763415499588" duration="110000" />
+      <workItem from="1763423003994" duration="599000" />
+      <workItem from="1763457814595" duration="121000" />
+      <workItem from="1763461529381" duration="594000" />
+      <workItem from="1763476400923" duration="7000" />
+      <workItem from="1763477475230" duration="1233000" />
+      <workItem from="1763545599657" duration="726000" />
     </task>
     <servers />
   </component>

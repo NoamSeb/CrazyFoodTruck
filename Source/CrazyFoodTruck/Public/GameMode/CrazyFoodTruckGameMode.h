@@ -8,6 +8,9 @@
 
 class ACrazyFoodTruckCharacter;
 class UCrazyFoodTruckCharacterInputData;
+class UMatchTimerComponent;
+class UScoreManagerComponent;
+class AHordeManager;
 
 class UInputMappingContext;
 class APlayerStart;
@@ -18,6 +21,8 @@ class CRAZYFOODTRUCK_API ACrazyFoodTruckGameMode : public AGameModeBase
 	GENERATED_BODY()
     
 public:
+	ACrazyFoodTruckGameMode();
+
 	virtual void BeginPlay() override;
 
 public:
@@ -29,19 +34,37 @@ protected:
 	TArray<ACrazyFoodTruckCharacter*> Characters;
 
 private:
-	void CreateAndInitPlayers() const;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Score", meta = (AllowPrivateAccess = "true"))
+	UScoreManagerComponent* ScoreManager = nullptr;
 
+	bool bHasComputedFinalScore = false;
+
+	void CreateAndInitPlayers() const;
 	void FindPlayerStartActors(TArray<APlayerStart*>& ResultsActors) const;
 	void SpawnCharacters(const TArray<APlayerStart*>& SpawnPoints);
 
 	UCrazyFoodTruckCharacterInputData* LoadInputDataFromConfig() const;
 	UInputMappingContext* LoadInputMappingContextFromConfig() const;
-
 	TSubclassOf<ACrazyFoodTruckCharacter> GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
+
+	AActor* ResolveVehicleActor() const;
+	AActor* ResolveViewTargetActor() const;
+
+	void ConfigureMovementFrameForAllCharacters(AActor* Vehicle);
+
+	UFUNCTION()
+	void HandleTimerSecondPrint(int32 ElapsedSeconds);
+
+	static FString FormatMMSS(int32 TotalSeconds);
+
+	void EvaluateFinalScore();
+
+	AHordeManager* ResolveHordeManager() const;
 
 private:
 	UPROPERTY()
-	TWeakObjectPtr<AActor> GlobalViewTarget;
+	TWeakObjectPtr<AActor> VehicleActorRef;
 
-	AActor* ResolveGlobalViewTarget() const;
+	UPROPERTY()
+	TWeakObjectPtr<AActor> GlobalViewTarget;
 };
