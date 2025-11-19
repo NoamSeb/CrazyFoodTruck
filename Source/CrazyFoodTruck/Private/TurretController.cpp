@@ -81,6 +81,7 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		BulletFireRate = ActualBulletStructure->FireRate;
 		AreaRangeSide = ActualBulletStructure->AreaSide;
 		AreaRangeDepht = ActualBulletStructure->AreaDepth;
+		BulletHapticForce = ActualBulletStructure->HapticsScale;
 		SetMaxAmmo(ActualBulletStructure->Ammo);
 	}
 	else{return;}

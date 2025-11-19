@@ -158,6 +158,8 @@ private:
 	int GetBulletDamage() { return BulletDamage ;}
 	float GetBulletSpeed() { return BulletSpeed ;}
 	float GetBulletFireRate() { return BulletFireRate ;}
+	
+	UFUNCTION(BlueprintCallable)
 	float GetBulletHapticForce(){ return BulletHapticForce ;}
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
