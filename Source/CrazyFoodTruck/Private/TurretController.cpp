@@ -145,6 +145,14 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 			Eic->BindAction(QuitTurret, ETriggerEvent::Started, this, &ATurretController::InputQuitTurret);
 		}
 	}
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		PlayerController = PC;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player Controller Not found !"));
+	}
 }
 
 
