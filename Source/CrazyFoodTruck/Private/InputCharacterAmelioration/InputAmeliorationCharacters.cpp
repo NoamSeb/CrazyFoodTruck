@@ -72,6 +72,7 @@ void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInput
 
 void UInputAmeliorationCharacters::Move(const FInputActionValue& Value)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove");
 	if (!OnSkip && !IsValidate)
 	{
 		float FloatValue = Value.Get<float>();
