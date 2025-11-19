@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "StructUpgrade.h"
 #include "Blueprint/UserWidget.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "AmeliorationWidget.generated.h"
 
 /**
@@ -19,6 +20,12 @@ class CRAZYFOODTRUCK_API UAmeliorationWidget : public UUserWidget
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void Move(int32 PlayerIndex, int32 PositionIndex);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void MoveModule(int32 PlayerIndex, int32 PositionIndex);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ValidModule(int32 PlayerIndex, int32 PositionIndex);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void MoveOnSkip(int32 PlayerIndex, int32 Move, int32 PositionIndex);
 	
@@ -31,10 +38,19 @@ class CRAZYFOODTRUCK_API UAmeliorationWidget : public UUserWidget
 	//UFUNCTION(BlueprintCallable, Category = "Inventory|Modifier")
 	//void AddItemToInventory(int32 ItemToAdd, bool& bSuccess, int32& InventorySlot);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UGameInstanceCrazyFoodTruck* GI;
+	
+
 	UFUNCTION(BlueprintCallable)
 	int32 GetWinnerIndex(const TArray<int32>& ListVote);
 	
 	UFUNCTION(BlueprintCallable)
 	FStructUpgrade CheckUpgradeChoose(const int32& Index, const TArray<FStructUpgrade>& ListUpgrade);
 
+	UFUNCTION(BlueprintCallable)
+	void Init();
+
+	UFUNCTION(BlueprintCallable)
+	void ApplyUpgrades();
 };
