@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Bullet/EBulletType.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "FoodTruckDataSubSystem.generated.h"
 
@@ -17,50 +16,38 @@ class CRAZYFOODTRUCK_API UFoodTruckDataSubSystem : public UGameInstanceSubsystem
 
 #pragma region Cabestan
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	float RotationSpeed;
 #pragma endregion Cabestan
 	
 #pragma region Turret
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	float TurretFireRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	float TurretRangeSide;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	float TurretRangeDepth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	int TurretMaxAmmo;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	int DamagePerBullet;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EbulletType TypeBullet;
-	
 #pragma endregion Turret
 
 #pragma region Driving
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	float SpeedRecovery;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	float TruckRotationSpeed;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Speed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Heal;
-
-
 #pragma endregion Driving
 public:
 	// = Repair Fill Per Press
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 	float RepairSpeed;
 };
