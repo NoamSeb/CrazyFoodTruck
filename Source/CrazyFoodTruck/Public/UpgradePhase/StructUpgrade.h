@@ -34,7 +34,7 @@ struct FStructUpgrade
 	FString TextUpgrade;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
-	float intAddModif;
+	int32 intAddModif;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")

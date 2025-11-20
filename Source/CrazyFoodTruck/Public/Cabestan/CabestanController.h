@@ -42,13 +42,10 @@ public:
 	bool CanBring();
 
 private:
-	UGameInstanceCrazyFoodTruck* GI;
-	UFoodTruckDataSubSystem* TruckSubSystem;
 
 	USceneComponent* RootCabestan;
 	float RotationSpeed = 10.f;
 
-	float CurrentRotationSpeed;
 	
 	float towardInput = 0.f;
 	float backwardInput = 0.f;

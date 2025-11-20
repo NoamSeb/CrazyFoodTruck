@@ -17,18 +17,6 @@ void ATurretController::BeginPlay()
 {
 	Super::BeginPlay();
 
-#pragma region Upgrades
-	if (UGameInstance* GIBase = GetGameInstance())
-	{
-		GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
-	}
-	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
-
-	_CurrentAmmoMax = _AmmoMax + TruckSubSystem->TurretMaxAmmo;
-	_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
-	_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
-#pragma endregion
-	
 
 	auto sceneComponents = K2_GetComponentsByClass(USceneComponent::StaticClass());
 	for (auto SceneComponent : sceneComponents)
@@ -44,7 +32,7 @@ void ATurretController::BeginPlay()
 	}
 	
 	ResetCoolDown();
-	SwitchBulletType(TruckSubSystem->TypeBullet);
+	SwitchBulletType(EbulletType::BulletNormal);
 	Shoot();
 	UpdateTurretCanonRotation();
 }
@@ -61,7 +49,7 @@ void ATurretController::DecrementPlayerReloading()
 	OnPlayerReload.Broadcast(_ActualPlayerReloading);
 	if (_ActualPlayerReloading <= 0)
     {
-		OnAmmoChanged.Broadcast(_CurrentAmmo, _CurrentAmmoMax);
+		OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
     }
 }
 
@@ -77,7 +65,7 @@ void ATurretController::ResetCoolDown()
 
 void ATurretController::ResetAmmo()
 {
-	_CurrentAmmo = _CurrentAmmoMax;
+	_CurrentAmmo = _AmmoMax;
 }
 
 void ATurretController::SwitchBulletType(EbulletType NewType)
@@ -95,10 +83,6 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 		BulletHapticForce = ActualBulletStructure->HapticsScale;
 		SetMaxAmmo(ActualBulletStructure->Ammo);
-
-		//Pour Upgrades
-		_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
-		_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
 	}
 	else{return;}
 	
@@ -114,8 +98,8 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		ActualBulletPrefab = nullptr;
 	}
 	
-	OnAmmoChanged.Broadcast(GetAmmo(),_CurrentAmmoMax);
-	OnTypeChangedGetAmmo.Broadcast(GetAmmo(),_CurrentAmmoMax);
+	OnAmmoChanged.Broadcast(GetAmmo(),_AmmoMax);
+	OnTypeChangedGetAmmo.Broadcast(GetAmmo(),_AmmoMax);
 	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);
 }
 
@@ -176,13 +160,13 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 {
 	_CurrentAmmo = NewAmmo;
-	OnAmmoChanged.Broadcast(_CurrentAmmo, _CurrentAmmoMax);
+	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
 }
 
 void ATurretController::SetMaxAmmo(int32 NewAmmo)
 {
-	_CurrentAmmoMax = NewAmmo;
-	OnAmmoChanged.Broadcast(_CurrentAmmo, _CurrentAmmoMax);
+	_AmmoMax = NewAmmo;
+	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
 }
 
 void ATurretController::DecrementAmmo()
@@ -193,7 +177,7 @@ void ATurretController::DecrementAmmo()
 		OnAmmoEmpty.Broadcast();
 		_CurrentAmmo = 0;
 	}
-	OnAmmoChanged.Broadcast(_CurrentAmmo, _CurrentAmmoMax);
+	OnAmmoChanged.Broadcast(_CurrentAmmo, _AmmoMax);
 }
 
 void ATurretController::BlueprintShoot()
@@ -203,7 +187,7 @@ void ATurretController::BlueprintShoot()
 
 float ATurretController::GetCoolDownBetweenShoot()
 {
-	return _CurrentBulletFireRate;
+	return BulletFireRate;
 }
 
 void ATurretController::AddRotationInput(float value)
@@ -237,7 +221,7 @@ void ATurretController::Shoot()
 	
 	FActorSpawnParameters bulletParams;
 	OnShoot.Broadcast();
-	OnShootGetAmmo.Broadcast(GetAmmo(),_CurrentAmmoMax);
+	OnShootGetAmmo.Broadcast(GetAmmo(),_AmmoMax);
 
 	AActor* bulletInstance = GetWorld()->SpawnActor<AActor>(ActualBulletPrefab, _SpawnBulletTransform->GetComponentTransform(), bulletParams);
 	if (bulletInstance)
