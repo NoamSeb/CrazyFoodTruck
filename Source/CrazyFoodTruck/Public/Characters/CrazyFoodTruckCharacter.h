@@ -101,6 +101,9 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<AAmmoBox> CarriedAmmoBox = nullptr;
 
+	//APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
+	//int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
+	
 	void AddMappingContext(UInputMappingContext* InputMappingContext, int8 Priority);
 	void RemoveMappingContext(UInputMappingContext* InputMappingContext);
 	
