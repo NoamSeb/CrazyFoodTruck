@@ -47,10 +47,12 @@ void UInputAmeliorationCharacters::TickComponent(float DeltaTime, ELevelTick Tic
 
 void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInputComponent)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Dans setup");
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		if (MoveAction)
 		{
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "a move");
 			Eic->BindAction(MoveAction, ETriggerEvent::Triggered, this, &UInputAmeliorationCharacters::Move);
 			Eic->BindAction(MoveAction, ETriggerEvent::Triggered, this, &UInputAmeliorationCharacters::MoveInModule);
 		}
@@ -74,7 +76,7 @@ void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInput
 
 void UInputAmeliorationCharacters::Move(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove");
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove");
 	if (!OnSkip && !IsValidate)
 	{
 		float FloatValue = Value.Get<float>();
@@ -88,6 +90,7 @@ void UInputAmeliorationCharacters::Move(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::MoveOnSkip(const FInputActionValue& Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove on skip");
 	if (!IsValidate)
 	{
 		float FloatValue = Value.Get<float>();
@@ -107,10 +110,12 @@ void UInputAmeliorationCharacters::MoveOnSkip(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::Validate(const FInputActionValue& Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Validation");
 	if (!IsValidate)
 	{
 		IsValidate = true;
 		CanMoveOnModule = true;
+		indexPositionForModule = 0; 
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value can move : %d\n"), CanMoveOnModule));
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "coucou");
 		UpgradeUserWidget->Validate(indexPlayerController, indexPosition, OnSkip);
@@ -119,6 +124,7 @@ void UInputAmeliorationCharacters::Validate(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::RemoveValidate()
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "RemoveValidate");
 	if (IsValidate)
 	{
 		IsValidate = false;
@@ -131,6 +137,7 @@ void UInputAmeliorationCharacters::RemoveValidate()
 
 void UInputAmeliorationCharacters::MoveInModule(const FInputActionValue& Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove in module");
 	if (CanMoveOnModule && indexPlayerController == 0)
 	{
 		float FloatValue = Value.Get<float>();
@@ -146,6 +153,7 @@ void UInputAmeliorationCharacters::MoveInModule(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::ValidInModule(const FInputActionValue& Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Valide Module");
 	if (CanMoveOnModule && indexPlayerController == 0)
 	{
 		CanMoveOnModule = false;
