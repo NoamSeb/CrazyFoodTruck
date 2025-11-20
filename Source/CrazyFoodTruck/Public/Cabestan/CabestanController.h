@@ -27,7 +27,19 @@ protected:
 
 
 public:
+
+	UPROPERTY(EditAnywhere)
+	float AngleMax = 90.f;
+
+	UPROPERTY(EditAnywhere)
+	float AngleMin = -90.f;
+
+	
 	virtual void Tick(float DeltaTime) override;
+
+	
+	bool CanPush();
+	bool CanBring();
 
 private:
 
