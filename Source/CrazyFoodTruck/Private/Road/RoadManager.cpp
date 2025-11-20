@@ -43,19 +43,19 @@ void ARoadManager::SpawnRoadSegment()
         GI = nullptr;
     }
     int LevelNumber = GI->GameData->LevelNumber;
-    FString DataTablePath = FString::Printf(TEXT("/Game/CrazyFoodTruck/Blueprint/Road/Levels/DT_Level_%i.DT_Level_%i"), LevelNumber, LevelNumber);
+    
 
-    UDataTable* LevelDataTable = Cast<UDataTable>(StaticLoadObject(UDataTable::StaticClass(), nullptr, *DataTablePath));
+    UDataTable* LevelDataTable = Levels[LevelNumber];
     if (!LevelDataTable)
     {
-        UE_LOG(LogTemp, Error, TEXT("DataTable not found at path: %s"), *DataTablePath);
+        UE_LOG(LogTemp, Error, TEXT("DataTable not found"));
         return;
     }
     
     TArray<FName> RowNames = LevelDataTable->GetRowNames();
     if (RowNames.Num() == 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("No rows found in DataTable: %s"), *DataTablePath);
+        UE_LOG(LogTemp, Warning, TEXT("No rows found in DataTable"));
         return;
     }
 
