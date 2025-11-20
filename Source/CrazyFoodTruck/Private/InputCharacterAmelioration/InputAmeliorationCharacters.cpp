@@ -31,6 +31,8 @@ void UInputAmeliorationCharacters::BeginPlay()
 
 	CanMoveOnModule = false;
 	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "IndexCurrentCible");
+
+	justepourchangerasuprr = SelfRef;
 }
 
 
