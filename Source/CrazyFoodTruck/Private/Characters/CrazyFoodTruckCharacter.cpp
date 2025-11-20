@@ -45,6 +45,7 @@ void ACrazyFoodTruckCharacter::BeginPlay()
         Move->MaxWalkSpeed = MovementSpeed;
     }
 
+    GameDataSubSystem = GetGameInstance()->GetSubsystem<UGameDataSubSystem>();
 
     UpdatePlayerColorFromController();
 }
@@ -52,24 +53,27 @@ void ACrazyFoodTruckCharacter::BeginPlay()
 void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
+
     
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         BindInputMoveAction(EnhancedInputComponent);
         BindInputInteractAction(EnhancedInputComponent);
     }
+    
 
     PlayerInputComp = PlayerInputComponent;
 }
 
 void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMappingContextParam, int8 Priority)
 {
+    
     const APlayerController* PlayerController = Cast<APlayerController>(Controller);
     if (!PlayerController)
     {
         return;
     }
-
+    
     const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
     if (!LocalPlayer)
     {
@@ -78,10 +82,6 @@ void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMapp
 
     if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
     {
-        //APlayerController* PlayerControllerLocal = GetPlayerControllerFromActor(this);
-        //int indexPlayerController = GetPlayerIndexFromPlayerController(PlayerControllerLocal);
-        //EnhancedInputLocalPlayerSubsystem->RemoveTemporaryMappingForPlayer(indexPlayerController, InputMappingContextParam, true);
-        //RemoveTemporaryMappingForPlayer
         EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
     }
 }
@@ -108,7 +108,6 @@ void ACrazyFoodTruckCharacter::RemoveMappingContext(UInputMappingContext* Mappin
 
 void ACrazyFoodTruckCharacter::AddMappingUpgrade()
 {
-    RemoveMappingContext(InputMappingContext);
     GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "add");
     if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
     {
@@ -122,7 +121,6 @@ void ACrazyFoodTruckCharacter::RemoveMappingUpgrade()
     if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
     {
         RemoveMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext);
-        //AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
     }
 }
 
@@ -184,47 +182,50 @@ void ACrazyFoodTruckCharacter::BindInputMoveAction(UEnhancedInputComponent* Enha
 
 void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionValue)
 {
-    if (InputActionValue.GetValueType() != EInputActionValueType::Axis2D) return;
-
-    const FVector2D Raw = InputActionValue.Get<FVector2D>();
-
-    constexpr float Deadzone = 0.20f;
-    if (Raw.SizeSquared() < Deadzone * Deadzone) return;
-
-    const float X = Raw.X;
-    const float Y = Raw.Y;
-
-    FVector Forward, Right;
-
-    switch (MovementFrame)
+    if (GameDataSubSystem->CurrentGamePhase != EPhaseGameCrazyFoodTruckState::Amelioration)
     {
-    case EMovementFrame::Vehicle:
-    {
-        if (VehicleRefActor.IsValid())
+        if (InputActionValue.GetValueType() != EInputActionValueType::Axis2D) return;
+
+        const FVector2D Raw = InputActionValue.Get<FVector2D>();
+
+        constexpr float Deadzone = 0.20f;
+        if (Raw.SizeSquared() < Deadzone * Deadzone) return;
+
+        const float X = Raw.X;
+        const float Y = Raw.Y;
+
+        FVector Forward, Right;
+
+        switch (MovementFrame)
         {
-            const float Yaw = VehicleRefActor->GetActorRotation().Yaw + MovementYawOffsetDegrees;
-            BasisFromYaw(Yaw, Forward, Right);
+        case EMovementFrame::Vehicle:
+            {
+                if (VehicleRefActor.IsValid())
+                {
+                    const float Yaw = VehicleRefActor->GetActorRotation().Yaw + MovementYawOffsetDegrees;
+                    BasisFromYaw(Yaw, Forward, Right);
+                }
+                else
+                {
+                    const APlayerController* PC = Cast<APlayerController>(Controller);
+                    const float Yaw = (PC ? PC->GetControlRotation().Yaw : GetActorRotation().Yaw) + MovementYawOffsetDegrees;
+                    BasisFromYaw(Yaw, Forward, Right);
+                }
+                break;
+            }
+        case EMovementFrame::World:
+        default:
+            {
+                const APlayerController* PC = Cast<APlayerController>(Controller);
+                const float Yaw = (PC ? PC->GetControlRotation().Yaw : GetActorRotation().Yaw) + MovementYawOffsetDegrees;
+                BasisFromYaw(Yaw, Forward, Right);
+                break;
+            }
         }
-        else
-        {
-            const APlayerController* PC = Cast<APlayerController>(Controller);
-            const float Yaw = (PC ? PC->GetControlRotation().Yaw : GetActorRotation().Yaw) + MovementYawOffsetDegrees;
-            BasisFromYaw(Yaw, Forward, Right);
-        }
-        break;
-    }
-    case EMovementFrame::World:
-    default:
-    {
-        const APlayerController* PC = Cast<APlayerController>(Controller);
-        const float Yaw = (PC ? PC->GetControlRotation().Yaw : GetActorRotation().Yaw) + MovementYawOffsetDegrees;
-        BasisFromYaw(Yaw, Forward, Right);
-        break;
-    }
-    }
 
-    AddMovementInput(Forward, Y);
-    AddMovementInput(Right, X);
+        AddMovementInput(Forward, Y);
+        AddMovementInput(Right, X);
+    }
 }
 
 void ACrazyFoodTruckCharacter::BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent)
@@ -237,17 +238,20 @@ void ACrazyFoodTruckCharacter::BindInputInteractAction(UEnhancedInputComponent* 
 
 void ACrazyFoodTruckCharacter::TryInteract()
 {
-    if (!FocusedInteractable) return;
-
-    UObject* Obj = FocusedInteractable.GetObject();
-    if (!Obj) return;
-
-    APlayerController* PC = Cast<APlayerController>(Controller);
-    if (!PC) return;
-
-    if (Obj->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+    if (GameDataSubSystem->CurrentGamePhase != EPhaseGameCrazyFoodTruckState::Amelioration)
     {
-        FocusedInteractable->Interact(PC, this);
+        if (!FocusedInteractable) return;
+
+        UObject* Obj = FocusedInteractable.GetObject();
+        if (!Obj) return;
+
+        APlayerController* PC = Cast<APlayerController>(Controller);
+        if (!PC) return;
+
+        if (Obj->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+        {
+            FocusedInteractable->Interact(PC, this);
+        }
     }
 }
 

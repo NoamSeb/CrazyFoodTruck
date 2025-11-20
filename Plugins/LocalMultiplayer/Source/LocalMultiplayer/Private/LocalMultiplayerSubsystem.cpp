@@ -335,6 +335,7 @@ void ULocalMultiplayerSubsystem::RemoveTemporaryMappingForPlayer(int32 PlayerInd
 
 		if (EIS->HasMappingContext(IMC))
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "SUBSTRACT MAP");
 			FModifyContextOptions Options;
 			Options.bForceImmediately = bForceImmediately;
 			EIS->RemoveMappingContext(IMC, Options);
