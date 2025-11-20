@@ -68,6 +68,20 @@ void UAmeliorationWidget::ApplyUpgrades()
 	
 }
 
+
+
+FStructUpgrade UAmeliorationWidget::CheckUpgradeChoose(const int32& Index, const TArray<FStructUpgrade>& ListUpgrade)
+{
+	if (Index == 4)
+	{
+		FStructUpgrade newStruct = FStructUpgrade{};
+		newStruct.Zone = EZoneUpgrade::Skip;
+		return newStruct;
+	}
+	return ListUpgrade[Index];
+}
+
+
 int32 UAmeliorationWidget::GetWinnerIndex(const TArray<int32>& ListVote)
 {
 	int nbrVote = 0;
@@ -90,15 +104,4 @@ int32 UAmeliorationWidget::GetWinnerIndex(const TArray<int32>& ListVote)
 	}
 
 	return indexVoteFinal;
-}
-
-FStructUpgrade UAmeliorationWidget::CheckUpgradeChoose(const int32& Index, const TArray<FStructUpgrade>& ListUpgrade)
-{
-	if (Index == 4)
-	{
-		FStructUpgrade newStruct = FStructUpgrade{};
-		newStruct.Zone = EZoneUpgrade::Skip;
-		return newStruct;
-	}
-	return ListUpgrade[Index];
 }

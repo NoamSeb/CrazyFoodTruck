@@ -80,6 +80,8 @@ protected:
 	int32 indexPlayerController;
 	AActor* SelfRef;
 
+	AActor* justepourchangerasuprr;
+
 	
 	void Move(const FInputActionValue& Value);
 	void MoveOnSkip(const FInputActionValue& Value);

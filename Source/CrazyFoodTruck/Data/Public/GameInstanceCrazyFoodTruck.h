@@ -51,6 +51,8 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EModuleUpgrade ModuleUpgradeRight;
 
+	AActor actoraspurr;
+
 private:
 	ACameraShakeManager* CameraShakeManager;
 };
