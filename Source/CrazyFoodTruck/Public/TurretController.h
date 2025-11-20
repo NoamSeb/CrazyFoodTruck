@@ -43,7 +43,7 @@ public:
 	APawn* ActualPawn;
 	
 	int GetAmmo() const { return _CurrentAmmo;}
-	int GetAmmoMax() const { return _AmmoMax;}
+	int GetAmmoMax() const { return _CurrentAmmoMax;}
 	void SetCurrentAmmo(int32 NewAmmo);
 	void SetMaxAmmo(int32 NewAmmo);
 	void DecrementAmmo();
@@ -76,6 +76,18 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnPlayerReload OnPlayerReload;
 protected:
+
+#pragma region Upgrades
+	UGameInstanceCrazyFoodTruck* GI;
+	UFoodTruckDataSubSystem* TruckSubSystem;
+
+	int32 _CurrentAmmoMax;
+	//float _CurrentTurretRotationSpeed;
+
+	float _CurrentBulletFireRate;
+	int _CurrentBulletDamage;
+	
+#pragma endregion
 
 	UPROPERTY(EditAnywhere, Category="OTHER")
 	USceneComponent* _JointCursor;
@@ -155,9 +167,9 @@ private:
 	float BulletSpeed;
 	float BulletFireRate;
 	
-	int GetBulletDamage() { return BulletDamage ;}
+	int GetBulletDamage() { return _CurrentBulletDamage ;}
 	float GetBulletSpeed() { return BulletSpeed ;}
-	float GetBulletFireRate() { return BulletFireRate ;}
+	float GetBulletFireRate() { return _CurrentBulletFireRate ;}
 	
 	UFUNCTION(BlueprintCallable)
 	float GetBulletHapticForce(){ return BulletHapticForce ;}
