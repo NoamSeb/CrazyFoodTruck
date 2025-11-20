@@ -217,6 +217,7 @@ protected:
 	UPROPERTY(Transient)
 	TObjectPtr<UForwardCamWidget> ForwardCamWidget = nullptr;
 
+
 public:
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings", meta = (ClampMin = "1.0"))
 	float ForwardCaptureFPS = 24.f;

@@ -13,6 +13,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "LocalMultiplayerSubsystem.h"
 #include "InputCharacterAmelioration/InputAmeliorationCharacters.h"
 
 static void BasisFromYaw(const float YawDeg, FVector& OutForward, FVector& OutRight)
@@ -77,6 +78,10 @@ void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMapp
 
     if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
     {
+        //APlayerController* PlayerControllerLocal = GetPlayerControllerFromActor(this);
+        //int indexPlayerController = GetPlayerIndexFromPlayerController(PlayerControllerLocal);
+        //EnhancedInputLocalPlayerSubsystem->RemoveTemporaryMappingForPlayer(indexPlayerController, InputMappingContextParam, true);
+        //RemoveTemporaryMappingForPlayer
         EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
     }
 }
@@ -103,6 +108,7 @@ void ACrazyFoodTruckCharacter::RemoveMappingContext(UInputMappingContext* Mappin
 
 void ACrazyFoodTruckCharacter::AddMappingUpgrade()
 {
+    RemoveMappingContext(InputMappingContext);
     GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "add");
     if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
     {
