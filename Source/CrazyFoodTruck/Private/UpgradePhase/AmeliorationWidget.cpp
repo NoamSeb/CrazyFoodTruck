@@ -5,6 +5,83 @@
 
 #include "UpgradePhase/StructUpgrade.h"
 
+void UAmeliorationWidget::Init()
+{
+	if (UGameInstance* GIBase = GetGameInstance())
+	{
+		GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
+	}
+}
+
+void UAmeliorationWidget::ApplyUpgrades()
+{
+	UFoodTruckDataSubSystem* TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
+	
+	TArray<FStructUpgrade> Upgrades;
+	
+	Upgrades = GI->ListUpgradesToAdd(EZoneUpgrade::Camion);
+	for (FStructUpgrade Upgrade : Upgrades)
+	{
+		switch (Upgrade.UpgradeCamion)
+		{
+		case ECamionUpgrade::Speed :
+			TruckSubSystem->Speed += Upgrade.intAddModif;
+			break;
+		case ECamionUpgrade::TurningSpeed:
+			TruckSubSystem->TruckRotationSpeed += Upgrade.intAddModif;
+			break;
+		case ECamionUpgrade::Heal:
+			TruckSubSystem->Heal += Upgrade.intAddModif;
+			break;
+		default:
+			break;
+		}
+	}
+
+	Upgrades = GI->ListUpgradesToAdd(EZoneUpgrade::Turret);
+	for (FStructUpgrade Upgrade : Upgrades)
+	{
+		switch (Upgrade.UpgradeTurret)
+		{
+		case ETurretUpgrade::AugmentationAngle :
+			TruckSubSystem->TurretRangeSide += Upgrade.intAddModif;
+			break;
+		case ETurretUpgrade::Cadence:
+			TruckSubSystem->TurretFireRate += Upgrade.intAddModif;
+			break;
+		case ETurretUpgrade::Damage:
+			TruckSubSystem->DamagePerBullet += Upgrade.intAddModif;
+			break;
+		case ETurretUpgrade::MaxAmmo:
+			TruckSubSystem->TurretMaxAmmo = Upgrade.intAddModif;
+			break;
+		default:
+			break;
+		}
+	}
+
+	Upgrades = GI->ListUpgradesToAdd(EZoneUpgrade::Bullet);
+	for (FStructUpgrade Upgrade : Upgrades)
+	{
+		TruckSubSystem->TypeBullet = Upgrade.UpgradeBullet;
+	}
+	
+}
+
+
+
+FStructUpgrade UAmeliorationWidget::CheckUpgradeChoose(const int32& Index, const TArray<FStructUpgrade>& ListUpgrade)
+{
+	if (Index == 4)
+	{
+		FStructUpgrade newStruct = FStructUpgrade{};
+		newStruct.Zone = EZoneUpgrade::Skip;
+		return newStruct;
+	}
+	return ListUpgrade[Index];
+}
+
+
 int32 UAmeliorationWidget::GetWinnerIndex(const TArray<int32>& ListVote)
 {
 	int nbrVote = 0;
@@ -27,15 +104,4 @@ int32 UAmeliorationWidget::GetWinnerIndex(const TArray<int32>& ListVote)
 	}
 
 	return indexVoteFinal;
-}
-
-FStructUpgrade UAmeliorationWidget::CheckUpgradeChoose(const int32& Index, const TArray<FStructUpgrade>& ListUpgrade)
-{
-	if (Index == 4)
-	{
-		FStructUpgrade newStruct = FStructUpgrade{};
-		newStruct.Zone = EZoneUpgrade::Skip;
-		return newStruct;
-	}
-	return ListUpgrade[Index];
 }

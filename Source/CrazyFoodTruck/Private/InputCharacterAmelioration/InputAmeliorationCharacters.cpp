@@ -28,7 +28,11 @@ void UInputAmeliorationCharacters::BeginPlay()
 	IndexCurrentCible = indexPlayerController;
 
 	IsValidate = false;
+
+	CanMoveOnModule = false;
 	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "IndexCurrentCible");
+
+	justepourchangerasuprr = SelfRef;
 }
 
 
@@ -37,15 +41,20 @@ void UInputAmeliorationCharacters::TickComponent(float DeltaTime, ELevelTick Tic
                                                  FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("value can move : %d\n"), CanMoveOnModule));
 }
 
 void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInputComponent)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Dans setup");
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		if (MoveAction)
 		{
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "a move");
 			Eic->BindAction(MoveAction, ETriggerEvent::Triggered, this, &UInputAmeliorationCharacters::Move);
+			Eic->BindAction(MoveAction, ETriggerEvent::Triggered, this, &UInputAmeliorationCharacters::MoveInModule);
 		}
 		if (MoveOnSkipAction)
 		{
@@ -53,6 +62,7 @@ void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInput
 		}
 		if (ValidateAction)
 		{
+			Eic->BindAction(ValidateAction, ETriggerEvent::Triggered, this, &UInputAmeliorationCharacters::ValidInModule);
 			Eic->BindAction(ValidateAction, ETriggerEvent::Triggered, this, &UInputAmeliorationCharacters::Validate);
 		}
 		if (RemoveValidateAction)
@@ -62,8 +72,11 @@ void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInput
 	}
 }
 
+
+
 void UInputAmeliorationCharacters::Move(const FInputActionValue& Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove");
 	if (!OnSkip && !IsValidate)
 	{
 		float FloatValue = Value.Get<float>();
@@ -77,6 +90,7 @@ void UInputAmeliorationCharacters::Move(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::MoveOnSkip(const FInputActionValue& Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove on skip");
 	if (!IsValidate)
 	{
 		float FloatValue = Value.Get<float>();
@@ -96,9 +110,13 @@ void UInputAmeliorationCharacters::MoveOnSkip(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::Validate(const FInputActionValue& Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Validation");
 	if (!IsValidate)
 	{
 		IsValidate = true;
+		CanMoveOnModule = true;
+		indexPositionForModule = 0; 
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value can move : %d\n"), CanMoveOnModule));
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "coucou");
 		UpgradeUserWidget->Validate(indexPlayerController, indexPosition, OnSkip);
 	}
@@ -106,11 +124,40 @@ void UInputAmeliorationCharacters::Validate(const FInputActionValue& Value)
 
 void UInputAmeliorationCharacters::RemoveValidate()
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "RemoveValidate");
 	if (IsValidate)
 	{
 		IsValidate = false;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "1");
+		CanMoveOnModule = false;
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("value can move : %d\n"), CanMoveOnModule));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "1");
 		UpgradeUserWidget->RemoveValidate(indexPlayerController, indexPosition, OnSkip);
+	}
+}
+
+void UInputAmeliorationCharacters::MoveInModule(const FInputActionValue& Value)
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove in module");
+	if (CanMoveOnModule && indexPlayerController == 0)
+	{
+		float FloatValue = Value.Get<float>();
+		FloatValue = FMath::RoundToInt(FloatValue);
+		indexPositionForModule += FloatValue;
+		indexPositionForModule = (indexPositionForModule % 2 + 2) % 2;
+
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::Printf(TEXT("value index pos : %d\n"), indexPositionForModule));
+
+		UpgradeUserWidget->MoveModule(indexPlayerController, indexPositionForModule);
+	}
+}
+
+void UInputAmeliorationCharacters::ValidInModule(const FInputActionValue& Value)
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Valide Module");
+	if (CanMoveOnModule && indexPlayerController == 0)
+	{
+		CanMoveOnModule = false;
+		UpgradeUserWidget->ValidModule(indexPlayerController, indexPositionForModule);
 	}
 }
 

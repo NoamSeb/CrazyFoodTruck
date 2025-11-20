@@ -101,6 +101,19 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<AAmmoBox> CarriedAmmoBox = nullptr;
 
+	//APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
+	//int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
+	
+	void AddMappingContext(UInputMappingContext* InputMappingContext, int8 Priority);
+	void RemoveMappingContext(UInputMappingContext* InputMappingContext);
+	
+	UFUNCTION(BlueprintCallable, Category = "Upgrade Phase")
+	void AddMappingUpgrade();
+	UFUNCTION(BlueprintCallable, Category = "Upgrade Phase")
+	void RemoveMappingUpgrade();
+
+	UInputComponent* PlayerInputComp;
+
 	void BindInputMoveAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent);
 
