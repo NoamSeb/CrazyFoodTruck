@@ -13,6 +13,8 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "LocalMultiplayerSubsystem.h"
+#include "InputCharacterAmelioration/InputAmeliorationCharacters.h"
 
 static void BasisFromYaw(const float YawDeg, FVector& OutForward, FVector& OutRight)
 {
@@ -43,6 +45,7 @@ void ACrazyFoodTruckCharacter::BeginPlay()
         Move->MaxWalkSpeed = MovementSpeed;
     }
 
+
     UpdatePlayerColorFromController();
 }
 
@@ -55,7 +58,74 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
         BindInputMoveAction(EnhancedInputComponent);
         BindInputInteractAction(EnhancedInputComponent);
     }
+
+    PlayerInputComp = PlayerInputComponent;
 }
+
+void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMappingContextParam, int8 Priority)
+{
+    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController)
+    {
+        return;
+    }
+
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    if (!LocalPlayer)
+    {
+        return;
+    }
+
+    if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+    {
+        //APlayerController* PlayerControllerLocal = GetPlayerControllerFromActor(this);
+        //int indexPlayerController = GetPlayerIndexFromPlayerController(PlayerControllerLocal);
+        //EnhancedInputLocalPlayerSubsystem->RemoveTemporaryMappingForPlayer(indexPlayerController, InputMappingContextParam, true);
+        //RemoveTemporaryMappingForPlayer
+        EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
+    }
+}
+
+void ACrazyFoodTruckCharacter::RemoveMappingContext(UInputMappingContext* MappingContext)
+{
+    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController)
+    {
+        return;
+    }
+
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    if (!LocalPlayer)
+    {
+        return;
+    }
+
+    if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+    {
+        EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(MappingContext);
+    }
+}
+
+void ACrazyFoodTruckCharacter::AddMappingUpgrade()
+{
+    RemoveMappingContext(InputMappingContext);
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "add");
+    if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    {
+        AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+        InputAmeliorationComp->SetupPlayerInput(PlayerInputComp);
+    }
+}
+
+void ACrazyFoodTruckCharacter::RemoveMappingUpgrade()
+{
+    if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
+    {
+        RemoveMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext);
+        //AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);
+    }
+}
+
 
 void ACrazyFoodTruckCharacter::SetVehicleMovementRef(AActor* InVehicleActor)
 {
