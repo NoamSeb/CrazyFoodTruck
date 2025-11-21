@@ -1,5 +1,4 @@
-﻿// FBulletStructure.h
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h" // <- important pour FTableRowBase
@@ -19,6 +18,9 @@ struct FBulletStructure : public FTableRowBase
 	, GravityScale(0.f)
 	, Ammo(0)
 	{}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
+	TSoftClassPtr<class ABulletBase> BulletClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
 	int32 Damage;
