@@ -20,6 +20,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShootSignature, int32, AmmoLeft, int32, AmmoMax);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAmmoTypeEvent, float, AreaSide, float, AreaDepht);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTurretEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerReload, int32, CurrentReloadingPlayers);
 
 UCLASS()
 class CRAZYFOODTRUCK_API ATurretController : public APawn
@@ -42,12 +43,16 @@ public:
 	APawn* ActualPawn;
 	
 	int GetAmmo() const { return _CurrentAmmo;}
-	int GetAmmoMax() const { return _AmmoMax;}
+	int GetAmmoMax() const { return _CurrentAmmoMax;}
 	void SetCurrentAmmo(int32 NewAmmo);
-	void Reload();
+	void SetMaxAmmo(int32 NewAmmo);
 	void DecrementAmmo();
 	bool HasAmmo() const { return _CurrentAmmo > 0; }
 
+	// TEST
+
+	UFUNCTION(BlueprintCallable)
+	void BlueprintShoot();
 
 	UFUNCTION(BlueprintCallable)
 	float GetCoolDownBetweenShoot();
@@ -59,15 +64,36 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnShootSignature OnAmmoChanged;
 	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnShootSignature OnShootGetAmmo;
+	FOnShootSignature OnTypeChangedGetAmmo;
+	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnTurretEvent OnShoot;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnTurretEvent OnReload;
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnTurretEvent OnAmmoEmpty;
+
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FOnPlayerReload OnPlayerReload;
 protected:
 
+#pragma region Upgrades
+	UGameInstanceCrazyFoodTruck* GI;
+	UFoodTruckDataSubSystem* TruckSubSystem;
+
+	int32 _CurrentAmmoMax;
+	//float _CurrentTurretRotationSpeed;
+
+	float _CurrentBulletFireRate;
+	int _CurrentBulletDamage;
+	
+#pragma endregion
+
 	UPROPERTY(EditAnywhere, Category="OTHER")
-	USceneComponent* _CursorJoint;
+	USceneComponent* _JointCursor;
+
+	UPROPERTY(EditAnywhere, Category="OTHER")
+	USceneComponent* _JointCanonTurret;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputMappingContext* TurretMappingContext;
@@ -94,10 +120,20 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	
+
+	void IncrementPlayerReloading();
+	void DecrementPlayerReloading();
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<APlayerController> PlayerController;
+	
+
 private:
+
+	float BulletHapticForce;
+
+	int _ActualPlayerReloading = 0;
 
 	EbulletType _actualBulletType;
 	FBulletStructure* ActualBulletStructure;
@@ -131,9 +167,12 @@ private:
 	float BulletSpeed;
 	float BulletFireRate;
 	
-	int GetBulletDamage() { return BulletDamage ;}
+	int GetBulletDamage() { return _CurrentBulletDamage ;}
 	float GetBulletSpeed() { return BulletSpeed ;}
-	float GetBulletFireRate() { return BulletFireRate ;}
+	float GetBulletFireRate() { return _CurrentBulletFireRate ;}
+	
+	UFUNCTION(BlueprintCallable)
+	float GetBulletHapticForce(){ return BulletHapticForce ;}
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
@@ -144,13 +183,12 @@ private:
 	void InputRoll(const FInputActionValue& Value);
 	void InputChangeBulletType(const FInputActionValue& Value);
 	void InputQuitTurret(const FInputActionValue& Value);
-	void TestingFunction(const FInputActionValue& Value);
 	void Print(FString Message);
 
 	void UpdateTurretCanonRotation();
 
 	int32 mappingPriority = 0;
-
+	
 };
 
 

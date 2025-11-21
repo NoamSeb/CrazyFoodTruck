@@ -23,7 +23,7 @@ protected:
 	virtual void EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit) override;
 	virtual void BeginPlay() override;
 	virtual void GroundHit(FVector LocationHit) override;
-	virtual void EnemyHit(IIEntity* Entity, FVector LocationHit) override;
+	virtual void EnemyHit(IIShootable* Entity, FVector LocationHit) override;
 
 public:
 	virtual void Tick(float DeltaTime) override;

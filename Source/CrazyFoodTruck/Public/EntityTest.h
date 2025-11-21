@@ -24,12 +24,7 @@ protected:
 	
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	virtual void ReceiveDamage(int DamageAmount) override;
-
 	virtual void CrushUnderTruck() override;
-
-	
 	
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnLifeChange OnLifeChange;

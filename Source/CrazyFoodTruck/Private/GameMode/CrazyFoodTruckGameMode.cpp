@@ -8,6 +8,15 @@
 #include "Characters/CrazyFoodTruckCharacterSettings.h"
 #include "Characters/CrazyFoodTruckCharacterInputData.h"
 
+#include "GameState/CrazyFoodTruckGameState.h"
+
+#include "Timer/MatchTimerComponent.h"
+#include "Score/ScoreManagerComponent.h"
+
+#include "../HordeManager.h"
+
+#include "HUD/CrazyFoodTruckHUD.h"
+
 #include "LocalMultiplayerSubsystem.h"
 
 #include "Components/SceneComponent.h"
@@ -16,6 +25,12 @@
 #include "GameFramework/PlayerController.h"
 
 #include "Kismet/GameplayStatics.h"
+
+ACrazyFoodTruckGameMode::ACrazyFoodTruckGameMode()
+{
+    GameStateClass = ACrazyFoodTruckGameState::StaticClass();
+    ScoreManager = CreateDefaultSubobject<UScoreManagerComponent>(TEXT("ScoreManager"));
+}
 
 void ACrazyFoodTruckGameMode::BeginPlay()
 {
@@ -44,6 +59,15 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     }
 
     ApplyGlobalViewToAllPlayers();
+
+    if (ACrazyFoodTruckGameState* GS = GetWorld() ? GetWorld()->GetGameState<ACrazyFoodTruckGameState>() : nullptr)
+    {
+        if (UMatchTimerComponent* Timer = GS->GetMatchTimer())
+        {
+            Timer->StartTimer(0.f);
+            Timer->OnTimerSecond.AddDynamic(this, &ACrazyFoodTruckGameMode::HandleTimerSecondPrint);
+        }
+    }
 }
 
 void ACrazyFoodTruckGameMode::CreateAndInitPlayers() const
@@ -173,8 +197,16 @@ void ACrazyFoodTruckGameMode::ConfigureMovementFrameForAllCharacters(AActor* Veh
     {
         if (!IsValid(C)) continue;
 
-        C->UseVehicleFrame(Vehicle);
-        C->MovementYawOffsetDegrees = 180.f;
+        if (Vehicle)
+        {
+            C->UseVehicleFrame(Vehicle);
+            C->MovementYawOffsetDegrees = 180.f;
+        }
+        else
+        {
+            C->UseWorldFrame();
+            C->MovementYawOffsetDegrees = 0.f;
+        }
     }
 }
 
@@ -200,4 +232,68 @@ void ACrazyFoodTruckGameMode::ApplyGlobalViewToAllPlayers() const
             ApplyGlobalViewTo(PC);
         }
     }
+}
+
+void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
+{
+    if (!GEngine) return;
+
+    static const int32 MsgKey = 99999;
+    const FString Text = FString::Printf(TEXT("Time: %s"), *FormatMMSS(ElapsedSeconds));
+
+    GEngine->AddOnScreenDebugMessage(MsgKey, 1.1f, FColor::Green, Text);
+
+    if (!bHasComputedFinalScore && ElapsedSeconds >= 30)
+    {
+        EvaluateFinalScore();
+    }
+}
+
+FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
+{
+    const int32 Minutes = TotalSeconds / 60;
+    const int32 Seconds = TotalSeconds % 60;
+    return FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds);
+}
+
+void ACrazyFoodTruckGameMode::EvaluateFinalScore()
+{
+    bHasComputedFinalScore = true;
+
+    UWorld* World = GetWorld();
+    if (!World || !ScoreManager) return;
+
+    ACrazyFoodTruckGameState* GS = World->GetGameState<ACrazyFoodTruckGameState>();
+    if (!GS || !GS->GetMatchTimer()) return;
+
+    const int32 TimeSeconds = GS->GetMatchTimer()->GetElapsedSeconds();
+
+    AHordeManager* HordeMgr = ResolveHordeManager();
+    const int32 Kills = HordeMgr ? HordeMgr->GetZombiesKilledCount() : 0;
+
+    int32 TimeScore = 0;
+    int32 KillScore = 0;
+    
+    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, TimeScore, KillScore);
+    const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
+
+    GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
+
+    if (APlayerController* PC = World->GetFirstPlayerController())
+    {
+        if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
+        {
+            HUD->ShowScoreResult(FinalScore, TimeScore, KillScore, Grade);
+        }
+    }
+}
+
+AHordeManager* ACrazyFoodTruckGameMode::ResolveHordeManager() const
+{
+    UWorld* World = GetWorld();
+    if (!World) return nullptr;
+
+    TArray<AActor*> Found;
+    UGameplayStatics::GetAllActorsOfClass(World, AHordeManager::StaticClass(), Found);
+    return (Found.Num() > 0) ? Cast<AHordeManager>(Found[0]) : nullptr;
 }

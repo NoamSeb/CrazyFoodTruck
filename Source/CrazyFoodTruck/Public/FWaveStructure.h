@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FZoneSpawn.h"
 #include "PositionSpawn.h"
 #include "Engine/DataTable.h"
 #include "FWaveStructure.generated.h"
@@ -14,16 +15,16 @@ struct FWaveStructure : public FTableRowBase
 
 	FWaveStructure()
 		: ZombieAmount(0)
-		, TempSpawnBetweenWave(1.f)
-		, PositionSpawn(EPositionSpawn::TopRight) // exemple default (ajuste selon ton enum)
+		, ZoneSpawn()
+	, TargetZombiePoint(ETargetZombiePoint::MiddleDown)
 	{}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Wave")
 	int32 ZombieAmount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Wave")
-	float TempSpawnBetweenWave;
+	AAreaZombieSpawn* ZoneSpawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Wave")
-	EPositionSpawn PositionSpawn;
+	ETargetZombiePoint TargetZombiePoint;
 };

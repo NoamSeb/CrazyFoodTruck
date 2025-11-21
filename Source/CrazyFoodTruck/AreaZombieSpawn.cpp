@@ -34,7 +34,6 @@ void AAreaZombieSpawn::InitArea(int32 IdArea, AActor* ParentActor)
 void AAreaZombieSpawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

@@ -3,6 +3,8 @@
 
 #include "TriggerZombie.h"
 
+#include <string>
+
 #include "Interface/IVehicule.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -19,17 +21,53 @@ ATriggerZombie::ATriggerZombie()
 
 void ATriggerZombie::BeginPlay()
 {
-	Super::BeginPlay();
-	if (!HordeManager)
-	{
-		auto hordeActor = UGameplayStatics::GetActorOfClass(GetWorld(), AHordeManager::StaticClass());
-		HordeManager = Cast<AHordeManager>(hordeActor);
-	}
+    Super::BeginPlay();
+
+    if (!HordeManager)
+    {
+        AActor* hordeActor = UGameplayStatics::GetActorOfClass(GetWorld(), AHordeManager::StaticClass());
+        HordeManager = Cast<AHordeManager>(hordeActor);
+    }
+
+	// Basic identity
+	FString me = GetName();
+	// List all components on THIS actor
+	TArray<UChildActorComponent*> Comps;
+	for (auto Comp : Comps)
+    {
+        FString compName = Comp->GetName();
+        FString compClass = Comp->GetClass()->GetName();
+        GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Cyan,
+            FString::Printf(TEXT(" - %s (%s)"), *compName, *compClass));
+    }
 }
 
 void ATriggerZombie::Initialize(AHordeManager* NewHordeManager)
 {
 	HordeManager = NewHordeManager;
+}
+
+void ATriggerZombie::SpawnZone()
+{
+	AAreaZombieSpawn* NewArea = GetWorld()->SpawnActor<AAreaZombieSpawn>(AreaZombieSpawn, GetActorLocation(), GetActorRotation());
+	if (!NewArea){return;}
+
+
+#if WITH_EDITOR
+	if (GEditor && NewArea)
+	{
+		// Nettoyer la sélection précédente
+		GEditor->SelectNone(false, true, false);
+
+		// Sélectionner le nouvel acteur
+		GEditor->SelectActor(NewArea, true, true, true);
+
+		// Centrer la vue dessus
+		GEditor->MoveViewportCamerasToActor(*NewArea, false);
+			
+	}
+#endif
+
 }
 
 void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -39,7 +77,6 @@ void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 	{
 		if (OtherActor->GetClass()->ImplementsInterface(UIVehicule::StaticClass()))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Green, "Trigger Zombie Spawn Horde ");
 			// VEHICULE ENTER
 			if (!HordeManager)
 			{
@@ -49,7 +86,12 @@ void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 			
 			BoxComponent->OnComponentBeginOverlap.RemoveDynamic(this, &ATriggerZombie::OnOverlapBegin);
 			bHasTriggered = true;
-			HordeManager->SpawnHordeZombie(WaveStructure.ZombieAmount, WaveStructure.PositionSpawn);
+			
+			for (auto W : SpawnWaves)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Green, "Trigger Zombie Spawn Horde ");
+				HordeManager->SpawnHordeZombie(W.ZombieAmount, W.ZoneSpawn, W.TargetZombiePoint);
+			}
 		}
 	}
 }

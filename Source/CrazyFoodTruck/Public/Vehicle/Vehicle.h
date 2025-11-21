@@ -6,6 +6,11 @@
 #include "GameFramework/Pawn.h"
 #include "InputMappingContext.h"
 #include "Interface/IVehicule.h"
+
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
+
 #include "Vehicle.generated.h"
 
 class UBoxComponent;
@@ -115,6 +120,8 @@ public:
 	UPROPERTY(EditAnywhere, Category="Vehicle Settings | Tilt")
 	TObjectPtr<UCurveFloat> TiltAnimCurve;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool MovementEnable;
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
@@ -145,6 +152,15 @@ private:
 	FVector PossessKeepVelocity = FVector::ZeroVector;
 	bool bHoldSpeedAfterPossess = false;
 	float HoldSpeedTimer = 0.f;
+
+#pragma region Upgrades
+	UGameInstanceCrazyFoodTruck* GI;
+	UFoodTruckDataSubSystem* TruckSubSystem;
+
+	float _CurrentTruckMaxSpeed;
+	float _CurrentTruckAngleSpeed;
+		
+#pragma endregion
 
 private:
 	UFUNCTION()
@@ -189,11 +205,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
 	bool bLiveCaptureWhilePossessed = true;
 
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bForwardCamAlwaysOn = true;
+
+	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings")
+	bool bCreateForwardCamWidgetAtBeginPlay = true;
+
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|UI")
 	TSubclassOf<UForwardCamWidget> ForwardCamWidgetClass;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UForwardCamWidget> ForwardCamWidget = nullptr;
+
 
 public:
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings", meta = (ClampMin = "1.0"))

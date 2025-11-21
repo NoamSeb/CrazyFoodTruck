@@ -27,13 +27,28 @@ protected:
 
 
 public:
+
+	UPROPERTY(EditAnywhere)
+	float AngleMax = 90.f;
+
+	UPROPERTY(EditAnywhere)
+	float AngleMin = -90.f;
+
+	
 	virtual void Tick(float DeltaTime) override;
 
+	
+	bool CanPush();
+	bool CanBring();
+
 private:
+	UGameInstanceCrazyFoodTruck* GI;
+	UFoodTruckDataSubSystem* TruckSubSystem;
 
 	USceneComponent* RootCabestan;
 	float RotationSpeed = 10.f;
 
+	float CurrentRotationSpeed;
 	
 	float towardInput = 0.f;
 	float backwardInput = 0.f;

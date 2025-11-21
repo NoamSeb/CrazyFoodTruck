@@ -18,19 +18,22 @@ AModuleBase* UModuleManager::AddModule(FString ModuleID, EModuleSide ModuleSide)
 
 	// SPAWN MODULE
 	FVector SpawnLocation = FVector::ZeroVector;
+	FRotator SpawnRotation = FRotator::ZeroRotator;
 	switch (ModuleSide)
 	{
 	case EModuleSide::Left:
-		SpawnLocation = LeftPosition;
+		SpawnLocation = LeftPosition->GetComponentLocation();
+		SpawnRotation = LeftPosition->GetComponentRotation();
 		break;
 	case EModuleSide::Right:
-		SpawnLocation = RightPosition;
+		SpawnLocation = RightPosition->GetComponentLocation();
+		SpawnRotation = RightPosition->GetComponentRotation();
 		break;
 	default:
 		break;
 	}
 		
-	AModuleBase* ModuleInstance = GetWorld()->SpawnActor<AModuleBase>(CurrentModule, SpawnLocation, FRotator::ZeroRotator);
+	AModuleBase* ModuleInstance = GetWorld()->SpawnActor<AModuleBase>(CurrentModule, SpawnLocation, SpawnRotation);
 	ModuleInstance->AttachToActor(GetOwner(), FAttachmentTransformRules::KeepWorldTransform);
 	AllModules.Add(ModuleInstance);
 
@@ -57,10 +60,9 @@ void UModuleManager::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UModuleManager::Initialize(FVector LeftPos, FVector RightPos)
+void UModuleManager::Initialize(USceneComponent* LeftPos, USceneComponent* RightPos)
 {
 	LeftPosition = LeftPos;
-	GEngine->AddOnScreenDebugMessage(-1,7.f, FColor::Black, TEXT("Left Position Set" + LeftPosition.ToString()));
 	RightPosition = RightPos;
 }
 
