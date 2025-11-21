@@ -30,6 +30,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category="Module")
+	UDataTable* ModuleDataTable;
+
 private:
 	UPROPERTY()
 	USceneComponent* LeftPosition;

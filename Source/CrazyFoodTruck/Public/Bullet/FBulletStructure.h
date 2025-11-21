@@ -4,6 +4,8 @@
 #include "Engine/DataTable.h" // <- important pour FTableRowBase
 #include "FBulletStructure.generated.h"
 
+class ABulletBase;
+
 USTRUCT(BlueprintType)
 struct FBulletStructure : public FTableRowBase
 {
@@ -20,7 +22,7 @@ struct FBulletStructure : public FTableRowBase
 	{}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
-	TSoftClassPtr<class ABulletBase> BulletClass;
+	TSubclassOf<ABulletBase> BulletClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
 	int32 Damage;
