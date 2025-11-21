@@ -41,13 +41,11 @@ void UInputAmeliorationCharacters::TickComponent(float DeltaTime, ELevelTick Tic
                                                  FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("value can move : %d\n"), CanMoveOnModule));
 }
 
 void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInputComponent)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Dans setup");
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Dans setup");
 	if (UEnhancedInputComponent* Eic = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		if (MoveAction)
@@ -76,7 +74,7 @@ void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInput
 
 void UInputAmeliorationCharacters::Move(const FInputActionValue& Value)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove");
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove");
 	if (!OnSkip && !IsValidate)
 	{
 		float FloatValue = Value.Get<float>();

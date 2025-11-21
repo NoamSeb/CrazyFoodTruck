@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "FBulletStructure.h"
-#include "Interface/IEntity.h"
 #include "NiagaraFunctionLibrary.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"

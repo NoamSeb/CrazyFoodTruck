@@ -7,6 +7,9 @@
 #include "InputMappingContext.h"
 #include "Interactable/Interactable.h"
 #include "Interface/IPlayer.h"
+
+#include "CrazyFoodTruck/Data/Public/GameDataSubSystem.h"
+
 #include "CrazyFoodTruckCharacter.generated.h"
 
 class UCrazyFoodTruckCharacterInputData;
@@ -111,6 +114,8 @@ private:
 	void AddMappingUpgrade();
 	UFUNCTION(BlueprintCallable, Category = "Upgrade Phase")
 	void RemoveMappingUpgrade();
+
+	UGameDataSubSystem* GameDataSubSystem;
 
 	UInputComponent* PlayerInputComp;
 
