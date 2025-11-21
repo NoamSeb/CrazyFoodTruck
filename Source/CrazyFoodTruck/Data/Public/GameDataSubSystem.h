@@ -25,6 +25,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int LevelNumber = 0;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EPhaseGameCrazyFoodTruckState CurrentGamePhase;
 };
