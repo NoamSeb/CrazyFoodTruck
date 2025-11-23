@@ -27,9 +27,9 @@ void ATurretController::BeginPlay()
 	_CurrentAmmoMax = _AmmoMax + TruckSubSystem->TurretMaxAmmo;
 	_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
 	_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
+	
 #pragma endregion
 	
-
 	auto sceneComponents = K2_GetComponentsByClass(USceneComponent::StaticClass());
 	for (auto SceneComponent : sceneComponents)
 	{
@@ -45,7 +45,6 @@ void ATurretController::BeginPlay()
 	
 	ResetCoolDown();
 	SwitchBulletType(TruckSubSystem->TypeBullet);
-	Shoot();
 	UpdateTurretCanonRotation();
 }
 
@@ -94,26 +93,47 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		AreaRangeSide = ActualBulletStructure->AreaSide;
 		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 		BulletHapticForce = ActualBulletStructure->HapticsScale;
+		if (ActualBulletStructure->BulletClass)
+        {
+			ActualBulletPrefab = ActualBulletStructure->BulletClass.Get();
+			if (!ActualBulletPrefab)
+			{
+				// ActualBulletPrefab = ActualBulletStructure->BulletClass.LoadSynchronous();
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Bullet Class Loaded Synchronously !"));
+				if (!ActualBulletPrefab)
+                {
+                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to Load Bullet Class Synchronously !"));
+                }
+			}
+        }else
+        {
+        	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Bullet Class Assigned in DataTable !"));
+        }
 		SetMaxAmmo(ActualBulletStructure->Ammo);
 
 		//Pour Upgrades
 		_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
 		_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
 	}
-	else{return;}
-	
-	FString FullPath = FString::Printf(TEXT("/Game/Resources/Bullet/%s.%s_C"), *TargetName, *TargetName);
-	
-	UClass* LoadedClass = LoadClass<ABulletBase>(nullptr, *FullPath);
-	if (LoadedClass)
-	{
-		ActualBulletPrefab = LoadedClass;
-	}
 	else
 	{
-		ActualBulletPrefab = nullptr;
+		return;
 	}
 	
+	// FString FullPath = FString::Printf(TEXT("/Game/Resources/Bullet/%s.%s_C"), *TargetName, *TargetName);
+	// UE_LOG(LogTemp, Warning, TEXT("Trying to load class: %s"), *FullPath);
+	//
+	// UClass* LoadedClass = StaticLoadClass(ABulletBase::StaticClass(), nullptr, *FullPath);
+	// if (LoadedClass)
+	// {
+	// 	ActualBulletPrefab = LoadedClass;
+	// }
+	// else
+	// {
+	// 	ActualBulletPrefab = nullptr;
+	// 	UE_LOG(LogTemp, Error, TEXT("Failed to StaticLoadClass %s"), *FullPath);
+	// }
+	//
 	OnAmmoChanged.Broadcast(GetAmmo(),_CurrentAmmoMax);
 	OnTypeChangedGetAmmo.Broadcast(GetAmmo(),_CurrentAmmoMax);
 	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);
@@ -226,11 +246,31 @@ void ATurretController::Tick(float DeltaTime)
 
 void ATurretController::Shoot()
 {
-	if (!ActualBulletPrefab) return;
-	if (!_SpawnBulletTransform) return;
-	if (_CurrentCoolDown > 0) return;
-	if (_ActualPlayerReloading > 0) return;
-	if (!HasAmmo()) return;
+	if (!ActualBulletPrefab)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Bullet Prefab Assigned !"));
+		return;
+	}
+	if (!_SpawnBulletTransform)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Spawn Bullet Transform Assigned !"));
+		return;
+	}
+	if (_CurrentCoolDown > 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Turret on Cooldown !"));
+		return;
+	}
+	if (_ActualPlayerReloading > 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Player is Reloading !"));
+		return;
+	}
+	if (!HasAmmo())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Turret no ammo !"));
+		return;
+	}
 
 	ResetCoolDown();
 	DecrementAmmo();

@@ -87,8 +87,8 @@ void AVehicle::BeginPlay()
 
 	ForwardCaptureInterval = (ForwardCaptureFPS > 0.f) ? (1.f / ForwardCaptureFPS) : (1.f / 30.f);
 	ForwardCaptureTimer = 0.f;
-
-	if (bForwardCamAlwaysOn)
+	
+	if (bForwardCamAlwaysOn && GI->GameData->CurrentGamePhase == EPhaseGameCrazyFoodTruckState::Route)
 	{
 		if (!ForwardCamWidget && bCreateForwardCamWidgetAtBeginPlay && ForwardCamWidgetClass && ForwardRT)
 		{
@@ -103,7 +103,7 @@ void AVehicle::BeginPlay()
 				}
 			}
 		}
-
+		
 		StartForwardCapture();
 	}
 	else
