@@ -15,21 +15,19 @@
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Upgrade.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Upgrade.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultGame.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultGame.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/Road/BP_RoadManager.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/Road/BP_RoadManager.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/DATA/DT_ListUpgrades.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/DATA/DT_ListUpgrades.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/SurvivorCamp.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/SurvivorCamp.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/GameMode/BP_CrazyFoodTruckGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/GameMode/BP_CrazyFoodTruckGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_Menu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_Menu.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_Upgrade.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_Upgrade.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/PC_PlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/PC_PlayerController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/6/A1/9PG4YNNJPDDVSJN8IJTBR5.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/6/A1/9PG4YNNJPDDVSJN8IJTBR5.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/A/TJ/NAU78DLI5XSXCUF93SREJQ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/A/TJ/NAU78DLI5XSXCUF93SREJQ.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/UpgradePhase/StructHealTruck.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/UpgradePhase/StructHealTruck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/UpgradePhase/StructUpgrade.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/UpgradePhase/StructUpgrade.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Vehicle/Vehicle.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Vehicle/Vehicle.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Road/RoadManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Road/RoadManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Road/RoadManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Road/RoadManager.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -283,7 +281,8 @@
       <workItem from="1763632797209" duration="2173000" />
       <workItem from="1763636179293" duration="2774000" />
       <workItem from="1763646586469" duration="16051000" />
-      <workItem from="1763973294137" duration="5127000" />
+      <workItem from="1763973294137" duration="8341000" />
+      <workItem from="1763982930042" duration="6244000" />
     </task>
     <servers />
   </component>
