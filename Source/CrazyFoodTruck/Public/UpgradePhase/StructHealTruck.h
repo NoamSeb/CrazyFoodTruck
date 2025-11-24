@@ -15,6 +15,7 @@ struct FStructHealTruck
 
 	FStructHealTruck()
 		: TextUpgrade()
+		, TextUpgradeDescription()
 		, intAddModif(10)
 		, UpgradeTruck(ECamionUpgrade::Heal)
 		, Zone(EZoneUpgrade::Camion)
@@ -23,6 +24,9 @@ struct FStructHealTruck
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	FString TextUpgrade;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
+	FString TextUpgradeDescription;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	int32 intAddModif;

@@ -47,6 +47,12 @@ void ACrazyFoodTruckCharacter::BeginPlay()
 
     GameDataSubSystem = GetGameInstance()->GetSubsystem<UGameDataSubSystem>();
 
+    //UGameInstance* GI = GetGameInstance();
+    //if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
+    //{
+    //    LMS->EnsurePlayerIMCs(ELocalMultiplayerInputMappingType::Player);
+    //}
+
     UpdatePlayerColorFromController();
 }
 

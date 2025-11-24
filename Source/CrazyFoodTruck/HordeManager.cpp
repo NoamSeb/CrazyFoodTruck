@@ -129,7 +129,7 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 		ListHordeZombie.Add(NewZombie);
 
 		NewZombie->SpawnDefaultController();
-		NewZombie->ZombieSpeed = FinalZombieSpeed;
+		NewZombie->ZombieSpeed = (FoodTruck->_CurrentTruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
 
 		NewZombie->MainActorToFollower = MainActorToFollow;
 
@@ -160,7 +160,7 @@ void AHordeManager::InitHordeZombies()
 {
 	if (!bCanSpawnHorde){return;}
 	//ajouter à la vitesse du camion
-	FinalZombieSpeed = (FoodTruck->TruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
+	FinalZombieSpeed = (FoodTruck->_CurrentTruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
 
 	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Food truck value : %f"), FoodTruck->TruckMaxSpeed));
 	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Diff value : %f"), DifferenceBetweenFoodTruck * KilometersToMetersConvertingValue));
