@@ -19,6 +19,7 @@ struct FStructUpgrade
 
 	FStructUpgrade()
 		: TextUpgrade()
+		, TextUpgradeDescription()
 		, intAddModif(0)
 		, UpgradeTurret(ETurretUpgrade::None)
 		, UpgradeModule(EModuleUpgrade::None)
@@ -32,10 +33,12 @@ struct FStructUpgrade
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	FString TextUpgrade;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
+	FString TextUpgradeDescription;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	float intAddModif;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	ETurretUpgrade UpgradeTurret = ETurretUpgrade::None;

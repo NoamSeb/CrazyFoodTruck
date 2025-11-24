@@ -126,6 +126,15 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
 
+#pragma region Upgrades
+	UGameInstanceCrazyFoodTruck* GI;
+	UFoodTruckDataSubSystem* TruckSubSystem;
+
+	float _CurrentTruckMaxSpeed;
+	float _CurrentTruckAngleSpeed;
+		
+#pragma endregion
+
 private:
 	// ===== Runtime State =====
 	static constexpr float KilometersToMetersConvertingValue = 27.777777777778f;
@@ -153,14 +162,6 @@ private:
 	bool bHoldSpeedAfterPossess = false;
 	float HoldSpeedTimer = 0.f;
 
-#pragma region Upgrades
-	UGameInstanceCrazyFoodTruck* GI;
-	UFoodTruckDataSubSystem* TruckSubSystem;
-
-	float _CurrentTruckMaxSpeed;
-	float _CurrentTruckAngleSpeed;
-		
-#pragma endregion
 
 private:
 	UFUNCTION()
