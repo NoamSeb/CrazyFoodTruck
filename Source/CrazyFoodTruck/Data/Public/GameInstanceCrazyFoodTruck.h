@@ -51,6 +51,9 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EModuleUpgrade ModuleUpgradeRight;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 CurrentLifeFoodTruck = 5;
+
 	int actoraspurr;
 
 private:
