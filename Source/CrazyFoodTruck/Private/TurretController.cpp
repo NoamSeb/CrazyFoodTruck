@@ -98,7 +98,7 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 			ActualBulletPrefab = ActualBulletStructure->BulletClass.Get();
 			if (!ActualBulletPrefab)
 			{
-				ActualBulletPrefab = ActualBulletStructure->BulletClass.LoadSynchronous();
+				// ActualBulletPrefab = ActualBulletStructure->BulletClass.LoadSynchronous();
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Bullet Class Loaded Synchronously !"));
 				if (!ActualBulletPrefab)
                 {

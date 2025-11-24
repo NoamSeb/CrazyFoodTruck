@@ -4,6 +4,7 @@
 #include "ModuleManager.h"
 
 #include "EModuleSide.h"
+#include "FStructModule.h"
 
 
 UModuleManager::UModuleManager()
@@ -42,15 +43,28 @@ AModuleBase* UModuleManager::AddModule(FString ModuleID, EModuleSide ModuleSide)
 
 TSubclassOf<AModuleBase> UModuleManager::GetModuleByID(FString ModuleID)
 {
-
-	FString FullPath = FString::Printf(TEXT("/Game/Resources/Module/%s.%s_C"), *ModuleID, *ModuleID);
-	
-	UClass* LoadedClass = LoadClass<AModuleBase>(nullptr, *FullPath);
-	if (LoadedClass)
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, ModuleID);
+	if(!ModuleDataTable)
 	{
-		return LoadedClass;
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "NO DATA TABLE");
+		return nullptr;
 	}
+	auto ModuleStruct = ModuleDataTable->FindRow<FStructModule>(FName(*ModuleID), "", true);
+	if(ModuleStruct)
+	{
+		auto CurrentModule = ModuleStruct->ModuleClasse;
+		if(CurrentModule)
+		{
+			return CurrentModule;
+		}else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "NO CURRENT MODULE");
 
+		}
+	}else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "NO MODULE STRUCT");
+	}
 	return nullptr;
 }
 
