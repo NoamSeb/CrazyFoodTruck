@@ -2,6 +2,8 @@
 
 #include "GameMode/CrazyFoodTruckGameMode.h"
 
+#include "../Data/Public/GameInstanceCrazyFoodTruck.h"
+
 #include "CrazyFoodTruck/CrazyFoodTruckSettings.h"
 
 #include "Characters/CrazyFoodTruckCharacter.h"
@@ -278,6 +280,11 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
     const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
 
     GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
+
+    if (UGameInstanceCrazyFoodTruck* CFTGI = GetGameInstance<UGameInstanceCrazyFoodTruck>())
+    {
+        CFTGI->AddTicketsForGrade(Grade);
+    }
 
     if (APlayerController* PC = World->GetFirstPlayerController())
     {

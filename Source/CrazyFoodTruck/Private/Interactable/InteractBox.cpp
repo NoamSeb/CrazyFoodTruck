@@ -559,24 +559,18 @@ void AInteractBox::TeleportBackAndDetachPlayer(APlayerController* PlayerControll
     {
         Pawn->TeleportTo(TargetLocation, TargetRotation, false, true);
     }
-
-    if (ACharacter* Char2 = Cast<ACharacter>(Pawn))
-    {
-        if (UCharacterMovementComponent* MoveComp2 = Char2->GetCharacterMovement())
-        {
-            MoveComp2->StopMovementImmediately();
-            MoveComp2->Velocity = FVector::ZeroVector;
-        }
-    }
-
+    
     if (ACharacter* Char = Cast<ACharacter>(Pawn))
     {
         if (UCharacterMovementComponent* Move2 = Char->GetCharacterMovement())
         {
+            Move2->StopMovementImmediately();
+            Move2->Velocity = FVector::ZeroVector;
             Move2->SetComponentTickEnabled(true);
             Move2->Activate();
             Move2->SetMovementMode(MOVE_Walking);
         }
+        Char->GetMesh()->SetCustomDepthStencilValue(true);
     }
 
 }
