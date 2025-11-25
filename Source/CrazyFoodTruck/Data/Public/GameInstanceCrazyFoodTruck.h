@@ -12,6 +12,24 @@
 #include "UpgradePhase/EnumUpgrade/ZoneUpgrade.h"
 #include "GameInstanceCrazyFoodTruck.generated.h"
 
+USTRUCT(BlueprintType)
+struct FMenuPlayerSlot
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
+	bool bIsConnected = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
+	int32 ControllerId = INDEX_NONE;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
+	bool bIsReady = false;
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLobbySlotsChanged);
+
 UCLASS()
 class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 {
@@ -56,6 +74,29 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 
 	int actoraspurr;
 
+	UPROPERTY(BlueprintReadOnly, Category = "CrazyFoodTruck|Lobby")
+	TArray<FMenuPlayerSlot> PlayerSlots;
+
+	UPROPERTY(BlueprintAssignable, Category = "CrazyFoodTruck|Lobby")
+	FOnLobbySlotsChanged OnLobbySlotsChanged;
+
+	UFUNCTION(BlueprintCallable, Category = "CrazyFoodTruck|Lobby")
+	void TryJoinPlayer(int32 ControllerId);
+
+	UFUNCTION(BlueprintCallable, Category = "CrazyFoodTruck|Lobby")
+	bool AreAllPlayersConnected() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CrazyFoodTruck|Lobby")
+	void ResetLobby();
+
+	UFUNCTION(BlueprintCallable, Category = "CrazyFoodTruck|Lobby")
+	void StartGameFromLobby();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CrazyFoodTruck|Lobby")
+	FName GameLevelName = FName(TEXT("SandboxGab"));
+
 private:
 	ACameraShakeManager* CameraShakeManager;
+
+	void InitLobbySlots();
 };

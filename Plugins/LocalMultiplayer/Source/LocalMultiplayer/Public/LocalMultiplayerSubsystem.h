@@ -52,6 +52,9 @@ public:
 	void RemoveTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, bool bForceImmediately = true);
 
 	UInputMappingContext* GetGamepadIMC(ELocalMultiplayerInputMappingType MappingType) const;
+
+	void SetCurrentMappingType(ELocalMultiplayerInputMappingType NewType) { CurrentMappingType = NewType; }
+	ELocalMultiplayerInputMappingType GetCurrentMappingType() const { return CurrentMappingType; }
 	
 protected:
 	UPROPERTY()
@@ -67,4 +70,7 @@ private:
 	UEnhancedInputLocalPlayerSubsystem* GetEISForPlayerIndex(int32 PlayerIndex) const;
 
 	UInputMappingContext* GetKeyboardIMC(int32 KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const;
+
+	UPROPERTY()
+	ELocalMultiplayerInputMappingType CurrentMappingType = ELocalMultiplayerInputMappingType::Player;
 };
