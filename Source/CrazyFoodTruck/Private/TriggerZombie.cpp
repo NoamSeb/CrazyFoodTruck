@@ -89,7 +89,7 @@ void ATriggerZombie::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 			
 			for (auto W : SpawnWaves)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.F, FColor::Green, "Trigger Zombie Spawn Horde ");
+				if (W.ZombieAmount <= 0){continue;}
 				HordeManager->SpawnHordeZombie(W.ZombieAmount, W.ZoneSpawn, W.TargetZombiePoint);
 			}
 		}

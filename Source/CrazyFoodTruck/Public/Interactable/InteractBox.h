@@ -149,6 +149,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 	float OverlappTimer = 0.f;
+	float ExitTimer = 0.f;
 	
 	UPROPERTY(EditAnywhere, Category = "Interact|State")
 	float BaseOverlappTimer = 0.01f;
