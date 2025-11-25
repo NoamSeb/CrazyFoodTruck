@@ -116,6 +116,13 @@ public:
 	
 #pragma endregion 
 
+#pragma region UI Spawn Indicator
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Horde Manager | UI")
+	TSubclassOf<UUserWidget> ZombieSpawnIndicatorWidgetClass;
+
+#pragma endregion
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

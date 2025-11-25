@@ -10,6 +10,7 @@
 #include "ZombieDataSubSystem.h"
 #include "UpgradePhase/StructUpgrade.h"
 #include "UpgradePhase/EnumUpgrade/ZoneUpgrade.h"
+#include "Score/ScoreManagerComponent.h"
 #include "GameInstanceCrazyFoodTruck.generated.h"
 
 UCLASS()
@@ -58,6 +59,12 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	int32 MaxLifeFoodTruck = 20;
 
 	int actoraspurr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tickets")
+	TMap<EScoreGrade, int32> TicketsByGrade;
+
+	UFUNCTION(BlueprintCallable, Category = "Tickets")
+	void AddTicketsForGrade(EScoreGrade Grade);
 
 private:
 	ACameraShakeManager* CameraShakeManager;
