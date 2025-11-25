@@ -176,19 +176,26 @@ void AInteractBox::ClearAttachPoint()
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool bFromSweep, const FHitResult& Hit)
 {
     //if (!CanDetectOverlapp()) return;
+
+    APlayerController* NewPlayerInside = GetPlayerControllerFromActor(Other);
+    AddOverlappingPlayerController(NewPlayerInside);
+    
     if (bPlayerIsControlling)
     {
         GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Player Controlling"));
         return;
     }
-
-    APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(Other);
-    AddOverlappingPlayerController(EnteringPlayerController);
-
+    
+    if (EnteringCharacter != nullptr)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Another Player is already inside"));
+        return;
+    }
+    
     if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Other))
     {
         EnteringCharacter = Character;
-        TryDetectPlayer(EnteringPlayerController, Character);
+        TryDetectPlayer(NewPlayerInside, EnteringCharacter);
     }
 }
 
@@ -197,23 +204,34 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPr
    // if (!CanDetectOverlapp()) return;
     if (bPlayerIsControlling) return;
 
+
     APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(Other);
+
     ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Other);
 
     RemoveOverlappingPlayerController(LeavingPlayerController);
+
+    if (EnteringCharacter != Character)
+    {
+        return;
+    }
+
     ExitTimer = BaseOverlappTimer;
 }
 
 void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
 {
-    if (bPlayerIsControlling){return;}
+    if (bPlayerIsControlling)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green ,TEXT("Player Controlling after Timer ."));
+        return;
+    }
     if (Character)
     {
         if (Character->GetFocusedInteractable().GetInterface() == static_cast<IInteractable*>(this))
         {
             Character->SetFocusedInteractable(TScriptInterface<IInteractable>(nullptr));
         }
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green ,TEXT("Player exited interact box."));
         OnCollisionExit.Broadcast();
         CurrentInteractorPlayerController = nullptr;
         CachedCharacter = nullptr;
@@ -402,7 +420,6 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 
 void AInteractBox::UnpossessPawn()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, "UnpossessPawn");
     OnPlayerQuit.Broadcast();
     
     bPlayerIsControlling = false;
@@ -427,13 +444,11 @@ void AInteractBox::UnpossessPawn()
 
     if (CachedCharacter.IsValid())
     {
-        // Restore actor rotation and controller rotation snapshot
         CachedCharacter->SetActorRotation(RotationActorOnEnter);
         if (CachedPlayerController.IsValid())
         {
             CachedPlayerController->SetControlRotation(RotationControllerOnEnter);
         }
-
         if (PlayerStillInsideCheck(CachedCharacter.Get()))
         {
             TryDetectPlayer(CachedPlayerController.Get(), CachedCharacter.Get());
@@ -454,6 +469,15 @@ void AInteractBox::UnpossessPawn()
         }
     }
 
+
+    
+    auto players = DetectPlayerInside();
+    if (players)
+    {
+        APlayerController* PC = GetPlayerControllerFromActor(players);
+        TryDetectPlayer(PC, players);
+    }
+    
     if (UWorld* World = GetWorld())
     {
         if (auto* GM = Cast<ACrazyFoodTruckGameMode>(UGameplayStatics::GetGameMode(World)))
@@ -461,12 +485,6 @@ void AInteractBox::UnpossessPawn()
             GM->ApplyGlobalViewTo(CachedPlayerController.Get());
         }
     }
-
-    CurrentInteractorPlayerController = nullptr;
-    CachedPlayerController = nullptr;
-    CachedCharacter = nullptr;
-    CachedPreviousPawn = nullptr;
-    EnteringCharacter = nullptr;
 }
 
 void AInteractBox::SetRepairProgress(URepairProgressBillboard* RPB)
