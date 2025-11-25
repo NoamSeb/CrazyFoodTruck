@@ -38,6 +38,7 @@ AInteractBox::AInteractBox()
 
     // Defaults (au cas où)
     OverlappTimer = 0.f;
+    ExitTimer = BaseOverlappTimer;
     bPlayerIsControlling = false;
     bIsFunctional = true;
 }
@@ -45,13 +46,24 @@ AInteractBox::AInteractBox()
 void AInteractBox::BeginPlay()
 {
     Super::BeginPlay();
-
-
 }
 
 void AInteractBox::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (ExitTimer> 0.f)
+    {
+        ExitTimer -= DeltaSeconds;
+        if (ExitTimer <= 0.f)
+        {
+            if (!PlayerStillInsideCheck(EnteringCharacter))
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Exit Timer finished"));
+                TryExitPlayer(EnteringCharacter);
+            }
+        }
+    }
 
     if (OverlappTimer > 0.f)
     {
@@ -62,14 +74,14 @@ void AInteractBox::Tick(float DeltaSeconds)
             if (playerInsidfe == nullptr)
             {
                 if (!EnteringCharacter){return;}
-                GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("No player inside"));
+               // GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("No player inside"));
                 TryExitPlayer(EnteringCharacter);
             }
             else if (playerInsidfe != EnteringCharacter)
             {
                 APlayerController* PC = GetPlayerControllerFromActor(playerInsidfe);
                 TryDetectPlayer(PC, playerInsidfe);
-                GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Same player inside"));
+               // GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Same player inside"));
             }
         }
     }
@@ -163,8 +175,12 @@ void AInteractBox::ClearAttachPoint()
 
 void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex, bool bFromSweep, const FHitResult& Hit)
 {
-    if (!CanDetectOverlapp()) return;
-    if (bPlayerIsControlling) return;
+    //if (!CanDetectOverlapp()) return;
+    if (bPlayerIsControlling)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Player Controlling"));
+        return;
+    }
 
     APlayerController* EnteringPlayerController = GetPlayerControllerFromActor(Other);
     AddOverlappingPlayerController(EnteringPlayerController);
@@ -178,17 +194,15 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, U
 
 void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPrimitiveComponent* OtherComp, int32 BodyIndex)
 {
-    if (!CanDetectOverlapp()) return;
+   // if (!CanDetectOverlapp()) return;
     if (bPlayerIsControlling) return;
 
     APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(Other);
     ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Other);
 
     RemoveOverlappingPlayerController(LeavingPlayerController);
-    GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player exited overlap box."));
-    TryExitPlayer(Character);
+    ExitTimer = BaseOverlappTimer;
 }
-
 
 void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
 {
@@ -199,8 +213,7 @@ void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
         {
             Character->SetFocusedInteractable(TScriptInterface<IInteractable>(nullptr));
         }
-
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player exited interact box."));
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green ,TEXT("Player exited interact box."));
         OnCollisionExit.Broadcast();
         CurrentInteractorPlayerController = nullptr;
         CachedCharacter = nullptr;
@@ -209,13 +222,23 @@ void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
         EnteringCharacter = nullptr;
     }else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("No character to exit."));
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No character to exit."));
     }
 }
+
 void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFoodTruckCharacter* Character)
 {
-    if (!Character) return;
-    if (!PlayerController) return;
+    if (!Character)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No Character"));
+        return;
+    }
+    if (!PlayerController)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No CONTROLLLER"));
+
+        return;
+    }
 
     const bool bLockedByAnother = CurrentInteractorPlayerController.IsValid() && PlayerController && (CurrentInteractorPlayerController.Get() != PlayerController);
     const bool bAnotherInside = IsAnotherPlayerAlreadyInside(PlayerController);
@@ -230,9 +253,13 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
     }
     else
     {
-        if (GEngine)
+        if (bLockedByAnother)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Player detected but locked or another inside."));
+             GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("InteractBox: Already in use by another player."));
+        }
+        else if (bAnotherInside)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("InteractBox: Another player is already inside."));
         }
     }
 }
