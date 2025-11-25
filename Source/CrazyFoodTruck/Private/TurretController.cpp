@@ -93,25 +93,19 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		AreaRangeSide = ActualBulletStructure->AreaSide;
 		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 		BulletHapticForce = ActualBulletStructure->HapticsScale;
+
+		// LOAD BULLET
 		if (ActualBulletStructure->BulletClass)
         {
 			ActualBulletPrefab = ActualBulletStructure->BulletClass.Get();
-			if (!ActualBulletPrefab)
-			{
-				// ActualBulletPrefab = ActualBulletStructure->BulletClass.LoadSynchronous();
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Bullet Class Loaded Synchronously !"));
-				if (!ActualBulletPrefab)
-                {
-                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to Load Bullet Class Synchronously !"));
-                }
-			}
-        }else
+        }
+		else
         {
         	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Bullet Class Assigned in DataTable !"));
         }
+		
 		SetMaxAmmo(ActualBulletStructure->Ammo);
 
-		//Pour Upgrades
 		_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
 		_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
 	}
@@ -119,21 +113,7 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 	{
 		return;
 	}
-	
-	// FString FullPath = FString::Printf(TEXT("/Game/Resources/Bullet/%s.%s_C"), *TargetName, *TargetName);
-	// UE_LOG(LogTemp, Warning, TEXT("Trying to load class: %s"), *FullPath);
-	//
-	// UClass* LoadedClass = StaticLoadClass(ABulletBase::StaticClass(), nullptr, *FullPath);
-	// if (LoadedClass)
-	// {
-	// 	ActualBulletPrefab = LoadedClass;
-	// }
-	// else
-	// {
-	// 	ActualBulletPrefab = nullptr;
-	// 	UE_LOG(LogTemp, Error, TEXT("Failed to StaticLoadClass %s"), *FullPath);
-	// }
-	//
+
 	OnAmmoChanged.Broadcast(GetAmmo(),_CurrentAmmoMax);
 	OnTypeChangedGetAmmo.Broadcast(GetAmmo(),_CurrentAmmoMax);
 	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);

@@ -19,6 +19,7 @@ struct FBulletStructure : public FTableRowBase
 	, AreaDepth(0.f)
 	, GravityScale(0.f)
 	, Ammo(0)
+	, HapticsScale(0.f)
 	{}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Bullet")
