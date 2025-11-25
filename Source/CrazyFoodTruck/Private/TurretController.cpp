@@ -93,9 +93,11 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		AreaRangeSide = ActualBulletStructure->AreaSide;
 		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 		BulletHapticForce = ActualBulletStructure->HapticsScale;
+
 		if (ActualBulletStructure->BulletClass)
         {
 			ActualBulletPrefab = ActualBulletStructure->BulletClass.Get();
+			
 			if (!ActualBulletPrefab)
 			{
 				// ActualBulletPrefab = ActualBulletStructure->BulletClass.LoadSynchronous();
@@ -109,11 +111,16 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
         {
         	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Bullet Class Assigned in DataTable !"));
         }
-		SetMaxAmmo(ActualBulletStructure->Ammo);
 
 		//Pour Upgrades
 		_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
 		_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
+
+		ActualBulletStructure->Damage = _CurrentBulletDamage;
+		ActualBulletStructure->FireRate = _CurrentBulletFireRate;
+
+		SetMaxAmmo(_CurrentAmmoMax);
+		//SetMaxAmmo(ActualBulletStructure->Ammo);
 	}
 	else
 	{
@@ -207,6 +214,7 @@ void ATurretController::SetMaxAmmo(int32 NewAmmo)
 
 void ATurretController::DecrementAmmo()
 {
+	//TruckSubSystem->TripleDamageFor10EBullet;
 	_CurrentAmmo -= 1;
 	if (_CurrentAmmo <= 0)
 	{
@@ -306,6 +314,17 @@ void ATurretController::InputChangeBulletType(const FInputActionValue& Value)
 
 void ATurretController::InputShootTriggered(const FInputActionValue& Value)
 {
+	if (TruckSubSystem->TripleDamageFor10EBullet)
+	{
+		if (TruckSubSystem->indexBulletShoot >= 9)
+		{
+			ActualBulletStructure->Damage = _CurrentBulletDamage * 3;
+			TruckSubSystem->indexBulletShoot = 0;
+		} else
+		{
+			TruckSubSystem->indexBulletShoot ++;
+		}
+	}
 	Shoot();
 }
 

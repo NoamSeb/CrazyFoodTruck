@@ -31,8 +31,10 @@ void UAmeliorationWidget::ApplyUpgrades()
 			TruckSubSystem->TruckRotationSpeed += Upgrade.intAddModif;
 			break;
 		case ECamionUpgrade::Heal:
-			TruckSubSystem->Heal += Upgrade.intAddModif;
+			GI->CurrentLifeFoodTruck += Upgrade.intAddModif;
 			break;
+		case ECamionUpgrade::FullHeal:
+			GI->CurrentLifeFoodTruck = GI->MaxLifeFoodTruck;
 		default:
 			break;
 		}
@@ -55,6 +57,8 @@ void UAmeliorationWidget::ApplyUpgrades()
 		case ETurretUpgrade::MaxAmmo:
 			TruckSubSystem->TurretMaxAmmo = Upgrade.intAddModif;
 			break;
+		case ETurretUpgrade::TripleDamageFor10EmeBullet:
+			TruckSubSystem->TripleDamageFor10EBullet = true;
 		default:
 			break;
 		}

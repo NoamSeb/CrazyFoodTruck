@@ -40,6 +40,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EbulletType TypeBullet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool TripleDamageFor10EBullet;
+
+	int indexBulletShoot = 0;
 	
 #pragma endregion Turret
 

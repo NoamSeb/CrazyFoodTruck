@@ -12,6 +12,7 @@ enum class ETurretUpgrade : uint8
 	AugmentationAngle,
 	Cadence,
 	Damage,
-	OneTicketWhenKilledZombies,
-	MaxAmmo
+	TripleDamageFor10EmeBullet,
+	MaxAmmo,
+	SpeedBullet
 };
