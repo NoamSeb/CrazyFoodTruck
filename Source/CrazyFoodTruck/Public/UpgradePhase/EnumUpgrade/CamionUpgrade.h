@@ -9,8 +9,8 @@ enum class ECamionUpgrade : uint8
 {
 	None = 0,
 	Speed,
-	//TurningSpeed,
-	//AddBoostTime,
+	TurningSpeed,
+	AddBoostTime,
 	Heal,
 	FullHeal,
 };
