@@ -5,8 +5,6 @@
 #include <string>
 
 #include "Components/BoxComponent.h"
-#include "Blueprint/UserWidget.h"
-#include "Kismet/GameplayStatics.h"
 #include "Vehicle/Vehicle.h"
 
 
@@ -78,22 +76,15 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 		return;
 	}
 
+	if (ListSpawnArea.IsEmpty())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("HordeManager: ListSpawnArea is empty."));
+	}
+
 	if (!PawnZombie)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("HordeManager: PawnZombie is NOT set !"));
 		return;
-	}
-
-	UWorld* World = GetWorld();
-	if (!World)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("HordeManager: World is NULL !"));
-		return;
-	}
-
-	if (ListSpawnArea.IsEmpty())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("HordeManager: ListSpawnArea is empty."));
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SPAWN ZOMBIE WAVE"));
@@ -102,45 +93,11 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 	const FVector BoxExtent = ZoneSpawn->NewBoxAreaSpawn->GetScaledBoxExtent();
 	const FVector BoxCenter = ZoneSpawn->NewBoxAreaSpawn->GetComponentLocation();
 
-	if (ZombieSpawnIndicatorWidgetClass)
+	UWorld* World = GetWorld();
+	if (!World)
 	{
-		APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-		if (PC)
-		{
-			int32 ViewX = 0;
-			int32 ViewY = 0;
-			PC->GetViewportSize(ViewX, ViewY);
-
-			const FVector2D ViewportSize(ViewX, ViewY);
-			FVector2D ScreenPos(0.f, 0.f);
-
-			const bool bProjected = PC->ProjectWorldLocationToScreen(BoxCenter, ScreenPos, false);
-
-			const float Padding = 20.f;
-
-			if (bProjected)
-			{
-				const float MinX = Padding;
-				const float MaxX = ViewportSize.X - Padding;
-				const float MinY = Padding;
-				const float MaxY = ViewportSize.Y - Padding;
-
-				ScreenPos.X = FMath::Clamp(ScreenPos.X, MinX, MaxX);
-				ScreenPos.Y = FMath::Clamp(ScreenPos.Y, MinY, MaxY);
-			}
-			else
-			{
-				ScreenPos.X = ViewportSize.X * 0.5f;
-				ScreenPos.Y = ViewportSize.Y * 0.5f;
-			}
-
-			UUserWidget* SpawnIndicator = CreateWidget<UUserWidget>(PC, ZombieSpawnIndicatorWidgetClass);
-			if (SpawnIndicator)
-			{
-				SpawnIndicator->AddToViewport();
-				SpawnIndicator->SetPositionInViewport(ScreenPos, true);
-			}
-		}
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("HordeManager: World is NULL !"));
+		return;
 	}
 
 	for (int32 i = 0; i < nombreZombies; ++i)
@@ -173,6 +130,7 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 
 		NewZombie->SpawnDefaultController();
 		NewZombie->ZombieSpeed = (FoodTruck->_CurrentTruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
+
 		NewZombie->MainActorToFollower = MainActorToFollow;
 		
 
@@ -194,6 +152,7 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 		}
 
 		NewZombie->OnZombieDied.AddDynamic(this, &AHordeManager::HandleZombieDied);
+
 		NewZombie->CallRound();
 	}
 }
