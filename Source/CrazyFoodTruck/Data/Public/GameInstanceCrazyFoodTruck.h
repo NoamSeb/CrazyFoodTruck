@@ -12,20 +12,25 @@
 #include "UpgradePhase/EnumUpgrade/ZoneUpgrade.h"
 #include "GameInstanceCrazyFoodTruck.generated.h"
 
+class UFoodTruckDataSubSystem;
+class UGameDataSubSystem;
+class UZombieDataSubSystem;
+class UMaterialParameterCollection;
+
 USTRUCT(BlueprintType)
 struct FMenuPlayerSlot
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsConnected = false;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
-	int32 ControllerId = INDEX_NONE;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsReady = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ControllerId = INDEX_NONE;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLobbySlotsChanged);
@@ -34,15 +39,9 @@ UCLASS()
 class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 {
 	GENERATED_BODY()
-
 	
-
+public:
 	virtual void Init() override;
-
-	
-	public:
-
-	// FUNCTION
 
 	void SetCameraShakeManager(ACameraShakeManager* NewCameraShakeManager);
 	void PlayerCameraShake(ECameraShake ShakeType);
@@ -74,29 +73,33 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 
 	int actoraspurr;
 
-	UPROPERTY(BlueprintReadOnly, Category = "CrazyFoodTruck|Lobby")
+	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
 	TArray<FMenuPlayerSlot> PlayerSlots;
 
-	UPROPERTY(BlueprintAssignable, Category = "CrazyFoodTruck|Lobby")
+	UPROPERTY(BlueprintAssignable, Category = "Lobby")
 	FOnLobbySlotsChanged OnLobbySlotsChanged;
 
-	UFUNCTION(BlueprintCallable, Category = "CrazyFoodTruck|Lobby")
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
+	void InitLobbySlots();
+
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
 	void TryJoinPlayer(int32 ControllerId);
 
-	UFUNCTION(BlueprintCallable, Category = "CrazyFoodTruck|Lobby")
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
 	bool AreAllPlayersConnected() const;
 
-	UFUNCTION(BlueprintCallable, Category = "CrazyFoodTruck|Lobby")
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
 	void ResetLobby();
 
-	UFUNCTION(BlueprintCallable, Category = "CrazyFoodTruck|Lobby")
-	void StartGameFromLobby();
+	UFUNCTION(BlueprintPure, Category = "Lobby|Colors")
+	FLinearColor GetPlayerColorForIndex(int32 PlayerIndex) const;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CrazyFoodTruck|Lobby")
-	FName GameLevelName = FName(TEXT("SandboxGab"));
+	UFUNCTION(BlueprintPure, Category = "Lobby|Colors")
+	int32 GetSlotIndexForControllerId(int32 ControllerId) const;
+
+	UFUNCTION(BlueprintPure, Category = "Lobby|Colors")
+	FLinearColor GetPlayerColorForControllerId(int32 ControllerId) const;
 
 private:
 	ACameraShakeManager* CameraShakeManager;
-
-	void InitLobbySlots();
 };

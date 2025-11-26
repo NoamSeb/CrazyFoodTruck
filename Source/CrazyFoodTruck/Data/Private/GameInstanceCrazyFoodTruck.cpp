@@ -3,17 +3,24 @@
 
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 
+#include "LocalMultiplayerSettings.h"
+
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMaterialLibrary.h"
+
+#include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
 
 void UGameInstanceCrazyFoodTruck::Init()
 {
 	Super::Init();
+
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("INIT Game Instance Crazy Food Truck"));
 
 	FoodTruckData = GetSubsystem<UFoodTruckDataSubSystem>();
 	GameData = GetSubsystem<UGameDataSubSystem>();
 	ZombieData = GetSubsystem<UZombieDataSubSystem>();
-	
+
 	InitLobbySlots();
 }
 
@@ -56,8 +63,9 @@ void UGameInstanceCrazyFoodTruck::InitLobbySlots()
 	PlayerSlots.Empty();
 	PlayerSlots.SetNum(4);
 
-	for (FMenuPlayerSlot& Slot : PlayerSlots)
+	for (int32 i = 0; i < PlayerSlots.Num(); ++i)
 	{
+		FMenuPlayerSlot& Slot = PlayerSlots[i];
 		Slot.bIsConnected = false;
 		Slot.bIsReady = false;
 		Slot.ControllerId = INDEX_NONE;
@@ -73,14 +81,16 @@ void UGameInstanceCrazyFoodTruck::TryJoinPlayer(int32 ControllerId)
 		return;
 	}
 
-	for (FMenuPlayerSlot& Slot : PlayerSlots)
+	for (int32 SlotIndex = 0; SlotIndex < PlayerSlots.Num(); ++SlotIndex)
 	{
+		FMenuPlayerSlot& Slot = PlayerSlots[SlotIndex];
 		if (Slot.ControllerId == ControllerId)
 		{
 			if (!Slot.bIsConnected)
 			{
 				Slot.bIsConnected = true;
 				Slot.bIsReady = true;
+				
 				OnLobbySlotsChanged.Broadcast();
 			}
 			
@@ -88,8 +98,9 @@ void UGameInstanceCrazyFoodTruck::TryJoinPlayer(int32 ControllerId)
 		}
 	}
 
-	for (FMenuPlayerSlot& Slot : PlayerSlots)
+	for (int32 SlotIndex = 0; SlotIndex < PlayerSlots.Num(); ++SlotIndex)
 	{
+		FMenuPlayerSlot& Slot = PlayerSlots[SlotIndex];
 		if (!Slot.bIsConnected)
 		{
 			Slot.bIsConnected = true;
@@ -111,14 +122,15 @@ bool UGameInstanceCrazyFoodTruck::AreAllPlayersConnected() const
 			return false;
 		}
 	}
-
+	
 	return true;
 }
 
 void UGameInstanceCrazyFoodTruck::ResetLobby()
 {
-	for (FMenuPlayerSlot& Slot : PlayerSlots)
+	for (int32 i = 0; i < PlayerSlots.Num(); ++i)
 	{
+		FMenuPlayerSlot& Slot = PlayerSlots[i];
 		Slot.bIsConnected = false;
 		Slot.bIsReady = false;
 		Slot.ControllerId = INDEX_NONE;
@@ -127,43 +139,62 @@ void UGameInstanceCrazyFoodTruck::ResetLobby()
 	OnLobbySlotsChanged.Broadcast();
 }
 
-void UGameInstanceCrazyFoodTruck::StartGameFromLobby()
+FLinearColor UGameInstanceCrazyFoodTruck::GetPlayerColorForIndex(int32 PlayerIndex) const
 {
-	if (!AreAllPlayersConnected())
+	const ULocalMultiplayerSettings* LocalSettings = GetDefault<ULocalMultiplayerSettings>();
+	if (!LocalSettings)
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				3.f,
-				FColor::Red,
-				TEXT("Cannot start game: not all players are connected.")
-			);
-		}
-		
-		return;
-	}
-
-	if (GameLevelName.IsNone())
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				3.f,
-				FColor::Red,
-				TEXT("GameLevelName is not set on GameInstanceCrazyFoodTruck.")
-			);
-		}
-		
-		return;
+		return FLinearColor::White;
 	}
 
 	UWorld* World = GetWorld();
 	if (!World)
 	{
-		return;
+		return FLinearColor::White;
 	}
 
-	UGameplayStatics::OpenLevel(World, GameLevelName);
+	UMaterialParameterCollection* MPC = LocalSettings->MPCOutline.LoadSynchronous();
+	if (!MPC)
+	{
+		return FLinearColor::White;
+	}
+
+	const int32 OneBasedIndex = PlayerIndex + 1;
+	const FName ParamName(*FString::Printf(TEXT("OutlineColor_P%d"), OneBasedIndex));
+
+	const FLinearColor Color = UKismetMaterialLibrary::GetVectorParameterValue(World, MPC, ParamName);
+
+	return Color;
+}
+
+int32 UGameInstanceCrazyFoodTruck::GetSlotIndexForControllerId(int32 ControllerId) const
+{
+	if (ControllerId == INDEX_NONE)
+	{
+		return INDEX_NONE;
+	}
+
+	for (int32 SlotIndex = 0; SlotIndex < PlayerSlots.Num(); ++SlotIndex)
+	{
+		const FMenuPlayerSlot& Slot = PlayerSlots[SlotIndex];
+		if (Slot.bIsConnected && Slot.ControllerId == ControllerId)
+		{
+			return SlotIndex;
+		}
+	}
+
+	return INDEX_NONE;
+}
+
+FLinearColor UGameInstanceCrazyFoodTruck::GetPlayerColorForControllerId(int32 ControllerId) const
+{
+	const int32 SlotIndex = GetSlotIndexForControllerId(ControllerId);
+	if (SlotIndex == INDEX_NONE)
+	{
+		return FLinearColor::White;
+	}
+
+	const FLinearColor Color = GetPlayerColorForIndex(SlotIndex);
+
+	return Color;
 }

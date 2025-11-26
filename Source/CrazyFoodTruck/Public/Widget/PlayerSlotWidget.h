@@ -9,6 +9,7 @@
 
 class UWidgetSwitcher;
 class UImage;
+class UBorder;
 class UTexture2D;
 
 UCLASS()
@@ -17,23 +18,27 @@ class CRAZYFOODTRUCK_API UPlayerSlotWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lobby", meta = (ExposeOnSpawn = "true"))
-	int32 SlotIndex = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lobby")
-	TArray<TObjectPtr<UTexture2D>> PlayerAvatarTextures;
-
-	void UpdateFromSlotData(const FMenuPlayerSlot& SlotData);
-
-protected:
 	virtual void NativeConstruct() override;
 
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UWidgetSwitcher> StateSwitcher;
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
+	void UpdateFromSlotData(const FMenuPlayerSlot& SlotData);
 
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UImage> AIconImage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby")
+	int32 SlotIndex = 0;
 
-	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UImage> CharacterImage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby")
+	TArray<TObjectPtr<UTexture2D>> PlayerAvatarTextures;
+
+protected:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UWidgetSwitcher> StateSwitcher = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UImage> CharacterImage = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UBorder> ColorBorder = nullptr;
+
+	UPROPERTY(meta = (BindWidget, OptionalWidget = true))
+	TObjectPtr<UImage> AIconImage = nullptr;
 };

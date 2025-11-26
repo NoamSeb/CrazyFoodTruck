@@ -46,8 +46,5 @@ private:
 	UFUNCTION()
 	void OnLobbySlotsChanged();
 
-	UFUNCTION()
-	void HandlePlayClicked();
-
 	void RefreshSlots();
 };

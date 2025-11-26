@@ -27,7 +27,6 @@ void UMainMenuWidget::NativeConstruct()
 
 	if (PlayButton)
 	{
-		PlayButton->OnClicked.AddDynamic(this, &UMainMenuWidget::HandlePlayClicked);
 		PlayButton->SetIsEnabled(false);
 	}
 
@@ -79,14 +78,4 @@ void UMainMenuWidget::RefreshSlots()
 		const bool bAllConnected = GIRef->AreAllPlayersConnected();
 		PlayButton->SetIsEnabled(bAllConnected);
 	}
-}
-
-void UMainMenuWidget::HandlePlayClicked()
-{
-	if (!GIRef)
-	{
-		return;
-	}
-
-	GIRef->StartGameFromLobby();
 }
