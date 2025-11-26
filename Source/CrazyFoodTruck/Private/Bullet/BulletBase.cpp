@@ -24,11 +24,11 @@ void ABulletBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ABulletBase::Initialize(FBulletStructure* BulletStructure, const FVector& direction)
+void ABulletBase::Initialize(FBulletStructure BulletStructure, const FVector& direction)
 {
-	this->damage = BulletStructure->Damage;
-	bulletSpeed = BulletStructure->Speed;
-	GravityScale = BulletStructure->GravityScale;
+	this->damage = BulletStructure.Damage;
+	bulletSpeed = BulletStructure.Speed;
+	GravityScale = BulletStructure.GravityScale;
 	
 	BulletMovementComponent = FindComponentByClass<UProjectileMovementComponent>();
 	if (BulletMovementComponent)

@@ -77,12 +77,18 @@ public:
 	FOnPlayerReload OnPlayerReload;
 protected:
 
+
 #pragma region Upgrades
 	UGameInstanceCrazyFoodTruck* GI;
 	UFoodTruckDataSubSystem* TruckSubSystem;
 
 	int32 _CurrentAmmoMax;
 	//float _CurrentTurretRotationSpeed;
+
+	float TimeDamageWhenFullReload = 3.f;
+	float TimerFullReload = 0.f;
+	bool IsAmmoFullReload;
+	bool IsDamageAlreadyIncrease = false;
 
 	float _CurrentBulletFireRate;
 	int _CurrentBulletDamage;
@@ -137,6 +143,8 @@ private:
 
 	EbulletType _actualBulletType;
 	FBulletStructure* ActualBulletStructure;
+
+	FBulletStructure BulletChooseForShoot;
 
 	int32 _CurrentAmmo = 0;
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")

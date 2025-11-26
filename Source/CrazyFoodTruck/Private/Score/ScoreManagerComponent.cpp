@@ -2,6 +2,8 @@
 
 #include "Score/ScoreManagerComponent.h"
 
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
+
 UScoreManagerComponent::UScoreManagerComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -35,7 +37,6 @@ UScoreManagerComponent::UScoreManagerComponent()
 int32 UScoreManagerComponent::EvaluateScore_Direct(const TArray<FScoreTier>& Tiers, int32 Value) const
 {
 	int32 BestScore = 0;
-
 	for (const FScoreTier& Tier : Tiers)
 	{
 		if (Value >= Tier.Threshold)
@@ -83,11 +84,11 @@ EScoreGrade UScoreManagerComponent::EvaluateGrade(const TArray<FScoreGradeTier>&
 	return BestGrade;
 }
 
-int32 UScoreManagerComponent::ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32& OutTimeScore, int32& OutKillScore) const
+int32 UScoreManagerComponent::ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32 LifeRemaining, int32 OutLifeScore, int32& OutTimeScore, int32& OutKillScore) const
 {
 	OutTimeScore = EvaluateScore_Inverse(TimeScoreTiers, TimeSeconds);
 	OutKillScore = EvaluateScore_Direct(KillScoreTiers, ZombiesKilled);
-	return OutTimeScore + OutKillScore;
+	return OutTimeScore + OutKillScore + OutLifeScore;
 }
 
 EScoreGrade UScoreManagerComponent::GetGradeForScore(int32 TotalScore) const

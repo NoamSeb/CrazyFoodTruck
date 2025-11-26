@@ -31,8 +31,14 @@ void UAmeliorationWidget::ApplyUpgrades()
 			TruckSubSystem->TruckRotationSpeed += Upgrade.intAddModif;
 			break;
 		case ECamionUpgrade::Heal:
-			TruckSubSystem->Heal += Upgrade.intAddModif;
+			GI->CurrentLifeFoodTruck += Upgrade.intAddModif;
 			break;
+		case ECamionUpgrade::FullHeal:
+			GI->CurrentLifeFoodTruck = GI->MaxLifeFoodTruck;
+		case ECamionUpgrade::ReplenishAmmoWhenKilledZombies:
+			TruckSubSystem->ReplenishAmmoWhenTruckKillZombies = true;
+		case ECamionUpgrade::FasterRepair:
+			TruckSubSystem->RepairSpeed += Upgrade.intAddModif;
 		default:
 			break;
 		}
@@ -43,6 +49,9 @@ void UAmeliorationWidget::ApplyUpgrades()
 	{
 		switch (Upgrade.UpgradeTurret)
 		{
+		case ETurretUpgrade::RotationSpeedCabestan:
+			TruckSubSystem->RotationSpeed += Upgrade.intAddModif;
+			break;
 		case ETurretUpgrade::AugmentationAngle :
 			TruckSubSystem->TurretRangeSide += Upgrade.intAddModif;
 			break;
@@ -55,6 +64,15 @@ void UAmeliorationWidget::ApplyUpgrades()
 		case ETurretUpgrade::MaxAmmo:
 			TruckSubSystem->TurretMaxAmmo = Upgrade.intAddModif;
 			break;
+		case ETurretUpgrade::SpeedBullet:
+			TruckSubSystem->SpeedBullet += Upgrade.intAddModif;
+			break;
+		case ETurretUpgrade::TripleDamageFor10EmeBullet:
+			TruckSubSystem->TripleDamageFor10EBullet = true;
+		case ETurretUpgrade::IncreaseDamageWhenFullReload:
+			TruckSubSystem->IncreaseDamageWhenFullReload = true;
+			TruckSubSystem->DamageIncreaseWhenFullReload = Upgrade.intAddModif;
+			break;
 		default:
 			break;
 		}
@@ -65,7 +83,9 @@ void UAmeliorationWidget::ApplyUpgrades()
 	{
 		TruckSubSystem->TypeBullet = Upgrade.UpgradeBullet;
 	}
-	
+
+
+	GI->ClearUpgrades();
 }
 
 
