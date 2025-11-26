@@ -49,6 +49,7 @@ class CRAZYFOODTRUCK_API UScoreManagerComponent : public UActorComponent
 
 public:
 	UScoreManagerComponent();
+	int32 EvaluateLifeScore(int32 LivesRemaining) const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	TArray<FScoreTier> TimeScoreTiers;
@@ -56,11 +57,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	TArray<FScoreTier> KillScoreTiers;
 
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	// TArray<FScoreTier> LifeScoreTiers;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score|Grade")
 	TArray<FScoreGradeTier> GradeTiers;
 
 	UFUNCTION(BlueprintCallable, Category = "Score")
-	int32 ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32& OutTimeScore, int32& OutKillScore) const;
+	int32 ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32 LifeRemaining, int32 OutLifeScore, int32& OutTimeScore, int32&
+	                        OutKillScore) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Score|Grade")
 	EScoreGrade GetGradeForScore(int32 TotalScore) const;

@@ -19,7 +19,7 @@ class CRAZYFOODTRUCK_API ACrazyFoodTruckHUD : public AHUD
 public:
 	virtual void BeginPlay() override;
 
-	void ShowScoreResult(int32 FinalScore, int32 TimeScore, int32 KillScore, EScoreGrade Grade);
+	void ShowScoreResult(float Time, int32 KillCount, int32 LifeRemaining, EScoreGrade Grade);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "HUD")

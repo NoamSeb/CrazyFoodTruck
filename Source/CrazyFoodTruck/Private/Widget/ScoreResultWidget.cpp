@@ -4,24 +4,9 @@
 
 #include "Components/TextBlock.h"
 
-void UScoreResultWidget::SetScoreData(int32 InFinalScore, int32 InTimeScore, int32 InKillScore, EScoreGrade InGrade)
+void UScoreResultWidget::SetScoreData(int32 Time, int32 KillCount, int LifeRemaining, EScoreGrade InGrade)
 {
-	if (FinalScoreText)
-	{
-		FinalScoreText->SetText(FText::FromString(FString::Printf(TEXT("Total score: %d"), InFinalScore)));
-	}
-	if (TimeScoreText)
-	{
-		TimeScoreText->SetText(FText::FromString(FString::Printf(TEXT("Time score: %d"), InTimeScore)));
-	}
-	if (KillScoreText)
-	{
-		KillScoreText->SetText(FText::FromString(FString::Printf(TEXT("Kill score: %d"), InKillScore)));
-	}
-	if (GradeText)
-	{
-		GradeText->SetText(FText::FromString(FString::Printf(TEXT("Grade: %s"), *GradeToString(InGrade))));
-	}
+	OnScoreShow.Broadcast(Time, KillCount,LifeRemaining, InGrade);
 }
 
 FString UScoreResultWidget::GradeToString(EScoreGrade Grade) const

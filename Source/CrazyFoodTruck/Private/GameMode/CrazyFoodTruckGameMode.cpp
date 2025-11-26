@@ -245,7 +245,7 @@ void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
 
     GEngine->AddOnScreenDebugMessage(MsgKey, 1.1f, FColor::Green, Text);
 
-    if (!bHasComputedFinalScore && ElapsedSeconds >= 30)
+    if (!bHasComputedFinalScore && ElapsedSeconds >= 15)
     {
         EvaluateFinalScore();
     }
@@ -272,16 +272,31 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
 
     AHordeManager* HordeMgr = ResolveHordeManager();
     const int32 Kills = HordeMgr ? HordeMgr->GetZombiesKilledCount() : 0;
-
+    
+    
+    UGameInstanceCrazyFoodTruck* CFTGI = GetGameInstance<UGameInstanceCrazyFoodTruck>();
+    
     int32 TimeScore = 0;
     int32 KillScore = 0;
+    int32 LifeRemaining = 0;
+    int32 OutLifeScore = 0;
+
+    if (CFTGI)
+    {
+        LifeRemaining = CFTGI->CurrentLifeFoodTruck - (CFTGI->MaxLifeFoodTruck -  CFTGI->CurrentLifeFoodTruck);
+        OutLifeScore = LifeRemaining * 100;
+        GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Life Remaining: %d"), CFTGI->CurrentLifeFoodTruck));
+    }
+
     
-    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, TimeScore, KillScore);
+    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, LifeRemaining, OutLifeScore,TimeScore, KillScore);
     const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
 
+
+    
     GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
 
-    if (UGameInstanceCrazyFoodTruck* CFTGI = GetGameInstance<UGameInstanceCrazyFoodTruck>())
+    if (CFTGI)
     {
         CFTGI->AddTicketsForGrade(Grade);
     }
@@ -290,7 +305,7 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
     {
         if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
         {
-            HUD->ShowScoreResult(FinalScore, TimeScore, KillScore, Grade);
+            HUD->ShowScoreResult(TimeSeconds, Kills, LifeRemaining, Grade);
         }
     }
 }
