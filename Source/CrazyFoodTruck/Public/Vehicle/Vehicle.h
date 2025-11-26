@@ -25,14 +25,14 @@ class UTextureRenderTarget2D;
 class AInteractBox;
 class UForwardCamWidget;
 
-UENUM()
-enum class VehicleStates
+UENUM(BlueprintType)
+enum class EVehicleStates : uint8
 {
-	Idle,
+	Idle = 0,
 	Rotating
 };
 UENUM()
-enum class VehicleOrientation
+enum class EVehicleOrientation
 {
 	Left,
 	Right
@@ -126,6 +126,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EVehicleStates TruckState;
+
 #pragma region Upgrades
 	UGameInstanceCrazyFoodTruck* GI;
 	UFoodTruckDataSubSystem* TruckSubSystem;
@@ -138,9 +141,8 @@ public:
 private:
 	// ===== Runtime State =====
 	static constexpr float KilometersToMetersConvertingValue = 27.777777777778f;
-
-	VehicleStates TruckState;
-	VehicleOrientation TruckOrientation;
+	
+	EVehicleOrientation TruckOrientation;
 
 	float InputRotatingValue;
 		

@@ -403,7 +403,10 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
                 
                 if(Cast<AVehicle>(PawnToPossess))
                 {
-                    AddOutlineToForwardCamera(PlayerIndex);
+                    APlayerController* PC = CurrentInteractorPlayerController.Get(); 
+                    int CurrentPlayerIndex = GetPlayerIndexFromPlayerController(PC);
+                    UE_LOG(LogTemp, Display, TEXT("Player Index: %d"), CurrentPlayerIndex);
+                    AddOutlineToForwardCamera(CurrentPlayerIndex);
                 }
             }
         }
