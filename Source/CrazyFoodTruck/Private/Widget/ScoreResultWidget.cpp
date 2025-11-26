@@ -6,6 +6,7 @@
 
 void UScoreResultWidget::SetScoreData(int32 Time, int32 KillCount, int LifeRemaining, EScoreGrade InGrade)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")));
 	OnScoreShow.Broadcast(Time, KillCount,LifeRemaining, InGrade);
 }
 

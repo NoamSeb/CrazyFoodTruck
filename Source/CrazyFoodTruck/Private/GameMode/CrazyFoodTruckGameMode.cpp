@@ -286,7 +286,6 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
     {
         LifeRemaining = CFTGI->CurrentLifeFoodTruck - (CFTGI->MaxLifeFoodTruck -  CFTGI->CurrentLifeFoodTruck);
         OutLifeScore = LifeRemaining * 100;
-        GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Life Remaining: %d"), CFTGI->CurrentLifeFoodTruck));
     }
 
     
@@ -306,6 +305,7 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
     {
         if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
         {
+
             HUD->ShowScoreResult(TimeSeconds, Kills, LifeRemaining, Grade);
         }
     }
