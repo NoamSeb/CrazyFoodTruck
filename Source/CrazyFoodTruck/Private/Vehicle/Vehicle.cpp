@@ -183,6 +183,7 @@ void AVehicle::UnPossessed()
 			ForwardCamWidget = nullptr;
 		}
 	}
+	
 }
 
 void AVehicle::Tick(float DeltaTime)
@@ -217,10 +218,10 @@ void AVehicle::Tick(float DeltaTime)
 
 	switch (TruckState)
 	{
-	case VehicleStates::Idle:
+	case EVehicleStates::Idle:
 		ResetTruckTilt(DeltaTime);
 		break;
-	case VehicleStates::Rotating:
+	case EVehicleStates::Rotating:
 		RotateTruck(DeltaTime);
 		break;
 	default:
@@ -341,7 +342,7 @@ void AVehicle::InputQuitTruck(const FInputActionValue& InputActionValue)
 
 void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 {
-	TruckState = VehicleStates::Rotating;
+	TruckState = EVehicleStates::Rotating;
 	InputRotatingValue = InputActionValue.Get<float>();
 	
 	if (!AlreadyPassed)
@@ -353,11 +354,11 @@ void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 	
 	if (InputRotatingValue > 0)
 	{
-		TruckOrientation = VehicleOrientation::Right;
+		TruckOrientation = EVehicleOrientation::Right;
 	}
 	else
 	{
-		TruckOrientation = VehicleOrientation::Left;
+		TruckOrientation = EVehicleOrientation::Left;
 	}
 	
 	AlreadyPassed = true;
@@ -365,7 +366,7 @@ void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 
 void AVehicle::SetTruckIdleStates()
 {
-	TruckState = VehicleStates::Idle;
+	TruckState = EVehicleStates::Idle;
 	TiltTimer = 0.f;
 	StartRotationRoll = GetActorRotation().Roll;
 	AlreadyPassed = false;

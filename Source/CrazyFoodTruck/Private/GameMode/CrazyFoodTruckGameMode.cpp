@@ -238,6 +238,7 @@ void ACrazyFoodTruckGameMode::ApplyGlobalViewToAllPlayers() const
 
 void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
 {
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Printing...");
     if (!GEngine) return;
 
     static const int32 MsgKey = 99999;
