@@ -49,7 +49,6 @@ class CRAZYFOODTRUCK_API UScoreManagerComponent : public UActorComponent
 
 public:
 	UScoreManagerComponent();
-	int32 EvaluateLifeScore(int32 LivesRemaining) const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
 	TArray<FScoreTier> TimeScoreTiers;

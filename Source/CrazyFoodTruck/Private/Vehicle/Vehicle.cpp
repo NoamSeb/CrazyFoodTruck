@@ -190,13 +190,6 @@ void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	GEngine->AddOnScreenDebugMessage(
-	   -1,                                   // Key (-1 = new line)
-	   5.f,                                  // Display time in seconds
-	   FColor::Green,                        // Text color
-	   FString::Printf(TEXT("Current Truck Speed: %f"), _CurrentTruckMaxSpeed*KilometersToMetersConvertingValue)
-   );
-	
 	if(MovementEnable)
 	{
 		MoveForward();

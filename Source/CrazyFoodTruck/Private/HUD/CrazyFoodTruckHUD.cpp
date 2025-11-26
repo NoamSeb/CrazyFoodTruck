@@ -60,6 +60,13 @@ void ACrazyFoodTruckHUD::ShowScoreResult(float Time, int32 KillCount, int32 Life
 	}
 	
 	ScoreResultWidgetInstance->SetScoreData(Time, KillCount, LifeRemaining, Grade);
+
+	ScoreResultWidgetInstance->OnScoreEnded.AddDynamic(this, &ACrazyFoodTruckHUD::ListenScoreEnd);
+}
+
+void ACrazyFoodTruckHUD::ListenScoreEnd()
+{
+	OnFinalScoreShownHUD.Broadcast();
 }
 
 AHordeManager* ACrazyFoodTruckHUD::ResolveHordeManager() const
