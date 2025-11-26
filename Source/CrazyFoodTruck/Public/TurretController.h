@@ -36,7 +36,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Data")
 	UDataTable* BulletDataTable;
 
-	UPROPERTY(EditAnywhere, Category="Variable")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Variable")
 	AInteractBox* InteractBox;
 
 	APlayerController* ActualPlayerController;

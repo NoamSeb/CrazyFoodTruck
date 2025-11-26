@@ -157,7 +157,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interact|Components")
 	TObjectPtr<UBoxComponent> Box = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Interact|State")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interact|State")
 	TWeakObjectPtr<APlayerController> CurrentInteractorPlayerController;
 
 	UPROPERTY(VisibleAnywhere, Category = "Interact|State")

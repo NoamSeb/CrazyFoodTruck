@@ -21,6 +21,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<UDataTable>> Levels;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ARoad> SurvivorCamp;
 	
 	UPROPERTY(EditAnywhere)
 	int RoadSegmentsNumber;
