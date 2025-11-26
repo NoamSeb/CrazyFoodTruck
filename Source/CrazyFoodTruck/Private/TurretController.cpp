@@ -118,8 +118,8 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 
 		//Pour Upgrades
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Turquoise, FString::Printf(TEXT("value fireRate Truck : %f"), TruckSubSystem->TurretFireRate));
-		
-		if (BulletFireRate != 0)
+
+		if (TruckSubSystem->TurretFireRate != 0)
 		{
 			_CurrentBulletFireRate = BulletFireRate - (TruckSubSystem->TurretFireRate * BulletFireRate / 100);
 		}
@@ -127,6 +127,8 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		{
 			_CurrentBulletFireRate = BulletFireRate;
 		}
+
+		
 		_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
 
 		BulletChooseForShoot.Damage = _CurrentBulletDamage;
