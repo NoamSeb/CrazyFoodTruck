@@ -57,6 +57,7 @@ void UAmeliorationWidget::ApplyUpgrades()
 			break;
 		case ETurretUpgrade::Cadence:
 			TruckSubSystem->TurretFireRate += Upgrade.intAddModif;
+			TruckSubSystem->TurretFireRate = FMath::Clamp(TruckSubSystem->TurretFireRate, 0, 100);
 			break;
 		case ETurretUpgrade::Damage:
 			TruckSubSystem->DamagePerBullet += Upgrade.intAddModif;
