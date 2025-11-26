@@ -190,6 +190,13 @@ void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	GEngine->AddOnScreenDebugMessage(
+	   -1,                                   // Key (-1 = new line)
+	   5.f,                                  // Display time in seconds
+	   FColor::Green,                        // Text color
+	   FString::Printf(TEXT("Current Truck Speed: %f"), _CurrentTruckMaxSpeed*KilometersToMetersConvertingValue)
+   );
+	
 	if(MovementEnable)
 	{
 		MoveForward();
@@ -260,8 +267,8 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if (OtherActor->Tags.Contains("Obstacle"))
 	{
-		OtherActor->Destroy();
 		ReduceSpeed();
+		OtherActor->Destroy();
 	}
 	else if (OtherActor->Tags.Contains("MapSwitch"))
 	{
@@ -426,7 +433,12 @@ void AVehicle::ReduceSpeed()
 	if (!MovementComponent) return;
 
 	StartSpeed = MovementComponent->MaxSpeed;
-	MovementComponent->MaxSpeed -= KilometersToMetersConvertingValue;
+	MovementComponent->MaxSpeed -= TruckLossSpeed * KilometersToMetersConvertingValue;
+	
+	if (GI)
+	{
+		GI->PlayerCameraShake(Explosion);
+	}
 
 	GetWorld()->GetTimerManager().SetTimer(
 		SpeedRecoveryHandle,
