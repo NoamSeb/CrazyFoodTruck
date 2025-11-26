@@ -45,6 +45,8 @@ public:
 	bool PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType);
 	bool UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType);
 
+	void ApplyOutline(APawn* OutlinedPawn, int PlayerIndex);
+	
 	UFUNCTION(BlueprintCallable, Category="Local Multiplayer|Input")
 	void AddTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, int32 Priority = 100, bool bForceImmediately = true);
 

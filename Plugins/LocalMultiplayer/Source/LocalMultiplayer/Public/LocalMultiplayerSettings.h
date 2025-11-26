@@ -52,10 +52,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC DRAWER"))
 	TObjectPtr<UInputMappingContext> IMCDrawer = nullptr;
+
 	
     UInputMappingContext* GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const;
     bool ContainsKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;
-	
 };
 
 /**
@@ -76,6 +76,9 @@ public:
 
     UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
     int NbMaxGamepads = 4;
+
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer", meta=(DisplayName="MPC Outline"))
+	TObjectPtr<UMaterialParameterCollection> MPCOutline = nullptr;
 
 	int GetNbKeyboardProfiles() const;
 	int FindKeyboardProfileIndexFromKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;

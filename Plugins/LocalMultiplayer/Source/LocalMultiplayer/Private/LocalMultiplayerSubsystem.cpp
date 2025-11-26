@@ -245,28 +245,7 @@ bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, AP
 
 	PC->Possess(PawnToPossess);
 	
-	UMeshComponent* PawnMesh = PawnToPossess->FindComponentByClass<UMeshComponent>();
-	if(PawnMesh)
-	{
-		PawnMesh->SetRenderCustomDepth(true);
-		PawnMesh->SetCustomDepthStencilWriteMask(ERendererStencilMask::ERSM_255);
-		FString ParamName = FString::Printf(TEXT("Bit_P%d"), PlayerIndex+1);
-		FName ParamFName(*ParamName);
-		
-		UMaterialParameterCollection* MPC = LoadObject<UMaterialParameterCollection>(nullptr, TEXT("/Game/CrazyFoodTruck/Visuals/VFX/Outline/MPC_Outline"));
-		if (!MPC)
-			UE_LOG(LogTemp, Error, TEXT("MPC Not found !"));
-
-		UMaterialParameterCollectionInstance* MPCInstance = GetWorld()->GetParameterCollectionInstance(MPC);
-		if (!MPCInstance)
-			UE_LOG(LogTemp, Error, TEXT("MPCInstance Not found !"));
-		
-		float ScalarValue = UKismetMaterialLibrary::GetScalarParameterValue(GetWorld(), MPC, ParamFName);
-		
-		int32 StencilValue = FMath::TruncToInt(ScalarValue);
-		
-		PawnMesh->SetCustomDepthStencilValue(StencilValue);
-	}
+	ApplyOutline(PawnToPossess, PlayerIndex);
 
 	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
 	{
@@ -293,6 +272,8 @@ bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, 
 	if (PlayerPawn)
 	{
 		PC->Possess(PlayerPawn);
+		
+		ApplyOutline(PlayerPawn, PlayerIndex);
 	}
 
 	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
@@ -301,6 +282,33 @@ bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, 
 	}
 
 	return true;
+}
+
+void ULocalMultiplayerSubsystem::ApplyOutline(APawn* OutlinedPawn, int PlayerIndex)
+{
+	UMeshComponent* PawnMesh = OutlinedPawn->FindComponentByClass<UMeshComponent>();
+	if(PawnMesh)
+	{
+		PawnMesh->SetRenderCustomDepth(true);
+		PawnMesh->SetCustomDepthStencilWriteMask(ERendererStencilMask::ERSM_255);
+		FString ParamName = FString::Printf(TEXT("Bit_P%d"), PlayerIndex+1);
+		FName ParamFName(*ParamName);
+		
+		const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
+		UMaterialParameterCollection* MPC = LocalMultiplayerSettings->MPCOutline;
+		if (!MPC)
+			UE_LOG(LogTemp, Error, TEXT("MPC Not found !"));
+
+		UMaterialParameterCollectionInstance* MPCInstance = GetWorld()->GetParameterCollectionInstance(MPC);
+		if (!MPCInstance)
+			UE_LOG(LogTemp, Error, TEXT("MPCInstance Not found !"));
+		
+		float ScalarValue = UKismetMaterialLibrary::GetScalarParameterValue(GetWorld(), MPC, ParamFName);
+		
+		int32 StencilValue = FMath::TruncToInt(ScalarValue);
+		
+		PawnMesh->SetCustomDepthStencilValue(StencilValue);
+	}
 }
 
 void ULocalMultiplayerSubsystem::AddTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, int32 Priority, bool bForceImmediately)

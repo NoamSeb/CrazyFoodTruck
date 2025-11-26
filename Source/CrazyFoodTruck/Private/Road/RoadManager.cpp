@@ -83,6 +83,7 @@ void ARoadManager::SpawnRoadSegment()
         }
     }
 
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Je suis juste avant spawn");
     SpawnTileToSurvivorCamp(SpawnLocation, SpawnRotation);
    
 }
@@ -105,32 +106,13 @@ void ARoadManager::RegulateRoadSegmentsPosition(TObjectPtr<ARoad> RoadToMove, in
 /// @param Rotation 
 void ARoadManager::SpawnTileToSurvivorCamp(FVector Location, FRotator Rotation)
 {
-    const FString TargetName = TEXT("BP_SurvivorCamp");
-    FString LocalFolderPath = TEXT("/Game/CrazyFoodTruck/Blueprint/Road/Segments");
-    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-
-    TArray<FAssetData> AssetDataList;
-    AssetRegistryModule.Get().GetAssetsByPath(*LocalFolderPath, AssetDataList, true);
-    TObjectPtr<UObject> FoundAsset = nullptr;
-	
-    for (const FAssetData& AssetData : AssetDataList)
-    {
-        if (AssetData.AssetName.ToString() == TargetName)
-        {
-            FoundAsset = AssetData.GetAsset();
-            TObjectPtr<UBlueprint> BlueprintAsset = Cast<UBlueprint>(FoundAsset);
-            if (BlueprintAsset && BlueprintAsset->GeneratedClass->IsChildOf(ARoad::StaticClass()))
-            {
-                TSubclassOf<ARoad> RoadSurvivorClass = Cast<UClass>(BlueprintAsset->GeneratedClass);
-                if (RoadSurvivorClass)
+                if (SurvivorCamp)
                 {
-                    ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(RoadSurvivorClass, Location, Rotation);
+                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "SPAWNNNNNNNNNNNNN");
+
+                    ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(SurvivorCamp, Location, Rotation);
                     RegulateRoadSegmentsPosition(SurvivorCampRoad, RoadsSegments.Num());
                 }
-            }
-            break;
-        }
-    }
 }
 
 /// Get the correct Road Segment from the Data Table
