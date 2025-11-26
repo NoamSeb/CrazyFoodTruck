@@ -25,8 +25,10 @@ void ATurretController::BeginPlay()
 	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
 
 	_CurrentAmmoMax = _AmmoMax + TruckSubSystem->TurretMaxAmmo;
-	_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
+	//_CurrentBulletFireRate = TruckSubSystem->TurretFireRate;
 	_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
+
+	TruckSubSystem->indexBulletShoot = 0;
 	
 #pragma endregion
 	
@@ -43,8 +45,8 @@ void ATurretController::BeginPlay()
         }
 	}
 	
-	ResetCoolDown();
 	SwitchBulletType(TruckSubSystem->TypeBullet);
+	ResetCoolDown();
 	UpdateTurretCanonRotation();
 }
 
@@ -94,9 +96,11 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 		BulletHapticForce = ActualBulletStructure->HapticsScale;
 
-		if (ActualBulletStructure->BulletClass)
+		BulletChooseForShoot = *ActualBulletStructure;
+
+		if (BulletChooseForShoot.BulletClass)
         {
-			ActualBulletPrefab = ActualBulletStructure->BulletClass.Get();
+			ActualBulletPrefab = BulletChooseForShoot.BulletClass.Get();
 			
 			if (!ActualBulletPrefab)
 			{
@@ -113,11 +117,25 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
         }
 
 		//Pour Upgrades
-		_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Turquoise, FString::Printf(TEXT("value fireRate Truck : %f"), TruckSubSystem->TurretFireRate));
+		
+		if (BulletFireRate != 0)
+		{
+			_CurrentBulletFireRate = BulletFireRate - (TruckSubSystem->TurretFireRate * BulletFireRate / 100);
+		}
+		else
+		{
+			_CurrentBulletFireRate = BulletFireRate;
+		}
 		_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
 
-		ActualBulletStructure->Damage = _CurrentBulletDamage;
-		ActualBulletStructure->FireRate = _CurrentBulletFireRate;
+		BulletChooseForShoot.Damage = _CurrentBulletDamage;
+		BulletChooseForShoot.FireRate = _CurrentBulletFireRate;
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::FromInt(BulletChooseForShoot.Speed));
+		BulletChooseForShoot.Speed = BulletSpeed + TruckSubSystem->SpeedBullet;
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::FromInt(BulletChooseForShoot.Speed));
+
+		_CurrentAmmoMax = BulletChooseForShoot.Ammo + TruckSubSystem->TurretMaxAmmo;
 
 		SetMaxAmmo(_CurrentAmmoMax);
 		//SetMaxAmmo(ActualBulletStructure->Ammo);
@@ -203,6 +221,19 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 {
 	_CurrentAmmo = NewAmmo;
+
+	if (_CurrentAmmo >= _CurrentAmmoMax)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(_CurrentAmmo));
+		if (TruckSubSystem->IncreaseDamageWhenFullReload && !IsDamageAlreadyIncrease)
+		{
+			IsAmmoFullReload = true;
+			BulletChooseForShoot.Damage += TruckSubSystem->DamageIncreaseWhenFullReload;
+			TimerFullReload = TimeDamageWhenFullReload;
+			IsDamageAlreadyIncrease = true;
+		}
+	}
+	
 	OnAmmoChanged.Broadcast(_CurrentAmmo, _CurrentAmmoMax);
 }
 
@@ -231,6 +262,8 @@ void ATurretController::BlueprintShoot()
 
 float ATurretController::GetCoolDownBetweenShoot()
 {
+	//return 0;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value fireRate : %f"), _CurrentBulletFireRate));
 	return _CurrentBulletFireRate;
 }
 
@@ -250,6 +283,21 @@ void ATurretController::Tick(float DeltaTime)
 	{
 		_CurrentCoolDown -= DeltaTime;
 	}
+
+
+	if (IsDamageAlreadyIncrease)
+	{
+		if (TimerFullReload > 0.f)
+		{
+			TimerFullReload -= DeltaTime;
+		}
+		else
+		{
+			BulletChooseForShoot.Damage = _CurrentBulletDamage;
+			IsDamageAlreadyIncrease = false;
+			IsAmmoFullReload = false;
+		}
+	}
 }
 
 void ATurretController::Shoot()
@@ -266,7 +314,10 @@ void ATurretController::Shoot()
 	}
 	if (_CurrentCoolDown > 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Turret on Cooldown !"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value fireRate : %f"), _CurrentBulletFireRate));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("value fireRate : %f"), _CurrentCoolDown));
+		
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Turret on Cooldown !"));
 		return;
 	}
 	if (_ActualPlayerReloading > 0)
@@ -287,6 +338,21 @@ void ATurretController::Shoot()
 	OnShoot.Broadcast();
 	OnShootGetAmmo.Broadcast(GetAmmo(),_CurrentAmmoMax);
 
+	if (TruckSubSystem->TripleDamageFor10EBullet)
+	{
+		if (TruckSubSystem->indexBulletShoot >= 9)
+		{
+			BulletChooseForShoot.Damage = _CurrentBulletDamage * 3;
+			TruckSubSystem->indexBulletShoot = 0;
+		} else
+		{
+			BulletChooseForShoot.Damage = _CurrentBulletDamage;
+			TruckSubSystem->indexBulletShoot ++;
+		}
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("value index : %d"), TruckSubSystem->indexBulletShoot));
+		
+	}
+
 	AActor* bulletInstance = GetWorld()->SpawnActor<AActor>(ActualBulletPrefab, _SpawnBulletTransform->GetComponentTransform(), bulletParams);
 	if (bulletInstance)
 	{
@@ -294,7 +360,10 @@ void ATurretController::Shoot()
 		ABulletBase* BulletBase = Cast<ABulletBase>(bulletInstance);
 		if (BulletBase)
 		{
-			BulletBase->Initialize(ActualBulletStructure, _CanonToRotate->GetForwardVector());
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value damage : %d"), BulletChooseForShoot.Damage));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::FromInt(BulletChooseForShoot.Speed));
+			
+			BulletBase->Initialize(BulletChooseForShoot, _CanonToRotate->GetForwardVector());
 		}
 	}
 }
@@ -314,17 +383,18 @@ void ATurretController::InputChangeBulletType(const FInputActionValue& Value)
 
 void ATurretController::InputShootTriggered(const FInputActionValue& Value)
 {
-	if (TruckSubSystem->TripleDamageFor10EBullet)
-	{
-		if (TruckSubSystem->indexBulletShoot >= 9)
-		{
-			ActualBulletStructure->Damage = _CurrentBulletDamage * 3;
-			TruckSubSystem->indexBulletShoot = 0;
-		} else
-		{
-			TruckSubSystem->indexBulletShoot ++;
-		}
-	}
+	//if (TruckSubSystem->TripleDamageFor10EBullet)
+	//{
+	//	if (TruckSubSystem->indexBulletShoot >= 9)
+	//	{
+	//		BulletChooseForShoot.Damage = _CurrentBulletDamage * 3;
+	//		TruckSubSystem->indexBulletShoot = 0;
+	//	} else
+	//	{
+	//		BulletChooseForShoot.Damage = _CurrentBulletDamage;
+	//		TruckSubSystem->indexBulletShoot ++;
+	//	}
+	//}
 	Shoot();
 }
 

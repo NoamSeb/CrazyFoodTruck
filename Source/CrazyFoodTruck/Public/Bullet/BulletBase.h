@@ -18,7 +18,7 @@ class CRAZYFOODTRUCK_API ABulletBase : public AActor
 
 public:
 	ABulletBase();
-	virtual void Initialize(FBulletStructure* BulletStructure, const FVector& direction);
+	virtual void Initialize(FBulletStructure BulletStructure, const FVector& direction);
 	
 protected:
 	

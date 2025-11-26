@@ -8,6 +8,5 @@ UENUM(BlueprintType)
 enum class EJeuUpgrade : uint8
 {
 	None = 0,
-	MoreZombies,
-	BetterHealing
+	RandomUpgrades
 };
