@@ -122,6 +122,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool MovementEnable;
+	
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();

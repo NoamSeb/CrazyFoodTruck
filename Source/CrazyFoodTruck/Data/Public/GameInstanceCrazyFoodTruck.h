@@ -20,7 +20,11 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	
 	virtual void Init() override;
 
-	public:
+private:
+	
+	int32 nbrTickets;
+	
+public:
 
 	// FUNCTION
 
@@ -31,8 +35,6 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	TObjectPtr<UGameDataSubSystem> GameData;
 	TObjectPtr<UZombieDataSubSystem> ZombieData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 nbrTickets;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FStructUpgrade> ListUpgrades;
@@ -56,6 +58,12 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	int32 MaxLifeFoodTruck = 20;
 
 	int actoraspurr;
+
+	UFUNCTION(BlueprintCallable, Category = "Tickets")
+	int GetTicketsNumber() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Tickets")
+	int IncrementTicketsNumber(int Amount);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tickets")
 	TMap<EScoreGrade, int32> TicketsByGrade;

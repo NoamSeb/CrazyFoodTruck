@@ -91,7 +91,7 @@ void UAmeliorationWidget::ApplyUpgrades()
 		switch (Upgrade.UpgradeGame)
 		{
 		case EJeuUpgrade::MoreTickets:
-			GI->nbrTickets += Upgrade.intAddModif;
+			GI->IncrementTicketsNumber(Upgrade.intAddModif);
 			break;
 		}
 	}
