@@ -245,11 +245,11 @@ void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
     const FString Text = FString::Printf(TEXT("Time: %s"), *FormatMMSS(ElapsedSeconds));
 
     GEngine->AddOnScreenDebugMessage(MsgKey, 1.1f, FColor::Green, Text);
-
-    if (!bHasComputedFinalScore && ElapsedSeconds >= 15)
-    {
-        EvaluateFinalScore();
-    }
+    //
+    // if (!bHasComputedFinalScore && ElapsedSeconds >= 15)
+    // {
+    //     EvaluateFinalScore();
+    // }
 }
 
 FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
@@ -286,7 +286,6 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
     {
         LifeRemaining = CFTGI->CurrentLifeFoodTruck - (CFTGI->MaxLifeFoodTruck -  CFTGI->CurrentLifeFoodTruck);
         OutLifeScore = LifeRemaining * 100;
-        GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Life Remaining: %d"), CFTGI->CurrentLifeFoodTruck));
     }
 
     
@@ -307,8 +306,14 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
         if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
         {
             HUD->ShowScoreResult(TimeSeconds, Kills, LifeRemaining, Grade);
+            HUD->OnFinalScoreShownHUD.AddDynamic(this, &ACrazyFoodTruckGameMode::ListenScoreEnd);
         }
     }
+}
+
+void ACrazyFoodTruckGameMode::ListenScoreEnd()
+{
+    OnFinalScoreShown.Broadcast();
 }
 
 AHordeManager* ACrazyFoodTruckGameMode::ResolveHordeManager() const
