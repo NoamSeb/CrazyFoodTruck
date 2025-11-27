@@ -4,9 +4,9 @@
 
 #include "Components/TextBlock.h"
 
-void UScoreResultWidget::SetScoreData(int32 Time, int32 KillCount, int LifeRemaining, EScoreGrade InGrade)
+void UScoreResultWidget::SetScoreData(int32 Time, int32 KillCount, int32 LifeRemaining, int TicketsCount, EScoreGrade InGrade)
 {
-	OnScoreShow.Broadcast(Time, KillCount, LifeRemaining, InGrade);
+	OnScoreShow.Broadcast(Time, KillCount, LifeRemaining, TicketsCount, InGrade);
 }
 
 void UScoreResultWidget::EndScoreDisplay()

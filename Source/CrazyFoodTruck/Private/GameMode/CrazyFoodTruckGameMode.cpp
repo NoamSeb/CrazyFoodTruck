@@ -289,23 +289,24 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
     }
 
     
-    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, LifeRemaining, OutLifeScore,TimeScore, KillScore);
+    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, OutLifeScore, TimeScore,KillScore);
     const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
 
 
     
     GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
 
+    int32 tickets = 0;
     if (CFTGI)
     {
-        CFTGI->AddTicketsForGrade(Grade);
+        tickets = CFTGI->AddTicketsForGrade(Grade);
     }
 
     if (APlayerController* PC = World->GetFirstPlayerController())
     {
         if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
         {
-            HUD->ShowScoreResult(TimeSeconds, Kills, LifeRemaining, Grade);
+            HUD->ShowScoreResult(TimeSeconds, Kills, LifeRemaining, tickets, Grade);
             HUD->OnFinalScoreShownHUD.AddDynamic(this, &ACrazyFoodTruckGameMode::ListenScoreEnd);
         }
     }
