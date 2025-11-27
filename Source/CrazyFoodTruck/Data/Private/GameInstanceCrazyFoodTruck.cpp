@@ -58,23 +58,12 @@ void UGameInstanceCrazyFoodTruck::ClearUpgrades()
 	ListUpgrades.Empty();
 }
 
-void UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
+int32 UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
 {
 	if (int32* TicketsPtr = TicketsByGrade.Find(Grade))
 	{
 		nbrTickets += *TicketsPtr;
-
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1, 5.f, FColor::Cyan,
-				FString::Printf(
-					TEXT("[Tickets] Grade=%d -> +%d tickets (total=%d)"),
-					static_cast<int32>(Grade),
-					*TicketsPtr,
-					nbrTickets
-				)
-			);
-		}
+		return nbrTickets;
 	}
+	return 0;
 }

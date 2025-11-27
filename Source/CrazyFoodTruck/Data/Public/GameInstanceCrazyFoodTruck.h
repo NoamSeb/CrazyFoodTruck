@@ -17,12 +17,9 @@ UCLASS()
 class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 {
 	GENERATED_BODY()
-
 	
-
 	virtual void Init() override;
 
-	
 	public:
 
 	// FUNCTION
@@ -64,7 +61,7 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	TMap<EScoreGrade, int32> TicketsByGrade;
 
 	UFUNCTION(BlueprintCallable, Category = "Tickets")
-	void AddTicketsForGrade(EScoreGrade Grade);
+	int32 AddTicketsForGrade(EScoreGrade Grade);
 
 private:
 	ACameraShakeManager* CameraShakeManager;
