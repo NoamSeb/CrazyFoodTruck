@@ -126,8 +126,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EVehicleStates TruckState;
+	UFUNCTION(BlueprintCallable)
+	void SetTruckState(EVehicleStates NewState);
+	UFUNCTION(BlueprintCallable)
+	EVehicleStates GetTruckState() const { return TruckState; }
 
 #pragma region Upgrades
 	UGameInstanceCrazyFoodTruck* GI;
@@ -165,6 +167,10 @@ public:
     #pragma endregion
 
 private:
+
+	UPROPERTY(EditAnywhere)
+	EVehicleStates TruckState;
+	
 	// ===== Runtime State =====
 	static constexpr float KilometersToMetersConvertingValue = 27.777777777778f;
 	
@@ -269,6 +275,7 @@ private:
 	void StartForwardCapture();
 	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	void StopForwardCapture();
+	
 	void CaptureForwardOnce();
 
 	void UpdateForwardCapture(float DeltaTime);
