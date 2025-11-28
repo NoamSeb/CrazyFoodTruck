@@ -56,8 +56,8 @@ void AVehicle::BeginPlay()
 		RaceUpdateTimer,
 		this,
 		&AVehicle::BroadcastRaceData,
-		3.0f,   // interval
-		true    // looping
+		fDelegateInterval, 
+		true
 	);
 	
 #pragma region Upgrades
@@ -367,7 +367,7 @@ void AVehicle::ShootLineTrace(FVector TargetLocation)
 
 void AVehicle::BroadcastRaceData()
 {
-	OnVehicleUpdate.Broadcast(fDistanceToFinishLine);
+	OnVehicleUpdate.Broadcast(fDistanceToFinishLine, fTotalRaceDistance, fDelegateInterval);
 }
 
 void AVehicle::BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)

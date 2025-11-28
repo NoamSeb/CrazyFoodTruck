@@ -139,7 +139,13 @@ public:
 #pragma endregion
 
 #pragma region Road Progress
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVehicleUpdate, float, DistanceToFinish);
+	float fTotalRaceDistance;
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
+	FOnVehicleUpdate, 
+	float, DistanceToFinish, 
+	float, TotalDistance, 
+	float, DelegateInterval
+);
         UFUNCTION()
         void ShootLineTrace(FVector TargetLocation);
         
@@ -149,6 +155,7 @@ public:
         UPROPERTY(EditAnywhere, BlueprintReadWrite)
         float fProgressDistance;
         bool bIsBeginOfTheRace = true;
+		float fDelegateInterval = 2;
 
 		UPROPERTY(BlueprintAssignable, Category = "Race")
 		FOnVehicleUpdate OnVehicleUpdate;
@@ -158,7 +165,7 @@ public:
 		FTimerHandle RaceUpdateTimer;
 	
         float fDistanceToFinishLine;
-        float fTotalRaceDistance;
+        
 		FVector FEndOfTheRaceLocation;
 		bool bSendDelegate = false;
     
