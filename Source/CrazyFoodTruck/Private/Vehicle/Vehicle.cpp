@@ -331,6 +331,11 @@ void AVehicle::SetupMappingContextIntoController() const
 	InputSystem->AddMappingContext(FoodTruckInputMappingContext, 0);
 }
 
+void AVehicle::SetTruckState(EVehicleStates NewState)
+{
+	TruckState = NewState;
+}
+
 void AVehicle::ShootLineTrace(FVector TargetLocation)
 {
 	FHitResult HitResult;
@@ -569,6 +574,8 @@ void AVehicle::StartForwardCapture()
 void AVehicle::StopForwardCapture()
 {
 	if (!ForwardCapture) return;
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stopping Forward Capture"));
 
 	bForwardCaptureActive = false;
 	ForwardCaptureTimer = 0.f;
