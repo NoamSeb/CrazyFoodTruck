@@ -55,6 +55,12 @@ protected:
 	void HandleRoll(const FInputActionValue& Value);
 	void HandleQuit(const FInputActionValue& Value);
 
+	void TurnCabestan(const FInputActionValue& Value);
+	void MoveX(const FInputActionValue& Value);
+	void MoveY(const FInputActionValue& Value);
+	float InputX;
+	float InputY;
+
 	void DropRollInput();
 	void DropYawInput();
 

@@ -59,6 +59,11 @@ void ASideMutionDrawer::QuitDrawer()
 void ASideMutionDrawer::HandleOpen(const FInputActionValue& Value)
 {
 	if (!LinkedMunitionDrawer){return;}
-	LinkedMunitionDrawer->ReceiveInputOpen(1.f);
+	float value = Value.Get<float>();
+	value = FMath::RoundToInt(value);
+	if (value > 0)
+	{
+		LinkedMunitionDrawer->ReceiveInputOpen(value);
+	}
 }
 
