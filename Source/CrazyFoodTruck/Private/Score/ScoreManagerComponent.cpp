@@ -45,8 +45,10 @@ int32 UScoreManagerComponent::EvaluateScore_Inverse(const TArray<FScoreTier>& Ti
 {
 	for (const FScoreTier& Tier : Tiers)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Evaluating Time Score Tier: Value %d vs Threshold %d"), Value, Tier.Threshold));
 		if (Value <= Tier.Threshold)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Time Score Tier Matched: Value %d <= Threshold %d => Score %d"), Value, Tier.Threshold, Tier.Score));
 			return Tier.Score;
 		}
 	}
@@ -62,7 +64,8 @@ EScoreGrade UScoreManagerComponent::EvaluateGrade(const TArray<FScoreGradeTier>&
 	{
 		if (TotalScore >= Tier.Threshold)
 		{
-			BestGrade = Tier.Grade;
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Blue, FString::Printf(TEXT("Grade Tier Matched: TotalScore %d >= Threshold %d => Grade %s"), TotalScore, Tier.Threshold, *UEnum::GetValueAsString(Tier.Grade)));
+			return Tier.Grade;
 		}
 		else
 		{

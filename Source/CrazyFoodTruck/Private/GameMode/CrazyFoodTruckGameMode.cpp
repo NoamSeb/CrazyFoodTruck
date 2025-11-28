@@ -292,6 +292,8 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
     const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, OutLifeScore, TimeScore,KillScore);
     const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
 
+    GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Final Score: %d | Time Score: %d | Kill Score: %d | Life Score: %d | Grade: %s"), FinalScore, TimeScore, KillScore, OutLifeScore, *UEnum::GetValueAsString(Grade)));
+
 
     
     GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
