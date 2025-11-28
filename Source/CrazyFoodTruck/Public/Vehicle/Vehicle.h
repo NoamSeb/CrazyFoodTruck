@@ -123,7 +123,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool MovementEnable;
 	
-public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
 
@@ -138,6 +137,32 @@ public:
 	float _CurrentTruckAngleSpeed;
 		
 #pragma endregion
+
+#pragma region Road Progress
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVehicleUpdate, float, DistanceToFinish);
+        UFUNCTION()
+        void ShootLineTrace(FVector TargetLocation);
+        
+        UPROPERTY(EditAnywhere, BlueprintReadWrite)
+        int ProgressOnRoad;
+    
+        UPROPERTY(EditAnywhere, BlueprintReadWrite)
+        float fProgressDistance;
+        bool bIsBeginOfTheRace = true;
+
+		UPROPERTY(BlueprintAssignable, Category = "Race")
+		FOnVehicleUpdate OnVehicleUpdate;
+	protected:
+		void BroadcastRaceData();
+    private:
+		FTimerHandle RaceUpdateTimer;
+	
+        float fDistanceToFinishLine;
+        float fTotalRaceDistance;
+		FVector FEndOfTheRaceLocation;
+		bool bSendDelegate = false;
+    
+    #pragma endregion
 
 private:
 	// ===== Runtime State =====
@@ -239,7 +264,10 @@ protected:
 private:
 	void CreateAndAssignForwardRenderTarget();
 	void ConfigureForwardCaptureQuality();
+	
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	void StartForwardCapture();
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	void StopForwardCapture();
 	void CaptureForwardOnce();
 
