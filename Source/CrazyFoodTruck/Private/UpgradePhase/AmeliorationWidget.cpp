@@ -30,15 +30,15 @@ void UAmeliorationWidget::ApplyUpgrades()
 		case ECamionUpgrade::TurningSpeed:
 			TruckSubSystem->TruckRotationSpeed += Upgrade.intAddModif;
 			break;
-		case ECamionUpgrade::Heal:
-			GI->CurrentLifeFoodTruck += Upgrade.intAddModif;
-			break;
-		case ECamionUpgrade::FullHeal:
-			GI->CurrentLifeFoodTruck = GI->MaxLifeFoodTruck;
+		//case ECamionUpgrade::Heal:
+		//	GI->CurrentLifeFoodTruck += Upgrade.intAddModif;
+		//	break;
 		case ECamionUpgrade::ReplenishAmmoWhenKilledZombies:
 			TruckSubSystem->ReplenishAmmoWhenTruckKillZombies = true;
+			break;
 		case ECamionUpgrade::FasterRepair:
 			TruckSubSystem->RepairSpeed += Upgrade.intAddModif;
+			break;
 		default:
 			break;
 		}
@@ -85,6 +85,17 @@ void UAmeliorationWidget::ApplyUpgrades()
 		TruckSubSystem->TypeBullet = Upgrade.UpgradeBullet;
 	}
 
+	Upgrades = GI->ListUpgradesToAdd(EZoneUpgrade::Jeu);
+	for (FStructUpgrade Upgrade : Upgrades)
+	{
+		switch (Upgrade.UpgradeGame)
+		{
+		case EJeuUpgrade::MoreTickets:
+			GI->IncrementTicketsNumber(Upgrade.intAddModif);
+			break;
+		}
+	}
+	
 
 	GI->ClearUpgrades();
 }

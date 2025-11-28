@@ -17,13 +17,14 @@ UCLASS()
 class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 {
 	GENERATED_BODY()
-
 	
-
 	virtual void Init() override;
 
+private:
 	
-	public:
+	int32 nbrTickets;
+	
+public:
 
 	// FUNCTION
 
@@ -34,8 +35,6 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 	TObjectPtr<UGameDataSubSystem> GameData;
 	TObjectPtr<UZombieDataSubSystem> ZombieData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 nbrTickets;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FStructUpgrade> ListUpgrades;
@@ -60,11 +59,17 @@ class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 
 	int actoraspurr;
 
+	UFUNCTION(BlueprintCallable, Category = "Tickets")
+	int GetTicketsNumber() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Tickets")
+	int IncrementTicketsNumber(int Amount);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tickets")
 	TMap<EScoreGrade, int32> TicketsByGrade;
 
 	UFUNCTION(BlueprintCallable, Category = "Tickets")
-	void AddTicketsForGrade(EScoreGrade Grade);
+	int32 AddTicketsForGrade(EScoreGrade Grade);
 
 private:
 	ACameraShakeManager* CameraShakeManager;

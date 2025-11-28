@@ -52,6 +52,14 @@ void AVehicle::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetWorldTimerManager().SetTimer(
+		RaceUpdateTimer,
+		this,
+		&AVehicle::BroadcastRaceData,
+		3.0f,   // interval
+		true    // looping
+	);
+	
 #pragma region Upgrades
 	if (UGameInstance* GIBase = GetGameInstance())
 	{
@@ -190,13 +198,6 @@ void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	GEngine->AddOnScreenDebugMessage(
-	   -1,                                   // Key (-1 = new line)
-	   5.f,                                  // Display time in seconds
-	   FColor::Green,                        // Text color
-	   FString::Printf(TEXT("Current Truck Speed: %f"), _CurrentTruckMaxSpeed*KilometersToMetersConvertingValue)
-   );
-	
 	if(MovementEnable)
 	{
 		MoveForward();
@@ -257,6 +258,8 @@ void AVehicle::Tick(float DeltaTime)
 	}
 
 	UpdateForwardCapture(DeltaTime);
+	ShootLineTrace(FEndOfTheRaceLocation);
+	
 }
 
 void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -326,6 +329,45 @@ void AVehicle::SetupMappingContextIntoController() const
 	if (InputSystem == nullptr) return;
 
 	InputSystem->AddMappingContext(FoodTruckInputMappingContext, 0);
+}
+
+void AVehicle::ShootLineTrace(FVector TargetLocation)
+{
+	FHitResult HitResult;
+	if (bIsBeginOfTheRace)
+	{
+		bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		GetActorLocation(),
+		TargetLocation,
+		ECC_Visibility
+		);
+		if (bHit)
+		{
+			fTotalRaceDistance = HitResult.Distance;
+			FEndOfTheRaceLocation = TargetLocation;
+		}
+		bIsBeginOfTheRace = false;
+	}else
+	{
+		
+		bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		GetActorLocation(),
+		TargetLocation,
+		ECC_Visibility
+		);
+		if (bHit)
+		{
+			fProgressDistance = HitResult.Distance;
+			fDistanceToFinishLine = fTotalRaceDistance - fProgressDistance;
+		}
+	}
+}
+
+void AVehicle::BroadcastRaceData()
+{
+	OnVehicleUpdate.Broadcast(fDistanceToFinishLine);
 }
 
 void AVehicle::BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)

@@ -245,11 +245,11 @@ void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
     const FString Text = FString::Printf(TEXT("Time: %s"), *FormatMMSS(ElapsedSeconds));
 
     GEngine->AddOnScreenDebugMessage(MsgKey, 1.1f, FColor::Green, Text);
-
-    if (!bHasComputedFinalScore && ElapsedSeconds >= 15)
-    {
-        EvaluateFinalScore();
-    }
+    //
+    // if (!bHasComputedFinalScore && ElapsedSeconds >= 15)
+    // {
+    //     EvaluateFinalScore();
+    // }
 }
 
 FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
@@ -289,26 +289,34 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
     }
 
     
-    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, LifeRemaining, OutLifeScore,TimeScore, KillScore);
+    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, OutLifeScore, TimeScore,KillScore);
     const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
+
+    GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Final Score: %d | Time Score: %d | Kill Score: %d | Life Score: %d | Grade: %s"), FinalScore, TimeScore, KillScore, OutLifeScore, *UEnum::GetValueAsString(Grade)));
 
 
     
     GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
 
+    int32 tickets = 0;
     if (CFTGI)
     {
-        CFTGI->AddTicketsForGrade(Grade);
+        tickets = CFTGI->AddTicketsForGrade(Grade);
     }
 
     if (APlayerController* PC = World->GetFirstPlayerController())
     {
         if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
         {
-
-            HUD->ShowScoreResult(TimeSeconds, Kills, LifeRemaining, Grade);
+            HUD->ShowScoreResult(TimeSeconds, Kills, LifeRemaining, tickets, Grade);
+            HUD->OnFinalScoreShownHUD.AddDynamic(this, &ACrazyFoodTruckGameMode::ListenScoreEnd);
         }
     }
+}
+
+void ACrazyFoodTruckGameMode::ListenScoreEnd()
+{
+    OnFinalScoreShown.Broadcast();
 }
 
 AHordeManager* ACrazyFoodTruckGameMode::ResolveHordeManager() const

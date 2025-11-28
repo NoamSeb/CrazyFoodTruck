@@ -20,7 +20,7 @@ void UGameInstanceCrazyFoodTruck::Init()
 		TicketsByGrade.Add(EScoreGrade::C, 3);
 		TicketsByGrade.Add(EScoreGrade::D, 2);
 		TicketsByGrade.Add(EScoreGrade::E, 1);
-		TicketsByGrade.Add(EScoreGrade::F, 0);
+		TicketsByGrade.Add(EScoreGrade::F, 5);
 	}
 }
 
@@ -58,23 +58,25 @@ void UGameInstanceCrazyFoodTruck::ClearUpgrades()
 	ListUpgrades.Empty();
 }
 
-void UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
+int UGameInstanceCrazyFoodTruck::GetTicketsNumber() const
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Get Tickets Number: %d"), nbrTickets));
+	return nbrTickets;
+}
+
+int UGameInstanceCrazyFoodTruck::IncrementTicketsNumber(int Amount)
+{
+	nbrTickets += Amount;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Increment Tickets Number by %d, new total: %d"), Amount, nbrTickets));
+	return nbrTickets;
+}
+
+int32 UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
 {
 	if (int32* TicketsPtr = TicketsByGrade.Find(Grade))
 	{
-		nbrTickets += *TicketsPtr;
-
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1, 5.f, FColor::Cyan,
-				FString::Printf(
-					TEXT("[Tickets] Grade=%d -> +%d tickets (total=%d)"),
-					static_cast<int32>(Grade),
-					*TicketsPtr,
-					nbrTickets
-				)
-			);
-		}
+		IncrementTicketsNumber(*TicketsPtr);
+		return nbrTickets;
 	}
+	return 0;
 }

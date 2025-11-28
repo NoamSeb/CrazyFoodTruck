@@ -11,7 +11,6 @@ enum class ECamionUpgrade : uint8
 	Speed, //fait
 	TurningSpeed, //fait 
 	Heal, //fait
-	FullHeal, //fait
 	FasterRepair, //ok ?
 	ReplenishAmmoWhenKilledZombies
 };

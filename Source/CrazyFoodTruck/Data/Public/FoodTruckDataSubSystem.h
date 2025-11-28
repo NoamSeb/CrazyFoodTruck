@@ -80,4 +80,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool ReplenishAmmoWhenTruckKillZombies;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MoreHeal;
 };

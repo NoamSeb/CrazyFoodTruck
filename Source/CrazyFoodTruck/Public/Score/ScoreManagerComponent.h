@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "CrazyFoodTruck/Data/Public/GameDataSubSystem.h"
 #include "ScoreManagerComponent.generated.h"
 
 UENUM(BlueprintType)
@@ -42,6 +43,28 @@ struct FScoreGradeTier
 	EScoreGrade Grade = EScoreGrade::F;
 };
 
+
+USTRUCT(BlueprintType)
+struct FStructScoreLevel : public FTableRowBase
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	TArray<FScoreTier> TimeScoreTiers;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	TArray<FScoreTier> KillScoreTiers;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score|Grade")
+	TArray<FScoreGradeTier> GradeTiers;
+};
+
+USTRUCT(BlueprintType)
+struct FStructLevelScoreContainer : public FTableRowBase
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	FStructScoreLevel LevelScore;
+};
+
 UCLASS(ClassGroup = (Game), meta = (BlueprintSpawnableComponent))
 class CRAZYFOODTRUCK_API UScoreManagerComponent : public UActorComponent
 {
@@ -49,29 +72,26 @@ class CRAZYFOODTRUCK_API UScoreManagerComponent : public UActorComponent
 
 public:
 	UScoreManagerComponent();
-	int32 EvaluateLifeScore(int32 LivesRemaining) const;
+
+	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
-	TArray<FScoreTier> TimeScoreTiers;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
-	TArray<FScoreTier> KillScoreTiers;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
-	// TArray<FScoreTier> LifeScoreTiers;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score|Grade")
-	TArray<FScoreGradeTier> GradeTiers;
+	TArray<UDataTable*> DataScoreLevels;
 
 	UFUNCTION(BlueprintCallable, Category = "Score")
-	int32 ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32 LifeRemaining, int32 OutLifeScore, int32& OutTimeScore, int32&
-	                        OutKillScore) const;
+	int32 ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32 OutLifeScore, int32& OutTimeScore, int32& OutKillScore) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Score|Grade")
 	EScoreGrade GetGradeForScore(int32 TotalScore) const;
+
+	FStructScoreLevel GetScoreLevelData(int32 LevelIndex) const;
 
 private:
 	int32 EvaluateScore_Direct(const TArray<FScoreTier>& Tiers, int32 Value) const;
 	int32 EvaluateScore_Inverse(const TArray<FScoreTier>& Tiers, int32 Value) const;
 	EScoreGrade EvaluateGrade(const TArray<FScoreGradeTier>& Tiers, int32 TotalScore) const;
+
+	UPROPERTY()
+	UGameDataSubSystem* GameData;
 };
+

@@ -4,10 +4,14 @@
 
 #include "Components/TextBlock.h"
 
-void UScoreResultWidget::SetScoreData(int32 Time, int32 KillCount, int LifeRemaining, EScoreGrade InGrade)
+void UScoreResultWidget::SetScoreData(int32 Time, int32 KillCount, int32 LifeRemaining, int TicketsCount, EScoreGrade InGrade)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")));
-	OnScoreShow.Broadcast(Time, KillCount,LifeRemaining, InGrade);
+	OnScoreShow.Broadcast(Time, KillCount, LifeRemaining, TicketsCount, InGrade);
+}
+
+void UScoreResultWidget::EndScoreDisplay()
+{
+	OnScoreEnded.Broadcast();
 }
 
 FString UScoreResultWidget::GradeToString(EScoreGrade Grade) const
