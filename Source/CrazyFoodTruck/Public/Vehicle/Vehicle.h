@@ -158,6 +158,7 @@ public:
         float fProgressDistance;
         bool bIsBeginOfTheRace = true;
 		float fDelegateInterval = 2;
+		FVector InitLocation;
 
 		UPROPERTY(BlueprintAssignable, Category = "Race")
 		FOnVehicleUpdate OnVehicleUpdate;
