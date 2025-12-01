@@ -109,16 +109,16 @@ void ARoadManager::RegulateRoadSegmentsPosition(TObjectPtr<ARoad> RoadToMove, in
 void ARoadManager::SpawnTileToSurvivorCamp(FVector Location, FRotator Rotation)
 {
     if (SurvivorCamp)
-                {
-                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "SPAWNNNNNNNNNNNNN");
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "SPAWNNNNNNNNNNNNN");
 
-                    ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(SurvivorCamp, Location, Rotation);
-                    RegulateRoadSegmentsPosition(SurvivorCampRoad, RoadsSegments.Num());
-                    AVehicle* FoodTruck = Cast<AVehicle>(
-                         UGameplayStatics::GetActorOfClass(GetWorld(), AVehicle::StaticClass())
-                    );
-                    FoodTruck->ShootLineTrace(Location);
-                }
+        ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(SurvivorCamp, Location, Rotation);
+        RegulateRoadSegmentsPosition(SurvivorCampRoad, RoadsSegments.Num());
+        AVehicle* FoodTruck = Cast<AVehicle>(
+        UGameplayStatics::GetActorOfClass(GetWorld(), AVehicle::StaticClass())
+        );
+        FoodTruck->ShootLineTrace(SurvivorCampRoad->StartPoint->GetComponentLocation());
+    }
 }
 
 /// Get the correct Road Segment from the Data Table
