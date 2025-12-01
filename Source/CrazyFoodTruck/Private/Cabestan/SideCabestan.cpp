@@ -28,6 +28,42 @@ void ASideCabestan::BeginPlay()
 void ASideCabestan::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
+	// 1) On lit le joystick (tu dois déjà stocker InputX et InputY quelque part)
+	InputX = FMath::RoundToInt(InputX);
+	InputY = FMath::RoundToInt(InputY);
+	
+	FVector2D Input(InputX, InputY);
+	if (Input.IsNearlyZero())
+	{
+		StopPush();
+		return; // rien si joystick neutre
+	}
+	
+	Input.Normalize();
+	
+	float AngleRad = FMath::Atan2(Input.Y, Input.X);
+	float AngleDeg = -FMath::RadiansToDegrees(AngleRad); // inversion du sens (ton problème initial)
+	
+	float SideYaw = GetActorRotation().Yaw;
+	float Delta = FMath::FindDeltaAngleDegrees(SideYaw, AngleDeg);
+	
+	Delta = FMath::RoundToInt(Delta);
+	//StopPush();
+	// 5) Décision :
+	//    Delta < 0  → joystick pousse dans le sens horaire → PUSH
+	//    Delta > 0  → joystick tire dans l'anti-horaire   → BRING
+	
+	if (Delta < 0.f)
+	{
+		Push(FInputActionValue());
+	}
+	else
+	{
+		Bring(FInputActionValue());
+	}
+	
 }
 
 void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -49,11 +85,15 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		if (YawAction) // X
 		{
 			Eic->BindAction(YawAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveY);
+			Eic->BindAction(YawAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
+			Eic->BindAction(YawAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
 		}
 		if (RollAction) // Y
 		{
 			//Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::TurnCabestan);
 			Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveX);
+			Eic->BindAction(RollAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
+			Eic->BindAction(RollAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
 		}
 		if (QuitAction)
 		{
@@ -64,59 +104,19 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ASideCabestan::MoveX(const FInputActionValue& Value)
 {
-	InputX = Value.Get<float>();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "MoveX");
+	InputX = FMath::RoundToInt(Value.Get<float>());
+	//InputX = Value.Get<float>();
 }
 
 void ASideCabestan::MoveY(const FInputActionValue& Value)
 {
-	InputY = Value.Get<float>();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "MoveX");
+	InputY = FMath::RoundToInt(Value.Get<float>());
+	//InputY = Value.Get<float>();
 }
 
 
-
-void ASideCabestan::TurnCabestan(const FInputActionValue& Value)
-{
-	//float AxisValue = Value.Get<float>();
-	//if (FMath::Abs(AxisValue) > 0.1f)  // petite zone morte
-	//{
-	//	float Speed = 90.f; // degrés/seconde
-	//	FRotator DeltaRot = FRotator(0.f, AxisValue * Speed * GetWorld()->DeltaTimeSeconds, 0.f);
-	//	this->AddActorLocalRotation(DeltaRot);
-	//	//this->AddLocalRotation(DeltaRot);
-	//}
-
-
-	//-------------------------------------------
-	
-	// Récupère la valeur du joystick (X = gauche/droite, Y = haut/bas)
-	FVector2D StickValue = Value.Get<FVector2D>();
-
-	// Zone morte pour éviter micro-mouvements
-	if (StickValue.SizeSquared() < 0.01f)
-		return;
-
-	// Normaliser pour avoir une direction uniforme
-	StickValue.Normalize();
-
-	// Calcul de l'angle désiré en degrés (Yaw)
-	// atan2(Y, X) → angle par rapport à l'axe X positif
-	float TargetYaw = FMath::RadiansToDegrees(FMath::Atan2(StickValue.Y, StickValue.X));
-
-	// Si ton cabestan n’est pas orienté vers X par défaut, ajoute un offset
-	FRotator InitialOffset = FRotator(0.f, 0.f, 0.f); // Ajuste si nécessaire
-	TargetYaw += InitialOffset.Yaw;
-
-	// Récupère la rotation actuelle
-	FRotator CurrentRot = this->GetActorRotation();
-
-	// Interpolation pour fluidité
-	float InterpSpeed = 5.f; // Ajuste selon la rapidité souhaitée
-	float NewYaw = FMath::FInterpTo(CurrentRot.Yaw, TargetYaw, GetWorld()->DeltaTimeSeconds, InterpSpeed);
-
-	// Applique la rotation au cabestan (relative au parent)
-	//this->SetActorRotation()
-	this->SetActorRotation(FRotator(0.f, NewYaw, 0.f));
-}
 
 void ASideCabestan::StopPush()
 {
@@ -135,48 +135,54 @@ void ASideCabestan::StopPush()
 
 void ASideCabestan::Push(const FInputActionValue& Value)
 {
-	if (!bPlayerIn){return;}
-
-	if (!_CabestanController->CanPush())
+	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
-		_CabestanController->ReceiveInputToward(0);
-		_CabestanController->ReceiveInputBackward(0);
-		return;
-	}
+		if (!bPlayerIn){return;}
 
-	switch (_Side)
-	{
-	case ESideCabestan::Toward:
-		_CabestanController->ReceiveInputToward(1);
-		break;
-	case ESideCabestan::Backward:
-		_CabestanController->ReceiveInputBackward(-1);
-		break;
-	default:
-		break;
+		if (!_CabestanController->CanPush())
+		{
+			_CabestanController->ReceiveInputToward(0);
+			_CabestanController->ReceiveInputBackward(0);
+			return;
+		}
+
+		switch (_Side)
+		{
+		case ESideCabestan::Toward:
+			_CabestanController->ReceiveInputToward(1);
+			break;
+		case ESideCabestan::Backward:
+			_CabestanController->ReceiveInputBackward(-1);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
 void ASideCabestan::Bring(const FInputActionValue& Value)
 {
-	if (!bPlayerIn){return;}
-	if (!_CabestanController->CanBring())
+	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
-		_CabestanController->ReceiveInputToward(0);
-		_CabestanController->ReceiveInputBackward(0);
-		return;
-	}
+		if (!bPlayerIn){return;}
+		if (!_CabestanController->CanBring())
+		{
+			_CabestanController->ReceiveInputToward(0);
+			_CabestanController->ReceiveInputBackward(0);
+			return;
+		}
 
-	switch (_Side)
-	{
-	case ESideCabestan::Toward:
-		_CabestanController->ReceiveInputToward(-1);
-		break;
-	case ESideCabestan::Backward:
-		_CabestanController->ReceiveInputBackward(1);
-		break;
-	default:
-		break;
+		switch (_Side)
+		{
+		case ESideCabestan::Toward:
+			_CabestanController->ReceiveInputToward(-1);
+			break;
+		case ESideCabestan::Backward:
+			_CabestanController->ReceiveInputBackward(1);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
