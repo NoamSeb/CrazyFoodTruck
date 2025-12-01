@@ -25,6 +25,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Animation/AnimInstanceProxy.h"
 
 AVehicle::AVehicle()
 {
@@ -51,15 +52,16 @@ AVehicle::AVehicle()
 void AVehicle::BeginPlay()
 {
 	Super::BeginPlay();
+	InitLocation = GetActorLocation();
 
 	GetWorldTimerManager().SetTimer(
 		RaceUpdateTimer,
 		this,
 		&AVehicle::BroadcastRaceData,
-		fDelegateInterval, 
+		fDelegateInterval,
 		true
 	);
-	
+
 #pragma region Upgrades
 	if (UGameInstance* GIBase = GetGameInstance())
 	{
@@ -95,7 +97,7 @@ void AVehicle::BeginPlay()
 
 	ForwardCaptureInterval = (ForwardCaptureFPS > 0.f) ? (1.f / ForwardCaptureFPS) : (1.f / 30.f);
 	ForwardCaptureTimer = 0.f;
-	
+
 	if (bForwardCamAlwaysOn && GI->GameData->CurrentGamePhase == EPhaseGameCrazyFoodTruckState::Route)
 	{
 		if (!ForwardCamWidget && bCreateForwardCamWidgetAtBeginPlay && ForwardCamWidgetClass && ForwardRT)
@@ -111,7 +113,7 @@ void AVehicle::BeginPlay()
 				}
 			}
 		}
-		
+
 		StartForwardCapture();
 	}
 	else
@@ -191,14 +193,13 @@ void AVehicle::UnPossessed()
 			ForwardCamWidget = nullptr;
 		}
 	}
-	
 }
 
 void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(MovementEnable)
+	if (MovementEnable)
 	{
 		MoveForward();
 	}
@@ -259,7 +260,6 @@ void AVehicle::Tick(float DeltaTime)
 
 	UpdateForwardCapture(DeltaTime);
 	ShootLineTrace(FEndOfTheRaceLocation);
-	
 }
 
 void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -312,7 +312,8 @@ void AVehicle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		if (QuitTruckAction)
 		{
-			EnhancedInputComponent->BindAction(QuitTruckAction, ETriggerEvent::Started, this, &AVehicle::InputQuitTruck);
+			EnhancedInputComponent->BindAction(QuitTruckAction, ETriggerEvent::Started, this,
+			                                   &AVehicle::InputQuitTruck);
 		}
 	}
 }
@@ -338,36 +339,15 @@ void AVehicle::SetTruckState(EVehicleStates NewState)
 
 void AVehicle::ShootLineTrace(FVector TargetLocation)
 {
-	FHitResult HitResult;
-	if (bIsBeginOfTheRace)
+	if(bIsBeginOfTheRace)
 	{
-		bool bHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		GetActorLocation(),
-		TargetLocation,
-		ECC_Visibility
-		);
-		if (bHit)
-		{
-			fTotalRaceDistance = HitResult.Distance;
-			FEndOfTheRaceLocation = TargetLocation;
-		}
+		FEndOfTheRaceLocation = TargetLocation;
+		fTotalRaceDistance = FVector::Dist(GetActorLocation(), TargetLocation);
 		bIsBeginOfTheRace = false;
-	}else
-	{
-		
-		bool bHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		GetActorLocation(),
-		TargetLocation,
-		ECC_Visibility
-		);
-		if (bHit)
-		{
-			fProgressDistance = HitResult.Distance;
-			fDistanceToFinishLine = fTotalRaceDistance - fProgressDistance;
-		}
 	}
+
+	fProgressDistance = FVector::Dist(GetActorLocation(), InitLocation);
+	fDistanceToFinishLine = (fTotalRaceDistance - fProgressDistance);
 }
 
 void AVehicle::BroadcastRaceData()
@@ -381,8 +361,10 @@ void AVehicle::BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedI
 
 	if (TurnTruckAction)
 	{
-		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Triggered, this, &AVehicle::SetTruckRotatingStates);
-		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Completed, this, &AVehicle::SetTruckIdleStates);
+		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Triggered, this,
+		                                   &AVehicle::SetTruckRotatingStates);
+		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Completed, this,
+		                                   &AVehicle::SetTruckIdleStates);
 	}
 }
 
@@ -398,14 +380,14 @@ void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 {
 	TruckState = EVehicleStates::Rotating;
 	InputRotatingValue = InputActionValue.Get<float>();
-	
+
 	if (!AlreadyPassed)
 	{
 		RotationTimer = 0.f;
 		StartRotationYaw = GetActorRotation().Yaw;
 		StartRotationRoll = GetActorRotation().Roll;
 	}
-	
+
 	if (InputRotatingValue > 0)
 	{
 		TruckOrientation = EVehicleOrientation::Right;
@@ -414,7 +396,7 @@ void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 	{
 		TruckOrientation = EVehicleOrientation::Left;
 	}
-	
+
 	AlreadyPassed = true;
 }
 
@@ -481,7 +463,7 @@ void AVehicle::ReduceSpeed()
 
 	StartSpeed = MovementComponent->MaxSpeed;
 	MovementComponent->MaxSpeed -= TruckLossSpeed * KilometersToMetersConvertingValue;
-	
+
 	if (GI)
 	{
 		GI->PlayerCameraShake(Explosion);
