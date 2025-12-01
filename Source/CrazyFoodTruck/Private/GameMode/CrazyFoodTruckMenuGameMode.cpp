@@ -4,15 +4,16 @@
 
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "PlayerController/MenuPlayerController.h"
-#include "Widget/MainMenuWidget.h"
 #include "LocalMultiplayerSubsystem.h"
 
-#include "Blueprint/UserWidget.h"
-#include "GameFramework/PlayerController.h"
+#include "EngineUtils.h"
 
 ACrazyFoodTruckMenuGameMode::ACrazyFoodTruckMenuGameMode()
 {
 	PlayerControllerClass = AMenuPlayerController::StaticClass();
+
+	DefaultPawnClass = nullptr;
+	bStartPlayersAsSpectators = true;
 }
 
 void ACrazyFoodTruckMenuGameMode::BeginPlay()
@@ -31,20 +32,33 @@ void ACrazyFoodTruckMenuGameMode::BeginPlay()
 	}
 
 	APlayerController* PC = World->GetFirstPlayerController();
-	if (PC && MainMenuWidgetClass)
+	if (PC)
 	{
-		if (UMainMenuWidget* MenuWidget = CreateWidget<UMainMenuWidget>(PC, MainMenuWidgetClass))
+		AActor* FoundMenuCamera = nullptr;
+
+		for (TActorIterator<AActor> It(World); It; ++It)
 		{
-			MenuWidget->AddToViewport();
+			AActor* Actor = *It;
+			if (Actor && Actor->ActorHasTag("MenuCamera"))
+			{
+				FoundMenuCamera = Actor;
+				break;
+			}
+		}
+
+		if (FoundMenuCamera)
+		{
+			PC->bAutoManageActiveCameraTarget = false;
+			PC->SetViewTarget(FoundMenuCamera);
 		}
 
 		PC->bShowMouseCursor = false;
 
-		FInputModeGameAndUI Mode;
-		Mode.SetHideCursorDuringCapture(false);
-		Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		FInputModeGameAndUI InputMode;
+		InputMode.SetHideCursorDuringCapture(false);
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 
-		PC->SetInputMode(Mode);
+		PC->SetInputMode(InputMode);
 	}
 
 	if (UGameInstance* GIBase = GetGameInstance())

@@ -90,7 +90,6 @@ void UGameInstanceCrazyFoodTruck::TryJoinPlayer(int32 ControllerId)
 			{
 				Slot.bIsConnected = true;
 				Slot.bIsReady = true;
-				
 				OnLobbySlotsChanged.Broadcast();
 			}
 			

@@ -6,8 +6,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "CrazyFoodTruckMenuGameMode.generated.h"
 
-class UUserWidget;
-
 UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckMenuGameMode : public AGameModeBase
 {
@@ -19,6 +17,6 @@ public:
 	virtual void BeginPlay() override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> MainMenuWidgetClass;
+	UPROPERTY(EditAnywhere, Category = "Camera")
+	TObjectPtr<AActor> MenuCameraActor;
 };

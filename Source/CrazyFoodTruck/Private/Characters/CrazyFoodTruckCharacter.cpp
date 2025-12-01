@@ -350,23 +350,23 @@ void ACrazyFoodTruckCharacter::UpdatePlayerColorFromController()
         PlayerColor = FLinearColor::White;
     }
 
-    TArray<UMeshComponent*> MeshComponents;
-    GetComponents<UMeshComponent>(MeshComponents);
+    //TArray<UMeshComponent*> MeshComponents;
+    //GetComponents<UMeshComponent>(MeshComponents);
 
-    for (UMeshComponent* MeshComp : MeshComponents)
-    {
-        if (!MeshComp)
-        {
-            continue;
-        }
+    //for (UMeshComponent* MeshComp : MeshComponents)
+    //{
+    //    if (!MeshComp)
+    //    {
+    //        continue;
+    //    }
 
-        const int32 MatCount = MeshComp->GetNumMaterials();
-        for (int32 MatIndex = 0; MatIndex < MatCount; ++MatIndex)
-        {
-            if (UMaterialInstanceDynamic* MID = MeshComp->CreateAndSetMaterialInstanceDynamic(MatIndex))
-            {
-                MID->SetVectorParameterValue(TEXT("PlayerColor"), PlayerColor);
-            }
-        }
-    }
+    //    const int32 MatCount = MeshComp->GetNumMaterials();
+    //    for (int32 MatIndex = 0; MatIndex < MatCount; ++MatIndex)
+    //    {
+    //        if (UMaterialInstanceDynamic* MID = MeshComp->CreateAndSetMaterialInstanceDynamic(MatIndex))
+    //        {
+    //            MID->SetVectorParameterValue(TEXT("PlayerColor"), PlayerColor);
+    //        }
+    //    }
+    //}
 }
