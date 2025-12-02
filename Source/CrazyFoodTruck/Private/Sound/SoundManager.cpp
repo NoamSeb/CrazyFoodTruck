@@ -23,21 +23,8 @@ void USoundManager::PlaySFX(ESfxType SfxType, UObject* WorldContext)
 	{
 		if (Row && Row->SoundType == SfxType && Row->MetaSound)
 		{
-			UWorld* World = GEngine->GetWorldFromContextObjectChecked(this);
-			UGameplayStatics::PlaySound2D(World, Row->MetaSound);
+			UGameplayStatics::PlaySound2D(WorldContext, Row->MetaSound);
 			return;
 		}
-	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("PlaySFX: aucun son trouvé pour %d"), (int)SfxType);
-}
-
-FName USoundManager::GetRowNameFromEnum(ESfxType SfxType)
-{
-	switch(SfxType)
-	{
-	case ESfxType::ECC_Shoot:      return FName("Shoot");
-	case ESfxType::ECC_Accident:   return FName("Accident");
-	default:                       return NAME_None;
 	}
 }

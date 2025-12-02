@@ -15,7 +15,8 @@ struct FKey;
 UENUM(BlueprintType)
 enum class ESfxType : uint8
 {
-	ECC_Shoot UMETA(Displayname = "Shoot"),
+	ECC_ClassicShoot UMETA(Displayname = "ClassicShoot"),
+	ECC_ExplosivShoot UMETA(Displayname = "ExplosivShoot"),
 	ECC_Accident UMETA(Displayname = "Accident"),
 	ECC_HitZombie UMETA(Displayname = "HitZombie"),
 	ECC_ZombieDeath UMETA(Displayname = "ZombieDeath"),
@@ -58,5 +59,4 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Sound Manager")
 	void PlaySFX(ESfxType SfxType, UObject* WorldContext);
 
-	FName GetRowNameFromEnum(ESfxType SfxType);
 };
