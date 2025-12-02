@@ -18,11 +18,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_SideCabestan.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_SideCabestan.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/IMC/CabestanInput/IA_CabestanRoll.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/IMC/CabestanInput/IA_CabestanYaw.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/IMC/CabestanInput/IMC_Cabestan.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/IMC/CabestanInput/IMC_Cabestan.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/VY/2F0U9VM5143NIIXT20UF6U.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/CrazyFoodTruck/Levels/LouisQuentin/B/VY/2F0U9VM5143NIIXT20UF6U.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Cabestan/SideCabestan.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Cabestan/SideCabestan.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Cabestan/SideCabestan.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Cabestan/SideCabestan.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -280,7 +277,7 @@
       <workItem from="1764321598443" duration="2270000" />
       <workItem from="1764324498134" duration="9416000" />
       <workItem from="1764585480064" duration="5695000" />
-      <workItem from="1764663740197" duration="20025000" />
+      <workItem from="1764663740197" duration="22609000" />
     </task>
     <servers />
   </component>

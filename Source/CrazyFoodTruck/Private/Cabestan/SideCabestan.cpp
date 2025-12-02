@@ -43,7 +43,7 @@ void ASideCabestan::Tick(float DeltaTime)
 	if (AngleDeg < 0) AngleDeg += 360;   // 0 → 360
 
 	
-	if (AngleDeg >= 355.f || AngleDeg < 3.f)
+	if (AngleDeg >= 355.f || AngleDeg < 2.f)
 	{
 		LocationPose = ELocationPlayerCabestan::Nord;
 	}
@@ -142,7 +142,14 @@ void ASideCabestan::MoveX(const FInputActionValue& Value)
 		case ELocationPlayerCabestan::SudOuest:
 			Bring(1);
 			break;
+		//case ELocationPlayerCabestan::Est:
+		//	StopPush();
+		//	break;
+		//case ELocationPlayerCabestan::Ouest:
+		//	StopPush();
+		//	break;
 		default:
+			StopPush();
 			break;
 		}
 	}
@@ -173,7 +180,14 @@ void ASideCabestan::MoveX(const FInputActionValue& Value)
 		case ELocationPlayerCabestan::SudOuest:
 			Push(1);
 			break;
+		//case ELocationPlayerCabestan::Est:
+		//	StopPush();
+		//	break;
+		//case ELocationPlayerCabestan::Ouest:
+		//	StopPush();
+		//	break;
 		default:
+			StopPush();
 			break;
 		}
 	}
@@ -198,18 +212,25 @@ void ASideCabestan::MoveY(const FInputActionValue& Value)
 			Bring(1);
 			break;
 		case ELocationPlayerCabestan::NordEst:
-			Push(1);
+			Bring(1);
 			break;
 		case ELocationPlayerCabestan::EstSud:
-			Push(1);
+			Bring(1);
 			break;
 		case ELocationPlayerCabestan::OuestNord:
-			Bring(1);
+			Push(1);
 			break;
 		case ELocationPlayerCabestan::SudOuest:
-			Bring(1);
+			Push(1);
 			break;
+		//case ELocationPlayerCabestan::Nord:
+		//	StopPush();
+		//	break;
+		//case ELocationPlayerCabestan::Sud:
+		//	StopPush();
+		//	break;
 		default:
+			StopPush();
 			break;
 		}
 	}
@@ -229,18 +250,25 @@ void ASideCabestan::MoveY(const FInputActionValue& Value)
 			Push(1);
 			break;
 		case ELocationPlayerCabestan::NordEst:
-			 Bring(1);
+			 Push(1);
 			break;
 		case ELocationPlayerCabestan::EstSud:
-			Bring(1);
+			Push(1);
 			break;
 		case ELocationPlayerCabestan::OuestNord:
-			Push(1);
+			 Bring(1);
 			break;
 		case ELocationPlayerCabestan::SudOuest:
-			Push(1);
+			Bring(1);
 			break;
+		//case ELocationPlayerCabestan::Nord:
+		//	StopPush();
+		//	break;
+		//case ELocationPlayerCabestan::Sud:
+		//	StopPush();
+		//	break;
 		default:
+			StopPush();
 			break;
 		}
 	}
@@ -267,6 +295,7 @@ void ASideCabestan::StopPush()
 
 void ASideCabestan::Push(const FInputActionValue& Value)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, "Push");
 	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
 		if (!bPlayerIn){return;}
@@ -294,6 +323,8 @@ void ASideCabestan::Push(const FInputActionValue& Value)
 
 void ASideCabestan::Bring(const FInputActionValue& Value)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, "Bring");
+	
 	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
 		if (!bPlayerIn){return;}
