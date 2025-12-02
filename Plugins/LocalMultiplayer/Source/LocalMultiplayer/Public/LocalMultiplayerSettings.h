@@ -7,6 +7,7 @@
 #include "LocalMultiplayerSettings.generated.h"
 
 class UInputMappingContext;
+class UMaterialParameterCollection;
 
 struct FKey;
 
@@ -79,6 +80,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Local Multiplayer", meta=(DisplayName="MPC Outline"))
 	TObjectPtr<UMaterialParameterCollection> MPCOutline = nullptr;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Local Multiplayer", meta = (DisplayName = "MPC Outline"))
+	TSoftObjectPtr<UMaterialParameterCollection> MPCOutline;
 
 	int GetNbKeyboardProfiles() const;
 	int FindKeyboardProfileIndexFromKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;
