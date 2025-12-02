@@ -6,6 +6,7 @@
 #include "InputActionValue.h"
 
 
+
 // Sets default values
 ASideCabestan::ASideCabestan()
 {
@@ -29,41 +30,25 @@ void ASideCabestan::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FVector CabestanCenter = _CabestanController->GetActorLocation();
+	FVector PlanchePos = this->GetActorLocation();
 
-	// 1) On lit le joystick (tu dois déjà stocker InputX et InputY quelque part)
-	InputX = FMath::RoundToInt(InputX);
-	InputY = FMath::RoundToInt(InputY);
-	
-	FVector2D Input(InputX, InputY);
-	if (Input.IsNearlyZero())
-	{
-		StopPush();
-		return; // rien si joystick neutre
-	}
-	
-	Input.Normalize();
-	
-	float AngleRad = FMath::Atan2(Input.Y, Input.X);
-	float AngleDeg = -FMath::RadiansToDegrees(AngleRad); // inversion du sens (ton problème initial)
-	
-	float SideYaw = GetActorRotation().Yaw;
-	float Delta = FMath::FindDeltaAngleDegrees(SideYaw, AngleDeg);
-	
-	Delta = FMath::RoundToInt(Delta);
-	//StopPush();
-	// 5) Décision :
-	//    Delta < 0  → joystick pousse dans le sens horaire → PUSH
-	//    Delta > 0  → joystick tire dans l'anti-horaire   → BRING
-	
-	if (Delta < 0.f)
-	{
-		Push(FInputActionValue());
-	}
+	FVector Dir = PlanchePos - CabestanCenter;
+	Dir.Z = 0;
+
+	float Angle = FMath::Atan2(Dir.Y, Dir.X);
+	float AngleDeg = FMath::RadiansToDegrees(Angle);
+	if (AngleDeg < 0) AngleDeg += 360;   // 0 → 360
+
+	if (AngleDeg < 90)
+		LocationPose = ELocationPlayerCabestan::NordEst;
+	else if (AngleDeg < 180)
+		LocationPose = ELocationPlayerCabestan::EstSud;
+	else if (AngleDeg < 270)
+		LocationPose = ELocationPlayerCabestan::SudOuest;
 	else
-	{
-		Bring(FInputActionValue());
-	}
-	
+		LocationPose = ELocationPlayerCabestan::OuestNord;
+
 }
 
 void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -82,13 +67,13 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
             Eic->BindAction(BringAction, ETriggerEvent::Triggered, this, &ASideCabestan::Bring);
 			Eic->BindAction(BringAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
         }
-		if (YawAction) // X
+		if (YawAction) // Y
 		{
 			Eic->BindAction(YawAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveY);
 			Eic->BindAction(YawAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
 			Eic->BindAction(YawAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
 		}
-		if (RollAction) // Y
+		if (RollAction) // X
 		{
 			//Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::TurnCabestan);
 			Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveX);
@@ -104,15 +89,62 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ASideCabestan::MoveX(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "MoveX");
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("pos : %d"), LocationPose));
+
 	InputX = FMath::RoundToInt(Value.Get<float>());
+	
+
+	
+	if (InputX == 1 && LocationPose == ELocationPlayerCabestan::NordEst)
+	{
+		Push(Value);
+	}
+	if (InputX == 1 && LocationPose == ELocationPlayerCabestan::EstSud)
+	{
+		Bring(Value);
+	}
+
+	if (InputX == -1 && LocationPose == ELocationPlayerCabestan::SudOuest)
+	{
+		Push(1);
+	}
+	
+	if (InputX == -1 && LocationPose == ELocationPlayerCabestan::OuestNord)
+	{
+		Bring(1);
+	}
+	
+	
 	//InputX = Value.Get<float>();
 }
 
 void ASideCabestan::MoveY(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "MoveX");
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Purple, FString::Printf(TEXT("pos : %f"), InputY));
+
 	InputY = FMath::RoundToInt(Value.Get<float>());
+	
+	if (InputY == -1 && LocationPose == ELocationPlayerCabestan::NordEst)
+	{
+		Bring(1);
+	}
+
+	if (InputY == -1 && LocationPose == ELocationPlayerCabestan::OuestNord)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, "A Push dans MoveY");
+		Push(1);
+	}
+
+	if (InputY == 1 && LocationPose == ELocationPlayerCabestan::EstSud)
+	{
+		Push(1);
+	}
+
+	if (InputY == 1 && LocationPose == ELocationPlayerCabestan::SudOuest)
+	{
+		Bring(1);
+	}
+
 	//InputY = Value.Get<float>();
 }
 
@@ -120,6 +152,8 @@ void ASideCabestan::MoveY(const FInputActionValue& Value)
 
 void ASideCabestan::StopPush()
 {
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Stop Push");
+	
 	switch (_Side)
 	{
 	case ESideCabestan::Toward:
@@ -165,6 +199,7 @@ void ASideCabestan::Bring(const FInputActionValue& Value)
 	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
 		if (!bPlayerIn){return;}
+		
 		if (!_CabestanController->CanBring())
 		{
 			_CabestanController->ReceiveInputToward(0);

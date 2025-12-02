@@ -14,6 +14,15 @@
 #include "GameFramework/Pawn.h"
 #include "SideCabestan.generated.h"
 
+UENUM()
+enum class ELocationPlayerCabestan
+{
+	NordEst,
+	EstSud,
+	SudOuest,
+	OuestNord
+};
+
 UCLASS()
 class CRAZYFOODTRUCK_API ASideCabestan : public APawn
 {
@@ -60,6 +69,7 @@ protected:
 	void MoveY(const FInputActionValue& Value);
 	float InputX;
 	float InputY;
+	ELocationPlayerCabestan LocationPose;
 
 	void DropRollInput();
 	void DropYawInput();
