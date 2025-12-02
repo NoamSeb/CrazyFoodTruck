@@ -17,9 +17,13 @@
 UENUM()
 enum class ELocationPlayerCabestan
 {
+	Nord,
 	NordEst,
+	Est,
 	EstSud,
+	Sud,
 	SudOuest,
+	Ouest,
 	OuestNord
 };
 
@@ -41,7 +45,7 @@ protected:
 	UInputMappingContext* SideCabestanInputMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
-	UInputAction* YawAction;
+	UInputAction* UpDownAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* PushAction;
@@ -50,7 +54,7 @@ protected:
 	UInputAction* BringAction;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
-	UInputAction* RollAction;
+	UInputAction* RightLeftAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* QuitAction;

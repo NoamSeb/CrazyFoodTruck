@@ -30,24 +30,52 @@ void ASideCabestan::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector CabestanCenter = _CabestanController->GetActorLocation();
-	FVector PlanchePos = this->GetActorLocation();
+	#pragma region Angle Cardinaux
+	
+	FVector CabestanPos = _CabestanController->GetActorLocation();
+	FVector SidePos = this->GetActorLocation();
 
-	FVector Dir = PlanchePos - CabestanCenter;
-	Dir.Z = 0;
+	FVector Direction = SidePos - CabestanPos;
+	Direction.Z = 0;
 
-	float Angle = FMath::Atan2(Dir.Y, Dir.X);
+	float Angle = FMath::Atan2(Direction.Y, Direction.X);
 	float AngleDeg = FMath::RadiansToDegrees(Angle);
 	if (AngleDeg < 0) AngleDeg += 360;   // 0 → 360
 
-	if (AngleDeg < 90)
+	
+	if (AngleDeg >= 355.f || AngleDeg < 3.f)
+	{
+		LocationPose = ELocationPlayerCabestan::Nord;
+	}
+	else if (AngleDeg < 85.f)
+	{
 		LocationPose = ELocationPlayerCabestan::NordEst;
-	else if (AngleDeg < 180)
+	}
+	else if (AngleDeg < 95.f)
+	{
+		LocationPose = ELocationPlayerCabestan::Est;
+	}
+	else if (AngleDeg < 175.f)
+	{
 		LocationPose = ELocationPlayerCabestan::EstSud;
-	else if (AngleDeg < 270)
+	}
+	else if (AngleDeg < 185.f)
+	{
+		LocationPose = ELocationPlayerCabestan::Sud;
+	}
+	else if (AngleDeg < 265.f)
+	{
 		LocationPose = ELocationPlayerCabestan::SudOuest;
+	}
+	else if (AngleDeg < 275.f)
+	{
+		LocationPose = ELocationPlayerCabestan::Ouest;
+	}
 	else
+	{
 		LocationPose = ELocationPlayerCabestan::OuestNord;
+	}
+	#pragma endregion
 
 }
 
@@ -67,18 +95,17 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
             Eic->BindAction(BringAction, ETriggerEvent::Triggered, this, &ASideCabestan::Bring);
 			Eic->BindAction(BringAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
         }
-		if (YawAction) // Y
+		if (UpDownAction) // Y
 		{
-			Eic->BindAction(YawAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveY);
-			Eic->BindAction(YawAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
-			Eic->BindAction(YawAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
+			Eic->BindAction(UpDownAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveY);
+			Eic->BindAction(UpDownAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
+			Eic->BindAction(UpDownAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
 		}
-		if (RollAction) // X
+		if (RightLeftAction) // X
 		{
-			//Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::TurnCabestan);
-			Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveX);
-			Eic->BindAction(RollAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
-			Eic->BindAction(RollAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
+			Eic->BindAction(RightLeftAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveX);
+			Eic->BindAction(RightLeftAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
+			Eic->BindAction(RightLeftAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
 		}
 		if (QuitAction)
 		{
@@ -89,71 +116,142 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ASideCabestan::MoveX(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("pos : %d"), LocationPose));
-
 	InputX = FMath::RoundToInt(Value.Get<float>());
-	
 
+	#pragma region Droite
 	
-	if (InputX == 1 && LocationPose == ELocationPlayerCabestan::NordEst)
+	if (InputX == 1) //droite
 	{
-		Push(Value);
+		switch (LocationPose)
+		{
+		case ELocationPlayerCabestan::Nord:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::Sud:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::NordEst:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::EstSud:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::OuestNord:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::SudOuest:
+			Bring(1);
+			break;
+		default:
+			break;
+		}
 	}
-	if (InputX == 1 && LocationPose == ELocationPlayerCabestan::EstSud)
+	
+	#pragma endregion 
+
+	#pragma region Gauche
+	
+	if (InputX == -1) //gauche
 	{
-		Bring(Value);
+		switch (LocationPose)
+		{
+		case ELocationPlayerCabestan::Nord:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::Sud:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::NordEst:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::EstSud:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::OuestNord:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::SudOuest:
+			Push(1);
+			break;
+		default:
+			break;
+		}
 	}
 
-	if (InputX == -1 && LocationPose == ELocationPlayerCabestan::SudOuest)
-	{
-		Push(1);
-	}
-	
-	if (InputX == -1 && LocationPose == ELocationPlayerCabestan::OuestNord)
-	{
-		Bring(1);
-	}
-	
-	
-	//InputX = Value.Get<float>();
+	#pragma endregion 
 }
 
 void ASideCabestan::MoveY(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Purple, FString::Printf(TEXT("pos : %f"), InputY));
-
 	InputY = FMath::RoundToInt(Value.Get<float>());
+
+	#pragma region Haut
 	
-	if (InputY == -1 && LocationPose == ELocationPlayerCabestan::NordEst)
+	if (InputY == 1) //haut
 	{
-		Bring(1);
+		switch (LocationPose)
+		{
+		case ELocationPlayerCabestan::Est:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::Ouest:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::NordEst:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::EstSud:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::OuestNord:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::SudOuest:
+			Bring(1);
+			break;
+		default:
+			break;
+		}
 	}
 
-	if (InputY == -1 && LocationPose == ELocationPlayerCabestan::OuestNord)
+	#pragma endregion 
+
+	#pragma region Bas
+	
+	if (InputY == -1) //bas
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, "A Push dans MoveY");
-		Push(1);
+		switch (LocationPose)
+		{
+		case ELocationPlayerCabestan::Est:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::Ouest:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::NordEst:
+			 Bring(1);
+			break;
+		case ELocationPlayerCabestan::EstSud:
+			Bring(1);
+			break;
+		case ELocationPlayerCabestan::OuestNord:
+			Push(1);
+			break;
+		case ELocationPlayerCabestan::SudOuest:
+			Push(1);
+			break;
+		default:
+			break;
+		}
 	}
 
-	if (InputY == 1 && LocationPose == ELocationPlayerCabestan::EstSud)
-	{
-		Push(1);
-	}
-
-	if (InputY == 1 && LocationPose == ELocationPlayerCabestan::SudOuest)
-	{
-		Bring(1);
-	}
-
-	//InputY = Value.Get<float>();
+	#pragma endregion 
 }
 
 
 
 void ASideCabestan::StopPush()
 {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Stop Push");
-	
 	switch (_Side)
 	{
 	case ESideCabestan::Toward:
