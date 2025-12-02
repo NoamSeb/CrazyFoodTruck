@@ -28,6 +28,42 @@ void ASideCabestan::BeginPlay()
 void ASideCabestan::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
+	// 1) On lit le joystick (tu dois déjà stocker InputX et InputY quelque part)
+	InputX = FMath::RoundToInt(InputX);
+	InputY = FMath::RoundToInt(InputY);
+	
+	FVector2D Input(InputX, InputY);
+	if (Input.IsNearlyZero())
+	{
+		StopPush();
+		return; // rien si joystick neutre
+	}
+	
+	Input.Normalize();
+	
+	float AngleRad = FMath::Atan2(Input.Y, Input.X);
+	float AngleDeg = -FMath::RadiansToDegrees(AngleRad); // inversion du sens (ton problème initial)
+	
+	float SideYaw = GetActorRotation().Yaw;
+	float Delta = FMath::FindDeltaAngleDegrees(SideYaw, AngleDeg);
+	
+	Delta = FMath::RoundToInt(Delta);
+	//StopPush();
+	// 5) Décision :
+	//    Delta < 0  → joystick pousse dans le sens horaire → PUSH
+	//    Delta > 0  → joystick tire dans l'anti-horaire   → BRING
+	
+	if (Delta < 0.f)
+	{
+		Push(FInputActionValue());
+	}
+	else
+	{
+		Bring(FInputActionValue());
+	}
+	
 }
 
 void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -48,9 +84,16 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
         }
 		if (YawAction) // X
 		{
+			Eic->BindAction(YawAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveY);
+			Eic->BindAction(YawAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
+			Eic->BindAction(YawAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
 		}
 		if (RollAction) // Y
 		{
+			//Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::TurnCabestan);
+			Eic->BindAction(RollAction, ETriggerEvent::Triggered, this, &ASideCabestan::MoveX);
+			Eic->BindAction(RollAction, ETriggerEvent::Canceled, this, &ASideCabestan::StopPush);
+			Eic->BindAction(RollAction, ETriggerEvent::Completed, this, &ASideCabestan::StopPush);
 		}
 		if (QuitAction)
 		{
@@ -58,6 +101,22 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		}
 	}
 }
+
+void ASideCabestan::MoveX(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "MoveX");
+	InputX = FMath::RoundToInt(Value.Get<float>());
+	//InputX = Value.Get<float>();
+}
+
+void ASideCabestan::MoveY(const FInputActionValue& Value)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "MoveX");
+	InputY = FMath::RoundToInt(Value.Get<float>());
+	//InputY = Value.Get<float>();
+}
+
+
 
 void ASideCabestan::StopPush()
 {
@@ -76,48 +135,54 @@ void ASideCabestan::StopPush()
 
 void ASideCabestan::Push(const FInputActionValue& Value)
 {
-	if (!bPlayerIn){return;}
-
-	if (!_CabestanController->CanPush())
+	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
-		_CabestanController->ReceiveInputToward(0);
-		_CabestanController->ReceiveInputBackward(0);
-		return;
-	}
+		if (!bPlayerIn){return;}
 
-	switch (_Side)
-	{
-	case ESideCabestan::Toward:
-		_CabestanController->ReceiveInputToward(1);
-		break;
-	case ESideCabestan::Backward:
-		_CabestanController->ReceiveInputBackward(-1);
-		break;
-	default:
-		break;
+		if (!_CabestanController->CanPush())
+		{
+			_CabestanController->ReceiveInputToward(0);
+			_CabestanController->ReceiveInputBackward(0);
+			return;
+		}
+
+		switch (_Side)
+		{
+		case ESideCabestan::Toward:
+			_CabestanController->ReceiveInputToward(1);
+			break;
+		case ESideCabestan::Backward:
+			_CabestanController->ReceiveInputBackward(-1);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
 void ASideCabestan::Bring(const FInputActionValue& Value)
 {
-	if (!bPlayerIn){return;}
-	if (!_CabestanController->CanBring())
+	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
-		_CabestanController->ReceiveInputToward(0);
-		_CabestanController->ReceiveInputBackward(0);
-		return;
-	}
+		if (!bPlayerIn){return;}
+		if (!_CabestanController->CanBring())
+		{
+			_CabestanController->ReceiveInputToward(0);
+			_CabestanController->ReceiveInputBackward(0);
+			return;
+		}
 
-	switch (_Side)
-	{
-	case ESideCabestan::Toward:
-		_CabestanController->ReceiveInputToward(-1);
-		break;
-	case ESideCabestan::Backward:
-		_CabestanController->ReceiveInputBackward(1);
-		break;
-	default:
-		break;
+		switch (_Side)
+		{
+		case ESideCabestan::Toward:
+			_CabestanController->ReceiveInputToward(-1);
+			break;
+		case ESideCabestan::Backward:
+			_CabestanController->ReceiveInputBackward(1);
+			break;
+		default:
+			break;
+		}
 	}
 }
 

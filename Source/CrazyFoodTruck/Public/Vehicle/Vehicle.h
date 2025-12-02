@@ -9,6 +9,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/Widget.h"
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 
 #include "Vehicle.generated.h"
@@ -219,6 +220,9 @@ private:
 	void ReduceSpeed();
 	void StartSpeedRecovery();
 
+	UPROPERTY()
+	UWidget* CameraWidget;
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	UTextureRenderTarget2D* GetForwardRenderTarget() const { return ForwardRT; }
@@ -283,7 +287,13 @@ private:
 	void StartForwardCapture();
 	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	void StopForwardCapture();
+
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
+	void CreateWidgetCamera();
 	
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
+	void HideWidgetCamera();
+
 	void CaptureForwardOnce();
 
 	void UpdateForwardCapture(float DeltaTime);

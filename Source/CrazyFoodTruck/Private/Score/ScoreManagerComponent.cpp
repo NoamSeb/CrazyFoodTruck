@@ -37,7 +37,6 @@ int32 UScoreManagerComponent::EvaluateScore_Direct(const TArray<FScoreTier>& Tie
 			break;
 		}
 	}
-
 	return BestScore;
 }
 
@@ -45,10 +44,8 @@ int32 UScoreManagerComponent::EvaluateScore_Inverse(const TArray<FScoreTier>& Ti
 {
 	for (const FScoreTier& Tier : Tiers)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Evaluating Time Score Tier: Value %d vs Threshold %d"), Value, Tier.Threshold));
 		if (Value <= Tier.Threshold)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Time Score Tier Matched: Value %d <= Threshold %d => Score %d"), Value, Tier.Threshold, Tier.Score));
 			return Tier.Score;
 		}
 	}
@@ -60,18 +57,19 @@ EScoreGrade UScoreManagerComponent::EvaluateGrade(const TArray<FScoreGradeTier>&
 {
 	EScoreGrade BestGrade = EScoreGrade::F;
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString::Printf(TEXT("TOTALLLLLLLLLLL GRADES : %d"), Tiers.Num()));
 	for (const FScoreGradeTier& Tier : Tiers)
 	{
+		//print Tier
+		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Evaluating Grade %ls Tier: TotalScore %d >= Threshold %d"), *UEnum::GetValueAsString(Tier.Grade) , TotalScore,  Tier.Threshold));
 		if (TotalScore >= Tier.Threshold)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Blue, FString::Printf(TEXT("Grade Tier Matched: TotalScore %d >= Threshold %d => Grade %s"), TotalScore, Tier.Threshold, *UEnum::GetValueAsString(Tier.Grade)));
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, FString::Printf(TEXT("Matched GRADEEEEE %ls"), *UEnum::GetValueAsString(Tier.Grade)));
 			return Tier.Grade;
 		}
-		else
-		{
-			break;
-		}
 	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, FString::Printf(TEXT("NO GRADEEEEE FOUND %ls"), *UEnum::GetValueAsString(BestGrade)));
 
 	return BestGrade;
 }
