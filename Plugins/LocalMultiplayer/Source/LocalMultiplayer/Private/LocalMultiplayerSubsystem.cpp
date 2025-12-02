@@ -297,7 +297,7 @@ void ULocalMultiplayerSubsystem::ApplyOutline(APawn* OutlinedPawn, int PlayerInd
 		FName ParamFName(*ParamName);
 		
 		const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
-		UMaterialParameterCollection* MPC = LocalMultiplayerSettings->MPCOutline;
+		UMaterialParameterCollection* MPC = LocalMultiplayerSettings->MPCOutline.LoadSynchronous();
 		if (!MPC)
 			UE_LOG(LogTemp, Error, TEXT("MPC Not found !"));
 

@@ -77,9 +77,9 @@ public:
 
     UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
     int NbMaxGamepads = 4;
-
-	UPROPERTY(EditAnywhere, Category="Local Multiplayer", meta=(DisplayName="MPC Outline"))
-	TObjectPtr<UMaterialParameterCollection> MPCOutline = nullptr;
+	//
+	// UPROPERTY(EditAnywhere, Category="Local Multiplayer", meta=(DisplayName="MPC Outline"))
+	// TObjectPtr<UMaterialParameterCollection> MPCOutline = nullptr;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Local Multiplayer", meta = (DisplayName = "MPC Outline"))
 	TSoftObjectPtr<UMaterialParameterCollection> MPCOutline;
