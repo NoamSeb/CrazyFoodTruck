@@ -37,7 +37,6 @@ int32 UScoreManagerComponent::EvaluateScore_Direct(const TArray<FScoreTier>& Tie
 			break;
 		}
 	}
-
 	return BestScore;
 }
 
@@ -58,17 +57,19 @@ EScoreGrade UScoreManagerComponent::EvaluateGrade(const TArray<FScoreGradeTier>&
 {
 	EScoreGrade BestGrade = EScoreGrade::F;
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString::Printf(TEXT("TOTALLLLLLLLLLL GRADES : %d"), Tiers.Num()));
 	for (const FScoreGradeTier& Tier : Tiers)
 	{
+		//print Tier
+		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Evaluating Grade %ls Tier: TotalScore %d >= Threshold %d"), *UEnum::GetValueAsString(Tier.Grade) , TotalScore,  Tier.Threshold));
 		if (TotalScore >= Tier.Threshold)
 		{
-			BestGrade = Tier.Grade;
-		}
-		else
-		{
-			break;
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, FString::Printf(TEXT("Matched GRADEEEEE %ls"), *UEnum::GetValueAsString(Tier.Grade)));
+			return Tier.Grade;
 		}
 	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, FString::Printf(TEXT("NO GRADEEEEE FOUND %ls"), *UEnum::GetValueAsString(BestGrade)));
 
 	return BestGrade;
 }

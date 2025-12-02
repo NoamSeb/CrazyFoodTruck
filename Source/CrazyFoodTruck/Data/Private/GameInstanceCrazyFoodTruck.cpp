@@ -67,7 +67,6 @@ int UGameInstanceCrazyFoodTruck::GetTicketsNumber() const
 int UGameInstanceCrazyFoodTruck::IncrementTicketsNumber(int Amount)
 {
 	nbrTickets += Amount;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Increment Tickets Number by %d, new total: %d"), Amount, nbrTickets));
 	return nbrTickets;
 }
 
@@ -76,7 +75,7 @@ int32 UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
 	if (int32* TicketsPtr = TicketsByGrade.Find(Grade))
 	{
 		IncrementTicketsNumber(*TicketsPtr);
-		return nbrTickets;
+		return *TicketsPtr;
 	}
 	return 0;
 }
