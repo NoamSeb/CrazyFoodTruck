@@ -71,6 +71,7 @@ void AMenuPlayerSlot3D::OnLobbySlotsChanged()
 
 void AMenuPlayerSlot3D::RefreshFromSlotData()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Refresh Slot Index: %d"), SlotIndex));
 	if (!GIRef || !GIRef->PlayerSlots.IsValidIndex(SlotIndex))
 	{
 		return;
