@@ -53,6 +53,8 @@ void AMunitionDrawer::DecrementPlayerReloading()
 
 void AMunitionDrawer::ReceiveInputOpen(float value)
 {
+	//int ValueInt = FMath::RoundToInt(value);
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, FString::Printf(TEXT("alue : %d"), value));
 	UpdateValue(value * _OpenSpeed * GetWorld()->GetDeltaSeconds(), true);
 }
 

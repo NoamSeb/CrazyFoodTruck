@@ -100,20 +100,7 @@ void AVehicle::BeginPlay()
 
 	if (bForwardCamAlwaysOn && GI->GameData->CurrentGamePhase == EPhaseGameCrazyFoodTruckState::Route)
 	{
-		if (!ForwardCamWidget && bCreateForwardCamWidgetAtBeginPlay && ForwardCamWidgetClass && ForwardRT)
-		{
-			if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
-			{
-				ForwardCamWidget = CreateWidget<UForwardCamWidget>(PC, ForwardCamWidgetClass);
-				if (ForwardCamWidget)
-				{
-					ForwardCamWidget->AddToViewport(50);
-					ForwardCamWidget->SetForwardTexture(ForwardRT);
-					ForwardCamWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
-				}
-			}
-		}
-
+		CreateWidgetCamera();
 		StartForwardCapture();
 	}
 	else
@@ -566,6 +553,31 @@ void AVehicle::StopForwardCapture()
 	ForwardCapture->bCaptureOnMovement = false;
 	ForwardCapture->Deactivate();
 	ForwardCapture->TextureTarget = nullptr;
+}
+
+void AVehicle::CreateWidgetCamera()
+{
+	if (!ForwardCamWidget && bCreateForwardCamWidgetAtBeginPlay && ForwardCamWidgetClass && ForwardRT)
+	{
+		if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
+		{
+			ForwardCamWidget = CreateWidget<UForwardCamWidget>(PC, ForwardCamWidgetClass);
+			if (ForwardCamWidget)
+			{
+				ForwardCamWidget->AddToViewport(50);
+				ForwardCamWidget->SetForwardTexture(ForwardRT);
+				ForwardCamWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+			}
+		}
+	}
+}
+
+void AVehicle::HideWidgetCamera()
+{
+	if (ForwardCamWidget)
+	{
+		ForwardCamWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void AVehicle::CaptureForwardOnce()
