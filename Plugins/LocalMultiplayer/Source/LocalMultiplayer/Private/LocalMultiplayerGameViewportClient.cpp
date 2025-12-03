@@ -52,7 +52,7 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 		return Super::InputKey(EventArgs);
 	}
 
-	const ELocalMultiplayerInputMappingType MappingType = ELocalMultiplayerInputMappingType::Player;
+	const ELocalMultiplayerInputMappingType MappingType = LocalMultiplayerSubsystem->GetCurrentMappingType();
 
 	if (!EventArgs.Key.IsGamepadKey())
 	{
@@ -129,7 +129,7 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 		return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
 	}
 
-	const ELocalMultiplayerInputMappingType MappingType = ELocalMultiplayerInputMappingType::Player;
+	const ELocalMultiplayerInputMappingType MappingType = LocalMultiplayerSubsystem->GetCurrentMappingType();
 
 	if (!bGamepad && !Key.IsGamepadKey())
 	{

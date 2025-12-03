@@ -38,7 +38,13 @@ void ACrazyFoodTruckGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
-    UGameInstance* GI = GetGameInstance();
+    UWorld* World = GetWorld();
+    if (!World) return;
+
+    UGameInstance* GIBase = GetGameInstance();
+    if (!GIBase) return;
+
+    UGameInstanceCrazyFoodTruck* GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
     if (!GI) return;
 
     CreateAndInitPlayers();
@@ -99,35 +105,83 @@ void ACrazyFoodTruckGameMode::FindPlayerStartActors(TArray<APlayerStart*>& Resul
 
 void ACrazyFoodTruckGameMode::SpawnCharacters(const TArray<APlayerStart*>& SpawnPoints)
 {
+    UWorld* World = GetWorld();
+    if (!World) return;
+
+    UGameInstanceCrazyFoodTruck* GI = World->GetGameInstance<UGameInstanceCrazyFoodTruck>();
+    if (!GI) return;
+
     UCrazyFoodTruckCharacterInputData* InputData = LoadInputDataFromConfig();
     UInputMappingContext* InputMappingContext = LoadInputMappingContextFromConfig();
 
-    for (APlayerStart* SpawnPoint : SpawnPoints)
+    Characters.Reset();
+
+    const int32 NumSlots = GI->PlayerSlots.Num();
+
+    for (int32 SlotIndex = 0; SlotIndex < NumSlots; ++SlotIndex)
     {
+        if (!GI->PlayerSlots.IsValidIndex(SlotIndex))
+        {
+            continue;
+        }
+
+        const FMenuPlayerSlot& Slot = GI->PlayerSlots[SlotIndex];
+
+        if (!Slot.bIsConnected || Slot.ControllerId == INDEX_NONE)
+        {
+            continue;
+        }
+
+        if (!SpawnPoints.IsValidIndex(SlotIndex))
+        {
+            UE_LOG(LogTemp, Warning, TEXT("No PlayerStart for SlotIndex %d"), SlotIndex);
+            continue;
+        }
+
+        APlayerStart* SpawnPoint = SpawnPoints[SlotIndex];
         if (!SpawnPoint)
         {
             continue;
         }
-        
-        const EAutoReceiveInput::Type InputType = SpawnPoint->AutoReceiveInput.GetValue();
-        TSubclassOf<ACrazyFoodTruckCharacter> CrazyFoodTruckCharacterClass = GetCrazyFoodTruckCharacterClassFromInputType(InputType);
-        if (!CrazyFoodTruckCharacterClass)
+
+        APlayerController* PC = FindPlayerControllerByControllerId(World, Slot.ControllerId);
+        if (!PC)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("No PlayerController found for ControllerId %d (SlotIndex %d)"), Slot.ControllerId, SlotIndex);
+            continue;
+        }
+
+        TSubclassOf<ACrazyFoodTruckCharacter> CrazyCharClass = GetCrazyFoodTruckCharacterClassFromSlotIndex(SlotIndex);
+        if (!CrazyCharClass)
         {
             continue;
         }
 
-        ACrazyFoodTruckCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<ACrazyFoodTruckCharacter>(CrazyFoodTruckCharacterClass, SpawnPoint->GetTransform());
+        FTransform SpawnTransform = SpawnPoint->GetActorTransform();
+
+        FActorSpawnParameters Params;
+        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+        ACrazyFoodTruckCharacter* NewCharacter = World->SpawnActorDeferred<ACrazyFoodTruckCharacter>(CrazyCharClass, SpawnTransform);
         if (!NewCharacter)
         {
             continue;
         }
 
-        NewCharacter->AutoPossessPlayer = SpawnPoint->AutoReceiveInput;
-
         NewCharacter->SetInputData(InputData);
-        // NewCharacter->SetInputMappingContext(InputMappingContext);
+        NewCharacter->SetInputMappingContext(InputMappingContext);
 
-        NewCharacter->FinishSpawning(SpawnPoint->GetTransform());
+        const FLinearColor PlayerColor = GI->GetPlayerColorForIndex(SlotIndex);
+        NewCharacter->SetPlayerColor(PlayerColor);
+
+        NewCharacter->FinishSpawning(SpawnTransform);
+
+        PC->Possess(NewCharacter);
+
+        if (InputMappingContext)
+        {
+            NewCharacter->SetupMappingContextIntoController();
+        }
 
         Characters.Add(NewCharacter);
     }
@@ -145,7 +199,7 @@ UInputMappingContext* ACrazyFoodTruckGameMode::LoadInputMappingContextFromConfig
     return CharacterSettings ? CharacterSettings->InputMappingContext.LoadSynchronous() : nullptr;
 }
 
-TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const
+TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruckCharacterClassFromSlotIndex(int32 SlotIndex) const
 {
     const UCrazyFoodTruckSettings* CrazyFoodTruckSettings = GetDefault<UCrazyFoodTruckSettings>();
     if (!CrazyFoodTruckSettings)
@@ -153,19 +207,43 @@ TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruck
         return nullptr;
     }
 
-    switch (InputType)
+    switch (SlotIndex)
     {
-    case EAutoReceiveInput::Player0:
+    case 0:
         return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP0;
-    case EAutoReceiveInput::Player1:
+    case 1:
         return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP1;
-    case EAutoReceiveInput::Player2:
+    case 2:
         return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP2;
-    case EAutoReceiveInput::Player3:
+    case 3:
         return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP3;
     default:
+        return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP0;
+    }
+}
+
+APlayerController* ACrazyFoodTruckGameMode::FindPlayerControllerByControllerId(UWorld* World, int32 ControllerId) const
+{
+    if (!World || ControllerId == INDEX_NONE)
+    {
         return nullptr;
     }
+
+    for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
+    {
+        if (APlayerController* PC = It->Get())
+        {
+            if (const ULocalPlayer* LP = PC->GetLocalPlayer())
+            {
+                if (LP->GetControllerId() == ControllerId)
+                {
+                    return PC;
+                }
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 AActor* ACrazyFoodTruckGameMode::ResolveVehicleActor() const
@@ -242,13 +320,6 @@ void ACrazyFoodTruckGameMode::HandleTimerSecondPrint(int32 ElapsedSeconds)
 
     static const int32 MsgKey = 99999;
     const FString Text = FString::Printf(TEXT("Time: %s"), *FormatMMSS(ElapsedSeconds));
-
-    GEngine->AddOnScreenDebugMessage(MsgKey, 1.1f, FColor::Green, Text);
-
-    if (!bHasComputedFinalScore && ElapsedSeconds >= 30)
-    {
-        EvaluateFinalScore();
-    }
 }
 
 FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
@@ -272,27 +343,44 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
 
     AHordeManager* HordeMgr = ResolveHordeManager();
     const int32 Kills = HordeMgr ? HordeMgr->GetZombiesKilledCount() : 0;
-
+    
+    UGameInstanceCrazyFoodTruck* CFTGI = GetGameInstance<UGameInstanceCrazyFoodTruck>();
+    
     int32 TimeScore = 0;
     int32 KillScore = 0;
-    
-    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, TimeScore, KillScore);
-    const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
+    int32 LifeRemaining = 0;
+    int32 OutLifeScore = 0;
 
+    if (CFTGI)
+    {
+        LifeRemaining = CFTGI->CurrentLifeFoodTruck - (CFTGI->MaxLifeFoodTruck -  CFTGI->CurrentLifeFoodTruck);
+        OutLifeScore = LifeRemaining * 100;
+    }
+
+    const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, OutLifeScore, TimeScore,KillScore);
+    const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
+    
     GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);
 
-    if (UGameInstanceCrazyFoodTruck* CFTGI = GetGameInstance<UGameInstanceCrazyFoodTruck>())
+    int32 tickets = 0;
+    if (CFTGI)
     {
-        CFTGI->AddTicketsForGrade(Grade);
+        tickets = CFTGI->AddTicketsForGrade(Grade);
     }
 
     if (APlayerController* PC = World->GetFirstPlayerController())
     {
         if (ACrazyFoodTruckHUD* HUD = Cast<ACrazyFoodTruckHUD>(PC->GetHUD()))
         {
-            HUD->ShowScoreResult(FinalScore, TimeScore, KillScore, Grade);
+            HUD->ShowScoreResult(TimeSeconds, Kills, LifeRemaining, tickets, Grade);
+            HUD->OnFinalScoreShownHUD.AddDynamic(this, &ACrazyFoodTruckGameMode::ListenScoreEnd);
         }
     }
+}
+
+void ACrazyFoodTruckGameMode::ListenScoreEnd()
+{
+    OnFinalScoreShown.Broadcast();
 }
 
 AHordeManager* ACrazyFoodTruckGameMode::ResolveHordeManager() const
