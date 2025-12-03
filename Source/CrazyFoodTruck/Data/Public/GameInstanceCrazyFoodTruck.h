@@ -13,11 +13,35 @@
 #include "Score/ScoreManagerComponent.h"
 #include "GameInstanceCrazyFoodTruck.generated.h"
 
+class UFoodTruckDataSubSystem;
+class UGameDataSubSystem;
+class UZombieDataSubSystem;
+class UMaterialParameterCollection;
+
+USTRUCT(BlueprintType)
+struct FMenuPlayerSlot
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsConnected = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsReady = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ControllerId = INDEX_NONE;
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLobbySlotsChanged);
+
 UCLASS()
 class CRAZYFOODTRUCK_API UGameInstanceCrazyFoodTruck : public UGameInstance
 {
 	GENERATED_BODY()
 	
+public:
 	virtual void Init() override;
 
 private:
@@ -58,6 +82,33 @@ public:
 	int32 MaxLifeFoodTruck = 20;
 
 	int actoraspurr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
+	TArray<FMenuPlayerSlot> PlayerSlots;
+
+	UPROPERTY(BlueprintAssignable, Category = "Lobby")
+	FOnLobbySlotsChanged OnLobbySlotsChanged;
+
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
+	void InitLobbySlots();
+
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
+	void TryJoinPlayer(int32 ControllerId);
+
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
+	bool AreAllPlayersConnected() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Lobby")
+	void ResetLobby();
+
+	UFUNCTION(BlueprintPure, Category = "Lobby|Colors")
+	FLinearColor GetPlayerColorForIndex(int32 PlayerIndex) const;
+
+	UFUNCTION(BlueprintPure, Category = "Lobby|Colors")
+	int32 GetSlotIndexForControllerId(int32 ControllerId) const;
+
+	UFUNCTION(BlueprintPure, Category = "Lobby|Colors")
+	FLinearColor GetPlayerColorForControllerId(int32 ControllerId) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Tickets")
 	int GetTicketsNumber() const;

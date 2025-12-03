@@ -7,7 +7,6 @@
 #include "Components/BoxComponent.h"
 #include "Vehicle/Vehicle.h"
 
-
 AHordeManager::AHordeManager()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -239,4 +238,3 @@ void AHordeManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-

@@ -55,7 +55,8 @@ private:
 
 	UCrazyFoodTruckCharacterInputData* LoadInputDataFromConfig() const;
 	UInputMappingContext* LoadInputMappingContextFromConfig() const;
-	TSubclassOf<ACrazyFoodTruckCharacter> GetCrazyFoodTruckCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
+	TSubclassOf<ACrazyFoodTruckCharacter> GetCrazyFoodTruckCharacterClassFromSlotIndex(int32 SlotIndex) const;
+	APlayerController* FindPlayerControllerByControllerId(UWorld* World, int32 ControllerId) const;
 
 	AActor* ResolveVehicleActor() const;
 	AActor* ResolveViewTargetActor() const;
