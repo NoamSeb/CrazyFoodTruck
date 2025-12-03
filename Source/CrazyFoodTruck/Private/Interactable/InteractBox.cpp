@@ -400,14 +400,15 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
             const int32 PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
             if (PlayerIndex != -1 && PawnToPossess)
             {
-                LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType);
-                
                 if(Cast<AVehicle>(PawnToPossess))
                 {
                     APlayerController* PC = CurrentInteractorPlayerController.Get(); 
                     int CurrentPlayerIndex = GetPlayerIndexFromPlayerController(PC);
-                    UE_LOG(LogTemp, Display, TEXT("Player Index: %d"), CurrentPlayerIndex);
                     AddOutlineToForwardCamera(CurrentPlayerIndex);
+                    LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, true);
+                }else
+                {
+                    LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, false);
                 }
             }
         }
@@ -439,7 +440,13 @@ void AInteractBox::UnpossessPawn()
         {
             if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
             {
-                LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType);
+                if(Cast<AVehicle>(PawnToPossess))
+                {
+                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false);
+                }else
+                {
+                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false);
+                }
             }
         }
     }
