@@ -281,6 +281,11 @@ void AHordeManager::HandleZombieDied(AZombieIA* Zombie, AActor* Killer)
 	OnAnyZombieDied.Broadcast(Zombie, Killer);
 }
 
+void AHordeManager::IncrementZombiesKilled()
+{
+	++ZombiesKilledTotal;
+}
+
 void AHordeManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
