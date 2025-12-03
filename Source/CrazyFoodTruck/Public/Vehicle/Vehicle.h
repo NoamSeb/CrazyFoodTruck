@@ -9,6 +9,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/Widget.h"
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 
 #include "Vehicle.generated.h"
@@ -25,14 +26,14 @@ class UTextureRenderTarget2D;
 class AInteractBox;
 class UForwardCamWidget;
 
-UENUM()
-enum class VehicleStates
+UENUM(BlueprintType)
+enum class EVehicleStates : uint8
 {
-	Idle,
+	Idle = 0,
 	Rotating
 };
 UENUM()
-enum class VehicleOrientation
+enum class EVehicleOrientation
 {
 	Left,
 	Right
@@ -122,9 +123,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool MovementEnable;
-public:
+	
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
+
+	UFUNCTION(BlueprintCallable)
+	void SetTruckState(EVehicleStates NewState);
+	UFUNCTION(BlueprintCallable)
+	EVehicleStates GetTruckState() const { return TruckState; }
 
 #pragma region Upgrades
 	UGameInstanceCrazyFoodTruck* GI;
@@ -135,12 +141,49 @@ public:
 		
 #pragma endregion
 
+#pragma region Road Progress
+	float fTotalRaceDistance;
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(
+	FOnVehicleUpdate, 
+	float, DistanceToFinish, 
+	float, TotalDistance, 
+	float, DelegateInterval
+);
+        UFUNCTION()
+        void ShootLineTrace(FVector TargetLocation);
+        
+        UPROPERTY(EditAnywhere, BlueprintReadWrite)
+        int ProgressOnRoad;
+    
+        UPROPERTY(EditAnywhere, BlueprintReadWrite)
+        float fProgressDistance;
+        bool bIsBeginOfTheRace = true;
+		float fDelegateInterval = 2;
+		FVector InitLocation;
+
+		UPROPERTY(BlueprintAssignable, Category = "Race")
+		FOnVehicleUpdate OnVehicleUpdate;
+	protected:
+		void BroadcastRaceData();
+    private:
+		FTimerHandle RaceUpdateTimer;
+	
+        float fDistanceToFinishLine;
+        
+		FVector FEndOfTheRaceLocation;
+		bool bSendDelegate = false;
+    
+    #pragma endregion
+
 private:
+
+	UPROPERTY(EditAnywhere)
+	EVehicleStates TruckState;
+	
 	// ===== Runtime State =====
 	static constexpr float KilometersToMetersConvertingValue = 27.777777777778f;
-
-	VehicleStates TruckState;
-	VehicleOrientation TruckOrientation;
+	
+	EVehicleOrientation TruckOrientation;
 
 	float InputRotatingValue;
 		
@@ -176,6 +219,9 @@ private:
 
 	void ReduceSpeed();
 	void StartSpeedRecovery();
+
+	UPROPERTY()
+	UWidget* CameraWidget;
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
@@ -236,8 +282,18 @@ protected:
 private:
 	void CreateAndAssignForwardRenderTarget();
 	void ConfigureForwardCaptureQuality();
+	
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	void StartForwardCapture();
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	void StopForwardCapture();
+
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
+	void CreateWidgetCamera();
+	
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
+	void HideWidgetCamera();
+
 	void CaptureForwardOnce();
 
 	void UpdateForwardCapture(float DeltaTime);
