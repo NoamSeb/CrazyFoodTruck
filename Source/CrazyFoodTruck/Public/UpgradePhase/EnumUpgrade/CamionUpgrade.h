@@ -8,8 +8,9 @@ UENUM(BlueprintType)
 enum class ECamionUpgrade : uint8
 {
 	None = 0,
-	Speed,
-	TurningSpeed,
-	AddBoostTime,
-	Heal
+	//Speed, //fait
+	//TurningSpeed, //fait 
+	Heal, //fait
+	FasterRepair, //ok ?
+	ReplenishAmmoWhenKilledZombies
 };

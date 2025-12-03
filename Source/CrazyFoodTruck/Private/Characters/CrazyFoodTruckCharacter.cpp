@@ -306,7 +306,10 @@ void ACrazyFoodTruckCharacter::SetFocusedInteractable(const TScriptInterface<IIn
 int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
 {
     const APlayerController* PC = Cast<APlayerController>(Controller);
-    if (!PC) return -1;
+    if (!PC)
+    {
+        return -1;
+    }
 
     const ULocalPlayer* LP = PC->GetLocalPlayer();
     return LP ? LP->GetControllerId() : -1;
@@ -324,22 +327,46 @@ void ACrazyFoodTruckCharacter::SetPlayerColor(FLinearColor NewColor)
 
 void ACrazyFoodTruckCharacter::UpdatePlayerColorFromController()
 {
-    switch (GetPlayerIndex())
+    const int32 ControllerId = GetPlayerIndex();
+    if (ControllerId < 0)
     {
-    case 0:
-        PlayerColor = FLinearColor(0.0f, 0.45f, 1.0f);
-        break;
-    case 1:
-        PlayerColor = FLinearColor(0.1f, 0.8f, 0.2f); 
-        break;
-    case 2:
-        PlayerColor = FLinearColor(1.0f, 0.1f, 0.1f); 
-        break;
-    case 3:
-        PlayerColor = FLinearColor(1.0f, 0.9f, 0.1f);
-        break;
-    default:
         PlayerColor = FLinearColor::White;
-        break;
+        return;
     }
+
+    UWorld* World = GetWorld();
+    if (!World)
+    {
+        PlayerColor = FLinearColor::White;
+        return;
+    }
+
+    if (UGameInstanceCrazyFoodTruck* GI = World->GetGameInstance<UGameInstanceCrazyFoodTruck>())
+    {
+        PlayerColor = GI->GetPlayerColorForControllerId(ControllerId);
+    }
+    else
+    {
+        PlayerColor = FLinearColor::White;
+    }
+
+    //TArray<UMeshComponent*> MeshComponents;
+    //GetComponents<UMeshComponent>(MeshComponents);
+
+    //for (UMeshComponent* MeshComp : MeshComponents)
+    //{
+    //    if (!MeshComp)
+    //    {
+    //        continue;
+    //    }
+
+    //    const int32 MatCount = MeshComp->GetNumMaterials();
+    //    for (int32 MatIndex = 0; MatIndex < MatCount; ++MatIndex)
+    //    {
+    //        if (UMaterialInstanceDynamic* MID = MeshComp->CreateAndSetMaterialInstanceDynamic(MatIndex))
+    //        {
+    //            MID->SetVectorParameterValue(TEXT("PlayerColor"), PlayerColor);
+    //        }
+    //    }
+    //}
 }

@@ -14,6 +14,19 @@
 #include "GameFramework/Pawn.h"
 #include "SideCabestan.generated.h"
 
+UENUM()
+enum class ELocationPlayerCabestan
+{
+	Nord,
+	NordEst,
+	Est,
+	EstSud,
+	Sud,
+	SudOuest,
+	Ouest,
+	OuestNord
+};
+
 UCLASS()
 class CRAZYFOODTRUCK_API ASideCabestan : public APawn
 {
@@ -32,7 +45,7 @@ protected:
 	UInputMappingContext* SideCabestanInputMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
-	UInputAction* YawAction;
+	UInputAction* UpDownAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* PushAction;
@@ -41,7 +54,7 @@ protected:
 	UInputAction* BringAction;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
-	UInputAction* RollAction;
+	UInputAction* RightLeftAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	UInputAction* QuitAction;
@@ -54,6 +67,13 @@ protected:
 	void HandleYaw(const FInputActionValue& Value);
 	void HandleRoll(const FInputActionValue& Value);
 	void HandleQuit(const FInputActionValue& Value);
+
+	void TurnCabestan(const FInputActionValue& Value);
+	void MoveX(const FInputActionValue& Value);
+	void MoveY(const FInputActionValue& Value);
+	float InputX;
+	float InputY;
+	ELocationPlayerCabestan LocationPose;
 
 	void DropRollInput();
 	void DropYawInput();

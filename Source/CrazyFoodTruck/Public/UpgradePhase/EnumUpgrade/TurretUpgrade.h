@@ -8,10 +8,13 @@ UENUM(BlueprintType)
 enum class ETurretUpgrade : uint8
 {
 	None = 0,
-	RotationSpeedCabestan,
-	AugmentationAngle,
-	Cadence,
-	Damage,
-	OneTicketWhenKilledZombies,
-	MaxAmmo
+	//RotationSpeedCabestan, //fait ?
+	//AugmentationAngle,
+	Cadence, //fait
+	Damage, //fait
+	TripleDamageFor10EmeBullet, //fait
+	MaxAmmo, //fait
+	SpeedBullet, //fait
+	IncreaseDamageWhenFullReload, //fait
+	BulletRepelZombies,
 };
