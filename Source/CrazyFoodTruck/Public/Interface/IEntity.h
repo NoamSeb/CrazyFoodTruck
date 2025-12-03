@@ -29,12 +29,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
 	bool IsAZoombie();
 	
-	// DAMAGE
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
-	void ReceiveDamageBlueprint(int DamageAmount);
-
-	virtual void ReceiveDamage(int DamageAmount) = 0;
-
 	// ROAD
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Entity")
 	void CrushUnderTruckBlueprint(int DamageAmount);

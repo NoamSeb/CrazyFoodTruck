@@ -42,14 +42,21 @@ public:
 	ULocalPlayer* GetLocalPlayerForIndex(int32 PlayerIndex);
 	int32 GetPlayerIndexFromController(APlayerController* PlayerController) const;
 
-	bool PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType);
-	bool UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType);
+	bool PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed);
+	bool UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed);
 
+	void ApplyOutline(APawn* OutlinedPawn, int PlayerIndex);
+	
 	UFUNCTION(BlueprintCallable, Category="Local Multiplayer|Input")
 	void AddTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, int32 Priority = 100, bool bForceImmediately = true);
 
 	UFUNCTION(BlueprintCallable, Category="Local Multiplayer|Input")
 	void RemoveTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, bool bForceImmediately = true);
+
+	UInputMappingContext* GetGamepadIMC(ELocalMultiplayerInputMappingType MappingType) const;
+
+	void SetCurrentMappingType(ELocalMultiplayerInputMappingType NewType) { CurrentMappingType = NewType; }
+	ELocalMultiplayerInputMappingType GetCurrentMappingType() const { return CurrentMappingType; }
 	
 protected:
 	UPROPERTY()
@@ -65,5 +72,7 @@ private:
 	UEnhancedInputLocalPlayerSubsystem* GetEISForPlayerIndex(int32 PlayerIndex) const;
 
 	UInputMappingContext* GetKeyboardIMC(int32 KeyboardProfileIndex, ELocalMultiplayerInputMappingType MappingType) const;
-	UInputMappingContext* GetGamepadIMC(ELocalMultiplayerInputMappingType MappingType) const;
+
+	UPROPERTY()
+	ELocalMultiplayerInputMappingType CurrentMappingType = ELocalMultiplayerInputMappingType::Player;
 };

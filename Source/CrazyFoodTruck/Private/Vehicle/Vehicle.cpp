@@ -25,6 +25,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Animation/AnimInstanceProxy.h"
 
 AVehicle::AVehicle()
 {
@@ -32,7 +33,8 @@ AVehicle::AVehicle()
 	PrimaryActorTick.TickGroup = TG_PostUpdateWork;
 
 	Root = CreateDefaultSubobject<UBoxComponent>(TEXT("Root"));
-    Root->SetCollisionProfileName(TEXT("Vehicle"));
+	Root->SetCollisionProfileName(TEXT("Vehicle"));
+	RootComponent = Root;
 
 	ForwardCamRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ForwardCamRoot"));
 	ForwardCamRoot->SetupAttachment(RootComponent);
@@ -50,30 +52,61 @@ AVehicle::AVehicle()
 void AVehicle::BeginPlay()
 {
 	Super::BeginPlay();
+	InitLocation = GetActorLocation();
+
+	GetWorldTimerManager().SetTimer(
+		RaceUpdateTimer,
+		this,
+		&AVehicle::BroadcastRaceData,
+		fDelegateInterval,
+		true
+	);
+
+#pragma region Upgrades
+	if (UGameInstance* GIBase = GetGameInstance())
+	{
+		GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
+	}
+	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
+
+	_CurrentTruckMaxSpeed = TruckMaxSpeed + TruckSubSystem->Speed;
+	_CurrentTruckAngleSpeed = TruckAngleSpeed + TruckSubSystem->TruckRotationSpeed;
+#pragma endregion
 
 	MovementComponent = Cast<UFloatingPawnMovement>(GetMovementComponent());
-	MovementComponent->MaxSpeed = TruckMaxSpeed * KilometersToMetersConvertingValue;
-
-	if (!MovementComponent->UpdatedComponent)
+	if (MovementComponent)
 	{
-		MovementComponent->SetUpdatedComponent(RootComponent);
-	}
-	
-	MovementComponent->bUpdateOnlyIfRendered = false;
-	MovementComponent->Activate(true);
+		MovementComponent->MaxSpeed = _CurrentTruckMaxSpeed * KilometersToMetersConvertingValue;
 
-	MovementComponent->SetPlaneConstraintEnabled(true);
-	MovementComponent->SetPlaneConstraintNormal(FVector::UpVector);
-	MovementComponent->SetPlaneConstraintOrigin(FVector::ZeroVector);
+		if (!MovementComponent->UpdatedComponent)
+		{
+			MovementComponent->SetUpdatedComponent(RootComponent);
+		}
+
+		MovementComponent->bUpdateOnlyIfRendered = false;
+		MovementComponent->Activate(true);
+
+		MovementComponent->SetPlaneConstraintEnabled(true);
+		MovementComponent->SetPlaneConstraintNormal(FVector::UpVector);
+		MovementComponent->SetPlaneConstraintOrigin(FVector::ZeroVector);
+	}
 
 	CreateAndAssignForwardRenderTarget();
 	ConfigureForwardCaptureQuality();
 	StopForwardCapture();
 
-	ForwardCamWidget = nullptr;
-
 	ForwardCaptureInterval = (ForwardCaptureFPS > 0.f) ? (1.f / ForwardCaptureFPS) : (1.f / 30.f);
 	ForwardCaptureTimer = 0.f;
+
+	if (bForwardCamAlwaysOn && GI->GameData->CurrentGamePhase == EPhaseGameCrazyFoodTruckState::Route)
+	{
+		CreateWidgetCamera();
+		StartForwardCapture();
+	}
+	else
+	{
+		ForwardCamWidget = nullptr;
+	}
 }
 
 void AVehicle::PossessedBy(AController* NewController)
@@ -83,7 +116,7 @@ void AVehicle::PossessedBy(AController* NewController)
 		SavedLinearVelocity = MovementComponent->Velocity;
 		PossessKeepVelocity = SavedLinearVelocity;
 	}
-	
+
 	Super::PossessedBy(NewController);
 
 	if (MovementComponent)
@@ -95,27 +128,30 @@ void AVehicle::PossessedBy(AController* NewController)
 		HoldSpeedTimer = HoldSpeedDuration;
 	}
 
-	if (!ForwardCamWidget && ForwardCamWidgetClass && ForwardRT)
+	if (!bForwardCamAlwaysOn)
 	{
-		if (APlayerController* PC = Cast<APlayerController>(NewController))
+		if (!ForwardCamWidget && ForwardCamWidgetClass && ForwardRT)
 		{
-			ForwardCamWidget = CreateWidget<UForwardCamWidget>(PC, ForwardCamWidgetClass);
-			if (ForwardCamWidget)
+			if (APlayerController* PC = Cast<APlayerController>(NewController))
 			{
-				ForwardCamWidget->AddToViewport(50);
-				ForwardCamWidget->SetForwardTexture(ForwardRT);
-				ForwardCamWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+				ForwardCamWidget = CreateWidget<UForwardCamWidget>(PC, ForwardCamWidgetClass);
+				if (ForwardCamWidget)
+				{
+					ForwardCamWidget->AddToViewport(50);
+					ForwardCamWidget->SetForwardTexture(ForwardRT);
+					ForwardCamWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+				}
 			}
 		}
-	}
 
-	if (bLiveCaptureWhilePossessed)
-	{
-		StartForwardCapture();
-	}
-	else
-	{
-		CaptureForwardOnce();
+		if (bLiveCaptureWhilePossessed)
+		{
+			StartForwardCapture();
+		}
+		else
+		{
+			CaptureForwardOnce();
+		}
 	}
 }
 
@@ -125,7 +161,7 @@ void AVehicle::UnPossessed()
 	{
 		SavedLinearVelocity = MovementComponent->Velocity;
 	}
-	
+
 	Super::UnPossessed();
 
 	if (MovementComponent)
@@ -134,12 +170,15 @@ void AVehicle::UnPossessed()
 		MovementComponent->UpdateComponentVelocity();
 	}
 
-	StopForwardCapture();
-
-	if (ForwardCamWidget)
+	if (!bForwardCamAlwaysOn)
 	{
-		ForwardCamWidget->RemoveFromParent();
-		ForwardCamWidget = nullptr;
+		StopForwardCapture();
+
+		if (ForwardCamWidget)
+		{
+			ForwardCamWidget->RemoveFromParent();
+			ForwardCamWidget = nullptr;
+		}
 	}
 }
 
@@ -147,7 +186,10 @@ void AVehicle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	MoveForward();
+	if (MovementEnable)
+	{
+		MoveForward();
+	}
 
 	if (bHoldSpeedAfterPossess)
 	{
@@ -155,8 +197,11 @@ void AVehicle::Tick(float DeltaTime)
 		const FVector Fwd2D = FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0.f).GetSafeNormal();
 		PossessKeepVelocity = Fwd2D * Speed;
 
-		MovementComponent->Velocity = PossessKeepVelocity;
-		MovementComponent->UpdateComponentVelocity();
+		if (MovementComponent)
+		{
+			MovementComponent->Velocity = PossessKeepVelocity;
+			MovementComponent->UpdateComponentVelocity();
+		}
 
 		AddMovementInput(Fwd2D, 1.f, true);
 
@@ -169,23 +214,23 @@ void AVehicle::Tick(float DeltaTime)
 
 	switch (TruckState)
 	{
-	case VehicleStates::Idle:
+	case EVehicleStates::Idle:
 		ResetTruckTilt(DeltaTime);
 		break;
-	case VehicleStates::Rotating:
+	case EVehicleStates::Rotating:
 		RotateTruck(DeltaTime);
 		break;
 	default:
 		break;
 	}
 
-	if (bRecoveringSpeed)
+	if (bRecoveringSpeed && MovementComponent)
 	{
 		ElapsedTime += DeltaTime;
 		const float Alpha = FMath::Clamp(ElapsedTime / SpeedRecoveryDuration, 0.f, 1.f);
 
-		const float VMin = (TruckMaxSpeed - TruckLossSpeed) * KilometersToMetersConvertingValue;
-		const float VMax = TruckMaxSpeed * KilometersToMetersConvertingValue;
+		const float VMin = (_CurrentTruckMaxSpeed - TruckLossSpeed) * KilometersToMetersConvertingValue;
+		const float VMax = _CurrentTruckMaxSpeed * KilometersToMetersConvertingValue;
 		MovementComponent->MaxSpeed = FMath::Lerp(VMin, VMax, Alpha);
 
 		if (Alpha >= 1.0f)
@@ -201,6 +246,7 @@ void AVehicle::Tick(float DeltaTime)
 	}
 
 	UpdateForwardCapture(DeltaTime);
+	ShootLineTrace(FEndOfTheRaceLocation);
 }
 
 void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -211,8 +257,8 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if (OtherActor->Tags.Contains("Obstacle"))
 	{
-		OtherActor->Destroy();
 		ReduceSpeed();
+		OtherActor->Destroy();
 	}
 	else if (OtherActor->Tags.Contains("MapSwitch"))
 	{
@@ -253,7 +299,8 @@ void AVehicle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		if (QuitTruckAction)
 		{
-			EnhancedInputComponent->BindAction(QuitTruckAction, ETriggerEvent::Started, this, &AVehicle::InputQuitTruck);
+			EnhancedInputComponent->BindAction(QuitTruckAction, ETriggerEvent::Started, this,
+			                                   &AVehicle::InputQuitTruck);
 		}
 	}
 }
@@ -272,14 +319,39 @@ void AVehicle::SetupMappingContextIntoController() const
 	InputSystem->AddMappingContext(FoodTruckInputMappingContext, 0);
 }
 
+void AVehicle::SetTruckState(EVehicleStates NewState)
+{
+	TruckState = NewState;
+}
+
+void AVehicle::ShootLineTrace(FVector TargetLocation)
+{
+	if(bIsBeginOfTheRace)
+	{
+		FEndOfTheRaceLocation = TargetLocation;
+		fTotalRaceDistance = FVector::Dist(GetActorLocation(), TargetLocation);
+		bIsBeginOfTheRace = false;
+	}
+
+	fProgressDistance = FVector::Dist(GetActorLocation(), InitLocation);
+	fDistanceToFinishLine = (fTotalRaceDistance - fProgressDistance);
+}
+
+void AVehicle::BroadcastRaceData()
+{
+	OnVehicleUpdate.Broadcast(fDistanceToFinishLine, fTotalRaceDistance, fDelegateInterval);
+}
+
 void AVehicle::BindInputRotateZAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)
 {
 	if (FoodTruckInputMappingContext == nullptr) return;
 
 	if (TurnTruckAction)
 	{
-		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Triggered, this, &AVehicle::SetTruckRotatingStates);
-		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Completed, this, &AVehicle::SetTruckIdleStates);
+		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Triggered, this,
+		                                   &AVehicle::SetTruckRotatingStates);
+		EnhancedInputComponent->BindAction(TurnTruckAction, ETriggerEvent::Completed, this,
+		                                   &AVehicle::SetTruckIdleStates);
 	}
 }
 
@@ -293,31 +365,31 @@ void AVehicle::InputQuitTruck(const FInputActionValue& InputActionValue)
 
 void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 {
-	TruckState = VehicleStates::Rotating;
+	TruckState = EVehicleStates::Rotating;
 	InputRotatingValue = InputActionValue.Get<float>();
-	
+
 	if (!AlreadyPassed)
 	{
 		RotationTimer = 0.f;
 		StartRotationYaw = GetActorRotation().Yaw;
 		StartRotationRoll = GetActorRotation().Roll;
 	}
-	
+
 	if (InputRotatingValue > 0)
 	{
-		TruckOrientation = VehicleOrientation::Right;
+		TruckOrientation = EVehicleOrientation::Right;
 	}
 	else
 	{
-		TruckOrientation = VehicleOrientation::Left;
+		TruckOrientation = EVehicleOrientation::Left;
 	}
-	
+
 	AlreadyPassed = true;
 }
 
 void AVehicle::SetTruckIdleStates()
 {
-	TruckState = VehicleStates::Idle;
+	TruckState = EVehicleStates::Idle;
 	TiltTimer = 0.f;
 	StartRotationRoll = GetActorRotation().Roll;
 	AlreadyPassed = false;
@@ -325,10 +397,10 @@ void AVehicle::SetTruckIdleStates()
 
 void AVehicle::RotateTruck(float DeltaTime)
 {
-	destinationRotation.Yaw += (InputRotatingValue * TruckAngleSpeed) * DeltaTime;
+	destinationRotation.Yaw += (InputRotatingValue * _CurrentTruckAngleSpeed) * DeltaTime;
 	destinationRotation.Yaw = FMath::Clamp(destinationRotation.Yaw, -TruckMaxRotation, TruckMaxRotation);
 
-	destinationRotation.Roll += ((InputRotatingValue * TruckAngleSpeed) / 2) * DeltaTime;
+	destinationRotation.Roll += ((InputRotatingValue * _CurrentTruckAngleSpeed) / 2) * DeltaTime;
 	destinationRotation.Roll = FMath::Clamp(destinationRotation.Roll, -TruckMaxTilt, TruckMaxTilt);
 
 	UpdateRotationTruck(destinationRotation, DeltaTime);
@@ -377,7 +449,12 @@ void AVehicle::ReduceSpeed()
 	if (!MovementComponent) return;
 
 	StartSpeed = MovementComponent->MaxSpeed;
-	MovementComponent->MaxSpeed -= KilometersToMetersConvertingValue;
+	MovementComponent->MaxSpeed -= TruckLossSpeed * KilometersToMetersConvertingValue;
+
+	if (GI)
+	{
+		GI->PlayerCameraShake(Explosion);
+	}
 
 	GetWorld()->GetTimerManager().SetTimer(
 		SpeedRecoveryHandle,
@@ -467,6 +544,8 @@ void AVehicle::StopForwardCapture()
 {
 	if (!ForwardCapture) return;
 
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stopping Forward Capture"));
+
 	bForwardCaptureActive = false;
 	ForwardCaptureTimer = 0.f;
 
@@ -474,6 +553,31 @@ void AVehicle::StopForwardCapture()
 	ForwardCapture->bCaptureOnMovement = false;
 	ForwardCapture->Deactivate();
 	ForwardCapture->TextureTarget = nullptr;
+}
+
+void AVehicle::CreateWidgetCamera()
+{
+	if (!ForwardCamWidget && bCreateForwardCamWidgetAtBeginPlay && ForwardCamWidgetClass && ForwardRT)
+	{
+		if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
+		{
+			ForwardCamWidget = CreateWidget<UForwardCamWidget>(PC, ForwardCamWidgetClass);
+			if (ForwardCamWidget)
+			{
+				ForwardCamWidget->AddToViewport(50);
+				ForwardCamWidget->SetForwardTexture(ForwardRT);
+				ForwardCamWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+			}
+		}
+	}
+}
+
+void AVehicle::HideWidgetCamera()
+{
+	if (ForwardCamWidget)
+	{
+		ForwardCamWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void AVehicle::CaptureForwardOnce()
@@ -499,15 +603,21 @@ void AVehicle::UpdateForwardCapture(float DeltaTime)
 	if (ForwardCaptureTimer < ForwardCaptureInterval) return;
 
 	ForwardCaptureTimer = 0.f;
+
 	ForwardCapture->CaptureScene();
 }
 
 bool AVehicle::ShouldCaptureForward() const
 {
+	if (bForwardCamAlwaysOn)
+	{
+		return true;
+	}
+
 	if (!bLiveCaptureWhilePossessed && Controller == nullptr)
 	{
 		return false;
 	}
-	
+
 	return true;
 }

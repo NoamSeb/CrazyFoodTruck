@@ -27,8 +27,10 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 
 	const int NbKeyboardProfiles = LocalMultiplayerSettings->GetNbKeyboardProfiles();
 	const int NbMaxGamepads = LocalMultiplayerSettings->NbMaxGamepads;
-	const int TargetPlayers = FMath::Max(1, NbKeyboardProfiles + NbMaxGamepads);
+	//const int TargetPlayers = FMath::Max(1, NbKeyboardProfiles + NbMaxGamepads);
 
+	const int TargetPlayers = 4;
+	
 	while (GameInstance->GetLocalPlayers().Num() < TargetPlayers)
 	{
 		const int ControllerId = GameInstance->GetLocalPlayers().Num();
@@ -230,7 +232,7 @@ int32 ULocalMultiplayerSubsystem::GetPlayerIndexFromController(APlayerController
 	return -1;
 }
 
-bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType)
+bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed)
 {
 	if (!PawnToPossess)
 	{
@@ -244,29 +246,8 @@ bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, AP
 	}
 
 	PC->Possess(PawnToPossess);
-	
-	UMeshComponent* PawnMesh = PawnToPossess->FindComponentByClass<UMeshComponent>();
-	if(PawnMesh)
-	{
-		PawnMesh->SetRenderCustomDepth(true);
-		PawnMesh->SetCustomDepthStencilWriteMask(ERendererStencilMask::ERSM_255);
-		FString ParamName = FString::Printf(TEXT("Bit_P%d"), PlayerIndex+1);
-		FName ParamFName(*ParamName);
-		
-		UMaterialParameterCollection* MPC = LoadObject<UMaterialParameterCollection>(nullptr, TEXT("/Game/CrazyFoodTruck/Visuals/VFX/Outline/MPC_Outline"));
-		if (!MPC)
-			UE_LOG(LogTemp, Error, TEXT("MPC Not found !"));
-
-		UMaterialParameterCollectionInstance* MPCInstance = GetWorld()->GetParameterCollectionInstance(MPC);
-		if (!MPCInstance)
-			UE_LOG(LogTemp, Error, TEXT("MPCInstance Not found !"));
-		
-		float ScalarValue = UKismetMaterialLibrary::GetScalarParameterValue(GetWorld(), MPC, ParamFName);
-		
-		int32 StencilValue = FMath::TruncToInt(ScalarValue);
-		
-		PawnMesh->SetCustomDepthStencilValue(StencilValue);
-	}
+	if(!IsVehiclePossessed)
+		ApplyOutline(PawnToPossess, PlayerIndex);
 
 	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
 	{
@@ -276,7 +257,7 @@ bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, AP
 	return true;
 }
 
-bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType)
+bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed)
 {
 	APlayerController* PC = GetPlayerControllerForIndex(PlayerIndex);
 
@@ -293,6 +274,8 @@ bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, 
 	if (PlayerPawn)
 	{
 		PC->Possess(PlayerPawn);
+		
+		ApplyOutline(PlayerPawn, PlayerIndex);
 	}
 
 	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
@@ -301,6 +284,33 @@ bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, 
 	}
 
 	return true;
+}
+
+void ULocalMultiplayerSubsystem::ApplyOutline(APawn* OutlinedPawn, int PlayerIndex)
+{
+	UMeshComponent* PawnMesh = OutlinedPawn->FindComponentByClass<UMeshComponent>();
+	if(PawnMesh)
+	{
+		PawnMesh->SetRenderCustomDepth(true);
+		PawnMesh->SetCustomDepthStencilWriteMask(ERendererStencilMask::ERSM_255);
+		FString ParamName = FString::Printf(TEXT("Bit_P%d"), PlayerIndex+1);
+		FName ParamFName(*ParamName);
+		
+		const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
+		UMaterialParameterCollection* MPC = LocalMultiplayerSettings->MPCOutline.LoadSynchronous();
+		if (!MPC)
+			UE_LOG(LogTemp, Error, TEXT("MPC Not found !"));
+
+		UMaterialParameterCollectionInstance* MPCInstance = GetWorld()->GetParameterCollectionInstance(MPC);
+		if (!MPCInstance)
+			UE_LOG(LogTemp, Error, TEXT("MPCInstance Not found !"));
+		
+		float ScalarValue = UKismetMaterialLibrary::GetScalarParameterValue(GetWorld(), MPC, ParamFName);
+		
+		int32 StencilValue = FMath::TruncToInt(ScalarValue);
+		
+		PawnMesh->SetCustomDepthStencilValue(StencilValue);
+	}
 }
 
 void ULocalMultiplayerSubsystem::AddTemporaryMappingForPlayer(int32 PlayerIndex, UInputMappingContext* IMC, int32 Priority, bool bForceImmediately)
@@ -335,6 +345,7 @@ void ULocalMultiplayerSubsystem::RemoveTemporaryMappingForPlayer(int32 PlayerInd
 
 		if (EIS->HasMappingContext(IMC))
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, "SUBSTRACT MAP");
 			FModifyContextOptions Options;
 			Options.bForceImmediately = bForceImmediately;
 			EIS->RemoveMappingContext(IMC, Options);

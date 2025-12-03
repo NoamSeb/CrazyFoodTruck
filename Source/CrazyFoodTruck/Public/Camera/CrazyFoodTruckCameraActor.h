@@ -25,10 +25,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	USpringArmComponent* SpringArm;
 
 private:
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;

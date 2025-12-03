@@ -6,6 +6,8 @@
 #include <string>
 
 #include "UWModule.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AModuleBase::AModuleBase()
 {
@@ -50,10 +52,21 @@ void AModuleBase::Tick(float DeltaTime)
 	{
 		ActualCooldown -= DeltaTime;
 		IIUWModule::Execute_UpdateSliderCooldown(WidgetModuleClass, ActualCooldown, BaseCooldown);
+		TurnWidgetTowardCamera();
 		if (ActualCooldown <= 0.f)
         {
             IIUWModule::Execute_CoolDownComplete(WidgetModuleClass);
         }
 	}
 	Super::Tick(DeltaTime);
+}
+
+void AModuleBase::TurnWidgetTowardCamera()
+{
+	// GETCAMERA
+	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	FVector CameraLocation = CameraManager->GetCameraLocation();
+	FVector WidgetRotation = ModuleWidgetComponent->GetComponentLocation();
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(WidgetRotation, CameraLocation);
+	ModuleWidgetComponent->SetWorldRotation(LookAtRotation);
 }

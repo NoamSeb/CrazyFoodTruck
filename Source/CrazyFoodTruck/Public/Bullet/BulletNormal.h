@@ -15,7 +15,7 @@ class CRAZYFOODTRUCK_API ABulletNormal : public ABulletBase
 public:
 	
 	ABulletNormal();
-	virtual void Initialize(FBulletStructure* BulletStructure ,const FVector& direction) override;
+	virtual void Initialize(FBulletStructure BulletStructure ,const FVector& direction) override;
 
 protected:
 
@@ -23,7 +23,7 @@ protected:
 	virtual void EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit) override;
 	virtual void BeginPlay() override;
 	virtual void GroundHit(FVector LocationHit) override;
-	virtual void EnemyHit(IIEntity* Entity, FVector LocationHit) override;
+	virtual void EnemyHit(IIShootable* Entity, FVector LocationHit) override;
 
 public:
 	virtual void Tick(float DeltaTime) override;

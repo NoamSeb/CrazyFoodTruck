@@ -3,6 +3,8 @@
 
 #include "Bullet/BulletNormal.h"
 
+#include "Interface/IShootable.h"
+
 
 ABulletNormal::ABulletNormal()
 {
@@ -15,7 +17,7 @@ void ABulletNormal::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ABulletNormal::Initialize(FBulletStructure* BulletStructure, const FVector& direction)
+void ABulletNormal::Initialize(FBulletStructure BulletStructure, const FVector& direction)
 {
 	Super::Initialize(BulletStructure, direction);
 }
@@ -31,7 +33,7 @@ void ABulletNormal::GroundHit(FVector LocationHit)
 	Super::GroundHit(LocationHit);
 }
 
-void ABulletNormal::EnemyHit(IIEntity* Entity, FVector LocationHit)
+void ABulletNormal::EnemyHit(IIShootable* Entity, FVector LocationHit)
 {
 	Super::EnemyHit(Entity, LocationHit);
 }

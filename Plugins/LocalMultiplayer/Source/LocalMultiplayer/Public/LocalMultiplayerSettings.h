@@ -7,6 +7,7 @@
 #include "LocalMultiplayerSettings.generated.h"
 
 class UInputMappingContext;
+class UMaterialParameterCollection;
 
 struct FKey;
 
@@ -19,6 +20,7 @@ enum class ELocalMultiplayerInputMappingType
 	Turret,
 	Cabestan,
 	Plate,
+	AmmoDrawer,
 };
 
 USTRUCT()
@@ -46,12 +48,15 @@ public:
 	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Cabestan"))
 	TObjectPtr<UInputMappingContext> IMCCabestan = nullptr;
 
-		UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Plate"))
-    	TObjectPtr<UInputMappingContext> IMCPlate = nullptr;
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC Plate"))
+	TObjectPtr<UInputMappingContext> IMCPlate = nullptr;
+
+	UPROPERTY(EditAnywhere, Category="Local Multiplayer|Profiles", meta=(DisplayName="IMC DRAWER"))
+	TObjectPtr<UInputMappingContext> IMCDrawer = nullptr;
+
 	
     UInputMappingContext* GetIMCFromType(ELocalMultiplayerInputMappingType MappingType) const;
     bool ContainsKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;
-	
 };
 
 /**
@@ -72,6 +77,12 @@ public:
 
     UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
     int NbMaxGamepads = 4;
+	//
+	// UPROPERTY(EditAnywhere, Category="Local Multiplayer", meta=(DisplayName="MPC Outline"))
+	// TObjectPtr<UMaterialParameterCollection> MPCOutline = nullptr;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Local Multiplayer", meta = (DisplayName = "MPC Outline"))
+	TSoftObjectPtr<UMaterialParameterCollection> MPCOutline;
 
 	int GetNbKeyboardProfiles() const;
 	int FindKeyboardProfileIndexFromKey(const FKey& Key, ELocalMultiplayerInputMappingType MappingType) const;

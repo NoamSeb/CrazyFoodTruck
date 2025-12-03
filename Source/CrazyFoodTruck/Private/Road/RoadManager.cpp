@@ -5,7 +5,9 @@
 
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
+#include "Kismet/GameplayStatics.h"
 #include "Road/Road.h"
+#include "Vehicle/Vehicle.h"
 
 
 // Sets default values
@@ -43,19 +45,19 @@ void ARoadManager::SpawnRoadSegment()
         GI = nullptr;
     }
     int LevelNumber = GI->GameData->LevelNumber;
-    FString DataTablePath = FString::Printf(TEXT("/Game/CrazyFoodTruck/Blueprint/Road/Levels/DT_Level_%i.DT_Level_%i"), LevelNumber, LevelNumber);
+    
 
-    UDataTable* LevelDataTable = Cast<UDataTable>(StaticLoadObject(UDataTable::StaticClass(), nullptr, *DataTablePath));
+    UDataTable* LevelDataTable = Levels[LevelNumber];
     if (!LevelDataTable)
     {
-        UE_LOG(LogTemp, Error, TEXT("DataTable not found at path: %s"), *DataTablePath);
+        UE_LOG(LogTemp, Error, TEXT("DataTable not found"));
         return;
     }
     
     TArray<FName> RowNames = LevelDataTable->GetRowNames();
     if (RowNames.Num() == 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("No rows found in DataTable: %s"), *DataTablePath);
+        UE_LOG(LogTemp, Warning, TEXT("No rows found in DataTable"));
         return;
     }
 
@@ -83,6 +85,7 @@ void ARoadManager::SpawnRoadSegment()
         }
     }
 
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Je suis juste avant spawn");
     SpawnTileToSurvivorCamp(SpawnLocation, SpawnRotation);
    
 }
@@ -105,31 +108,16 @@ void ARoadManager::RegulateRoadSegmentsPosition(TObjectPtr<ARoad> RoadToMove, in
 /// @param Rotation 
 void ARoadManager::SpawnTileToSurvivorCamp(FVector Location, FRotator Rotation)
 {
-    const FString TargetName = TEXT("BP_SurvivorCamp");
-    FString LocalFolderPath = TEXT("/Game/CrazyFoodTruck/Blueprint/Road/Segments");
-    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-
-    TArray<FAssetData> AssetDataList;
-    AssetRegistryModule.Get().GetAssetsByPath(*LocalFolderPath, AssetDataList, true);
-    TObjectPtr<UObject> FoundAsset = nullptr;
-	
-    for (const FAssetData& AssetData : AssetDataList)
+    if (SurvivorCamp)
     {
-        if (AssetData.AssetName.ToString() == TargetName)
-        {
-            FoundAsset = AssetData.GetAsset();
-            TObjectPtr<UBlueprint> BlueprintAsset = Cast<UBlueprint>(FoundAsset);
-            if (BlueprintAsset && BlueprintAsset->GeneratedClass->IsChildOf(ARoad::StaticClass()))
-            {
-                TSubclassOf<ARoad> RoadSurvivorClass = Cast<UClass>(BlueprintAsset->GeneratedClass);
-                if (RoadSurvivorClass)
-                {
-                    ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(RoadSurvivorClass, Location, Rotation);
-                    RegulateRoadSegmentsPosition(SurvivorCampRoad, RoadsSegments.Num());
-                }
-            }
-            break;
-        }
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "SPAWNNNNNNNNNNNNN");
+
+        ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(SurvivorCamp, Location, Rotation);
+        RegulateRoadSegmentsPosition(SurvivorCampRoad, RoadsSegments.Num());
+        AVehicle* FoodTruck = Cast<AVehicle>(
+        UGameplayStatics::GetActorOfClass(GetWorld(), AVehicle::StaticClass())
+        );
+        FoodTruck->ShootLineTrace(SurvivorCampRoad->StartPoint->GetComponentLocation());
     }
 }
 

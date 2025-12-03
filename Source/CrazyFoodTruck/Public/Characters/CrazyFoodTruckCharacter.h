@@ -7,6 +7,9 @@
 #include "InputMappingContext.h"
 #include "Interactable/Interactable.h"
 #include "Interface/IPlayer.h"
+
+#include "CrazyFoodTruck/Data/Public/GameDataSubSystem.h"
+
 #include "CrazyFoodTruckCharacter.generated.h"
 
 class UCrazyFoodTruckCharacterInputData;
@@ -27,49 +30,14 @@ class CRAZYFOODTRUCK_API ACrazyFoodTruckCharacter : public ACharacter, public II
 {
 	GENERATED_BODY()
 
-#pragma region Unreal Default
-
 public:
-	// Sets default values for this character's properties
 	ACrazyFoodTruckCharacter();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override; 
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	// IIPlayer Interface
-	virtual void SetInteractState(bool bCanInteract) override;
-	virtual bool CanInteract() override;
-	virtual void SetAmmoState(bool bHasAmmo) override;
-	virtual bool HasAmmo() override;
-
-	// Helpers
-	void TakeAmmoBox(AAmmoBox* AmmoBox);
-	AAmmoBox* DepositAmmoBox();
-
-	// Player Infos
-	UFUNCTION(BlueprintCallable, Category = "Player")
-	int32 GetPlayerIndex() const;
-
-	UFUNCTION(BlueprintCallable, Category = "Player")
-	FLinearColor GetPlayerColor() const;
-
-	UFUNCTION(BlueprintCallable, Category = "Player")
-	void SetPlayerColor(FLinearColor NewColor);
-
-	// Input Data / Mapping
-	void SetInputData(UCrazyFoodTruckCharacterInputData* InInputData);
-	void SetInputMappingContext(UInputMappingContext* InInputMappingContext);
-	void SetupMappingContextIntoController() const;
-
-	// Movement
+public:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MovementSpeed = 600.f;
 
@@ -88,14 +56,36 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement|Frame")
 	void UseVehicleFrame(AActor* InVehicle);
 
-	// Interact
+	void SetInputData(UCrazyFoodTruckCharacterInputData* InInputData);
+	void SetInputMappingContext(UInputMappingContext* InInputMappingContext);
+
+	void SetupMappingContextIntoController() const;
+
+	virtual void SetInteractState(bool bCanInteract) override;
+	virtual bool CanInteract() override;
+	virtual void SetAmmoState(bool bHasAmmo) override;
+	virtual bool HasAmmo() override;
+
+	void TakeAmmoBox(AAmmoBox* AmmoBox);
+	AAmmoBox* DepositAmmoBox();
+
 	const TScriptInterface<IInteractable>& GetFocusedInteractable() const;
 	void SetFocusedInteractable(const TScriptInterface<IInteractable>& NewTarget);
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	int32 GetPlayerIndex() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	FLinearColor GetPlayerColor() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void SetPlayerColor(FLinearColor NewColor);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Player")
 	FLinearColor PlayerColor = FLinearColor::White;
 
+private:
 	UPROPERTY()
 	TObjectPtr<UCrazyFoodTruckCharacterInputData> InputData = nullptr;
 
@@ -108,12 +98,26 @@ protected:
 	UPROPERTY()
 	TScriptInterface<IInteractable> FocusedInteractable;
 
-private:
 	bool bCanInteractInternal = true;
 	bool bHasAmmoInternal = false;
 	
 	UPROPERTY(Transient)
 	TObjectPtr<AAmmoBox> CarriedAmmoBox = nullptr;
+
+	//APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
+	//int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
+	
+	void AddMappingContext(UInputMappingContext* InputMappingContext, int8 Priority);
+	void RemoveMappingContext(UInputMappingContext* InputMappingContext);
+	
+	UFUNCTION(BlueprintCallable, Category = "Upgrade Phase")
+	void AddMappingUpgrade();
+	UFUNCTION(BlueprintCallable, Category = "Upgrade Phase")
+	void RemoveMappingUpgrade();
+
+	UGameDataSubSystem* GameDataSubSystem;
+
+	UInputComponent* PlayerInputComp;
 
 	void BindInputMoveAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent);

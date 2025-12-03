@@ -2,40 +2,30 @@
 
 #include "Score/ScoreManagerComponent.h"
 
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
+
 UScoreManagerComponent::UScoreManagerComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+}
 
+void UScoreManagerComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	if (UGameInstance* GIBase = GetOwner()->GetGameInstance())
 	{
-		FScoreTier T30; T30.Threshold = 30; T30.Score = 100;
-		FScoreTier T60; T60.Threshold = 60; T60.Score = 250;
-		FScoreTier T90; T90.Threshold = 90; T90.Score = 400;
-		TimeScoreTiers = { T30, T60, T90 };
-	}
-
-	{
-		FScoreTier K50;  K50.Threshold = 50;  K50.Score = 150;
-		FScoreTier K100; K100.Threshold = 100; K100.Score = 350;
-		FScoreTier K200; K200.Threshold = 200; K200.Score = 700;
-		KillScoreTiers = { K50, K100, K200 };
-	}
-
-	{
-		FScoreGradeTier G_F; G_F.Threshold = 0;    G_F.Grade = EScoreGrade::F;
-		FScoreGradeTier G_E; G_E.Threshold = 500;  G_E.Grade = EScoreGrade::E;
-		FScoreGradeTier G_D; G_D.Threshold = 1000; G_D.Grade = EScoreGrade::D;
-		FScoreGradeTier G_C; G_C.Threshold = 2000; G_C.Grade = EScoreGrade::C;
-		FScoreGradeTier G_B; G_B.Threshold = 3000; G_B.Grade = EScoreGrade::B;
-		FScoreGradeTier G_A; G_A.Threshold = 4000; G_A.Grade = EScoreGrade::A;
-		FScoreGradeTier G_S; G_S.Threshold = 5000; G_S.Grade = EScoreGrade::S;
-		GradeTiers = { G_F, G_E, G_D, G_C, G_B, G_A, G_S };
+		auto GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
+		if (GI)
+		{
+			GameData = GI->GetSubsystem<UGameDataSubSystem>();
+		}
 	}
 }
 
-int32 UScoreManagerComponent::EvaluateFromTiers(const TArray<FScoreTier>& Tiers, int32 Value) const
+
+int32 UScoreManagerComponent::EvaluateScore_Direct(const TArray<FScoreTier>& Tiers, int32 Value) const
 {
 	int32 BestScore = 0;
-
 	for (const FScoreTier& Tier : Tiers)
 	{
 		if (Value >= Tier.Threshold)
@@ -47,37 +37,74 @@ int32 UScoreManagerComponent::EvaluateFromTiers(const TArray<FScoreTier>& Tiers,
 			break;
 		}
 	}
-
 	return BestScore;
 }
 
-EScoreGrade UScoreManagerComponent::EvaluateGradeFromTiers(const TArray<FScoreGradeTier>& Tiers, int32 Score) const
+int32 UScoreManagerComponent::EvaluateScore_Inverse(const TArray<FScoreTier>& Tiers, int32 Value) const
+{
+	for (const FScoreTier& Tier : Tiers)
+	{
+		if (Value <= Tier.Threshold)
+		{
+			return Tier.Score;
+		}
+	}
+
+	return 0;
+}
+
+EScoreGrade UScoreManagerComponent::EvaluateGrade(const TArray<FScoreGradeTier>& Tiers, int32 TotalScore) const
 {
 	EScoreGrade BestGrade = EScoreGrade::F;
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString::Printf(TEXT("TOTALLLLLLLLLLL GRADES : %d"), Tiers.Num()));
 	for (const FScoreGradeTier& Tier : Tiers)
 	{
-		if (Score >= Tier.Threshold)
+		//print Tier
+		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Evaluating Grade %ls Tier: TotalScore %d >= Threshold %d"), *UEnum::GetValueAsString(Tier.Grade) , TotalScore,  Tier.Threshold));
+		if (TotalScore >= Tier.Threshold)
 		{
-			BestGrade = Tier.Grade;
-		}
-		else
-		{
-			break;
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, FString::Printf(TEXT("Matched GRADEEEEE %ls"), *UEnum::GetValueAsString(Tier.Grade)));
+			return Tier.Grade;
 		}
 	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Green, FString::Printf(TEXT("NO GRADEEEEE FOUND %ls"), *UEnum::GetValueAsString(BestGrade)));
 
 	return BestGrade;
 }
 
-int32 UScoreManagerComponent::ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32& OutTimeScore, int32& OutKillScore) const
+int32 UScoreManagerComponent::ComputeTotalScore(int32 TimeSeconds, int32 ZombiesKilled, int32 OutLifeScore, int32& OutTimeScore, int32& OutKillScore) const
 {
-	OutTimeScore = EvaluateFromTiers(TimeScoreTiers, TimeSeconds);
-	OutKillScore = EvaluateFromTiers(KillScoreTiers, ZombiesKilled);
-	return OutTimeScore + OutKillScore;
+	if (GameData)
+	{
+		FStructScoreLevel CurrentScoreLevel = GetScoreLevelData(GameData->LevelNumber);
+		OutTimeScore = EvaluateScore_Inverse(CurrentScoreLevel.TimeScoreTiers, TimeSeconds);
+		OutKillScore = EvaluateScore_Direct(CurrentScoreLevel.KillScoreTiers, ZombiesKilled);
+	}
+	return OutTimeScore + OutKillScore + OutLifeScore;
 }
 
 EScoreGrade UScoreManagerComponent::GetGradeForScore(int32 TotalScore) const
 {
-	return EvaluateGradeFromTiers(GradeTiers, TotalScore);
+	FStructScoreLevel CurrentScoreLevel = GetScoreLevelData(GameData->LevelNumber);
+	return EvaluateGrade(CurrentScoreLevel.GradeTiers, TotalScore);
+}
+
+FStructScoreLevel UScoreManagerComponent::GetScoreLevelData(int32 LevelIndex) const
+{
+	auto data =  DataScoreLevels[LevelIndex];
+	if (!data)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ScoreManagerComponent : DataScoreLevels not assigned or invalid !"));
+		return FStructScoreLevel();
+	}
+	auto X = data->FindRow<FStructLevelScoreContainer>(FName("ScoreLevel"), TEXT("") );
+	if (!X)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ScoreManagerComponent : Could not find ScoreLevel row in DataTable !"));
+		return FStructScoreLevel();
+	}
+	return 	X->LevelScore;
+
 }

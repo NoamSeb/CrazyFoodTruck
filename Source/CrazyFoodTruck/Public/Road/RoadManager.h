@@ -18,6 +18,12 @@ public:
 	ARoadManager();
 	UPROPERTY()
 	TArray<TObjectPtr<ARoad>> RoadsSegments;
+
+	UPROPERTY(EditAnywhere)
+	TArray<TObjectPtr<UDataTable>> Levels;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ARoad> SurvivorCamp;
 	
 	UPROPERTY(EditAnywhere)
 	int RoadSegmentsNumber;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Bullet/EBulletType.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "FoodTruckDataSubSystem.generated.h"
 
@@ -16,38 +17,70 @@ class CRAZYFOODTRUCK_API UFoodTruckDataSubSystem : public UGameInstanceSubsystem
 
 #pragma region Cabestan
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RotationSpeed;
 #pragma endregion Cabestan
 	
 #pragma region Turret
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TurretFireRate;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TurretRangeSide;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TurretRangeDepth;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int TurretMaxAmmo;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int DamagePerBullet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EbulletType TypeBullet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpeedBullet; 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool TripleDamageFor10EBullet;
+
+	int indexBulletShoot = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IncreaseDamageWhenFullReload;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int DamageIncreaseWhenFullReload;
+	
 #pragma endregion Turret
 
 #pragma region Driving
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SpeedRecovery;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TruckRotationSpeed;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Speed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Heal;
+
+
 #pragma endregion Driving
 public:
 	// = Repair Fill Per Press
-	UPROPERTY(EditAnywhere)
-	float RepairSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int RepairSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ReplenishAmmoWhenTruckKillZombies;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MoreHeal;
 };

@@ -22,7 +22,7 @@ public:
 	AModuleBase* AddModule(FString ModuleID, EModuleSide ModuleSide);
 	
 	UFUNCTION(BlueprintCallable, Category="Module")
-	void Initialize(FVector LeftPos, FVector RightPos);
+	void Initialize(USceneComponent* LeftPos, USceneComponent* RightPos);
 
 	UFUNCTION(BlueprintCallable, Category="Module")
 	void ResetAllModules();
@@ -30,11 +30,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category="Module")
+	UDataTable* ModuleDataTable;
+
 private:
 	UPROPERTY()
-	FVector LeftPosition;
+	USceneComponent* LeftPosition;
 	UPROPERTY()
-	FVector RightPosition;
+	USceneComponent*  RightPosition;
 
 	UPROPERTY()
 	AInteractBox* LeftInteractBox;
