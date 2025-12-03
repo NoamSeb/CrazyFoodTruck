@@ -15,6 +15,7 @@ class AHordeManager;
 class UInputMappingContext;
 class APlayerStart;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinalScoreShown);
 UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckGameMode : public AGameModeBase
 {
@@ -28,6 +29,15 @@ public:
 public:
 	void ApplyGlobalViewTo(APlayerController* PC) const;
 	void ApplyGlobalViewToAllPlayers() const;
+
+	UFUNCTION(BlueprintCallable)
+	void EvaluateFinalScore();
+
+	UFUNCTION()
+	void ListenScoreEnd();
+
+	UPROPERTY(BlueprintAssignable, Category = "Score|Events")
+	FOnFinalScoreShown OnFinalScoreShown;
 
 protected:
 	UPROPERTY()
@@ -58,7 +68,6 @@ private:
 
 	static FString FormatMMSS(int32 TotalSeconds);
 
-	void EvaluateFinalScore();
 
 	AHordeManager* ResolveHordeManager() const;
 

@@ -40,6 +40,20 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EbulletType TypeBullet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpeedBullet; 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool TripleDamageFor10EBullet;
+
+	int indexBulletShoot = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IncreaseDamageWhenFullReload;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int DamageIncreaseWhenFullReload;
 	
 #pragma endregion Turret
 
@@ -62,5 +76,11 @@ public:
 public:
 	// = Repair Fill Per Press
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float RepairSpeed;
+	int RepairSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ReplenishAmmoWhenTruckKillZombies;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MoreHeal;
 };
