@@ -43,9 +43,10 @@ AModuleBase* UModuleManager::AddModule(FString ModuleID, EModuleSide ModuleSide)
 
 TSubclassOf<AModuleBase> UModuleManager::GetModuleByID(FString ModuleID)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, ModuleID);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, ModuleID);
 	if(!ModuleDataTable)
 	{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "NO DATA TABLE");
 		return nullptr;
 	}
 	auto ModuleStruct = ModuleDataTable->FindRow<FStructModule>(FName(*ModuleID), "", true);
@@ -57,9 +58,12 @@ TSubclassOf<AModuleBase> UModuleManager::GetModuleByID(FString ModuleID)
 			return CurrentModule;
 		}else
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "NO CURRENT MODULE");
+
 		}
 	}else
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "NO MODULE STRUCT");
 	}
 	return nullptr;
 }

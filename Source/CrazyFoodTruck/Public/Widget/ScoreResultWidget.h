@@ -9,31 +9,28 @@
 
 class UTextBlock;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnScoreShow, int32, Time, int32, KillCount, int32, LifeRemaining, int32, TicketCounts, EScoreGrade, InGrade);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScoreEnded);
-
 UCLASS()
 class CRAZYFOODTRUCK_API UScoreResultWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-
 public:
-	UFUNCTION(Category = "Score")
-	void SetScoreData(int32 Time, int32 KillCount, int32 LifeRemaining, int TicketsCount, EScoreGrade InGrade);
-
 	UFUNCTION(BlueprintCallable, Category = "Score")
-	void EndScoreDisplay();
-
-	UPROPERTY(BlueprintAssignable, Category = "Score|Events")
-	FOnScoreEnded OnScoreEnded;
+	void SetScoreData(int32 InFinalScore, int32 InTimeScore, int32 InKillScore, EScoreGrade InGrade);
 
 protected:
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* FinalScoreText = nullptr;
 
-	UPROPERTY(BlueprintAssignable, Category = "Score|Events")
-	FOnScoreShow OnScoreShow;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TimeScoreText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* KillScoreText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* GradeText = nullptr;
 
 private:
-	
 	FString GradeToString(EScoreGrade Grade) const;
 };
