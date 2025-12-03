@@ -67,6 +67,12 @@ void AMunitionDrawer::UpdateValue(float valueChange, bool giveAmmo)
 	{
 		int Ammo = FMath::Lerp(0, munitionMax, _ActualOpenValue);
 		LinkedTurretController->SetCurrentAmmo(Ammo);
+		if (LinkedTurretController->GetAmmo() >= LinkedTurretController->GetAmmoMax())
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, "laaaaaaaaa");
+			
+			OnAmmoMax.Broadcast();
+		}
 	}
 }
 

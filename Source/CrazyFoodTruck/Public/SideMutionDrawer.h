@@ -43,6 +43,6 @@ private:
 
 	// INPUT FUNCTION
 	void HandleOpen(const FInputActionValue& Value);
+	UFUNCTION()
 	void QuitDrawer();
-
 };
