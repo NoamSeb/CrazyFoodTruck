@@ -5,9 +5,7 @@
 
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
-#include "Kismet/GameplayStatics.h"
 #include "Road/Road.h"
-#include "Vehicle/Vehicle.h"
 
 
 // Sets default values
@@ -108,17 +106,13 @@ void ARoadManager::RegulateRoadSegmentsPosition(TObjectPtr<ARoad> RoadToMove, in
 /// @param Rotation 
 void ARoadManager::SpawnTileToSurvivorCamp(FVector Location, FRotator Rotation)
 {
-    if (SurvivorCamp)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "SPAWNNNNNNNNNNNNN");
+                if (SurvivorCamp)
+                {
+                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "SPAWNNNNNNNNNNNNN");
 
-        ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(SurvivorCamp, Location, Rotation);
-        RegulateRoadSegmentsPosition(SurvivorCampRoad, RoadsSegments.Num());
-        AVehicle* FoodTruck = Cast<AVehicle>(
-        UGameplayStatics::GetActorOfClass(GetWorld(), AVehicle::StaticClass())
-        );
-        FoodTruck->ShootLineTrace(SurvivorCampRoad->StartPoint->GetComponentLocation());
-    }
+                    ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(SurvivorCamp, Location, Rotation);
+                    RegulateRoadSegmentsPosition(SurvivorCampRoad, RoadsSegments.Num());
+                }
 }
 
 /// Get the correct Road Segment from the Data Table

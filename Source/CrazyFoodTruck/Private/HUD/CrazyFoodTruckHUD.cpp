@@ -39,7 +39,7 @@ void ACrazyFoodTruckHUD::BeginPlay()
 	}
 }
 
-void ACrazyFoodTruckHUD::ShowScoreResult(int32 Time, int32 KillCount, int32 LifeRemaining, int TicketsCount, EScoreGrade InGrade)
+void ACrazyFoodTruckHUD::ShowScoreResult(int32 FinalScore, int32 TimeScore, int32 KillScore, EScoreGrade Grade)
 {
 	APlayerController* PC = GetOwningPlayerController();
 	if (!PC) return;
@@ -58,15 +58,8 @@ void ACrazyFoodTruckHUD::ShowScoreResult(int32 Time, int32 KillCount, int32 Life
 	{
 		ScoreResultWidgetInstance->AddToViewport(1);
 	}
-	
-	ScoreResultWidgetInstance->SetScoreData(Time, KillCount, LifeRemaining,TicketsCount, InGrade);
 
-	ScoreResultWidgetInstance->OnScoreEnded.AddDynamic(this, &ACrazyFoodTruckHUD::ListenScoreEnd);
-}
-
-void ACrazyFoodTruckHUD::ListenScoreEnd()
-{
-	OnFinalScoreShownHUD.Broadcast();
+	ScoreResultWidgetInstance->SetScoreData(FinalScore, TimeScore, KillScore, Grade);
 }
 
 AHordeManager* ACrazyFoodTruckHUD::ResolveHordeManager() const

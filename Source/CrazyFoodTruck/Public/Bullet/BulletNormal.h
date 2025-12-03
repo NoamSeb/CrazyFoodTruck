@@ -15,7 +15,7 @@ class CRAZYFOODTRUCK_API ABulletNormal : public ABulletBase
 public:
 	
 	ABulletNormal();
-	virtual void Initialize(FBulletStructure BulletStructure ,const FVector& direction) override;
+	virtual void Initialize(FBulletStructure* BulletStructure ,const FVector& direction) override;
 
 protected:
 

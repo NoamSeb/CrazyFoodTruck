@@ -26,13 +26,6 @@ void URepairProgressBillboard::BeginPlay()
 {
 	Super::BeginPlay();
 	UpdateWidget();
-
-	UWorld* World = GetWorld();
-	if (UGameInstance* GIBase = World->GetGameInstance())
-	{
-		GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
-	}
-	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
 }
 
 bool URepairProgressBillboard::IsDamaged() const
@@ -55,7 +48,7 @@ void URepairProgressBillboard::HandleRepairInput()
 
 void URepairProgressBillboard::ApplyProgressStep(float Step)
 {
-	RepairProgress = FMath::Clamp(RepairProgress + Step, 0.f, 1.f) + TruckSubSystem->RepairSpeed;
+	RepairProgress = FMath::Clamp(RepairProgress + Step, 0.f, 1.f);
 	UpdateWidget();
 
 	if (!IsDamaged())

@@ -27,10 +27,8 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 
 	const int NbKeyboardProfiles = LocalMultiplayerSettings->GetNbKeyboardProfiles();
 	const int NbMaxGamepads = LocalMultiplayerSettings->NbMaxGamepads;
-	//const int TargetPlayers = FMath::Max(1, NbKeyboardProfiles + NbMaxGamepads);
+	const int TargetPlayers = FMath::Max(1, NbKeyboardProfiles + NbMaxGamepads);
 
-	const int TargetPlayers = 4;
-	
 	while (GameInstance->GetLocalPlayers().Num() < TargetPlayers)
 	{
 		const int ControllerId = GameInstance->GetLocalPlayers().Num();

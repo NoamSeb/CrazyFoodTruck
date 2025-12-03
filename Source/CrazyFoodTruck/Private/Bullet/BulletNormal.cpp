@@ -17,7 +17,7 @@ void ABulletNormal::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ABulletNormal::Initialize(FBulletStructure BulletStructure, const FVector& direction)
+void ABulletNormal::Initialize(FBulletStructure* BulletStructure, const FVector& direction)
 {
 	Super::Initialize(BulletStructure, direction);
 }
