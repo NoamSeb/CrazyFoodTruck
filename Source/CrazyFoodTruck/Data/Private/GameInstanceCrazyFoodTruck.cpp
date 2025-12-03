@@ -81,6 +81,12 @@ int UGameInstanceCrazyFoodTruck::IncrementTicketsNumber(int Amount)
 	return nbrTickets;
 }
 
+int UGameInstanceCrazyFoodTruck::DecrementTicketsNumber(int Amount)
+{
+	nbrTickets -= Amount;
+	return nbrTickets;
+}
+
 int32 UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
 {
 	if (int32* TicketsPtr = TicketsByGrade.Find(Grade))

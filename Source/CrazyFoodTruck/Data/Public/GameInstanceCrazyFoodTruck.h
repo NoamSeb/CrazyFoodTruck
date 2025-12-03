@@ -116,6 +116,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Tickets")
 	int IncrementTicketsNumber(int Amount);
 
+	UFUNCTION(BlueprintCallable, Category = "Tickets")
+	int DecrementTicketsNumber(int Amount);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tickets")
 	TMap<EScoreGrade, int32> TicketsByGrade;
 

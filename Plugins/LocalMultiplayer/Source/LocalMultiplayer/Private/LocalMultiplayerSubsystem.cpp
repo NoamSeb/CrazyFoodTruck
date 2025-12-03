@@ -232,7 +232,7 @@ int32 ULocalMultiplayerSubsystem::GetPlayerIndexFromController(APlayerController
 	return -1;
 }
 
-bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType)
+bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed)
 {
 	if (!PawnToPossess)
 	{
@@ -246,8 +246,8 @@ bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, AP
 	}
 
 	PC->Possess(PawnToPossess);
-	
-	ApplyOutline(PawnToPossess, PlayerIndex);
+	if(!IsVehiclePossessed)
+		ApplyOutline(PawnToPossess, PlayerIndex);
 
 	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
 	{
@@ -257,7 +257,7 @@ bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, AP
 	return true;
 }
 
-bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType)
+bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed)
 {
 	APlayerController* PC = GetPlayerControllerForIndex(PlayerIndex);
 

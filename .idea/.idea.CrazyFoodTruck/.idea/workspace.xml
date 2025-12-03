@@ -13,7 +13,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="" />
+    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/SurvivorCamp.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/SurvivorCamp.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/RoadProgress/WBP_RoadProgress.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/RoadProgress/WBP_RoadProgress.uasset" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -52,6 +58,7 @@
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/Bread.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/SpawnBread.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Grille/Grille.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Menu/MenuLobbySlotsRoot.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/ModuleManager.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Steak/ActorSteak.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Steak/SpawnSteak.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -63,6 +70,7 @@
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Food/CuissonFood.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Food/SpawnBread.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Grille/Grille.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Menu/MenuLobbySlotsRoot.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Steak/ActorSteak.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Steak/SpawnSteak.h" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -80,7 +88,7 @@
     &quot;C/C++ Project.CrazyFoodTruck.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;GameFeel&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/Upgrades&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -125,8 +133,13 @@
       <option name="WORKING_DIRECTORY" value="" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Programs/AutomationTool/AutomationTool.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
@@ -143,8 +156,13 @@
       <option name="WORKING_DIRECTORY" value="" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Programs/UnrealBuildTool/UnrealBuildTool.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
@@ -166,6 +184,7 @@
       <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
       <option name="SEND_DEBUG_REQUEST" value="1" />
       <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -256,6 +275,8 @@
       <workItem from="1763636179293" duration="2774000" />
       <workItem from="1763646586469" duration="16051000" />
       <workItem from="1763973294137" duration="5127000" />
+      <workItem from="1764753894059" duration="874000" />
+      <workItem from="1764755033305" duration="3370000" />
     </task>
     <servers />
   </component>
