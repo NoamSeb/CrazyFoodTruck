@@ -24,12 +24,12 @@ void UAmeliorationWidget::ApplyUpgrades()
 	{
 		switch (Upgrade.UpgradeCamion)
 		{
-		case ECamionUpgrade::Speed :
-			TruckSubSystem->Speed += Upgrade.intAddModif;
-			break;
-		case ECamionUpgrade::TurningSpeed:
-			TruckSubSystem->TruckRotationSpeed += Upgrade.intAddModif;
-			break;
+		//case ECamionUpgrade::Speed :
+		//	TruckSubSystem->Speed += Upgrade.intAddModif;
+		//	break;
+		//case ECamionUpgrade::TurningSpeed:
+		//	TruckSubSystem->TruckRotationSpeed += Upgrade.intAddModif;
+		//	break;
 		//case ECamionUpgrade::Heal:
 		//	GI->CurrentLifeFoodTruck += Upgrade.intAddModif;
 		//	break;
@@ -49,12 +49,12 @@ void UAmeliorationWidget::ApplyUpgrades()
 	{
 		switch (Upgrade.UpgradeTurret)
 		{
-		case ETurretUpgrade::RotationSpeedCabestan:
-			TruckSubSystem->RotationSpeed += Upgrade.intAddModif;
-			break;
-		case ETurretUpgrade::AugmentationAngle :
-			TruckSubSystem->TurretRangeSide += Upgrade.intAddModif;
-			break;
+		//case ETurretUpgrade::RotationSpeedCabestan:
+		//	TruckSubSystem->RotationSpeed += Upgrade.intAddModif;
+		//	break;
+		//case ETurretUpgrade::AugmentationAngle :
+		//	TruckSubSystem->TurretRangeSide += Upgrade.intAddModif;
+		//	break;
 		case ETurretUpgrade::Cadence:
 			TruckSubSystem->TurretFireRate += Upgrade.intAddModif;
 			TruckSubSystem->TurretFireRate = FMath::Clamp(TruckSubSystem->TurretFireRate, 0, 100);
@@ -88,12 +88,12 @@ void UAmeliorationWidget::ApplyUpgrades()
 	Upgrades = GI->ListUpgradesToAdd(EZoneUpgrade::Jeu);
 	for (FStructUpgrade Upgrade : Upgrades)
 	{
-		switch (Upgrade.UpgradeGame)
-		{
-		case EJeuUpgrade::MoreTickets:
-			GI->IncrementTicketsNumber(Upgrade.intAddModif);
-			break;
-		}
+		//switch (Upgrade.UpgradeGame)
+		//{
+		//case EJeuUpgrade::MoreTickets:
+		//	GI->IncrementTicketsNumber(Upgrade.intAddModif);
+		//	break;
+		//}
 	}
 	
 
