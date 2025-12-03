@@ -26,11 +26,12 @@ static void BasisFromYaw(const float YawDeg, FVector& OutForward, FVector& OutRi
 
 ACrazyFoodTruckCharacter::ACrazyFoodTruckCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+    bUseControllerRotationYaw = false;
 
     if (UCharacterMovementComponent* Move = GetCharacterMovement())
     {
-        Move->bOrientRotationToMovement = true;
+        Move->bOrientRotationToMovement = false;
         Move->RotationRate = FRotator(0.f, 540.f, 0.f);
         Move->MaxWalkSpeed = MovementSpeed;
     }
@@ -54,6 +55,18 @@ void ACrazyFoodTruckCharacter::BeginPlay()
     //}
 
     UpdatePlayerColorFromController();
+}
+
+void ACrazyFoodTruckCharacter::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    if (!LastMovementDirection.IsNearlyZero())
+    {
+        const FRotator TargetRot = LastMovementDirection.Rotation();
+        const FRotator SmoothedRot = FMath::RInterpTo(GetActorRotation(), TargetRot, DeltaSeconds, RotationInterpSpeed);
+        SetActorRotation(SmoothedRot);
+    }
 }
 
 void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -190,17 +203,24 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
 {
     if (GameDataSubSystem->CurrentGamePhase != EPhaseGameCrazyFoodTruckState::Amelioration)
     {
-        if (InputActionValue.GetValueType() != EInputActionValueType::Axis2D) return;
+        if (InputActionValue.GetValueType() != EInputActionValueType::Axis2D)
+        {
+            return;
+        }
 
         const FVector2D Raw = InputActionValue.Get<FVector2D>();
 
         constexpr float Deadzone = 0.20f;
-        if (Raw.SizeSquared() < Deadzone * Deadzone) return;
+        if (Raw.SizeSquared() < Deadzone * Deadzone)
+        {
+            return;
+        }
 
         const float X = Raw.X;
         const float Y = Raw.Y;
 
-        FVector Forward, Right;
+        FVector Forward = FVector::ZeroVector;
+        FVector Right = FVector::ZeroVector;
 
         switch (MovementFrame)
         {
@@ -231,6 +251,14 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
 
         AddMovementInput(Forward, Y);
         AddMovementInput(Right, X);
+
+        FVector Dir = Forward * Y + Right * X;
+        Dir.Z = 0.f;
+
+        if (!Dir.IsNearlyZero())
+        {
+            LastMovementDirection = Dir.GetSafeNormal();
+        }
     }
 }
 
