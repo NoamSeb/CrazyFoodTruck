@@ -28,6 +28,24 @@
 
 #include "Kismet/GameplayStatics.h"
 
+namespace
+{
+    static bool HasAnyConnectedSlot(const UGameInstanceCrazyFoodTruck* GI)
+    {
+        if (!GI) return false;
+
+        for (const FMenuPlayerSlot& Slot : GI->PlayerSlots)
+        {
+            if (Slot.bIsConnected && Slot.ControllerId != INDEX_NONE)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
 ACrazyFoodTruckGameMode::ACrazyFoodTruckGameMode()
 {
     GameStateClass = ACrazyFoodTruckGameState::StaticClass();
@@ -48,6 +66,23 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     if (!GI) return;
 
     CreateAndInitPlayers();
+
+    if (!HasAnyConnectedSlot(GI))
+    {
+        GI->InitLobbySlots();
+
+        for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
+        {
+            if (APlayerController* PC = It->Get())
+            {
+                if (const ULocalPlayer* LP = PC->GetLocalPlayer())
+                {
+                    const int32 ControllerId = LP->GetControllerId();
+                    GI->TryJoinPlayer(ControllerId);
+                }
+            }
+        }
+    }
 
     TArray<APlayerStart*> PlayerStartsPoints;
     FindPlayerStartActors(PlayerStartsPoints);
