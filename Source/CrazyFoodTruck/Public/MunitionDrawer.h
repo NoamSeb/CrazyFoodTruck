@@ -47,6 +47,7 @@ public:
 
 private:
 
+	bool bIsFull = false;
 	int munitionMax = 0;
 	int currentMunition = 0;
 	float _ActualOpenValue = 0.f;

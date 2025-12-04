@@ -201,6 +201,7 @@ private:
 
 	UFUNCTION(BlueprintCallable)
 	void SetCursorJoint(USceneComponent* NewJoint);
+
 	int32 mappingPriority = 0;
 	
 };

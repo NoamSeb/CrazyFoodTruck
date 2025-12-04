@@ -57,6 +57,7 @@ void ATurretController::IncrementPlayerReloading()
 
 void ATurretController::DecrementPlayerReloading()
 {
+	if (_ActualPlayerReloading <= 0) return;
 	_ActualPlayerReloading--;
 	OnPlayerReload.Broadcast(_ActualPlayerReloading);
 	if (_ActualPlayerReloading <= 0)
@@ -421,8 +422,8 @@ void ATurretController::InputRoll(const FInputActionValue& Value) // side (Y)
 	FVector newRelative = parentTransform.InverseTransformPosition(newWorld);
 
 	// Clamp BOTH axes (X = depth, Y = side)
-	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeSide, AreaRangeSide);
-	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeDepht, AreaRangeDepht);
+	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeDepht, AreaRangeDepht);
+	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeSide, AreaRangeSide);
 	// si Z doit être fixé : newRelative.Z = ...;
 
 	SetCursorLocation(newRelative);
@@ -451,8 +452,8 @@ void ATurretController::InputYaw(const FInputActionValue& Value) // depth (X)
 	FVector newRelative = parentTransform.InverseTransformPosition(newWorld);
 
 	// Clamp BOTH axes (X = depth, Y = side)
-	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeSide, AreaRangeSide);
-	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeDepht, AreaRangeDepht);
+	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeDepht, AreaRangeDepht);
+	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeSide, AreaRangeSide);
 
 	SetCursorLocation(newRelative);
 	UpdateTurretCanonRotation();

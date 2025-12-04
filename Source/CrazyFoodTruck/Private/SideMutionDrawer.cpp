@@ -46,7 +46,6 @@ void ASideMutionDrawer::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	if (LinkedMunitionDrawer)
 	{
 		LinkedMunitionDrawer->IncrementPlayerReloading();
-		//LinkedMunitionDrawer->OnAmmoMax.AddDynamic(this, &ASideMutionDrawer::QuitDrawer);
 	}
 }
 
