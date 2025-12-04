@@ -45,6 +45,7 @@ void ABulletBase::GroundHit(FVector LocationHit)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), GroundImpact, LocationHit, GetActorRotation());
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("DESTROY BULLET ON GROUND"));
 	Destroy();
 }
 
