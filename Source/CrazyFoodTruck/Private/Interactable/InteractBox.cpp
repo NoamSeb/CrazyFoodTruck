@@ -204,7 +204,6 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPr
    // if (!CanDetectOverlapp()) return;
     if (bPlayerIsControlling) return;
 
-
     APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(Other);
 
     ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Other);
@@ -377,6 +376,9 @@ void AInteractBox::TryPossesPawn(APlayerController* InstigatorPlayerController)
 void AInteractBox::PossessPawn(APlayerController* PlayerController)
 {
     if (!PlayerController) return;
+
+    CurrentPlayerId = GetPlayerIndexFromPlayerController(PlayerController);
+    //CurrentPlayerController = GetPlayerControllerFromActor();
 
     bPlayerIsControlling = true;
     CachedPlayerController = PlayerController;
