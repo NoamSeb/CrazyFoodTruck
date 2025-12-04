@@ -130,6 +130,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Custom")
 	void ChangeMap();
 
+	bool MapAlreadyChange;
+
 	UFUNCTION(BlueprintCallable)
 	void SetTruckState(EVehicleStates NewState);
 	UFUNCTION(BlueprintCallable)

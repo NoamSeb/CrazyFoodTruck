@@ -54,6 +54,8 @@ void AVehicle::BeginPlay()
 	Super::BeginPlay();
 	InitLocation = GetActorLocation();
 
+	MapAlreadyChange = false;
+
 	GetWorldTimerManager().SetTimer(
 		RaceUpdateTimer,
 		this,
@@ -262,7 +264,11 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 	else if (OtherActor->Tags.Contains("MapSwitch"))
 	{
-		ChangeMap();
+		if (!MapAlreadyChange)
+		{
+			ChangeMap();
+			MapAlreadyChange = true;
+		}
 	}
 }
 
