@@ -272,7 +272,11 @@ void AVehicle::MoveForward()
 
 	if (Controller)
 	{
-		AddMovementInput(Fwd2D, 1.f, true);
+		if(bShouldBounceBack)
+			AddMovementInput(-Fwd2D/2, 1.f, true);
+		else
+			AddMovementInput(Fwd2D, 1.f, true);
+
 		return;
 	}
 
@@ -469,6 +473,25 @@ void AVehicle::StartSpeedRecovery()
 {
 	bRecoveringSpeed = true;
 	ElapsedTime = 0.0f;
+}
+
+void AVehicle::BounceBackOnHit()
+{
+	bShouldBounceBack = true;
+	if (GI)
+	{
+		GI->PlayerCameraShake(Explosion);
+	}
+	// Delay for fDelegateInterval seconds
+	GetWorld()->GetTimerManager().SetTimer(
+		RaceUpdateTimer,
+		[this]()
+		{
+			bShouldBounceBack = false;
+		},
+		fTakeBackSpeedAfterBounce,
+		false
+	);
 }
 
 void AVehicle::CreateAndAssignForwardRenderTarget()

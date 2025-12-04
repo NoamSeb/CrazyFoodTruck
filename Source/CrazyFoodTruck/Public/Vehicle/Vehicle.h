@@ -97,6 +97,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Vehicle Settings | Speed", meta = (ToolTip = "Dur�e de maintien de la vitesse apr�s Possess (s)", Units = "seconds"))
 	float HoldSpeedDuration = 0.08f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle Settings | Speed", meta = (ToolTip = "Dur�e du bounce back", Units = "seconds"))
+	float fTakeBackSpeedAfterBounce = 1.f;
 	
 	// Rotation (Yaw)
 	UPROPERTY(EditAnywhere, meta=(ToolTip="Represent the speed of rotation of the Truck per frame", Units="Degrees"), Category="Vehicle Settings")
@@ -204,7 +207,8 @@ private:
 	FVector PossessKeepVelocity = FVector::ZeroVector;
 	bool bHoldSpeedAfterPossess = false;
 	float HoldSpeedTimer = 0.f;
-
+	
+	bool bShouldBounceBack = false;
 
 private:
 	UFUNCTION()
@@ -219,6 +223,9 @@ private:
 
 	void ReduceSpeed();
 	void StartSpeedRecovery();
+
+	UFUNCTION(BlueprintCallable)
+	void BounceBackOnHit();
 
 	UPROPERTY()
 	UWidget* CameraWidget;
