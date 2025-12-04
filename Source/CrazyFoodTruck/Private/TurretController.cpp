@@ -38,10 +38,10 @@ void ATurretController::BeginPlay()
 		{
 			_CanonToRotate = Cast<USceneComponent>(SceneComponent);
 		}
-		if (SceneComponent->GetName() == "SC_CursorJoint")
-        {
-            _JointCursor = Cast<USceneComponent>(SceneComponent);
-        }
+		// if (SceneComponent->GetName() == "SC_CursorJoint")
+  //       {
+  //           _JointCursor = Cast<USceneComponent>(SceneComponent);
+  //       }
 	}
 	
 	SwitchBulletType(TruckSubSystem->TypeBullet);
@@ -469,6 +469,11 @@ void ATurretController::UpdateTurretCanonRotation()
 		FRotator lookAtRotator = UKismetMathLibrary::FindLookAtRotation(TurretPosition, cursorPosition);
 		_CanonToRotate->SetWorldRotation(lookAtRotator);
 	}
+}
+
+void ATurretController::SetCursorJoint(USceneComponent* NewJoint)
+{
+	_JointCursor = NewJoint;
 }
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)

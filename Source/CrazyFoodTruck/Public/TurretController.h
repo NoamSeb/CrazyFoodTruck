@@ -199,6 +199,8 @@ private:
 	void UpdateTurretCanonRotation();
 
 
+	UFUNCTION(BlueprintCallable)
+	void SetCursorJoint(USceneComponent* NewJoint);
 	int32 mappingPriority = 0;
 	
 };
