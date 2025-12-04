@@ -451,7 +451,7 @@ void AInteractBox::UnpossessPawn()
             {
                 if(Cast<AVehicle>(PawnToPossess))
                 {
-                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false);
+                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, true);
                 }else
                 {
                     LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false);
