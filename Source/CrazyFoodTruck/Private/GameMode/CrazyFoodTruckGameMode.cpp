@@ -366,6 +366,7 @@ FString ACrazyFoodTruckGameMode::FormatMMSS(int32 TotalSeconds)
 
 void ACrazyFoodTruckGameMode::EvaluateFinalScore()
 {
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Final Scooooooooooooooooooore"));
     bHasComputedFinalScore = true;
 
     UWorld* World = GetWorld();
