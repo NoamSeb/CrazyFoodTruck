@@ -38,10 +38,10 @@ void ATurretController::BeginPlay()
 		{
 			_CanonToRotate = Cast<USceneComponent>(SceneComponent);
 		}
-		if (SceneComponent->GetName() == "SC_CursorJoint")
-        {
-            _JointCursor = Cast<USceneComponent>(SceneComponent);
-        }
+		// if (SceneComponent->GetName() == "SC_CursorJoint")
+  //       {
+  //           _JointCursor = Cast<USceneComponent>(SceneComponent);
+  //       }
 	}
 	
 	SwitchBulletType(TruckSubSystem->TypeBullet);
@@ -425,7 +425,7 @@ void ATurretController::InputRoll(const FInputActionValue& Value) // side (Y)
 	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeDepht, AreaRangeDepht);
 	// si Z doit être fixé : newRelative.Z = ...;
 
-	_JointCursor->SetRelativeLocation(newRelative);
+	SetCursorLocation(newRelative);
 	UpdateTurretCanonRotation();
 	
 }
@@ -454,7 +454,7 @@ void ATurretController::InputYaw(const FInputActionValue& Value) // depth (X)
 	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeSide, AreaRangeSide);
 	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeDepht, AreaRangeDepht);
 
-	_JointCursor->SetRelativeLocation(newRelative);
+	SetCursorLocation(newRelative);
 	UpdateTurretCanonRotation();
 }
 
@@ -469,6 +469,11 @@ void ATurretController::UpdateTurretCanonRotation()
 		FRotator lookAtRotator = UKismetMathLibrary::FindLookAtRotation(TurretPosition, cursorPosition);
 		_CanonToRotate->SetWorldRotation(lookAtRotator);
 	}
+}
+
+void ATurretController::SetCursorJoint(USceneComponent* NewJoint)
+{
+	_JointCursor = NewJoint;
 }
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
