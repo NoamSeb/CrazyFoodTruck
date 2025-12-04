@@ -77,12 +77,18 @@ public:
 	FOnPlayerReload OnPlayerReload;
 protected:
 
+
 #pragma region Upgrades
 	UGameInstanceCrazyFoodTruck* GI;
 	UFoodTruckDataSubSystem* TruckSubSystem;
 
 	int32 _CurrentAmmoMax;
 	//float _CurrentTurretRotationSpeed;
+
+	float TimeDamageWhenFullReload = 3.f;
+	float TimerFullReload = 0.f;
+	bool IsAmmoFullReload;
+	bool IsDamageAlreadyIncrease = false;
 
 	float _CurrentBulletFireRate;
 	int _CurrentBulletDamage;
@@ -120,6 +126,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Turret|Events")
+	void SetCursorLocation(FVector NewLocation);
 
 	void IncrementPlayerReloading();
 	void DecrementPlayerReloading();
@@ -137,6 +146,8 @@ private:
 
 	EbulletType _actualBulletType;
 	FBulletStructure* ActualBulletStructure;
+
+	FBulletStructure BulletChooseForShoot;
 
 	int32 _CurrentAmmo = 0;
 	UPROPERTY(EditAnywhere, Category="Turret Parameters")
@@ -186,6 +197,10 @@ private:
 	void Print(FString Message);
 
 	void UpdateTurretCanonRotation();
+
+
+	UFUNCTION(BlueprintCallable)
+	void SetCursorJoint(USceneComponent* NewJoint);
 
 	int32 mappingPriority = 0;
 	

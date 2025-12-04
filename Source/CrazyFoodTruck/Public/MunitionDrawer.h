@@ -8,6 +8,7 @@
 #include "MunitionDrawer.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAmmoUpdate, float, CurrentOpenValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAmmoMax);
 UCLASS()
 class CRAZYFOODTRUCK_API AMunitionDrawer : public AActor
 {
@@ -39,11 +40,14 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAmmoUpdate OnAmmoUpdate;
 
+	FOnAmmoMax OnAmmoMax;
+
 	UPROPERTY(EditAnywhere, Category="MunitionDrawer")
 	ATurretController* LinkedTurretController;
 
 private:
 
+	bool bIsFull = false;
 	int munitionMax = 0;
 	int currentMunition = 0;
 	float _ActualOpenValue = 0.f;

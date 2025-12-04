@@ -5,6 +5,8 @@
 #include <string>
 
 #include "Components/BoxComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 #include "Vehicle/Vehicle.h"
 
 AHordeManager::AHordeManager()
@@ -75,15 +77,22 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 		return;
 	}
 
-	if (ListSpawnArea.IsEmpty())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("HordeManager: ListSpawnArea is empty."));
-	}
-
 	if (!PawnZombie)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("HordeManager: PawnZombie is NOT set !"));
 		return;
+	}
+
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("HordeManager: World is NULL !"));
+		return;
+	}
+
+	if (ListSpawnArea.IsEmpty())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("HordeManager: ListSpawnArea is empty."));
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SPAWN ZOMBIE WAVE"));
@@ -92,11 +101,45 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 	const FVector BoxExtent = ZoneSpawn->NewBoxAreaSpawn->GetScaledBoxExtent();
 	const FVector BoxCenter = ZoneSpawn->NewBoxAreaSpawn->GetComponentLocation();
 
-	UWorld* World = GetWorld();
-	if (!World)
+	if (ZombieSpawnIndicatorWidgetClass)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("HordeManager: World is NULL !"));
-		return;
+		APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+		if (PC)
+		{
+			int32 ViewX = 0;
+			int32 ViewY = 0;
+			PC->GetViewportSize(ViewX, ViewY);
+
+			const FVector2D ViewportSize(ViewX, ViewY);
+			FVector2D ScreenPos(0.f, 0.f);
+
+			const bool bProjected = PC->ProjectWorldLocationToScreen(BoxCenter, ScreenPos, false);
+
+			const float Padding = 20.f;
+
+			if (bProjected)
+			{
+				const float MinX = Padding;
+				const float MaxX = ViewportSize.X - Padding;
+				const float MinY = Padding;
+				const float MaxY = ViewportSize.Y - Padding;
+
+				ScreenPos.X = FMath::Clamp(ScreenPos.X, MinX, MaxX);
+				ScreenPos.Y = FMath::Clamp(ScreenPos.Y, MinY, MaxY);
+			}
+			else
+			{
+				ScreenPos.X = ViewportSize.X * 0.5f;
+				ScreenPos.Y = ViewportSize.Y * 0.5f;
+			}
+
+			UUserWidget* SpawnIndicator = CreateWidget<UUserWidget>(PC, ZombieSpawnIndicatorWidgetClass);
+			if (SpawnIndicator)
+			{
+				SpawnIndicator->AddToViewport();
+				SpawnIndicator->SetPositionInViewport(ScreenPos, true);
+			}
+		}
 	}
 
 	for (int32 i = 0; i < nombreZombies; ++i)
@@ -128,10 +171,8 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 		ListHordeZombie.Add(NewZombie);
 
 		NewZombie->SpawnDefaultController();
-		NewZombie->ZombieSpeed = (FoodTruck->_CurrentTruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
-
+		NewZombie->ZombieSpeed = FinalZombieSpeed;
 		NewZombie->MainActorToFollower = MainActorToFollow;
-		
 
 		switch (targetPoint)
 		{
@@ -151,7 +192,6 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 		}
 
 		NewZombie->OnZombieDied.AddDynamic(this, &AHordeManager::HandleZombieDied);
-
 		NewZombie->CallRound();
 	}
 }
@@ -159,8 +199,15 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 void AHordeManager::InitHordeZombies()
 {
 	if (!bCanSpawnHorde){return;}
-	FinalZombieSpeed = (FoodTruck->_CurrentTruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
+	//ajouter à la vitesse du camion
+	FinalZombieSpeed = (FoodTruck->TruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
 
+	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Food truck value : %f"), FoodTruck->TruckMaxSpeed));
+	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Diff value : %f"), DifferenceBetweenFoodTruck * KilometersToMetersConvertingValue));
+	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("zombie value : %f"), FinalZombieSpeed));
+	//TArray<TArray<UStaticMeshComponent*>> Components;
+
+	//c est moche faut pas voir ça
 #pragma region Moche a modif
 	TArray<UStaticMeshComponent*> Components;
 	MainActorToFollow->GetComponents<UStaticMeshComponent>(Components);
@@ -232,6 +279,11 @@ void AHordeManager::HandleZombieDied(AZombieIA* Zombie, AActor* Killer)
 	++ZombiesKilledTotal;
 	ListHordeZombie.Remove(Zombie);
 	OnAnyZombieDied.Broadcast(Zombie, Killer);
+}
+
+void AHordeManager::IncrementZombiesKilled()
+{
+	++ZombiesKilledTotal;
 }
 
 void AHordeManager::Tick(float DeltaTime)

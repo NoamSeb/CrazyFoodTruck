@@ -76,12 +76,12 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(VisibleAnywhere, Category="Input")
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,  Category="Input")
 	int32 indexPlayerController;
 	AActor* SelfRef;
 
-	AActor* justepourchangerasuprr;
-
+	UFUNCTION(BlueprintCallable)
+	void Init();
 	
 	void Move(const FInputActionValue& Value);
 	void MoveOnSkip(const FInputActionValue& Value);
@@ -99,6 +99,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
-	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
+	//int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
+	//APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 };

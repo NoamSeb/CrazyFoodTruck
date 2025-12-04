@@ -35,6 +35,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override; 
 
 public:
@@ -46,6 +47,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Movement|Frame")
 	float MovementYawOffsetDegrees = 0.f;
+
+	UPROPERTY(EditAnywhere, Category = "Movement|Rotation")
+	float RotationInterpSpeed = 10.f;
 
 	UFUNCTION(BlueprintCallable, Category = "Movement|Frame")
 	void SetVehicleMovementRef(AActor* InVehicleActor);
@@ -63,10 +67,12 @@ public:
 
 	virtual void SetInteractState(bool bCanInteract) override;
 	virtual bool CanInteract() override;
+	
 	virtual void SetAmmoState(bool bHasAmmo) override;
 	virtual bool HasAmmo() override;
 
 	void TakeAmmoBox(AAmmoBox* AmmoBox);
+	
 	AAmmoBox* DepositAmmoBox();
 
 	const TScriptInterface<IInteractable>& GetFocusedInteractable() const;
@@ -104,20 +110,23 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<AAmmoBox> CarriedAmmoBox = nullptr;
 
-	//APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
-	//int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
+	UGameDataSubSystem* GameDataSubSystem;
+
+	UInputComponent* PlayerInputComp;
+
+	FVector LastMovementDirection = FVector::ZeroVector;
+
+	// APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
+	// int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
 	
 	void AddMappingContext(UInputMappingContext* InputMappingContext, int8 Priority);
 	void RemoveMappingContext(UInputMappingContext* InputMappingContext);
 	
 	UFUNCTION(BlueprintCallable, Category = "Upgrade Phase")
 	void AddMappingUpgrade();
+	
 	UFUNCTION(BlueprintCallable, Category = "Upgrade Phase")
 	void RemoveMappingUpgrade();
-
-	UGameDataSubSystem* GameDataSubSystem;
-
-	UInputComponent* PlayerInputComp;
 
 	void BindInputMoveAction(UEnhancedInputComponent* EnhancedInputComponent);
 	void BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent);

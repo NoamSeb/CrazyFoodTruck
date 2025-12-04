@@ -15,7 +15,11 @@ ASideMutionDrawer::ASideMutionDrawer()
 void ASideMutionDrawer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (LinkedMunitionDrawer)
+	{
+		LinkedMunitionDrawer->OnAmmoMax.AddDynamic(this, &ASideMutionDrawer::QuitDrawer);
+	}
 }
 
 void ASideMutionDrawer::Tick(float DeltaTime)
@@ -47,6 +51,7 @@ void ASideMutionDrawer::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ASideMutionDrawer::QuitDrawer()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, "Quitting");
 	if (InteractBox)
 	{
 		InteractBox->UnpossessPawn();
@@ -66,4 +71,5 @@ void ASideMutionDrawer::HandleOpen(const FInputActionValue& Value)
 		LinkedMunitionDrawer->ReceiveInputOpen(value);
 	}
 }
+
 

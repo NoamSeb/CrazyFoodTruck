@@ -59,7 +59,7 @@ void AInteractBox::Tick(float DeltaSeconds)
         {
             if (!PlayerStillInsideCheck(EnteringCharacter))
             {
-                GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Exit Timer finished"));
+              //  GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Exit Timer finished"));
                 TryExitPlayer(EnteringCharacter);
             }
         }
@@ -182,13 +182,13 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, U
     
     if (bPlayerIsControlling)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Player Controlling"));
+         //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Player Controlling"));
         return;
     }
     
     if (EnteringCharacter != nullptr)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Another Player is already inside"));
+         //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Another Player is already inside"));
         return;
     }
     
@@ -203,7 +203,6 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPr
 {
    // if (!CanDetectOverlapp()) return;
     if (bPlayerIsControlling) return;
-
 
     APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(Other);
 
@@ -223,7 +222,7 @@ void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
 {
     if (bPlayerIsControlling)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green ,TEXT("Player Controlling after Timer ."));
+         //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green ,TEXT("Player Controlling after Timer ."));
         return;
     }
     if (Character)
@@ -240,7 +239,7 @@ void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
         EnteringCharacter = nullptr;
     }else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No character to exit."));
+         //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No character to exit."));
     }
 }
 
@@ -248,12 +247,12 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 {
     if (!Character)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No Character"));
+         //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No Character"));
         return;
     }
     if (!PlayerController)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No CONTROLLLER"));
+         //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No CONTROLLLER"));
 
         return;
     }
@@ -273,11 +272,11 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
     {
         if (bLockedByAnother)
         {
-             GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("InteractBox: Already in use by another player."));
+              //GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("InteractBox: Already in use by another player."));
         }
         else if (bAnotherInside)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("InteractBox: Another player is already inside."));
+            // GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("InteractBox: Another player is already inside."));
         }
     }
 }
@@ -305,7 +304,8 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACraz
 
     if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
     {
-        if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Already in use by another player."));
+         //
+         //if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Already in use by another player."));
         return;
     }
 
@@ -326,6 +326,13 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACraz
         }
         break;
     case EInteractionType::Interactable:
+        TryInteractWithObject(InstigatorPlayerController, CrazyCharacter);
+        break;
+    case EInteractionType::Both:
+        if (CrazyCharacter && CrazyCharacter->CanInteract())
+        {
+            TryPossesPawn(InstigatorPlayerController);
+        }
         TryInteractWithObject(InstigatorPlayerController, CrazyCharacter);
         break;
     default:
@@ -370,6 +377,9 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 {
     if (!PlayerController) return;
 
+    CurrentPlayerId = GetPlayerIndexFromPlayerController(PlayerController);
+    //CurrentPlayerController = GetPlayerControllerFromActor();
+
     bPlayerIsControlling = true;
     CachedPlayerController = PlayerController;
     CachedCharacter = PlayerController ? Cast<ACrazyFoodTruckCharacter>(PlayerController->GetPawn()) : nullptr;
@@ -399,11 +409,15 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
             const int32 PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
             if (PlayerIndex != -1 && PawnToPossess)
             {
-                LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType);
-                
                 if(Cast<AVehicle>(PawnToPossess))
                 {
-                    AddOutlineToForwardCamera(PlayerIndex);
+                    APlayerController* PC = CurrentInteractorPlayerController.Get(); 
+                    int CurrentPlayerIndex = GetPlayerIndexFromPlayerController(PC);
+                    AddOutlineToForwardCamera(CurrentPlayerIndex);
+                    LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, true);
+                }else
+                {
+                    LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, false);
                 }
             }
         }
@@ -435,7 +449,13 @@ void AInteractBox::UnpossessPawn()
         {
             if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
             {
-                LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType);
+                if(Cast<AVehicle>(PawnToPossess))
+                {
+                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, true);
+                }else
+                {
+                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false);
+                }
             }
         }
     }

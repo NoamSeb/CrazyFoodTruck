@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "RepairProgressBillboard.generated.h"
 
 class URepairProgressWidget;
@@ -36,6 +37,9 @@ public:
 	FOnRepaired OnBroked;
 	UFUNCTION(BlueprintCallable, Category = "Repair")
 	void InitializeWidget(UWidgetComponent* InWidgetComponent);
+
+	UGameInstanceCrazyFoodTruck* GI;
+	UFoodTruckDataSubSystem* TruckSubSystem;
 
 protected:
 	virtual void BeginPlay() override;

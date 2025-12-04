@@ -25,8 +25,9 @@ void ATurretController::BeginPlay()
 	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
 
 	_CurrentAmmoMax = _AmmoMax + TruckSubSystem->TurretMaxAmmo;
-	_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
 	_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
+
+	TruckSubSystem->indexBulletShoot = 0;
 	
 #pragma endregion
 	
@@ -37,14 +38,14 @@ void ATurretController::BeginPlay()
 		{
 			_CanonToRotate = Cast<USceneComponent>(SceneComponent);
 		}
-		if (SceneComponent->GetName() == "SC_CursorJoint")
-        {
-            _JointCursor = Cast<USceneComponent>(SceneComponent);
-        }
+		// if (SceneComponent->GetName() == "SC_CursorJoint")
+  //       {
+  //           _JointCursor = Cast<USceneComponent>(SceneComponent);
+  //       }
 	}
 	
-	ResetCoolDown();
 	SwitchBulletType(TruckSubSystem->TypeBullet);
+	ResetCoolDown();
 	UpdateTurretCanonRotation();
 }
 
@@ -56,6 +57,7 @@ void ATurretController::IncrementPlayerReloading()
 
 void ATurretController::DecrementPlayerReloading()
 {
+	if (_ActualPlayerReloading <= 0) return;
 	_ActualPlayerReloading--;
 	OnPlayerReload.Broadcast(_ActualPlayerReloading);
 	if (_ActualPlayerReloading <= 0)
@@ -94,26 +96,71 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 		AreaRangeDepht = ActualBulletStructure->AreaDepth;
 		BulletHapticForce = ActualBulletStructure->HapticsScale;
 
-		// LOAD BULLET
-		if (ActualBulletStructure->BulletClass)
+		BulletChooseForShoot = *ActualBulletStructure;
+
+		if (BulletChooseForShoot.BulletClass)
         {
-			ActualBulletPrefab = ActualBulletStructure->BulletClass.Get();
-        }
-		else
+			ActualBulletPrefab = BulletChooseForShoot.BulletClass.Get();
+			
+			if (!ActualBulletPrefab)
+			{
+				// ActualBulletPrefab = ActualBulletStructure->BulletClass.LoadSynchronous();
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Bullet Class Loaded Synchronously !"));
+				if (!ActualBulletPrefab)
+                {
+                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to Load Bullet Class Synchronously !"));
+                }
+			}
+        }else
         {
         	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Bullet Class Assigned in DataTable !"));
         }
-		
-		SetMaxAmmo(ActualBulletStructure->Ammo);
 
-		_CurrentBulletFireRate = BulletFireRate + TruckSubSystem->TurretFireRate;
+		//Pour Upgrades
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Turquoise, FString::Printf(TEXT("value fireRate Truck : %f"), TruckSubSystem->TurretFireRate));
+
+		if (TruckSubSystem->TurretFireRate != 0)
+		{
+			_CurrentBulletFireRate = BulletFireRate - (TruckSubSystem->TurretFireRate * BulletFireRate / 100);
+		}
+		else
+		{
+			_CurrentBulletFireRate = BulletFireRate;
+		}
+
+		
 		_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
+
+		BulletChooseForShoot.Damage = _CurrentBulletDamage;
+		BulletChooseForShoot.FireRate = _CurrentBulletFireRate;
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::FromInt(BulletChooseForShoot.Speed));
+		BulletChooseForShoot.Speed = BulletSpeed + TruckSubSystem->SpeedBullet;
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::FromInt(BulletChooseForShoot.Speed));
+
+		_CurrentAmmoMax = BulletChooseForShoot.Ammo + TruckSubSystem->TurretMaxAmmo;
+
+		SetMaxAmmo(_CurrentAmmoMax);
+		//SetMaxAmmo(ActualBulletStructure->Ammo);
 	}
 	else
 	{
 		return;
 	}
-
+	
+	// FString FullPath = FString::Printf(TEXT("/Game/Resources/Bullet/%s.%s_C"), *TargetName, *TargetName);
+	// UE_LOG(LogTemp, Warning, TEXT("Trying to load class: %s"), *FullPath);
+	//
+	// UClass* LoadedClass = StaticLoadClass(ABulletBase::StaticClass(), nullptr, *FullPath);
+	// if (LoadedClass)
+	// {
+	// 	ActualBulletPrefab = LoadedClass;
+	// }
+	// else
+	// {
+	// 	ActualBulletPrefab = nullptr;
+	// 	UE_LOG(LogTemp, Error, TEXT("Failed to StaticLoadClass %s"), *FullPath);
+	// }
+	//
 	OnAmmoChanged.Broadcast(GetAmmo(),_CurrentAmmoMax);
 	OnTypeChangedGetAmmo.Broadcast(GetAmmo(),_CurrentAmmoMax);
 	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);
@@ -176,6 +223,19 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 {
 	_CurrentAmmo = NewAmmo;
+
+	if (_CurrentAmmo >= _CurrentAmmoMax)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(_CurrentAmmo));
+		if (TruckSubSystem->IncreaseDamageWhenFullReload && !IsDamageAlreadyIncrease)
+		{
+			IsAmmoFullReload = true;
+			BulletChooseForShoot.Damage += TruckSubSystem->DamageIncreaseWhenFullReload;
+			TimerFullReload = TimeDamageWhenFullReload;
+			IsDamageAlreadyIncrease = true;
+		}
+	}
+	
 	OnAmmoChanged.Broadcast(_CurrentAmmo, _CurrentAmmoMax);
 }
 
@@ -187,6 +247,7 @@ void ATurretController::SetMaxAmmo(int32 NewAmmo)
 
 void ATurretController::DecrementAmmo()
 {
+	//TruckSubSystem->TripleDamageFor10EBullet;
 	_CurrentAmmo -= 1;
 	if (_CurrentAmmo <= 0)
 	{
@@ -203,6 +264,8 @@ void ATurretController::BlueprintShoot()
 
 float ATurretController::GetCoolDownBetweenShoot()
 {
+	//return 0;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value fireRate : %f"), _CurrentBulletFireRate));
 	return _CurrentBulletFireRate;
 }
 
@@ -222,6 +285,21 @@ void ATurretController::Tick(float DeltaTime)
 	{
 		_CurrentCoolDown -= DeltaTime;
 	}
+
+
+	if (IsDamageAlreadyIncrease)
+	{
+		if (TimerFullReload > 0.f)
+		{
+			TimerFullReload -= DeltaTime;
+		}
+		else
+		{
+			BulletChooseForShoot.Damage = _CurrentBulletDamage;
+			IsDamageAlreadyIncrease = false;
+			IsAmmoFullReload = false;
+		}
+	}
 }
 
 void ATurretController::Shoot()
@@ -238,7 +316,10 @@ void ATurretController::Shoot()
 	}
 	if (_CurrentCoolDown > 0)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Turret on Cooldown !"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value fireRate : %f"), _CurrentBulletFireRate));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("value fireRate : %f"), _CurrentCoolDown));
+		
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Turret on Cooldown !"));
 		return;
 	}
 	if (_ActualPlayerReloading > 0)
@@ -259,6 +340,21 @@ void ATurretController::Shoot()
 	OnShoot.Broadcast();
 	OnShootGetAmmo.Broadcast(GetAmmo(),_CurrentAmmoMax);
 
+	if (TruckSubSystem->TripleDamageFor10EBullet)
+	{
+		if (TruckSubSystem->indexBulletShoot >= 9)
+		{
+			BulletChooseForShoot.Damage = _CurrentBulletDamage * 3;
+			TruckSubSystem->indexBulletShoot = 0;
+		} else
+		{
+			BulletChooseForShoot.Damage = _CurrentBulletDamage;
+			TruckSubSystem->indexBulletShoot ++;
+		}
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("value index : %d"), TruckSubSystem->indexBulletShoot));
+		
+	}
+
 	AActor* bulletInstance = GetWorld()->SpawnActor<AActor>(ActualBulletPrefab, _SpawnBulletTransform->GetComponentTransform(), bulletParams);
 	if (bulletInstance)
 	{
@@ -266,7 +362,10 @@ void ATurretController::Shoot()
 		ABulletBase* BulletBase = Cast<ABulletBase>(bulletInstance);
 		if (BulletBase)
 		{
-			BulletBase->Initialize(ActualBulletStructure, _CanonToRotate->GetForwardVector());
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value damage : %d"), BulletChooseForShoot.Damage));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::FromInt(BulletChooseForShoot.Speed));
+			
+			BulletBase->Initialize(BulletChooseForShoot, _CanonToRotate->GetForwardVector());
 		}
 	}
 }
@@ -286,69 +385,81 @@ void ATurretController::InputChangeBulletType(const FInputActionValue& Value)
 
 void ATurretController::InputShootTriggered(const FInputActionValue& Value)
 {
+	//if (TruckSubSystem->TripleDamageFor10EBullet)
+	//{
+	//	if (TruckSubSystem->indexBulletShoot >= 9)
+	//	{
+	//		BulletChooseForShoot.Damage = _CurrentBulletDamage * 3;
+	//		TruckSubSystem->indexBulletShoot = 0;
+	//	} else
+	//	{
+	//		BulletChooseForShoot.Damage = _CurrentBulletDamage;
+	//		TruckSubSystem->indexBulletShoot ++;
+	//	}
+	//}
 	Shoot();
 }
 
-void ATurretController::InputRoll(const FInputActionValue& Value) // MOVE ALONG Y AXIS // side AXIS <->
+void ATurretController::InputRoll(const FInputActionValue& Value) // side (Y)
 {
 	float valueToFloat = Value.Get<float>();
-	if (_JointCursor)
+	if (!_JointCursor) return;
+
+	const FVector worldDelta = FVector::LeftVector * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
+
+	USceneComponent* ParentComp = _JointCursor->GetAttachParent();
+	if (!ParentComp)
 	{
-		auto WoldDir = FVector::LeftVector;
-		auto worldDelta = WoldDir * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
-
-		auto* ParentComp = _JointCursor->GetAttachParent();
-		
-		if (!ParentComp)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
-			_JointCursor->AddWorldOffset(worldDelta);
-			return;
-		}
-
-		const FTransform parentTransform = ParentComp->GetComponentTransform();
-		FVector localDelta = parentTransform.InverseTransformVectorNoScale(worldDelta);
-
-		FVector CurrentRelative = _JointCursor->GetRelativeLocation();
-		FVector NewRelative = CurrentRelative + localDelta;
-
-		NewRelative.Y = FMath::Clamp(NewRelative.Y,-AreaRangeSide , AreaRangeSide);
-		
-		_JointCursor->SetRelativeLocation(NewRelative);
-
-		UpdateTurretCanonRotation(); 
-	}
-}
-
-
-void ATurretController::InputYaw(const FInputActionValue& Value) // X VALUE depht axis ^
-{
-	float valueToFloat = Value.Get<float>();
-	
-	if (_JointCursor)
-	{
-		auto Fdir = FVector::BackwardVector;
-		auto worldDelta = Fdir * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
-
-		auto* ParentComp = _JointCursor->GetAttachParent();
-		if (!ParentComp)
-		{
-			_JointCursor->AddWorldOffset(worldDelta);
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
-			return;
-		}
-		
-		const FTransform parentTransform = ParentComp->GetComponentTransform();
-		FVector localDelta = parentTransform.InverseTransformVectorNoScale(worldDelta);
-
-		FVector CurrentRelative = _JointCursor->GetRelativeLocation();
-		FVector NewRelative = CurrentRelative + localDelta;
-		NewRelative.X = FMath::Clamp(NewRelative.X,-AreaRangeDepht , AreaRangeDepht);
-		
-		_JointCursor->SetRelativeLocation(NewRelative);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
+		_JointCursor->AddWorldOffset(worldDelta);
 		UpdateTurretCanonRotation();
+		return;
 	}
+
+	const FTransform parentTransform = ParentComp->GetComponentTransform();
+	const FVector currentWorld = _JointCursor->GetComponentLocation();
+	const FVector newWorld = currentWorld + worldDelta;
+	FVector newRelative = parentTransform.InverseTransformPosition(newWorld);
+
+	// Clamp BOTH axes (X = depth, Y = side)
+	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeDepht, AreaRangeDepht);
+	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeSide, AreaRangeSide);
+	// si Z doit être fixé : newRelative.Z = ...;
+
+	SetCursorLocation(newRelative);
+	UpdateTurretCanonRotation();
+	
 }
+void ATurretController::InputYaw(const FInputActionValue& Value) // depth (X)
+{
+	float valueToFloat = Value.Get<float>();
+	if (!_JointCursor) return;
+
+	const FVector worldDelta = FVector::BackwardVector * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
+
+	USceneComponent* ParentComp = _JointCursor->GetAttachParent();
+	if (!ParentComp)
+	{
+		_JointCursor->AddWorldOffset(worldDelta);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
+		UpdateTurretCanonRotation();
+		return;
+	}
+
+	const FTransform parentTransform = ParentComp->GetComponentTransform();
+	const FVector currentWorld = _JointCursor->GetComponentLocation();
+	const FVector newWorld = currentWorld + worldDelta;
+	FVector newRelative = parentTransform.InverseTransformPosition(newWorld);
+
+	// Clamp BOTH axes (X = depth, Y = side)
+	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeDepht, AreaRangeDepht);
+	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeSide, AreaRangeSide);
+
+	SetCursorLocation(newRelative);
+	UpdateTurretCanonRotation();
+}
+
+
 
 void ATurretController::UpdateTurretCanonRotation()
 {
@@ -359,6 +470,11 @@ void ATurretController::UpdateTurretCanonRotation()
 		FRotator lookAtRotator = UKismetMathLibrary::FindLookAtRotation(TurretPosition, cursorPosition);
 		_CanonToRotate->SetWorldRotation(lookAtRotator);
 	}
+}
+
+void ATurretController::SetCursorJoint(USceneComponent* NewJoint)
+{
+	_JointCursor = NewJoint;
 }
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
