@@ -25,7 +25,6 @@ void ATurretController::BeginPlay()
 	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
 
 	_CurrentAmmoMax = _AmmoMax + TruckSubSystem->TurretMaxAmmo;
-	//_CurrentBulletFireRate = TruckSubSystem->TurretFireRate;
 	_CurrentBulletDamage = BulletDamage + TruckSubSystem->DamagePerBullet;
 
 	TruckSubSystem->indexBulletShoot = 0;
@@ -400,66 +399,66 @@ void ATurretController::InputShootTriggered(const FInputActionValue& Value)
 	Shoot();
 }
 
-void ATurretController::InputRoll(const FInputActionValue& Value) // MOVE ALONG Y AXIS // side AXIS <->
+void ATurretController::InputRoll(const FInputActionValue& Value) // side (Y)
 {
 	float valueToFloat = Value.Get<float>();
-	if (_JointCursor)
+	if (!_JointCursor) return;
+
+	const FVector worldDelta = FVector::LeftVector * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
+
+	USceneComponent* ParentComp = _JointCursor->GetAttachParent();
+	if (!ParentComp)
 	{
-		auto WoldDir = FVector::LeftVector;
-		auto worldDelta = WoldDir * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
-
-		auto* ParentComp = _JointCursor->GetAttachParent();
-		
-		if (!ParentComp)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
-			_JointCursor->AddWorldOffset(worldDelta);
-			return;
-		}
-
-		const FTransform parentTransform = ParentComp->GetComponentTransform();
-		FVector localDelta = parentTransform.InverseTransformVectorNoScale(worldDelta);
-
-		FVector CurrentRelative = _JointCursor->GetRelativeLocation();
-		FVector NewRelative = CurrentRelative + localDelta;
-
-		NewRelative.Y = FMath::Clamp(NewRelative.Y,-AreaRangeSide , AreaRangeSide);
-		
-		_JointCursor->SetRelativeLocation(NewRelative);
-
-		UpdateTurretCanonRotation(); 
-	}
-}
-
-
-void ATurretController::InputYaw(const FInputActionValue& Value) // X VALUE depht axis ^
-{
-	float valueToFloat = Value.Get<float>();
-	
-	if (_JointCursor)
-	{
-		auto Fdir = FVector::BackwardVector;
-		auto worldDelta = Fdir * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
-
-		auto* ParentComp = _JointCursor->GetAttachParent();
-		if (!ParentComp)
-		{
-			_JointCursor->AddWorldOffset(worldDelta);
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
-			return;
-		}
-		
-		const FTransform parentTransform = ParentComp->GetComponentTransform();
-		FVector localDelta = parentTransform.InverseTransformVectorNoScale(worldDelta);
-
-		FVector CurrentRelative = _JointCursor->GetRelativeLocation();
-		FVector NewRelative = CurrentRelative + localDelta;
-		NewRelative.X = FMath::Clamp(NewRelative.X,-AreaRangeDepht , AreaRangeDepht);
-		
-		_JointCursor->SetRelativeLocation(NewRelative);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
+		_JointCursor->AddWorldOffset(worldDelta);
 		UpdateTurretCanonRotation();
+		return;
 	}
+
+	const FTransform parentTransform = ParentComp->GetComponentTransform();
+	const FVector currentWorld = _JointCursor->GetComponentLocation();
+	const FVector newWorld = currentWorld + worldDelta;
+	FVector newRelative = parentTransform.InverseTransformPosition(newWorld);
+
+	// Clamp BOTH axes (X = depth, Y = side)
+	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeSide, AreaRangeSide);
+	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeDepht, AreaRangeDepht);
+	// si Z doit être fixé : newRelative.Z = ...;
+
+	_JointCursor->SetRelativeLocation(newRelative);
+	UpdateTurretCanonRotation();
+	
 }
+void ATurretController::InputYaw(const FInputActionValue& Value) // depth (X)
+{
+	float valueToFloat = Value.Get<float>();
+	if (!_JointCursor) return;
+
+	const FVector worldDelta = FVector::BackwardVector * (valueToFloat * (_CursorSpeed * GetWorld()->GetDeltaSeconds()));
+
+	USceneComponent* ParentComp = _JointCursor->GetAttachParent();
+	if (!ParentComp)
+	{
+		_JointCursor->AddWorldOffset(worldDelta);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Parent Component for Cursor Joint"));
+		UpdateTurretCanonRotation();
+		return;
+	}
+
+	const FTransform parentTransform = ParentComp->GetComponentTransform();
+	const FVector currentWorld = _JointCursor->GetComponentLocation();
+	const FVector newWorld = currentWorld + worldDelta;
+	FVector newRelative = parentTransform.InverseTransformPosition(newWorld);
+
+	// Clamp BOTH axes (X = depth, Y = side)
+	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeSide, AreaRangeSide);
+	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeDepht, AreaRangeDepht);
+
+	_JointCursor->SetRelativeLocation(newRelative);
+	UpdateTurretCanonRotation();
+}
+
+
 
 void ATurretController::UpdateTurretCanonRotation()
 {
