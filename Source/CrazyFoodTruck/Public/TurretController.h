@@ -126,6 +126,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Turret|Events")
+	void SetCursorLocation(FVector NewLocation);
 
 	void IncrementPlayerReloading();
 	void DecrementPlayerReloading();
@@ -194,6 +197,7 @@ private:
 	void Print(FString Message);
 
 	void UpdateTurretCanonRotation();
+
 
 	int32 mappingPriority = 0;
 	

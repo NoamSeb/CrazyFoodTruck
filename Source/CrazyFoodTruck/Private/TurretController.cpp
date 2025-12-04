@@ -425,7 +425,7 @@ void ATurretController::InputRoll(const FInputActionValue& Value) // side (Y)
 	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeDepht, AreaRangeDepht);
 	// si Z doit être fixé : newRelative.Z = ...;
 
-	_JointCursor->SetRelativeLocation(newRelative);
+	SetCursorLocation(newRelative);
 	UpdateTurretCanonRotation();
 	
 }
@@ -454,7 +454,7 @@ void ATurretController::InputYaw(const FInputActionValue& Value) // depth (X)
 	newRelative.X = FMath::Clamp(newRelative.X, -AreaRangeSide, AreaRangeSide);
 	newRelative.Y = FMath::Clamp(newRelative.Y, -AreaRangeDepht, AreaRangeDepht);
 
-	_JointCursor->SetRelativeLocation(newRelative);
+	SetCursorLocation(newRelative);
 	UpdateTurretCanonRotation();
 }
 
