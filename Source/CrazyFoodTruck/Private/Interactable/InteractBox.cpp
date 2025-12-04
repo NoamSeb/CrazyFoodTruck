@@ -329,6 +329,13 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACraz
     case EInteractionType::Interactable:
         TryInteractWithObject(InstigatorPlayerController, CrazyCharacter);
         break;
+    case EInteractionType::Both:
+        if (CrazyCharacter && CrazyCharacter->CanInteract())
+        {
+            TryPossesPawn(InstigatorPlayerController);
+        }
+        TryInteractWithObject(InstigatorPlayerController, CrazyCharacter);
+        break;
     default:
         break;
     }
