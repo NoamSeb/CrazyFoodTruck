@@ -113,21 +113,9 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 			const FVector2D ViewportSize(ViewX, ViewY);
 			FVector2D ScreenPos(0.f, 0.f);
 
-			const bool bProjected = PC->ProjectWorldLocationToScreen(BoxCenter, ScreenPos, false);
+			bool bProjected = PC->ProjectWorldLocationToScreen(BoxCenter, ScreenPos, false);
 
-			const float Padding = 20.f;
-
-			if (bProjected)
-			{
-				const float MinX = Padding;
-				const float MaxX = ViewportSize.X - Padding;
-				const float MinY = Padding;
-				const float MaxY = ViewportSize.Y - Padding;
-
-				ScreenPos.X = FMath::Clamp(ScreenPos.X, MinX, MaxX);
-				ScreenPos.Y = FMath::Clamp(ScreenPos.Y, MinY, MaxY);
-			}
-			else
+			if (!bProjected)
 			{
 				ScreenPos.X = ViewportSize.X * 0.5f;
 				ScreenPos.Y = ViewportSize.Y * 0.5f;
@@ -137,6 +125,21 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 			if (SpawnIndicator)
 			{
 				SpawnIndicator->AddToViewport();
+				SpawnIndicator->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+
+				const FVector2D IndicatorSize = SpawnIndicator->GetDesiredSize();
+				const FVector2D HalfSize = IndicatorSize * 0.5f;
+
+				const float Padding = 50.f;
+
+				const float MinX = HalfSize.X + Padding;
+				const float MaxX = ViewportSize.X - HalfSize.X - Padding;
+				const float MinY = HalfSize.Y + Padding;
+				const float MaxY = ViewportSize.Y - HalfSize.Y - Padding;
+
+				ScreenPos.X = FMath::Clamp(ScreenPos.X, MinX, MaxX);
+				ScreenPos.Y = FMath::Clamp(ScreenPos.Y, MinY, MaxY);
+
 				SpawnIndicator->SetPositionInViewport(ScreenPos, true);
 			}
 		}
