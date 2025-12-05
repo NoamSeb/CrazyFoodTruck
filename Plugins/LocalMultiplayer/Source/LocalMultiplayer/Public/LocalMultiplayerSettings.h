@@ -76,7 +76,7 @@ public:
     FLocalMultiplayerProfileData GamepadProfileData;
 
     UPROPERTY(Config, EditAnywhere, Category="Local Multiplayer")
-    int NbMaxGamepads = 4;
+    int NbMaxGamepads = 3;
 	//
 	// UPROPERTY(EditAnywhere, Category="Local Multiplayer", meta=(DisplayName="MPC Outline"))
 	// TObjectPtr<UMaterialParameterCollection> MPCOutline = nullptr;

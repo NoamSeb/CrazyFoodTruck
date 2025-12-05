@@ -26,9 +26,6 @@ protected:
 
 	UFUNCTION(CallInEditor, Category = "Debug|Lobby")
 	void DebugConnectPlayer2();
-
-	UFUNCTION(CallInEditor, Category = "Debug|Lobby")
-	void DebugConnectPlayer3();
 #endif
 
 private:

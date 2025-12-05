@@ -18,11 +18,16 @@ void ULocalMultiplayerGameViewportClient::PostInitProperties()
 {
 	Super::PostInitProperties();
 	
-	MaxSplitscreenPlayers = 8;
+	MaxSplitscreenPlayers = 3;
 }
 
 bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& EventArgs)
 {
+	if (!EventArgs.Key.IsGamepadKey())
+	{
+		return Super::InputKey(EventArgs);
+	}
+
 	if (EventArgs.Event != IE_Pressed && EventArgs.Event != IE_Repeat && EventArgs.Event != IE_Released)
 	{
 		return Super::InputKey(EventArgs);
@@ -54,49 +59,27 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 
 	const ELocalMultiplayerInputMappingType MappingType = LocalMultiplayerSubsystem->GetCurrentMappingType();
 
-	if (!EventArgs.Key.IsGamepadKey())
-	{
-		const int KeyboardProfileIndex = LocalMultiplayerSettings->FindKeyboardProfileIndexFromKey(EventArgs.Key, MappingType);
-		if (KeyboardProfileIndex != -1)
-		{
-			int PlayerIndex = LocalMultiplayerSubsystem->GetAssignedPlayerIndexFromKeyboardProfileIndex(KeyboardProfileIndex);
-			const bool bWasAssigned = (PlayerIndex != -1);
-			if (!bWasAssigned)
-			{
-				PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToKeyboardProfileIndex(KeyboardProfileIndex);
-				LocalMultiplayerSubsystem->AssignKeyboardInputMapping(PlayerIndex, KeyboardProfileIndex, MappingType);
-			}
+	const int DeviceID = EventArgs.InputDevice.GetId();
 
-			if (ULocalPlayer* LocalPlayer = GameInstancePtr->GetLocalPlayerByIndex(PlayerIndex))
-			{
-				if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(WorldPtr))
-				{
-					const float AmountDepressed = (EventArgs.Event == IE_Released) ? 0.f : 1.f;
-					return PlayerController->InputKey(EventArgs.Key, EventArgs.Event, AmountDepressed, false);
-				}
-			}
+	int PlayerIndex = LocalMultiplayerSubsystem->GetAssignedPlayerIndexFromGamepadDeviceID(DeviceID);
+	const bool bWasAssigned = (PlayerIndex != -1);
+	if (!bWasAssigned)
+	{
+		PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToGamepadDeviceID(DeviceID);
+		if (PlayerIndex == -1)
+		{
+			return Super::InputKey(EventArgs);
 		}
+
+		LocalMultiplayerSubsystem->AssignGamepadInputMapping(PlayerIndex, MappingType);
 	}
 
-	if (EventArgs.Key.IsGamepadKey())
+	if (ULocalPlayer* LocalPlayer = GameInstancePtr->GetLocalPlayerByIndex(PlayerIndex))
 	{
-		const int DeviceID = EventArgs.InputDevice.GetId();
-
-		int PlayerIndex = LocalMultiplayerSubsystem->GetAssignedPlayerIndexFromGamepadDeviceID(DeviceID);
-		const bool bWasAssigned = (PlayerIndex != -1);
-		if (!bWasAssigned)
+		if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(WorldPtr))
 		{
-			PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToGamepadDeviceID(DeviceID);
-			LocalMultiplayerSubsystem->AssignGamepadInputMapping(PlayerIndex, MappingType);
-		}
-
-		if (ULocalPlayer* LocalPlayer = GameInstancePtr->GetLocalPlayerByIndex(PlayerIndex))
-		{
-			if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(WorldPtr))
-			{
-				const float AmountDepressed = (EventArgs.Event == IE_Released) ? 0.f : 1.f;
-				return PlayerController->InputKey(EventArgs.Key, EventArgs.Event, AmountDepressed, false);
-			}
+			const float AmountDepressed = (EventArgs.Event == IE_Released) ? 0.f : 1.f;
+			return PlayerController->InputKey(EventArgs.Key, EventArgs.Event, AmountDepressed, true);
 		}
 	}
 
@@ -105,6 +88,11 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 
 bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInputDeviceId InputDevice, FKey Key, float Delta, float DeltaTime, int32 NumSamples, bool bGamepad)
 {
+	if (!bGamepad && !Key.IsGamepadKey())
+	{
+		return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
+	}
+
 	UWorld* WorldPtr = GetWorld();
 	if (!WorldPtr)
 	{
@@ -131,50 +119,28 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 
 	const ELocalMultiplayerInputMappingType MappingType = LocalMultiplayerSubsystem->GetCurrentMappingType();
 
-	if (!bGamepad && !Key.IsGamepadKey())
-	{
-		const int KeyboardProfileIndex = LocalMultiplayerSettings->FindKeyboardProfileIndexFromKey(Key, MappingType);
-		if (KeyboardProfileIndex != -1)
-		{
-			int PlayerIndex = LocalMultiplayerSubsystem->GetAssignedPlayerIndexFromKeyboardProfileIndex(KeyboardProfileIndex);
-			const bool bWasAssigned = (PlayerIndex != -1);
-			if (!bWasAssigned)
-			{
-				PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToKeyboardProfileIndex(KeyboardProfileIndex);
-				LocalMultiplayerSubsystem->AssignKeyboardInputMapping(PlayerIndex, KeyboardProfileIndex, MappingType);
-			}
+	const int DeviceID = InputDevice.GetId();
 
-			if (ULocalPlayer* LocalPlayer = GameInstancePtr->GetLocalPlayerByIndex(PlayerIndex))
-			{
-				if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(WorldPtr))
-				{
-					return PlayerController->InputAxis(Key, Delta, DeltaTime, NumSamples, false);
-				}
-			}
+	int PlayerIndex = LocalMultiplayerSubsystem->GetAssignedPlayerIndexFromGamepadDeviceID(DeviceID);
+	const bool bWasAssigned = (PlayerIndex != -1);
+	if (!bWasAssigned)
+	{
+		PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToGamepadDeviceID(DeviceID);
+		if (PlayerIndex == -1)
+		{
+			return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
 		}
+
+		LocalMultiplayerSubsystem->AssignGamepadInputMapping(PlayerIndex, MappingType);
 	}
 
-	if (bGamepad || Key.IsGamepadKey())
+	if (ULocalPlayer* LocalPlayer = GameInstancePtr->GetLocalPlayerByIndex(PlayerIndex))
 	{
-		const int DeviceID = InputDevice.GetId();
-
-		int PlayerIndex = LocalMultiplayerSubsystem->GetAssignedPlayerIndexFromGamepadDeviceID(DeviceID);
-		const bool bWasAssigned = (PlayerIndex != -1);
-		if (!bWasAssigned)
+		if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(WorldPtr))
 		{
-			PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToGamepadDeviceID(DeviceID);
-			LocalMultiplayerSubsystem->AssignGamepadInputMapping(PlayerIndex, MappingType);
-		}
-
-		if (ULocalPlayer* LocalPlayer = GameInstancePtr->GetLocalPlayerByIndex(PlayerIndex))
-		{
-			if (APlayerController* PlayerController = LocalPlayer->GetPlayerController(WorldPtr))
-			{
-				return PlayerController->InputAxis(Key, Delta, DeltaTime, NumSamples, false);
-			}
+			return PlayerController->InputAxis(Key, Delta, DeltaTime, NumSamples, true);
 		}
 	}
 
 	return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
 }
-

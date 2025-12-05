@@ -80,9 +80,4 @@ void ALobbyDebugActor::DebugConnectPlayer2()
 	DebugTogglePlayerSlot(2);
 }
 
-void ALobbyDebugActor::DebugConnectPlayer3()
-{
-	DebugTogglePlayerSlot(3);
-}
-
 #endif

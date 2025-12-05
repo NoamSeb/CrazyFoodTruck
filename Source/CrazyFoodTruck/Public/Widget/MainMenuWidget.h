@@ -31,9 +31,6 @@ protected:
 	TObjectPtr<UPlayerSlotWidget> Slot2;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UPlayerSlotWidget> Slot3;
-
-	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UButton> PlayButton;
 
 private:

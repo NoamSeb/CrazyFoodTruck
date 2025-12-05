@@ -250,8 +250,6 @@ TSubclassOf<ACrazyFoodTruckCharacter> ACrazyFoodTruckGameMode::GetCrazyFoodTruck
         return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP1;
     case 2:
         return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP2;
-    case 3:
-        return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP3;
     default:
         return CrazyFoodTruckSettings->CrazyFoodTruckCharacterClassP0;
     }

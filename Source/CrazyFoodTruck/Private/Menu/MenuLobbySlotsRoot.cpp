@@ -21,9 +21,6 @@ AMenuLobbySlotsRoot::AMenuLobbySlotsRoot()
 
 	Slot2Comp = CreateDefaultSubobject<UChildActorComponent>(TEXT("Slot2"));
 	Slot2Comp->SetupAttachment(Root);
-
-	Slot3Comp = CreateDefaultSubobject<UChildActorComponent>(TEXT("Slot3"));
-	Slot3Comp->SetupAttachment(Root);
 }
 
 void AMenuLobbySlotsRoot::OnConstruction(const FTransform& Transform)
@@ -35,7 +32,6 @@ void AMenuLobbySlotsRoot::OnConstruction(const FTransform& Transform)
 	SetupSlot(Slot0Comp, 0, StartOffset + 0 * SlotSpacing);
 	SetupSlot(Slot1Comp, 1, StartOffset + 1 * SlotSpacing);
 	SetupSlot(Slot2Comp, 2, StartOffset + 2 * SlotSpacing);
-	SetupSlot(Slot3Comp, 3, StartOffset + 3 * SlotSpacing);
 }
 
 void AMenuLobbySlotsRoot::SetupSlot(UChildActorComponent* SlotComp, int32 SlotIndex, float OffsetX)

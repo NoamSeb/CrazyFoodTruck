@@ -23,7 +23,6 @@ void UMainMenuWidget::NativeConstruct()
 	if (Slot0) SlotWidgets.Add(Slot0);
 	if (Slot1) SlotWidgets.Add(Slot1);
 	if (Slot2) SlotWidgets.Add(Slot2);
-	if (Slot3) SlotWidgets.Add(Slot3);
 
 	if (PlayButton)
 	{
