@@ -17,18 +17,35 @@ void AMenuPlayerController::SetupInputComponent()
 		if (JoinAction)
 		{
 			EIC->BindAction(JoinAction, ETriggerEvent::Started, this, &AMenuPlayerController::OnJoinPressed);
+			//EIC->BindAction(PlayAction, ETriggerEvent::Started, this, &AMenuPlayerController::OnJoinPressed);
 		}
 	}
 }
 
 void AMenuPlayerController::OnJoinPressed(const FInputActionValue& Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Join");
 	if (UGameInstanceCrazyFoodTruck* GI = GetGameInstance<UGameInstanceCrazyFoodTruck>())
 	{
-		const ULocalPlayer* LP = GetLocalPlayer();
-		if (!LP) return;
+		UGameDataSubSystem* GameSubSystem = GI->GetSubsystem<UGameDataSubSystem>();
 
-		const int32 ControllerId = LP->GetControllerId();
-		GI->TryJoinPlayer(ControllerId);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("join current : %hhd"), GameSubSystem->CurrentGamePhase));
+		
+		if (GameSubSystem->CurrentGamePhase == EPhaseGameCrazyFoodTruckState::ChoosePlayers)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Join in choose player");
+			
+			const ULocalPlayer* LP = GetLocalPlayer();
+			if (!LP) return;
+		
+			const int32 ControllerId = LP->GetControllerId();
+			GI->TryJoinPlayer(ControllerId);
+		}
+
+		//const ULocalPlayer* LP = GetLocalPlayer();
+		//if (!LP) return;
+		//
+		//const int32 ControllerId = LP->GetControllerId();
+		//GI->TryJoinPlayer(ControllerId);
 	}
 }

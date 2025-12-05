@@ -85,7 +85,7 @@ protected:
 	int32 _CurrentAmmoMax;
 	//float _CurrentTurretRotationSpeed;
 
-	float TimeDamageWhenFullReload = 3.f;
+	float TimeDamageWhenFullReload = 6.f;
 	float TimerFullReload = 0.f;
 	bool IsAmmoFullReload;
 	bool IsDamageAlreadyIncrease = false;

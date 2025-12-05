@@ -81,8 +81,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 MaxLifeFoodTruck = 20;
 
-	int actoraspurr;
-
 	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
 	TArray<FMenuPlayerSlot> PlayerSlots;
 

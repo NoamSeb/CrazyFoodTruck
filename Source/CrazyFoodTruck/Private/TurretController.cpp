@@ -230,7 +230,8 @@ void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 		if (TruckSubSystem->IncreaseDamageWhenFullReload && !IsDamageAlreadyIncrease)
 		{
 			IsAmmoFullReload = true;
-			BulletChooseForShoot.Damage += TruckSubSystem->DamageIncreaseWhenFullReload;
+			//BulletChooseForShoot.Damage += TruckSubSystem->DamageIncreaseWhenFullReload;
+			BulletChooseForShoot.Damage += 2;
 			TimerFullReload = TimeDamageWhenFullReload;
 			IsDamageAlreadyIncrease = true;
 		}
