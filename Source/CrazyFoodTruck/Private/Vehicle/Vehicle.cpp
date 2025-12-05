@@ -172,16 +172,16 @@ void AVehicle::UnPossessed()
 		MovementComponent->UpdateComponentVelocity();
 	}
 
-	if (!bForwardCamAlwaysOn)
-	{
-		StopForwardCapture();
-
-		if (ForwardCamWidget)
-		{
-			ForwardCamWidget->RemoveFromParent();
-			ForwardCamWidget = nullptr;
-		}
-	}
+	// if (!bForwardCamAlwaysOn)
+	// {
+	// 	StopForwardCapture();
+	//
+	// 	if (ForwardCamWidget)
+	// 	{
+	// 		ForwardCamWidget->RemoveFromParent();
+	// 		ForwardCamWidget = nullptr;
+	// 	}
+	// }
 }
 
 void AVehicle::Tick(float DeltaTime)
@@ -261,6 +261,9 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		ReduceSpeed();
 		OtherActor->Destroy();
+	}else if(OtherActor->Tags.Contains("Boost"))
+	{
+		Boost();
 	}
 	else if (OtherActor->Tags.Contains("MapSwitch"))
 	{
@@ -278,7 +281,13 @@ void AVehicle::MoveForward()
 
 	if (Controller)
 	{
-		AddMovementInput(Fwd2D, 1.f, true);
+		if(bShouldBounceBack)
+			AddMovementInput(-Fwd2D/2, 1.f, true);
+		else if(bIsBoosted)
+			AddMovementInput(Fwd2D*2, 1.f, true);
+		else
+			AddMovementInput(Fwd2D, 1.f, true);
+
 		return;
 	}
 
@@ -475,6 +484,40 @@ void AVehicle::StartSpeedRecovery()
 {
 	bRecoveringSpeed = true;
 	ElapsedTime = 0.0f;
+}
+
+void AVehicle::Boost()
+{
+	bIsBoosted = true;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		BoostTimer,
+		[this]()
+		{
+			bIsBoosted = false;
+		},
+		fBoostTime,
+		false
+	);
+}
+
+void AVehicle::BounceBackOnHit()
+{
+	bShouldBounceBack = true;
+	if (GI)
+	{
+		GI->PlayerCameraShake(Explosion);
+	}
+	
+	GetWorld()->GetTimerManager().SetTimer(
+		BounceBackTimer,
+		[this]()
+		{
+			bShouldBounceBack = false;
+		},
+		fTakeBackSpeedAfterBounce,
+		false
+	);
 }
 
 void AVehicle::CreateAndAssignForwardRenderTarget()

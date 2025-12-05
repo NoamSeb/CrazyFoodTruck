@@ -20,6 +20,9 @@ enum class ESfxType : uint8
 	ECC_Accident UMETA(Displayname = "Accident"),
 	ECC_HitZombie UMETA(Displayname = "HitZombie"),
 	ECC_ZombieDeath UMETA(Displayname = "ZombieDeath"),
+	ECC_RockDestruction UMETA(Displayname = "RockDestruction"),
+	ECC_WoodDestruction UMETA(Displayname = "WoodDestruction"),
+	ECC_MetalDestruction UMETA(Displayname = "MetalDestruction"),
 };
 
 USTRUCT(BlueprintType)
