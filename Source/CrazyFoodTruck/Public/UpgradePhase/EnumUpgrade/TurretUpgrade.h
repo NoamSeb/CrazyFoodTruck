@@ -14,7 +14,7 @@ enum class ETurretUpgrade : uint8
 	Damage, //fait
 	TripleDamageFor10EmeBullet, //fait
 	MaxAmmo, //fait
-	SpeedBullet, //fait
+	//SpeedBullet, //fait
 	IncreaseDamageWhenFullReload, //fait
 	BulletRepelZombies,
 };

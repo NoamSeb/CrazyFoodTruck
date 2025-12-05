@@ -20,6 +20,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> JoinAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> PlayAction;
+
 private:
 	UFUNCTION()
 	void OnJoinPressed(const struct FInputActionValue& Value);

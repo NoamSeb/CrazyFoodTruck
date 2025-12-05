@@ -65,9 +65,9 @@ void UAmeliorationWidget::ApplyUpgrades()
 		case ETurretUpgrade::MaxAmmo:
 			TruckSubSystem->TurretMaxAmmo = Upgrade.intAddModif;
 			break;
-		case ETurretUpgrade::SpeedBullet:
-			TruckSubSystem->SpeedBullet += Upgrade.intAddModif;
-			break;
+		//case ETurretUpgrade::SpeedBullet:
+		//	TruckSubSystem->SpeedBullet += Upgrade.intAddModif;
+		//	break;
 		case ETurretUpgrade::TripleDamageFor10EmeBullet:
 			TruckSubSystem->TripleDamageFor10EBullet = true;
 		case ETurretUpgrade::IncreaseDamageWhenFullReload:
