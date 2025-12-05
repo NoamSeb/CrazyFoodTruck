@@ -24,9 +24,9 @@ void AGameModeCrazyFoodTruck::ChangeGamePhase()
 	case EPhaseGameCrazyFoodTruckState::Route:
 		GamePhaseBase();
 		break;
-	case EPhaseGameCrazyFoodTruckState::Base:
-		GamePhaseAmelioration();
-		break;
+	//case EPhaseGameCrazyFoodTruckState::Base:
+	//	GamePhaseAmelioration();
+	//	break;
 	case EPhaseGameCrazyFoodTruckState::Amelioration:
 		GamePhaseRoute();
 		break;
