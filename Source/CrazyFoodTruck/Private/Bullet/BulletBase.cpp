@@ -4,6 +4,7 @@
 #include "Bullet/BulletBase.h"
 
 #include "Bullet/FBulletStructure.h"
+#include "Components/CapsuleComponent.h"
 #include "Interface/IShootable.h"
 #include "Math/UnitConversion.h"
 
@@ -61,10 +62,34 @@ void ABulletBase::EnemyHit(IIShootable* Entity, FVector LocationHit)
 void ABulletBase::EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit)
 {
 	IIShootable::Execute_ReceiveDamageBlueprint(EntityActor, damage);
+	USceneComponent* AttachComp = nullptr;
+	
+	if (UActorComponent* RootComp = EntityActor->GetRootComponent())
+	{
+		AttachComp = Cast<USceneComponent>(RootComp);
+		GEngine ->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("XXXX   COMPONENT"));
+	}
+	if (!AttachComp)
+	{
+		AttachComp = EntityActor->FindComponentByClass<USkeletalMeshComponent>();
+		GEngine ->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("ATTACH SKELETAL MESH COMPONENT"));
+	}
+	if (!AttachComp)
+	{
+		AttachComp = EntityActor->FindComponentByClass<UStaticMeshComponent>();
+		GEngine ->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("ATTACH STATIC MESH COMPONENT"));
+	}
+	if (!AttachComp)
+	{
+		AttachComp = EntityActor->FindComponentByClass<UCapsuleComponent>();
+		GEngine ->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("ATTACH CAPSULE COMPONENT"));
+	}
+	
 	if (ZombieImpact)
 	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ZombieImpact, LocationHit, GetActorRotation());
+		UNiagaraFunctionLibrary::SpawnSystemAttached(ZombieImpact, AttachComp, NAME_None, LocationHit,GetActorRotation().GetInverse(), EAttachLocation::KeepWorldPosition, true);
 	}
+	
 	Destroy();
 }
 
