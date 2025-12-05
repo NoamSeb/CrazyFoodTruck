@@ -204,7 +204,6 @@ void AInteractBox::OnBoxEndOverlap(UPrimitiveComponent* Comp, AActor* Other, UPr
    // if (!CanDetectOverlapp()) return;
     if (bPlayerIsControlling) return;
 
-
     APlayerController* LeavingPlayerController = GetPlayerControllerFromActor(Other);
 
     ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Other);
@@ -329,6 +328,13 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACraz
     case EInteractionType::Interactable:
         TryInteractWithObject(InstigatorPlayerController, CrazyCharacter);
         break;
+    case EInteractionType::Both:
+        if (CrazyCharacter && CrazyCharacter->CanInteract())
+        {
+            TryPossesPawn(InstigatorPlayerController);
+        }
+        TryInteractWithObject(InstigatorPlayerController, CrazyCharacter);
+        break;
     default:
         break;
     }
@@ -370,6 +376,9 @@ void AInteractBox::TryPossesPawn(APlayerController* InstigatorPlayerController)
 void AInteractBox::PossessPawn(APlayerController* PlayerController)
 {
     if (!PlayerController) return;
+
+    CurrentPlayerId = GetPlayerIndexFromPlayerController(PlayerController);
+    //CurrentPlayerController = GetPlayerControllerFromActor();
 
     bPlayerIsControlling = true;
     CachedPlayerController = PlayerController;
@@ -442,7 +451,7 @@ void AInteractBox::UnpossessPawn()
             {
                 if(Cast<AVehicle>(PawnToPossess))
                 {
-                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false);
+                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, true);
                 }else
                 {
                     LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false);

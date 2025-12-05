@@ -11,6 +11,8 @@ class UZombieWidget;
 class UScoreResultWidget;
 class AHordeManager;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFinalScoreShownHUD);
+
 UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckHUD : public AHUD
 {
@@ -19,7 +21,12 @@ class CRAZYFOODTRUCK_API ACrazyFoodTruckHUD : public AHUD
 public:
 	virtual void BeginPlay() override;
 
-	void ShowScoreResult(int32 FinalScore, int32 TimeScore, int32 KillScore, EScoreGrade Grade);
+	void ShowScoreResult(int32 Time, int32 KillCount, int32 LifeRemaining, int TicketsCount, EScoreGrade InGrade);
+
+	UFUNCTION()
+	void ListenScoreEnd();
+
+	FOnFinalScoreShownHUD OnFinalScoreShownHUD;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "HUD")

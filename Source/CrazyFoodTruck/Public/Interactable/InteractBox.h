@@ -143,7 +143,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
 	FOnCollision OnPlayerQuit;
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player Index")
+	int CurrentPlayerId;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player")
+	//APlayerController* CurrentPlayerController;
 
 protected:
 	virtual void BeginPlay() override;

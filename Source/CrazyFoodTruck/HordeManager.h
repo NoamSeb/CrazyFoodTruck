@@ -35,6 +35,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Food Truck")
     AVehicle* FoodTruck;
+	
+	UFUNCTION(BlueprintCallable , Category = "Horde Manager | Stats")
+	void IncrementZombiesKilled();
 
 #pragma region Counter
 
@@ -128,17 +131,13 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// UFUNCTION(BlueprintCallable)
-	// UDataTable GetDataTable(){return DataWave;}
-
-	
 private:
 	
 	bool bCanSpawnHorde = true;
 	
 	UFUNCTION()
 	void HandleZombieDied(AZombieIA* Zombie, AActor* Killer);
+
 };

@@ -17,26 +17,25 @@ UInputAmeliorationCharacters::UInputAmeliorationCharacters()
 }
 
 
-// Called when the game starts
 void UInputAmeliorationCharacters::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SelfRef = GetOwner();
-	APlayerController* PlayerController = GetPlayerControllerFromActor(SelfRef);
-	indexPlayerController = GetPlayerIndexFromPlayerController(PlayerController);
+	//SelfRef = GetOwner();
+	//APlayerController* PlayerController = GetPlayerControllerFromActor(SelfRef);
+	//indexPlayerController = GetPlayerIndexFromPlayerController(PlayerController);
+
+	Init();
+}
+
+void UInputAmeliorationCharacters::Init()
+{
 	IndexCurrentCible = indexPlayerController;
-
 	IsValidate = false;
-
 	CanMoveOnModule = false;
-	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "IndexCurrentCible");
-
-	justepourchangerasuprr = SelfRef;
 }
 
 
-// Called every frame
 void UInputAmeliorationCharacters::TickComponent(float DeltaTime, ELevelTick TickType,
                                                  FActorComponentTickFunction* ThisTickFunction)
 {
@@ -74,7 +73,7 @@ void UInputAmeliorationCharacters::SetupPlayerInput(UInputComponent* PlayerInput
 
 void UInputAmeliorationCharacters::Move(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Mooove");
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "Moooooooove");
 	if (!OnSkip && !IsValidate)
 	{
 		float FloatValue = Value.Get<float>();
@@ -159,22 +158,24 @@ void UInputAmeliorationCharacters::ValidInModule(const FInputActionValue& Value)
 	}
 }
 
-int32 UInputAmeliorationCharacters::GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const
-{
-	if (!PlayerController) return -1;
-	if (const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer())
-	{
-		return LocalPlayer->GetControllerId();
-	}
-	return -1;
-}
+//int32 UInputAmeliorationCharacters::GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const
+//{
+//	if (!PlayerController) return -1;
+//	if (const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer())
+//	{
+//		return LocalPlayer->GetControllerId();
+//	}
+//	return -1;
+//}
+//
+//APlayerController* UInputAmeliorationCharacters::GetPlayerControllerFromActor(AActor* Actor) const
+//{
+//	if (!Actor) return nullptr;
+//	if (APawn* Pawn = Cast<APawn>(Actor))
+//	{
+//		return Cast<APlayerController>(Pawn->GetController());
+//	}
+//	return Cast<APlayerController>(Actor);
+//}
 
-APlayerController* UInputAmeliorationCharacters::GetPlayerControllerFromActor(AActor* Actor) const
-{
-	if (!Actor) return nullptr;
-	if (APawn* Pawn = Cast<APawn>(Actor))
-	{
-		return Cast<APlayerController>(Pawn->GetController());
-	}
-	return Cast<APlayerController>(Actor);
-}
+//int ChangeNumList

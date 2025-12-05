@@ -9,4 +9,5 @@ enum class EInteractionType : uint8
 {
 	Possess = 0,
 	Interactable,
+	Both,
 };

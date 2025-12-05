@@ -24,11 +24,11 @@ void ABulletBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ABulletBase::Initialize(FBulletStructure* BulletStructure, const FVector& direction)
+void ABulletBase::Initialize(FBulletStructure BulletStructure, const FVector& direction)
 {
-	this->damage = BulletStructure->Damage;
-	bulletSpeed = BulletStructure->Speed;
-	GravityScale = BulletStructure->GravityScale;
+	this->damage = BulletStructure.Damage;
+	bulletSpeed = BulletStructure.Speed;
+	GravityScale = BulletStructure.GravityScale;
 	
 	BulletMovementComponent = FindComponentByClass<UProjectileMovementComponent>();
 	if (BulletMovementComponent)
@@ -45,6 +45,7 @@ void ABulletBase::GroundHit(FVector LocationHit)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), GroundImpact, LocationHit, GetActorRotation());
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("DESTROY BULLET ON GROUND"));
 	Destroy();
 }
 
