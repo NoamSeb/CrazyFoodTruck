@@ -13,12 +13,13 @@ class CRAZYFOODTRUCK_API ATargetController : public AActor
 	GENERATED_BODY()
 ATargetController();
 
+public:
+
+	ESideTarget GetSideTarget() const { return SideTarget; }
 private:
 	void BeginPlay();
+	void SetTargetPosition();
 	virtual void Tick(float DeltaSeconds) override;
-
-	UPROPERTY(EditAnywhere, Category="Target Parameters")
-	APawn* TargetPawn;
 	
 	UPROPERTY(EditAnywhere, Category="Target Parameters")
 	ESideTarget SideTarget = ESideTarget::Left;
