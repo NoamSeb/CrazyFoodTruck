@@ -10,5 +10,4 @@ enum class ETargetZombiePoint : uint8
 	MiddleDown = 0,
 	Left,
 	Right,
-	Up,
 };

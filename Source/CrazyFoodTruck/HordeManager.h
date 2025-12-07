@@ -32,7 +32,8 @@ class CRAZYFOODTRUCK_API AHordeManager : public AActor
 
 public:
 	AHordeManager();
-	
+	void FindTargetPoints();
+
 	UPROPERTY(EditAnywhere, Category= "Horde Manager | BP Food Truck")
     AVehicle* FoodTruck;
 	
@@ -67,19 +68,14 @@ public:
 #pragma region Actor to Follow
 	//Attention sur Character Follower regarder si ça affect nav mash parce que ça peut ne pas fonctionner avec ça si c'est le cas mettre Can Ever Affect Navigation en false
 	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
-	TObjectPtr<AActor> MainActorToFollow;
+	TArray< TObjectPtr<AActor>> MainActorToFollow;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Horde Manager | Character to Follow")
-	TObjectPtr<AActor> LeftActorToFollow;
+	TArray< TObjectPtr<AActor>> LeftActorToFollow;
 
 	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
-	TObjectPtr<AActor> RightActorToFollow;
+	TArray< TObjectPtr<AActor>> RightActorToFollow;
 
-	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
-	TObjectPtr<AActor> ForwardActorToFollow;
-
-	UPROPERTY(EditAnywhere, Category = "Horde Manager | Character to Follow")
-	TObjectPtr<AActor> BackwardActorToFollow;
 #pragma endregion
 
 	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Horde")

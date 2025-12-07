@@ -4,6 +4,7 @@
 
 #include <string>
 
+#include "TargetController.h"
 #include "Components/BoxComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
@@ -12,6 +13,33 @@
 AHordeManager::AHordeManager()
 {
 	PrimaryActorTick.bCanEverTick = false;
+}
+
+void AHordeManager::FindTargetPoints()
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATargetController::StaticClass(), FoundActors);
+
+	for (AActor* Actor : FoundActors)
+	{
+		if (ATargetController* TargetPoint = Cast<ATargetController>(Actor))
+		{
+			switch (TargetPoint->GetSideTarget())
+			{
+				case ESideTarget::Left:
+				LeftActorToFollow.Add(TargetPoint);
+				break;
+				case ESideTarget::Middle:
+				MainActorToFollow.Add(TargetPoint);
+				break;
+				case ESideTarget::Right:
+				RightActorToFollow.Add(TargetPoint);
+				break;
+				default:
+				break;
+			}
+		}
+	}
 }
 
 void AHordeManager::AddSpawnArea()
@@ -175,22 +203,21 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 
 		NewZombie->SpawnDefaultController();
 		NewZombie->ZombieSpeed = FinalZombieSpeed;
-		NewZombie->MainActorToFollower = MainActorToFollow;
-
+		int mainActor = FMath::RandRange(0, MainActorToFollow.Num() -1);
+		
+		NewZombie->MainActorToFollower = MainActorToFollow[mainActor];
+		
 		switch (targetPoint)
 		{
-		case ETargetZombiePoint::Up:
-			NewZombie->FirstActorToFollower = ForwardActorToFollow;
-			break;
 		case ETargetZombiePoint::Left:
-			NewZombie->FirstActorToFollower = LeftActorToFollow;
+			NewZombie->FirstActorToFollower = LeftActorToFollow[FMath::RandRange(0, LeftActorToFollow.Num() -1)];
 			break;
 		case ETargetZombiePoint::Right:
-			NewZombie->FirstActorToFollower = RightActorToFollow;
+			NewZombie->FirstActorToFollower = RightActorToFollow[FMath::RandRange(0, RightActorToFollow.Num() -1)];
 			break;
 		case ETargetZombiePoint::MiddleDown:
 		default:
-			NewZombie->FirstActorToFollower = MainActorToFollow;
+			NewZombie->FirstActorToFollower = MainActorToFollow[mainActor];
 			break;
 		}
 
@@ -202,79 +229,47 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 void AHordeManager::InitHordeZombies()
 {
 	if (!bCanSpawnHorde){return;}
-	//ajouter à la vitesse du camion
 	FinalZombieSpeed = (FoodTruck->TruckMaxSpeed + DifferenceBetweenFoodTruck) * KilometersToMetersConvertingValue;
 
-	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Food truck value : %f"), FoodTruck->TruckMaxSpeed));
-	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("Diff value : %f"), DifferenceBetweenFoodTruck * KilometersToMetersConvertingValue));
-	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("zombie value : %f"), FinalZombieSpeed));
-	//TArray<TArray<UStaticMeshComponent*>> Components;
-
-	//c est moche faut pas voir ça
-#pragma region Moche a modif
-	TArray<UStaticMeshComponent*> Components;
-	MainActorToFollow->GetComponents<UStaticMeshComponent>(Components);
-	for (auto Component : Components)
-	{
-		if (!Component){return;}
-		Component->SetCanEverAffectNavigation(false);
-	}
-	RightActorToFollow->GetComponents<UStaticMeshComponent>(Components);
-	for (auto Component : Components)
-	{
-		if (!Component){return;}
-		Component->SetCanEverAffectNavigation(false);
-	}
-	LeftActorToFollow->GetComponents<UStaticMeshComponent>(Components);
-	for (auto Component : Components)
-	{
-		if (!Component){return;}
-		Component->SetCanEverAffectNavigation(false);
-	}
-	ForwardActorToFollow->GetComponents<UStaticMeshComponent>(Components);
-	for (auto Component : Components)
-	{
-		if (!Component){return;}
-		Component->SetCanEverAffectNavigation(false);
-	}
-	BackwardActorToFollow->GetComponents<UStaticMeshComponent>(Components);
-	for (auto Component : Components)
-	{
-		if (!Component){return;}
-		Component->SetCanEverAffectNavigation(false);
-	}
+// #pragma region Moche a modif
+// 	TArray<UStaticMeshComponent*> Components;
+// 	MainActorToFollow->GetComponents<UStaticMeshComponent>(Components);
+// 	for (auto Component : Components)
+// 	{
+// 		if (!Component){return;}
+// 		Component->SetCanEverAffectNavigation(false);
+// 	}
+// 	RightActorToFollow->GetComponents<UStaticMeshComponent>(Components);
+// 	for (auto Component : Components)
+// 	{
+// 		if (!Component){return;}
+// 		Component->SetCanEverAffectNavigation(false);
+// 	}
+// 	LeftActorToFollow->GetComponents<UStaticMeshComponent>(Components);
+// 	for (auto Component : Components)
+// 	{
+// 		if (!Component){return;}
+// 		Component->SetCanEverAffectNavigation(false);
+// 	}
+// 	ForwardActorToFollow->GetComponents<UStaticMeshComponent>(Components);
+// 	for (auto Component : Components)
+// 	{
+// 		if (!Component){return;}
+// 		Component->SetCanEverAffectNavigation(false);
+// 	}
+// 	BackwardActorToFollow->GetComponents<UStaticMeshComponent>(Components);
+// 	for (auto Component : Components)
+// 	{
+// 		if (!Component){return;}
+// 		Component->SetCanEverAffectNavigation(false);
+// 	}
 #pragma endregion
 }
 
 void AHordeManager::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!RightActorToFollow)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : RightActorToFollow is not assigned !"));
-		bCanSpawnHorde = false;
-		Destroy();
-	}
-	if (!LeftActorToFollow)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : LeftActorToFollow is not assigned !"));
-		bCanSpawnHorde = false;
-		Destroy();
-
-	}
-	if (!MainActorToFollow)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : MainActorToFollow is not assigned !"));
-		bCanSpawnHorde = false;
-		Destroy();
-
-	}
-	if (!ForwardActorToFollow)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Horde Manager : ForwardActorToFollow is not assigned !"));
-		bCanSpawnHorde = false;
-		Destroy();
-	}
+	FindTargetPoints();
 }
 
 void AHordeManager::HandleZombieDied(AZombieIA* Zombie, AActor* Killer)

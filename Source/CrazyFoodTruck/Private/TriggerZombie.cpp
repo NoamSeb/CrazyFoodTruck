@@ -28,18 +28,6 @@ void ATriggerZombie::BeginPlay()
         AActor* hordeActor = UGameplayStatics::GetActorOfClass(GetWorld(), AHordeManager::StaticClass());
         HordeManager = Cast<AHordeManager>(hordeActor);
     }
-
-	// Basic identity
-	FString me = GetName();
-	// List all components on THIS actor
-	TArray<UChildActorComponent*> Comps;
-	for (auto Comp : Comps)
-    {
-        FString compName = Comp->GetName();
-        FString compClass = Comp->GetClass()->GetName();
-        GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Cyan,
-            FString::Printf(TEXT(" - %s (%s)"), *compName, *compClass));
-    }
 }
 
 void ATriggerZombie::Initialize(AHordeManager* NewHordeManager)

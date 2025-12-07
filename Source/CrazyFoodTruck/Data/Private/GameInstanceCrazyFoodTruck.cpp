@@ -100,7 +100,7 @@ int32 UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
 void UGameInstanceCrazyFoodTruck::InitLobbySlots()
 {
 	PlayerSlots.Empty();
-	PlayerSlots.SetNum(4);
+	PlayerSlots.SetNum(3);
 
 	for (int32 i = 0; i < PlayerSlots.Num(); ++i)
 	{

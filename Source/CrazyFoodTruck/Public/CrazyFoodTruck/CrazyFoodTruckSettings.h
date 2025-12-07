@@ -25,7 +25,4 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category="Characters")
 	TSubclassOf<ACrazyFoodTruckCharacter> CrazyFoodTruckCharacterClassP2;
-
-	UPROPERTY(Config, EditAnywhere, Category="Characters")
-	TSubclassOf<ACrazyFoodTruckCharacter> CrazyFoodTruckCharacterClassP3;
 };

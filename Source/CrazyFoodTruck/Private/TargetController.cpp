@@ -13,34 +13,37 @@ ATargetController::ATargetController()
 void ATargetController::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!TargetPawn)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TargetController : TargetPawn is not assigned !"));
-	}
+	SetTargetPosition();
 }
 
-// Called every frame
-void ATargetController::Tick(float DeltaTime)
+void ATargetController::SetTargetPosition()
 {
-	Super::Tick(DeltaTime);
-	if (!TargetPawn){return;}
-
-	FVector TruckLocation = TargetPawn->GetActorLocation();
+	auto parent = GetAttachParentActor();
+	FVector TruckLocation = parent->GetActorLocation();
 	FVector Direction = FVector::Zero();
 	float CurrentLocationZ = GetActorLocation().Z;
 	
 	switch (SideTarget)
 	{
 	case ESideTarget::Left:
-		Direction = -TargetPawn->GetActorRightVector();
+		Direction = -parent->GetActorRightVector();
 		break;
 	case ESideTarget::Right:
-		Direction = TargetPawn->GetActorRightVector();
+		Direction = parent->GetActorRightVector();
+		break;
+	case  ESideTarget::Middle:
+		Direction = parent->GetActorRightVector();
 		break;
 	}
 	Direction.Normalize();
 	FVector TargetLocation = (DistanceLenght * Direction) + TruckLocation;
 	FVector FinalLocation = FVector(TargetLocation.X, TargetLocation.Y, CurrentLocationZ);
 	SetActorLocation(FinalLocation);
+}
+
+// Called every frame
+void ATargetController::Tick(float DeltaTime)
+{
+
 }
 

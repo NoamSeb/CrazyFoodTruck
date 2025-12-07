@@ -33,9 +33,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UChildActorComponent> Slot2Comp;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	TObjectPtr<UChildActorComponent> Slot3Comp;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lobby")
 	TSubclassOf<AMenuPlayerSlot3D> SlotClass;
 

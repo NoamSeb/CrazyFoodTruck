@@ -11,6 +11,20 @@
 #include "Materials/MaterialParameterCollection.h"
 #include "Materials/MaterialParameterCollectionInstance.h"
 
+namespace
+{
+	static int32 GetMaxGamepadPlayers()
+	{
+		const ULocalMultiplayerSettings* Settings = GetDefault<ULocalMultiplayerSettings>();
+		if (!Settings)
+		{
+			return 3;
+		}
+
+		return FMath::Clamp(Settings->NbMaxGamepads, 1, 3);
+	}
+}
+
 void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMappingType MappingType)
 {
 	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
@@ -25,15 +39,11 @@ void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMapp
 		return;
 	}
 
-	const int NbKeyboardProfiles = LocalMultiplayerSettings->GetNbKeyboardProfiles();
-	const int NbMaxGamepads = LocalMultiplayerSettings->NbMaxGamepads;
-	//const int TargetPlayers = FMath::Max(1, NbKeyboardProfiles + NbMaxGamepads);
+	const int32 TargetPlayers = GetMaxGamepadPlayers();
 
-	const int TargetPlayers = 4;
-	
 	while (GameInstance->GetLocalPlayers().Num() < TargetPlayers)
 	{
-		const int ControllerId = GameInstance->GetLocalPlayers().Num();
+		const int32 ControllerId = GameInstance->GetLocalPlayers().Num();
 		FString OutError;
 		GameInstance->CreateLocalPlayer(ControllerId, OutError, true);
 	}
@@ -90,6 +100,12 @@ int ULocalMultiplayerSubsystem::AssignNewPlayerToGamepadDeviceID(int DeviceID)
 	if (PlayerIndex != -1)
 	{
 		return PlayerIndex;
+	}
+
+	const int32 MaxPlayers = GetMaxGamepadPlayers();
+	if (LastAssignedPlayerIndex >= MaxPlayers)
+	{
+		return -1;
 	}
 
 	const int AssignedPlayerIndex = LastAssignedPlayerIndex++;

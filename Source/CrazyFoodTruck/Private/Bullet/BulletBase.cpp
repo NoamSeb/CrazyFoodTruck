@@ -67,24 +67,7 @@ void ABulletBase::EnemyHitBlueprint(AActor* EntityActor, FVector LocationHit)
 	if (UActorComponent* RootComp = EntityActor->GetRootComponent())
 	{
 		AttachComp = Cast<USceneComponent>(RootComp);
-		GEngine ->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("XXXX   COMPONENT"));
 	}
-	if (!AttachComp)
-	{
-		AttachComp = EntityActor->FindComponentByClass<USkeletalMeshComponent>();
-		GEngine ->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("ATTACH SKELETAL MESH COMPONENT"));
-	}
-	if (!AttachComp)
-	{
-		AttachComp = EntityActor->FindComponentByClass<UStaticMeshComponent>();
-		GEngine ->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("ATTACH STATIC MESH COMPONENT"));
-	}
-	if (!AttachComp)
-	{
-		AttachComp = EntityActor->FindComponentByClass<UCapsuleComponent>();
-		GEngine ->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("ATTACH CAPSULE COMPONENT"));
-	}
-	
 	if (ZombieImpact)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAttached(ZombieImpact, AttachComp, NAME_None, LocationHit,GetActorRotation().GetInverse(), EAttachLocation::KeepWorldPosition, true);
