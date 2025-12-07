@@ -19,6 +19,8 @@ void ATargetController::BeginPlay()
 void ATargetController::SetTargetPosition()
 {
 	auto parent = GetAttachParentActor();
+
+	if ( !parent){return;}
 	FVector TruckLocation = parent->GetActorLocation();
 	FVector Direction = FVector::Zero();
 	float CurrentLocationZ = GetActorLocation().Z;
