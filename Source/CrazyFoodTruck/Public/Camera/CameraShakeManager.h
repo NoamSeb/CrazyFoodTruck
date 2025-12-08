@@ -7,6 +7,9 @@
 #include "GameFramework/Actor.h"
 #include "CameraShakeManager.generated.h"
 
+class UCameraShakeBase;
+class APlayerCameraManager;
+
 UCLASS()
 class CRAZYFOODTRUCK_API ACameraShakeManager : public AActor
 {
@@ -14,24 +17,27 @@ class CRAZYFOODTRUCK_API ACameraShakeManager : public AActor
 
 public:
 	ACameraShakeManager();
-	void PlayShake(ECameraShake shakeType);
-
 	
+	void PlayShake(ECameraShake ShakeType);
+
 protected:
 	virtual void BeginPlay() override;
 
-	// SHAKE REFERENCE
-
-	UPROPERTY(EditAnywhere, Category="Camera Shake")
+	UPROPERTY(EditAnywhere, Category = "Camera Shake")
 	TSubclassOf<UCameraShakeBase> FireBulletShake;
-	UPROPERTY(EditAnywhere, Category="Camera Shake")
+
+	UPROPERTY(EditAnywhere, Category = "Camera Shake")
 	TSubclassOf<UCameraShakeBase> ExplosionShake;
-	UPROPERTY(EditAnywhere, Category="Camera Shake")
-    TSubclassOf<UCameraShakeBase> ZombieHitShake;
-	
-	//
-	APlayerCameraManager* PlayerCameraManager;
-	private :
+
+	UPROPERTY(EditAnywhere, Category = "Camera Shake")
+	TSubclassOf<UCameraShakeBase> ZombieHitShake;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Shake")
+	TSubclassOf<UCameraShakeBase> CalmAmbientShake;
+
+	APlayerCameraManager* PlayerCameraManager = nullptr;
+
+private:
 	void CheckEachShakeReference();
 	 
 public:
