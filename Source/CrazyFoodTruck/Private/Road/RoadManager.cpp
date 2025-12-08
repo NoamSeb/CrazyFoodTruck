@@ -47,7 +47,7 @@ void ARoadManager::SpawnRoadSegment()
     int LevelNumber = GI->GameData->LevelNumber;
     
 
-    UDataTable* LevelDataTable = Levels[LevelNumber];
+    UDataTable* LevelDataTable = Levels[LevelNumber].Level;
     if (!LevelDataTable)
     {
         UE_LOG(LogTemp, Error, TEXT("DataTable not found"));
