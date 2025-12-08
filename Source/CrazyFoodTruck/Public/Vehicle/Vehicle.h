@@ -217,6 +217,8 @@ private:
 	bool bIsBoosted = false;
 	FTimerHandle BoostTimer;
 
+	FTimerHandle ForwardCaptureTimerHandle;
+
 private:
 	UFUNCTION()
 	void MoveForward();
@@ -310,7 +312,7 @@ private:
 	void HideWidgetCamera();
 
 	void CaptureForwardOnce();
-
-	void UpdateForwardCapture(float DeltaTime);
+	
+	void DoForwardCapture();
 	bool ShouldCaptureForward() const;
 };

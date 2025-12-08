@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "StructLevels.h"
 #include "GameFramework/Actor.h"
 #include "RoadManager.generated.h"
 
@@ -19,8 +20,8 @@ public:
 	UPROPERTY()
 	TArray<TObjectPtr<ARoad>> RoadsSegments;
 
-	UPROPERTY(EditAnywhere)
-	TArray<TObjectPtr<UDataTable>> Levels;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FStructLevels> Levels;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ARoad> SurvivorCamp;
