@@ -136,4 +136,5 @@ private:
 	UFUNCTION()
 	void HandleZombieDied(AZombieIA* Zombie, AActor* Killer);
 
+	void ShowSpawnIndicatorForTarget(ETargetZombiePoint TargetPoint);
 };
