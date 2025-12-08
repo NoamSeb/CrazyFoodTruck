@@ -78,6 +78,56 @@ void AHordeManager::ClearSpawnArea()
 	ListSpawnArea.Empty();
 }
 
+void AHordeManager::ShowSpawnIndicatorForTarget(ETargetZombiePoint TargetPoint)
+{
+	if (!ZombieSpawnIndicatorWidgetClass)
+	{
+		return;
+	}
+
+	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	if (!PC)
+	{
+		return;
+	}
+
+	int32 ViewX = 0;
+	int32 ViewY = 0;
+	PC->GetViewportSize(ViewX, ViewY);
+
+	const FVector2D ViewportSize(ViewX, ViewY);
+	FVector2D ScreenPos(0.f, 0.f);
+
+	const float Padding = 100.f;
+
+	switch (TargetPoint)
+	{
+	case ETargetZombiePoint::Left:
+		ScreenPos.X = Padding;
+		ScreenPos.Y = ViewportSize.Y * 0.5f;
+		break;
+
+	case ETargetZombiePoint::Right:
+		ScreenPos.X = ViewportSize.X - Padding;
+		ScreenPos.Y = ViewportSize.Y * 0.5f;
+		break;
+
+	case ETargetZombiePoint::MiddleDown:
+	default:
+		ScreenPos.X = ViewportSize.X * 0.5f;
+		ScreenPos.Y = ViewportSize.Y - Padding;
+		break;
+	}
+
+	UUserWidget* SpawnIndicator = CreateWidget<UUserWidget>(PC, ZombieSpawnIndicatorWidgetClass);
+	if (SpawnIndicator)
+	{
+		SpawnIndicator->AddToViewport();
+		SpawnIndicator->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
+		SpawnIndicator->SetPositionInViewport(ScreenPos, true);
+	}
+}
+
 void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* ZoneSpawn, ETargetZombiePoint targetPoint)
 {
 	if (!GEngine)
@@ -129,49 +179,7 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 	const FVector BoxExtent = ZoneSpawn->NewBoxAreaSpawn->GetScaledBoxExtent();
 	const FVector BoxCenter = ZoneSpawn->NewBoxAreaSpawn->GetComponentLocation();
 
-	if (ZombieSpawnIndicatorWidgetClass)
-	{
-		APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-		if (PC)
-		{
-			int32 ViewX = 0;
-			int32 ViewY = 0;
-			PC->GetViewportSize(ViewX, ViewY);
-
-			const FVector2D ViewportSize(ViewX, ViewY);
-			FVector2D ScreenPos(0.f, 0.f);
-
-			bool bProjected = PC->ProjectWorldLocationToScreen(BoxCenter, ScreenPos, false);
-
-			if (!bProjected)
-			{
-				ScreenPos.X = ViewportSize.X * 0.5f;
-				ScreenPos.Y = ViewportSize.Y * 0.5f;
-			}
-
-			UUserWidget* SpawnIndicator = CreateWidget<UUserWidget>(PC, ZombieSpawnIndicatorWidgetClass);
-			if (SpawnIndicator)
-			{
-				SpawnIndicator->AddToViewport();
-				SpawnIndicator->SetAlignmentInViewport(FVector2D(0.5f, 0.5f));
-
-				const FVector2D IndicatorSize = SpawnIndicator->GetDesiredSize();
-				const FVector2D HalfSize = IndicatorSize * 0.5f;
-
-				const float Padding = 50.f;
-
-				const float MinX = HalfSize.X + Padding;
-				const float MaxX = ViewportSize.X - HalfSize.X - Padding;
-				const float MinY = HalfSize.Y + Padding;
-				const float MaxY = ViewportSize.Y - HalfSize.Y - Padding;
-
-				ScreenPos.X = FMath::Clamp(ScreenPos.X, MinX, MaxX);
-				ScreenPos.Y = FMath::Clamp(ScreenPos.Y, MinY, MaxY);
-
-				SpawnIndicator->SetPositionInViewport(ScreenPos, true);
-			}
-		}
-	}
+	ShowSpawnIndicatorForTarget(targetPoint);
 
 	for (int32 i = 0; i < nombreZombies; ++i)
 	{
