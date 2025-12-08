@@ -38,10 +38,6 @@ void ATurretController::BeginPlay()
 		{
 			_CanonToRotate = Cast<USceneComponent>(SceneComponent);
 		}
-		// if (SceneComponent->GetName() == "SC_CursorJoint")
-  //       {
-  //           _JointCursor = Cast<USceneComponent>(SceneComponent);
-  //       }
 	}
 	
 	SwitchBulletType(TruckSubSystem->TypeBullet);
@@ -464,6 +460,8 @@ void ATurretController::InputYaw(const FInputActionValue& Value) // depth (X)
 
 void ATurretController::UpdateTurretCanonRotation()
 {
+	if (!_JointCursor){return;}
+	if (!_CanonToRotate){return;}
 	if (_CanonToRotate)
 	{
 		FVector cursorPosition = _JointCursor->GetComponentLocation();
