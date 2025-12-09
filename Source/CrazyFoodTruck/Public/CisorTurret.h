@@ -22,6 +22,8 @@ public:
 
 	void TurretChangePosition(FVector NewPosition, float currentAlpha);
 
+	UFUNCTION(BlueprintImplementableEvent, Category="CisorTurret")
+	void SetAnimationAlpha(float Alpha);
 
 	UPROPERTY(EditAnywhere, Category="CisorTurret")
 	UCurveFloat* TurretCurve;
