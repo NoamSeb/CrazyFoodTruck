@@ -23,14 +23,14 @@ enum class ESfxType : uint8
 	ECC_RotateTurret UMETA(Displayname = "RotateTurret"),
 	// Truck Related
 	ECC_Accident UMETA(Displayname = "Accident"), // Done
-	ECC_HitZombie UMETA(Displayname = "HitZombie"),
-	ECC_ZombieDeath UMETA(Displayname = "ZombieDeath"),
-	ECC_Repair UMETA(Displayname = "Repair"),
-	// Obstacle
+	// Zombie Related
+	ECC_HitZombie UMETA(Displayname = "HitZombie"), // Done
+	ECC_ZombieDeath UMETA(Displayname = "ZombieDeath"), // Done
+	// Obstacle Related
 	ECC_RockDestruction UMETA(Displayname = "RockDestruction"), // Done
 	ECC_WoodDestruction UMETA(Displayname = "WoodDestruction"), // Done
 	ECC_MetalDestruction UMETA(Displayname = "MetalDestruction"), // Donne
-	// UI
+	// UI Related
 	ECC_PlayerVote UMETA(Displayname = "PlayerVote"),
 	ECC_UpdateModule UMETA(Displayname = "UpdateModule"),
 };
