@@ -9,7 +9,6 @@ ACisorTurret::ACisorTurret()
 void ACisorTurret::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ACisorTurret::Tick(float DeltaTime)
@@ -27,10 +26,7 @@ void ACisorTurret::TurretChangePosition(FVector NewPosition, float currentAlpha)
 	
 	if (!TurretCurve){return;}
 	float CurveValue = TurretCurve->GetFloatValue(currentAlpha);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Alpha : %f, Scale : %f "), currentAlpha, CurveValue));
-	FVector CurrentScale = GetActorScale3D();
-	CurrentScale.Y = CurveValue;
-	SetActorScale3D(CurrentScale);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(" Value : %f, Alpha %f"), CurveValue, currentAlpha));
+	SetAnimationAlpha(CurveValue);
 }
 
