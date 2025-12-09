@@ -246,6 +246,7 @@ float ATurretController::GetCoolDownBetweenShoot()
 
 void ATurretController::AddRotationInput(float value)
 {
+	if (!TurretSpline) return;
 	currentStateSpline += (value * TurretRotationSpeed) * GetWorld()->GetDeltaSeconds();
 	float current = FMathf::Lerp(0.f, TurretSpline->GetSplineLenght(), currentStateSpline);
 	UpdateTurretOnSpline(current);
