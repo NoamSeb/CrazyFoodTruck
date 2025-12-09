@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CisorTurret.h"
+#include "CisorTurret.h"
 #include "Bullet/BulletBase.h"
 #include "Bullet/EBulletType.h"
 #include "InputMappingContext.h"
@@ -216,8 +218,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category="TurretParameters")
 	ASplineTurret* TurretSpline;
-	
-	
+
+	UPROPERTY(EditAnywhere, Category="TurretParameters")
+	ACisorTurret* CisorTurretActor;
 };
 
 
