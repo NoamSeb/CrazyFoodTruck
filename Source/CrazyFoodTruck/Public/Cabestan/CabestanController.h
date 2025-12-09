@@ -41,6 +41,9 @@ public:
 	bool CanPush() const;
 	bool CanBring() const;
 
+	void AddPlayerInside();
+	void RemovePlayerInside();
+
 private:
 	UGameInstanceCrazyFoodTruck* GI;
 	UFoodTruckDataSubSystem* TruckSubSystem;
@@ -52,4 +55,6 @@ private:
 	
 	float towardInput = 0.f;
 	float backwardInput = 0.f;
+
+	int PlayerInsideCount = 0;
 };

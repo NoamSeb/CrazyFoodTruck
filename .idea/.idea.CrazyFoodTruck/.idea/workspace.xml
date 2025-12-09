@@ -15,7 +15,11 @@
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Upgrade.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Upgrade.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Camera/BP_CrazyFoodTruckCameraActor.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Camera/BP_CrazyFoodTruckCameraActor.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/SurvivorCamp.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/SurvivorCamp.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ScoreResultWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ScoreResultWidget.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -283,7 +287,9 @@
       <workItem from="1764844692283" duration="852000" />
       <workItem from="1764924847402" duration="793000" />
       <workItem from="1765121015871" duration="598000" />
-      <workItem from="1765182322279" duration="7792000" />
+      <workItem from="1765182322279" duration="9761000" />
+      <workItem from="1765210849206" duration="209000" />
+      <workItem from="1765268520909" duration="1409000" />
     </task>
     <servers />
   </component>
