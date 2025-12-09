@@ -31,24 +31,14 @@ void ACabestanController::Tick(float DeltaTime)
 	}
 }
 
-bool ACabestanController::CanPush()
+bool ACabestanController::CanPush() const
 {
-	FRotator CurrentRotation = GetActorRotation();
-	if (CurrentRotation.Yaw >= AngleMax)
-	{
-		return false;
-	}
-	return true;
+	return !LinkedTurretController->MaxTurnReached();
 }
 
-bool ACabestanController::CanBring()
+bool ACabestanController::CanBring() const
 {
-	FRotator CurrentRotation = GetActorRotation();
-	if (CurrentRotation.Yaw <= AngleMin)
-	{
-		return false;
-	}
-	return true;
+	return !LinkedTurretController->MinTurnReached();
 }
 
 void ACabestanController::ReceiveInputToward(float value)

@@ -3,6 +3,7 @@
 
 #include "CrazyFoodTruck/Public/TurretController.h"
 
+#include "MathUtil.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -100,7 +101,6 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 			
 			if (!ActualBulletPrefab)
 			{
-				// ActualBulletPrefab = ActualBulletStructure->BulletClass.LoadSynchronous();
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Bullet Class Loaded Synchronously !"));
 				if (!ActualBulletPrefab)
                 {
@@ -112,7 +112,6 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
         	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("No Bullet Class Assigned in DataTable !"));
         }
 
-		//Pour Upgrades
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Turquoise, FString::Printf(TEXT("value fireRate Truck : %f"), TruckSubSystem->TurretFireRate));
 
 		if (TruckSubSystem->TurretFireRate != 0)
@@ -129,34 +128,17 @@ void ATurretController::SwitchBulletType(EbulletType NewType)
 
 		BulletChooseForShoot.Damage = _CurrentBulletDamage;
 		BulletChooseForShoot.FireRate = _CurrentBulletFireRate;
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::FromInt(BulletChooseForShoot.Speed));
 		BulletChooseForShoot.Speed = BulletSpeed + TruckSubSystem->SpeedBullet;
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, FString::FromInt(BulletChooseForShoot.Speed));
 
 		_CurrentAmmoMax = BulletChooseForShoot.Ammo + TruckSubSystem->TurretMaxAmmo;
 
 		SetMaxAmmo(_CurrentAmmoMax);
-		//SetMaxAmmo(ActualBulletStructure->Ammo);
 	}
 	else
 	{
 		return;
 	}
-	
-	// FString FullPath = FString::Printf(TEXT("/Game/Resources/Bullet/%s.%s_C"), *TargetName, *TargetName);
-	// UE_LOG(LogTemp, Warning, TEXT("Trying to load class: %s"), *FullPath);
-	//
-	// UClass* LoadedClass = StaticLoadClass(ABulletBase::StaticClass(), nullptr, *FullPath);
-	// if (LoadedClass)
-	// {
-	// 	ActualBulletPrefab = LoadedClass;
-	// }
-	// else
-	// {
-	// 	ActualBulletPrefab = nullptr;
-	// 	UE_LOG(LogTemp, Error, TEXT("Failed to StaticLoadClass %s"), *FullPath);
-	// }
-	//
+
 	OnAmmoChanged.Broadcast(GetAmmo(),_CurrentAmmoMax);
 	OnTypeChangedGetAmmo.Broadcast(GetAmmo(),_CurrentAmmoMax);
 	OnAmmoTypeChanged.Broadcast(AreaRangeSide, AreaRangeDepht);
@@ -226,7 +208,6 @@ void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 		if (TruckSubSystem->IncreaseDamageWhenFullReload && !IsDamageAlreadyIncrease)
 		{
 			IsAmmoFullReload = true;
-			//BulletChooseForShoot.Damage += TruckSubSystem->DamageIncreaseWhenFullReload;
 			BulletChooseForShoot.Damage += 2;
 			TimerFullReload = TimeDamageWhenFullReload;
 			IsDamageAlreadyIncrease = true;
@@ -244,7 +225,6 @@ void ATurretController::SetMaxAmmo(int32 NewAmmo)
 
 void ATurretController::DecrementAmmo()
 {
-	//TruckSubSystem->TripleDamageFor10EBullet;
 	_CurrentAmmo -= 1;
 	if (_CurrentAmmo <= 0)
 	{
@@ -261,17 +241,15 @@ void ATurretController::BlueprintShoot()
 
 float ATurretController::GetCoolDownBetweenShoot()
 {
-	//return 0;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value fireRate : %f"), _CurrentBulletFireRate));
 	return _CurrentBulletFireRate;
 }
 
 void ATurretController::AddRotationInput(float value)
 {
-	float targetSpeed = value * (TurretRotationSpeed * GetWorld()->GetDeltaSeconds());
-	FRotator CurrentRotation = GetActorRotation();
-	FRotator NewRotation = FRotator(CurrentRotation.Pitch, CurrentRotation.Yaw + targetSpeed, CurrentRotation.Roll);
-	SetActorRotation(NewRotation);
+	if (!TurretSpline) return;
+	currentStateSpline += (value * TurretRotationSpeed) * GetWorld()->GetDeltaSeconds();
+	float current = FMathf::Lerp(0.f, TurretSpline->GetSplineLenght(), currentStateSpline);
+	UpdateTurretOnSpline(current);
 }
 
 
@@ -282,8 +260,6 @@ void ATurretController::Tick(float DeltaTime)
 	{
 		_CurrentCoolDown -= DeltaTime;
 	}
-
-
 	if (IsDamageAlreadyIncrease)
 	{
 		if (TimerFullReload > 0.f)
@@ -313,10 +289,7 @@ void ATurretController::Shoot()
 	}
 	if (_CurrentCoolDown > 0)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("value fireRate : %f"), _CurrentBulletFireRate));
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("value fireRate : %f"), _CurrentCoolDown));
-		
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Turret on Cooldown !"));
 		return;
 	}
 	if (_ActualPlayerReloading > 0)
@@ -376,24 +349,11 @@ void ATurretController::InputChangeBulletType(const FInputActionValue& Value)
 	{
 		nextType = EbulletType::BulletNormal;
 	}
-	
 	SwitchBulletType(nextType);
 }
 
 void ATurretController::InputShootTriggered(const FInputActionValue& Value)
 {
-	//if (TruckSubSystem->TripleDamageFor10EBullet)
-	//{
-	//	if (TruckSubSystem->indexBulletShoot >= 9)
-	//	{
-	//		BulletChooseForShoot.Damage = _CurrentBulletDamage * 3;
-	//		TruckSubSystem->indexBulletShoot = 0;
-	//	} else
-	//	{
-	//		BulletChooseForShoot.Damage = _CurrentBulletDamage;
-	//		TruckSubSystem->indexBulletShoot ++;
-	//	}
-	//}
 	Shoot();
 }
 
@@ -456,8 +416,6 @@ void ATurretController::InputYaw(const FInputActionValue& Value) // depth (X)
 	UpdateTurretCanonRotation();
 }
 
-
-
 void ATurretController::UpdateTurretCanonRotation()
 {
 	if (!_JointCursor){return;}
@@ -476,11 +434,41 @@ void ATurretController::SetCursorJoint(USceneComponent* NewJoint)
 	_JointCursor = NewJoint;
 }
 
+void ATurretController::UpdateTurretOnSpline(float alpha)
+{
+	if (!TurretSpline) return;
+
+	FVector StartPosition = FVector::ZeroVector;
+	FRotator StartRotation = FRotator::ZeroRotator;
+	
+	TurretSpline->GetTurretLocationAlongSpline(alpha, StartPosition, StartRotation);
+	
+	SetActorLocation(StartPosition);
+	SetActorRotation(StartRotation);
+}
+
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
 {
 	if (InteractBox)
 	{
 		InteractBox->UnpossessPawn();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player quit turret."));
 	}
+}
+
+bool ATurretController::MaxTurnReached()
+{
+	if (currentStateSpline >= 1.f)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool ATurretController::MinTurnReached()
+{
+	if (currentStateSpline <= 0.f)
+	{
+		return true;
+	}
+	return false;
 }
