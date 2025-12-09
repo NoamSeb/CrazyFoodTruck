@@ -111,6 +111,8 @@ void ASideCabestan::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		{
 			Eic->BindAction(QuitAction, ETriggerEvent::Started, this, &ASideCabestan::HandleQuit);
 		}
+
+		_CabestanController->AddPlayerInside();
 	}
 }
 
@@ -425,6 +427,7 @@ void ASideCabestan::HandleQuit(const FInputActionValue& Value)
 	{
 		bPlayerIn = false;
 		StopPush();
+		_CabestanController->RemovePlayerInside();
 		InteractBox->UnpossessPawn();
 	}
 }

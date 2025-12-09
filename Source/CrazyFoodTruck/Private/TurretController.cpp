@@ -249,7 +249,7 @@ void ATurretController::AddRotationInput(float value)
 	if (!TurretSpline) return;
 	currentStateSpline += (value * TurretRotationSpeed) * GetWorld()->GetDeltaSeconds();
 	float current = FMathf::Lerp(0.f, TurretSpline->GetSplineLenght(), currentStateSpline);
-	UpdateTurretOnSpline(current);
+	UpdateTurretOnSpline(current, current / TurretSpline->GetSplineLenght());
 }
 
 
@@ -434,17 +434,22 @@ void ATurretController::SetCursorJoint(USceneComponent* NewJoint)
 	_JointCursor = NewJoint;
 }
 
-void ATurretController::UpdateTurretOnSpline(float alpha)
+void ATurretController::UpdateTurretOnSpline(float currentDistance, float alphaDistance)
 {
 	if (!TurretSpline) return;
 
 	FVector StartPosition = FVector::ZeroVector;
 	FRotator StartRotation = FRotator::ZeroRotator;
 	
-	TurretSpline->GetTurretLocationAlongSpline(alpha, StartPosition, StartRotation);
+	TurretSpline->GetTurretLocationAlongSpline(currentDistance, StartPosition, StartRotation);
 	
 	SetActorLocation(StartPosition);
 	SetActorRotation(StartRotation);
+
+	if (CisorTurretActor)
+	{
+		CisorTurretActor->TurretChangePosition(StartPosition, alphaDistance);
+	}
 }
 
 void ATurretController::InputQuitTurret(const FInputActionValue& Value)
