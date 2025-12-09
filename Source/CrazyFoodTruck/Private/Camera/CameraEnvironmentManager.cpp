@@ -3,7 +3,6 @@
 #include "Camera/CameraEnvironmentManager.h"
 
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
-#include "../HordeManager.h"
 #include "Camera/ECameraShake.h"
 
 #include "GameFramework/SpringArmComponent.h"
@@ -31,8 +30,6 @@ void ACameraEnvironmentManager::BeginPlay()
 		DefaultRelativeLocation = TargetSpringArm->GetRelativeLocation();
 		DefaultRelativeRotation = TargetSpringArm->GetRelativeRotation();
 	}
-
-	FindHordeManager();
 }
 
 void ACameraEnvironmentManager::Tick(float DeltaTime)
@@ -44,119 +41,105 @@ void ACameraEnvironmentManager::Tick(float DeltaTime)
 		return;
 	}
 
-	UpdateState(DeltaTime);
-}
-
-void ACameraEnvironmentManager::FindHordeManager()
-{
-	if (!GetWorld()) return;
-
-	TArray<AActor*> Found;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AHordeManager::StaticClass(), Found);
-	if (Found.Num() > 0)
+	if (bIsBlending)
 	{
-		HordeManager = Cast<AHordeManager>(Found[0]);
+		UpdateBlend(DeltaTime);
 	}
 }
 
-bool ACameraEnvironmentManager::HasAnyZombie() const
+void ACameraEnvironmentManager::ActivateDynamicCamera(const FEnvCameraPreset& Preset)
 {
-	if (!HordeManager) return true;
-	return HordeManager->ListHordeZombie.Num() > 0;
-}
-
-void ACameraEnvironmentManager::UpdateState(float DeltaTime)
-{
-	const bool bHasZombies = HasAnyZombie();
-
-	if (bInEnvironmentMode && bHasZombies)
-	{
-		ExitEnvironmentMode();
-		return;
-	}
-
-	if (!bInEnvironmentMode && !bHasZombies && EnvCameraKeys.Num() > 0)
-	{
-		EnterEnvironmentMode();
-	}
-
-	if (!bInEnvironmentMode)
+	if (!TargetSpringArm || !bEnableEnvironmentMode)
 	{
 		return;
 	}
 
-	FEnvCameraKey& CurrentKey = EnvCameraKeys[CurrentKeyIndex];
+	ActivePreset = Preset;
 
-	if (BlendTimer < BlendTime)
-	{
-		BlendTimer += DeltaTime;
-		const float Alpha = FMath::Clamp(BlendTimer / BlendTime, 0.f, 1.f);
-		ApplyBlend(Alpha);
-		return;
-	}
+	StartBlend(true, ActivePreset.BlendTime);
 
-	HoldTimer += DeltaTime;
-	if (HoldTimer >= CurrentKey.HoldTime)
-	{
-		CurrentKeyIndex = (CurrentKeyIndex + 1) % EnvCameraKeys.Num();
-		StartBlendToCurrentKey();
-	}
-}
-
-void ACameraEnvironmentManager::EnterEnvironmentMode()
-{
-	bInEnvironmentMode = true;
-	CurrentKeyIndex = 0;
-	BlendTimer = 0.f;
-	HoldTimer = 0.f;
-	bHasTriggeredCalmShake = false;
-
-	StartBlendToCurrentKey();
-
-	if (CFTGameInstance && !bHasTriggeredCalmShake)
+	if (bPlayShakeOnActivate && CFTGameInstance)
 	{
 		CFTGameInstance->PlayerCameraShake(ECameraShake::CalmAmbient);
-		bHasTriggeredCalmShake = true;
 	}
 }
 
-void ACameraEnvironmentManager::ExitEnvironmentMode()
+void ACameraEnvironmentManager::DeactivateDynamicCamera(float BlendTimeOverride)
 {
-	bInEnvironmentMode = false;
-	bHasTriggeredCalmShake = false;
-	RestoreDefaultPose();
+	if (!TargetSpringArm || !bEnableEnvironmentMode)
+	{
+		return;
+	}
+
+	const float Duration = (BlendTimeOverride > 0.f) ? BlendTimeOverride : DefaultBlendBackTime;
+
+	StartBlend(false, Duration);
 }
 
-void ACameraEnvironmentManager::StartBlendToCurrentKey()
+void ACameraEnvironmentManager::StartBlend(bool bTowardsDynamic, float BlendDuration)
 {
-	if (!TargetSpringArm || EnvCameraKeys.Num() == 0) return;
+	if (!TargetSpringArm)
+	{
+		return;
+	}
 
+	bIsBlending = true;
+	bBlendToDynamic = bTowardsDynamic;
 	BlendTimer = 0.f;
-	HoldTimer = 0.f;
+	CurrentBlendDuration = FMath::Max(BlendDuration, 0.05f);
 
 	StartArmLength = TargetSpringArm->TargetArmLength;
 	StartRelLocation = TargetSpringArm->GetRelativeLocation();
-	StartRelRotation = TargetSpringArm->GetRelativeRotation();
 }
 
-void ACameraEnvironmentManager::ApplyBlend(float Alpha)
+void ACameraEnvironmentManager::UpdateBlend(float DeltaTime)
 {
-	if (!TargetSpringArm || EnvCameraKeys.Num() == 0) return;
+	if (!TargetSpringArm)
+	{
+		bIsBlending = false;
+		return;
+	}
 
-	const FEnvCameraKey& Key = EnvCameraKeys[CurrentKeyIndex];
+	BlendTimer += DeltaTime;
+	const float Alpha = FMath::Clamp(BlendTimer / CurrentBlendDuration, 0.f, 1.f);
 
-	const float NewArmLength = FMath::Lerp(StartArmLength, Key.TargetArmLength, Alpha);
-	const FVector NewLocation = FMath::Lerp(StartRelLocation, Key.RelativeLocation, Alpha);
+	ApplyBlend(Alpha, bBlendToDynamic);
+
+	if (Alpha >= 1.f)
+	{
+		bIsBlending = false;
+	}
+}
+
+void ACameraEnvironmentManager::ApplyBlend(float Alpha, bool bTowardsDynamic)
+{
+	if (!TargetSpringArm)
+	{
+		return;
+	}
+
+	float TargetArmLength;
+	FVector TargetLocation;
+
+	if (bTowardsDynamic)
+	{
+		TargetArmLength = ActivePreset.TargetArmLength;
+		TargetLocation = ActivePreset.RelativeLocation;
+	}
+	else
+	{
+		TargetArmLength = DefaultArmLength;
+		TargetLocation = DefaultRelativeLocation;
+	}
+
+	const float NewArmLength = FMath::Lerp(StartArmLength, TargetArmLength, Alpha);
+	const FVector NewLocation = FMath::Lerp(StartRelLocation, TargetLocation, Alpha);
 
 	TargetSpringArm->TargetArmLength = NewArmLength;
 	TargetSpringArm->SetRelativeLocation(NewLocation);
-}
 
-void ACameraEnvironmentManager::RestoreDefaultPose()
-{
-	if (!TargetSpringArm) return;
-
-	TargetSpringArm->TargetArmLength = DefaultArmLength;
-	TargetSpringArm->SetRelativeLocation(DefaultRelativeLocation);
-	TargetSpringArm->SetRelativeRotation(DefaultRelativeRotation);
+	if (!bTowardsDynamic)
+	{
+		TargetSpringArm->SetRelativeRotation(DefaultRelativeRotation);
+	}
 }

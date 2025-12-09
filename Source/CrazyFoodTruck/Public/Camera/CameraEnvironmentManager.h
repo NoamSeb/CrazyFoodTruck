@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+// CameraEnvironmentManager.h
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,10 +10,9 @@
 
 class USpringArmComponent;
 class UGameInstanceCrazyFoodTruck;
-class AHordeManager;
 
 USTRUCT(BlueprintType)
-struct FEnvCameraKey
+struct FEnvCameraPreset
 {
 	GENERATED_BODY()
 
@@ -21,8 +22,8 @@ struct FEnvCameraKey
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "100.0"))
 	float TargetArmLength = 800.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0.0"))
-	float HoldTime = 2.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0.05"))
+	float BlendTime = 1.5f;
 };
 
 UCLASS()
@@ -39,59 +40,59 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditInstanceOnly, Category = "EnvCam|Refs")
-	TObjectPtr<USpringArmComponent> TargetSpringArm = nullptr;
-
-	UPROPERTY(EditInstanceOnly, Category = "EnvCam|Refs")
 	TObjectPtr<AActor> TruckActor = nullptr;
 
-	UPROPERTY(Transient)
-	TObjectPtr<AHordeManager> HordeManager = nullptr;
+	UPROPERTY(EditInstanceOnly, Category = "EnvCam|Refs")
+	TObjectPtr<USpringArmComponent> TargetSpringArm = nullptr;
 
-	UPROPERTY(Transient)
+	UPROPERTY()
 	TObjectPtr<UGameInstanceCrazyFoodTruck> CFTGameInstance = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "EnvCam|Path")
-	TArray<FEnvCameraKey> EnvCameraKeys;
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Defaults")
+	float DefaultArmLength = 800.f;
 
-	UPROPERTY(EditAnywhere, Category = "EnvCam|Path", meta = (ClampMin = "0.1"))
-	float BlendTime = 1.5f;
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Defaults")
+	FVector DefaultRelativeLocation = FVector::ZeroVector;
 
-	UPROPERTY(EditAnywhere, Category = "EnvCam|Defaults")
-	float DefaultArmLength = 600.f;
-
-	UPROPERTY(EditAnywhere, Category = "EnvCam|Defaults")
-	FVector DefaultRelativeLocation = FVector(0.f, 0.f, 300.f);
-
-	UPROPERTY(EditAnywhere, Category = "EnvCam|Defaults")
-	FRotator DefaultRelativeRotation = FRotator(-60.f, 0.f, 0.f);
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Defaults")
+	FRotator DefaultRelativeRotation = FRotator::ZeroRotator;
 
 	UPROPERTY(EditAnywhere, Category = "EnvCam|Settings")
 	bool bEnableEnvironmentMode = true;
 
-	bool bInEnvironmentMode = false;
-	bool bHasTriggeredCalmShake = false;
+	UPROPERTY(EditAnywhere, Category = "EnvCam|Settings", meta = (ClampMin = "0.05"))
+	float DefaultBlendBackTime = 1.5f;
 
-	int32 CurrentKeyIndex = 0;
+	UPROPERTY(EditAnywhere, Category = "EnvCam|Settings")
+	bool bPlayShakeOnActivate = true;
 
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Runtime")
+	bool bIsBlending = false;
+
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Runtime")
+	bool bBlendToDynamic = false;
+
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Runtime")
 	float BlendTimer = 0.f;
-	float HoldTimer = 0.f;
+
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Runtime")
+	float CurrentBlendDuration = 1.0f;
 
 	float StartArmLength = 0.f;
 	FVector StartRelLocation = FVector::ZeroVector;
-	FRotator StartRelRotation = FRotator::ZeroRotator;
+
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Runtime")
+	FEnvCameraPreset ActivePreset;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "EnvCam")
+	void ActivateDynamicCamera(const FEnvCameraPreset& Preset);
+
+	UFUNCTION(BlueprintCallable, Category = "EnvCam")
+	void DeactivateDynamicCamera(float BlendTimeOverride = -1.f);
 
 private:
-	void UpdateState(float DeltaTime);
-
-	bool HasAnyZombie() const;
-
-	void FindHordeManager();
-
-	void EnterEnvironmentMode();
-	void ExitEnvironmentMode();
-
-	void StartBlendToCurrentKey();
-	void ApplyBlend(float Alpha);
-
-	void RestoreDefaultPose();
+	void StartBlend(bool bTowardsDynamic, float BlendDuration);
+	void UpdateBlend(float DeltaTime);
+	void ApplyBlend(float Alpha, bool bTowardsDynamic);
 };
