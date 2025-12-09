@@ -26,6 +26,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Animation/AnimInstanceProxy.h"
+#include "Road/RoadManager.h"
 
 AVehicle::AVehicle()
 {
@@ -271,7 +272,9 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		if (!MapAlreadyChange)
 		{
+			RoadManager->UnloadRoadSegments();
 			ChangeMap();
+			GlobalDynamicBuffer::GarbageCollect();
 			MapAlreadyChange = true;
 		}
 	}
@@ -603,8 +606,7 @@ void AVehicle::StartForwardCapture()
 void AVehicle::StopForwardCapture()
 {
 	if (!ForwardCapture) return;
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stopping Forward Capture"));
+	
 
 	bForwardCaptureActive = false;
 	ForwardCaptureTimer = 0.f;

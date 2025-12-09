@@ -37,8 +37,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void SpawnRoadSegment();
+	void UnloadRoadSegments();
 	void RegulateRoadSegmentsPosition(TObjectPtr<ARoad> RoadToMove, int LoopStep);
 
 	void SpawnTileToSurvivorCamp(FVector Location, FRotator Rotation);
 	void GetRoadSegmentFromLevelDataTable(UClass* &RoadClass, UDataTable* &LevelDataTable, uint8* &RowData);
+
+private:
+	TArray<TObjectPtr<ARoad>> SpawnedRoadsSegments;
 };
