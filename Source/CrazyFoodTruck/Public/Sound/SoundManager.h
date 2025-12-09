@@ -32,7 +32,7 @@ enum class ESfxType : uint8
 	ECC_MetalDestruction UMETA(Displayname = "MetalDestruction"), // Donne
 	// UI Related
 	ECC_PlayerVote UMETA(Displayname = "PlayerVote"),
-	ECC_UpdateModule UMETA(Displayname = "UpdateModule"),
+	ECC_UpdateModule UMETA(Displayname = "UpdateModule"), // Done
 };
 
 USTRUCT(BlueprintType)
@@ -71,5 +71,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Sound Manager")
 	void PlaySFX(ESfxType SfxType, UObject* WorldContext);
+	
+	UFUNCTION(BlueprintCallable, Category="Sound Manager")
+	void PlaySFXWithIndex(ESfxType SfxType, UObject* WorldContext, int index);
 	
 };
