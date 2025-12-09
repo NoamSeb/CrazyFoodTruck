@@ -14,6 +14,7 @@
 
 #include "Vehicle.generated.h"
 
+class ARoadManager;
 class UBoxComponent;
 class UCurveFloat;
 class UInputAction;
@@ -66,6 +67,10 @@ public:
 	// ===== Interact =====
 	UPROPERTY(EditAnywhere, Category = "Interact")
 	TObjectPtr<AInteractBox> InteractBox;
+
+	// ===== Settings =====
+	UPROPERTY(EditAnywhere, Category = "Interact")
+	TObjectPtr<ARoadManager> RoadManager;
 
 	// ===== Input Data =====
 protected:
@@ -217,6 +222,8 @@ private:
 	bool bIsBoosted = false;
 	FTimerHandle BoostTimer;
 
+	FTimerHandle ForwardCaptureTimerHandle;
+
 private:
 	UFUNCTION()
 	void MoveForward();
@@ -310,7 +317,7 @@ private:
 	void HideWidgetCamera();
 
 	void CaptureForwardOnce();
-
-	void UpdateForwardCapture(float DeltaTime);
+	
+	void DoForwardCapture();
 	bool ShouldCaptureForward() const;
 };

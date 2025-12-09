@@ -38,8 +38,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	
-	bool CanPush();
-	bool CanBring();
+	bool CanPush() const;
+	bool CanBring() const;
 
 private:
 	UGameInstanceCrazyFoodTruck* GI;

@@ -26,6 +26,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Animation/AnimInstanceProxy.h"
+#include "Road/RoadManager.h"
 
 AVehicle::AVehicle()
 {
@@ -39,6 +40,8 @@ AVehicle::AVehicle()
 	ForwardCamRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ForwardCamRoot"));
 	ForwardCamRoot->SetupAttachment(RootComponent);
 
+	ForwardCamRoot->SetUsingAbsoluteRotation(true);
+	
 	ForwardCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("ForwardCapture"));
 	ForwardCapture->SetupAttachment(ForwardCamRoot);
 
@@ -109,6 +112,17 @@ void AVehicle::BeginPlay()
 	{
 		ForwardCamWidget = nullptr;
 	}
+	
+	if (ForwardCaptureInterval > 0.f)
+	{
+		GetWorldTimerManager().SetTimer(
+			ForwardCaptureTimerHandle,
+			this,
+			&AVehicle::DoForwardCapture,
+			ForwardCaptureInterval,
+			true
+		);
+	}
 }
 
 void AVehicle::PossessedBy(AController* NewController)
@@ -171,17 +185,7 @@ void AVehicle::UnPossessed()
 		MovementComponent->Velocity = SavedLinearVelocity;
 		MovementComponent->UpdateComponentVelocity();
 	}
-
-	// if (!bForwardCamAlwaysOn)
-	// {
-	// 	StopForwardCapture();
-	//
-	// 	if (ForwardCamWidget)
-	// 	{
-	// 		ForwardCamWidget->RemoveFromParent();
-	// 		ForwardCamWidget = nullptr;
-	// 	}
-	// }
+	
 }
 
 void AVehicle::Tick(float DeltaTime)
@@ -247,7 +251,6 @@ void AVehicle::Tick(float DeltaTime)
 		ForwardCapture->ClipPlaneNormal = ForwardCapture->GetForwardVector();
 	}
 
-	UpdateForwardCapture(DeltaTime);
 	ShootLineTrace(FEndOfTheRaceLocation);
 }
 
@@ -269,7 +272,9 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		if (!MapAlreadyChange)
 		{
+			RoadManager->UnloadRoadSegments();
 			ChangeMap();
+			GlobalDynamicBuffer::GarbageCollect();
 			MapAlreadyChange = true;
 		}
 	}
@@ -547,13 +552,22 @@ void AVehicle::ConfigureForwardCaptureQuality()
 {
 	if (!ForwardCapture) return;
 
+	const int32 NewWidth = 512;
+    const int32 NewHeight = 512;
+
+    ForwardRT->ResizeTarget(NewWidth, NewHeight);
+    
+	 ForwardCapture->bCaptureEveryFrame = false;
+     ForwardCapture->bCaptureOnMovement = false;
+     ForwardCapture->bAlwaysPersistRenderingState = true;
+            
 	auto& SF = ForwardCapture->ShowFlags;
 
 	SF.SetLighting(true);
-	SF.SetPostProcessing(true);
+	SF.SetPostProcessing(false);
 	SF.SetTemporalAA(true);
 
-	SF.SetAtmosphere(false);
+	SF.SetAtmosphere(true);
 	SF.SetFog(false);
 
 	SF.SetScreenSpaceReflections(false);
@@ -592,8 +606,7 @@ void AVehicle::StartForwardCapture()
 void AVehicle::StopForwardCapture()
 {
 	if (!ForwardCapture) return;
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stopping Forward Capture"));
+	
 
 	bForwardCaptureActive = false;
 	ForwardCaptureTimer = 0.f;
@@ -643,17 +656,13 @@ void AVehicle::CaptureForwardOnce()
 	ForwardCapture->TextureTarget = nullptr;
 }
 
-void AVehicle::UpdateForwardCapture(float DeltaTime)
+void AVehicle::DoForwardCapture()
 {
 	if (!bForwardCaptureActive || !ForwardCapture || !ForwardRT) return;
 	if (!ShouldCaptureForward()) return;
+	
 
-	ForwardCaptureTimer += DeltaTime;
-	if (ForwardCaptureTimer < ForwardCaptureInterval) return;
-
-	ForwardCaptureTimer = 0.f;
-
-	ForwardCapture->CaptureScene();
+	ForwardCapture->CaptureSceneDeferred();
 }
 
 bool AVehicle::ShouldCaptureForward() const

@@ -47,17 +47,15 @@ void ARoadManager::SpawnRoadSegment()
     int LevelNumber = GI->GameData->LevelNumber;
     
 
-    UDataTable* LevelDataTable = Levels[LevelNumber];
+    UDataTable* LevelDataTable = Levels[LevelNumber].Level;
     if (!LevelDataTable)
     {
-        UE_LOG(LogTemp, Error, TEXT("DataTable not found"));
         return;
     }
     
     TArray<FName> RowNames = LevelDataTable->GetRowNames();
     if (RowNames.Num() == 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("No rows found in DataTable"));
         return;
     }
 
@@ -84,10 +82,19 @@ void ARoadManager::SpawnRoadSegment()
                 RegulateRoadSegmentsPosition(CurrentRoad, i);
         }
     }
-
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Je suis juste avant spawn");
     SpawnTileToSurvivorCamp(SpawnLocation, SpawnRotation);
    
+}
+
+/// Destroy All road Segments in the level to avoid overload when going back to road Scene
+/// Then call the Garbage Collector to force the removal of unuse assets
+void ARoadManager::UnloadRoadSegments()
+{
+    for(int i = 0; i < RoadsSegments.Num(); ++i)
+    {
+        RoadsSegments[i]->Destroy();
+    }
+    GlobalDynamicBuffer::GarbageCollect();
 }
 
 /// Place correctly the road segments to make the start point's position equal to previous end point's position
@@ -110,7 +117,7 @@ void ARoadManager::SpawnTileToSurvivorCamp(FVector Location, FRotator Rotation)
 {
     if (SurvivorCamp)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "SPAWNNNNNNNNNNNNN");
+       
 
         ARoad* SurvivorCampRoad = GetWorld()->SpawnActor<ARoad>(SurvivorCamp, Location, Rotation);
         RegulateRoadSegmentsPosition(SurvivorCampRoad, RoadsSegments.Num());

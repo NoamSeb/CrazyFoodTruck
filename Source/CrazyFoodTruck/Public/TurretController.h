@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CisorTurret.h"
+#include "CisorTurret.h"
 #include "Bullet/BulletBase.h"
 #include "Bullet/EBulletType.h"
 #include "InputMappingContext.h"
@@ -10,7 +12,9 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "SplineTurret.h"
 #include "Bullet/FBulletStructure.h"
+#include "Components/SplineComponent.h"
 #include "CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
@@ -75,6 +79,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="Events")
 	FOnPlayerReload OnPlayerReload;
+
+	UPROPERTY(EditAnywhere, Category="Turret|Spline")
+	float currentStateSpline = 0.5f;
+
 protected:
 
 
@@ -137,6 +145,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<APlayerController> PlayerController;
 	
+	bool MaxTurnReached();
+	bool MinTurnReached();
 
 private:
 
@@ -203,7 +213,14 @@ private:
 	void SetCursorJoint(USceneComponent* NewJoint);
 
 	int32 mappingPriority = 0;
+
+	void UpdateTurretOnSpline(float alpha);
 	
+	UPROPERTY(EditAnywhere, Category="TurretParameters")
+	ASplineTurret* TurretSpline;
+
+	UPROPERTY(EditAnywhere, Category="TurretParameters")
+	ACisorTurret* CisorTurretActor;
 };
 
 
