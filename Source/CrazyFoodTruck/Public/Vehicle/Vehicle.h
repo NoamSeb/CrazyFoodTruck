@@ -14,6 +14,7 @@
 
 #include "Vehicle.generated.h"
 
+class ARoadManager;
 class UBoxComponent;
 class UCurveFloat;
 class UInputAction;
@@ -66,6 +67,10 @@ public:
 	// ===== Interact =====
 	UPROPERTY(EditAnywhere, Category = "Interact")
 	TObjectPtr<AInteractBox> InteractBox;
+
+	// ===== Settings =====
+	UPROPERTY(EditAnywhere, Category = "Interact")
+	TObjectPtr<ARoadManager> RoadManager;
 
 	// ===== Input Data =====
 protected:
