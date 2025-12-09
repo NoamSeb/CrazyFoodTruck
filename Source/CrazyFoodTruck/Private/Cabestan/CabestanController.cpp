@@ -15,6 +15,7 @@ void ACabestanController::BeginPlay()
 	{
 		GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
 	}
+	
 	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
 
 	CurrentRotationSpeed = RotationSpeed + TruckSubSystem->RotationSpeed;
@@ -23,6 +24,7 @@ void ACabestanController::BeginPlay()
 void ACabestanController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (PlayerInsideCount <= 0){return;}
 	float value = towardInput - backwardInput;
 	AddRotationInput(value);
 	if (LinkedTurretController)
@@ -31,24 +33,28 @@ void ACabestanController::Tick(float DeltaTime)
 	}
 }
 
-bool ACabestanController::CanPush()
+bool ACabestanController::CanPush() const
 {
-	FRotator CurrentRotation = GetActorRotation();
-	if (CurrentRotation.Yaw >= AngleMax)
-	{
-		return false;
-	}
-	return true;
+	return !LinkedTurretController->MaxTurnReached();
 }
 
-bool ACabestanController::CanBring()
+bool ACabestanController::CanBring() const
 {
-	FRotator CurrentRotation = GetActorRotation();
-	if (CurrentRotation.Yaw <= AngleMin)
+	return !LinkedTurretController->MinTurnReached();
+}
+
+void ACabestanController::AddPlayerInside()
+{
+	PlayerInsideCount++;
+}
+
+void ACabestanController::RemovePlayerInside()
+{
+	PlayerInsideCount--;
+	if (PlayerInsideCount < 0)
 	{
-		return false;
+		PlayerInsideCount = 0;
 	}
-	return true;
 }
 
 void ACabestanController::ReceiveInputToward(float value)

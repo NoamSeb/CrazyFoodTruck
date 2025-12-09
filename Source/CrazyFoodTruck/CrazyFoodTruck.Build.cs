@@ -19,7 +19,8 @@ public class CrazyFoodTruck : ModuleRules
 			"Slate",     // <--- add this
 			"SlateCore",
 			"Niagara", // <--- add this
-			"MetasoundEngine"
+			"MetasoundEngine",
+			"RenderCore",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer" });
