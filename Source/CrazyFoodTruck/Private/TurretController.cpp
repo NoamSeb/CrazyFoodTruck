@@ -5,6 +5,7 @@
 
 #include "MathUtil.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundManager.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -201,6 +202,7 @@ void ATurretController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ATurretController::SetCurrentAmmo(int32 NewAmmo)
 {
+	
 	_CurrentAmmo = NewAmmo;
 
 	if (_CurrentAmmo >= _CurrentAmmoMax)
