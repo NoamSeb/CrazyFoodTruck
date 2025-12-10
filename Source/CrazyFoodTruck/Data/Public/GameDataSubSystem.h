@@ -27,4 +27,13 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EPhaseGameCrazyFoodTruckState CurrentGamePhase;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int NbrZombiesKill = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int NbrLevelFinish = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int NbrTicketsUse = 0;
 };
