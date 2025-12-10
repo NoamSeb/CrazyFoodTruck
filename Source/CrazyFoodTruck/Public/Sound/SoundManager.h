@@ -15,14 +15,24 @@ struct FKey;
 UENUM(BlueprintType)
 enum class ESfxType : uint8
 {
-	ECC_ClassicShoot UMETA(Displayname = "ClassicShoot"),
+	// Weapon Related
+	ECC_ClassicShoot UMETA(Displayname = "ClassicShoot"), // Done
 	ECC_ExplosivShoot UMETA(Displayname = "ExplosivShoot"),
-	ECC_Accident UMETA(Displayname = "Accident"),
-	ECC_HitZombie UMETA(Displayname = "HitZombie"),
-	ECC_ZombieDeath UMETA(Displayname = "ZombieDeath"),
-	ECC_RockDestruction UMETA(Displayname = "RockDestruction"),
-	ECC_WoodDestruction UMETA(Displayname = "WoodDestruction"),
-	ECC_MetalDestruction UMETA(Displayname = "MetalDestruction"),
+	ECC_GunSocket UMETA(Displayname = "GunSocket"), // Done
+	ECC_Reload UMETA(Displayname = "Reload"), // Done
+	ECC_RotateTurret UMETA(Displayname = "RotateTurret"),
+	// Truck Related
+	ECC_Accident UMETA(Displayname = "Accident"), // Done
+	// Zombie Related
+	ECC_HitZombie UMETA(Displayname = "HitZombie"), // Done
+	ECC_ZombieDeath UMETA(Displayname = "ZombieDeath"), // Done
+	// Obstacle Related
+	ECC_RockDestruction UMETA(Displayname = "RockDestruction"), // Done
+	ECC_WoodDestruction UMETA(Displayname = "WoodDestruction"), // Done
+	ECC_MetalDestruction UMETA(Displayname = "MetalDestruction"), // Donne
+	// UI Related
+	ECC_PlayerVote UMETA(Displayname = "PlayerVote"),
+	ECC_UpdateModule UMETA(Displayname = "UpdateModule"), // Done
 };
 
 USTRUCT(BlueprintType)
@@ -61,5 +71,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Sound Manager")
 	void PlaySFX(ESfxType SfxType, UObject* WorldContext);
-
+	
+	UFUNCTION(BlueprintCallable, Category="Sound Manager")
+	void PlaySFXWithIndex(ESfxType SfxType, UObject* WorldContext, int index);
+	
 };

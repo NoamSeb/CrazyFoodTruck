@@ -27,4 +27,5 @@ public:
 
 	UFUNCTION()
 	void GetTurretLocationAlongSpline(float DistanceAlongSpline, FVector& OutLocation, FRotator& OutRotation) const;
+	
 };
