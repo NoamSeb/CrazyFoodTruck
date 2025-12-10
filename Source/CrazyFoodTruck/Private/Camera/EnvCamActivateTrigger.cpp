@@ -53,6 +53,16 @@ void AEnvCamActivateTrigger::OnTriggerBegin(UPrimitiveComponent* OverlappedComp,
 
 	if (OtherActor->IsA(AVehicle::StaticClass()))
 	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				2.f,
+				FColor::Green,
+				TEXT("EnvCam ACTIVATE: Truck entered activate trigger")
+			);
+		}
+
 		EnvManager->ActivateDynamicCamera(CameraPreset);
 	}
 }

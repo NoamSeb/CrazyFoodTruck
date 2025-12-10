@@ -29,6 +29,20 @@ void AEnvCamDeactivateTrigger::BeginPlay()
 	{
 		TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AEnvCamDeactivateTrigger::OnTriggerBegin);
 	}
+
+	if (!EnvManager)
+	{
+		if (UWorld* World = GetWorld())
+		{
+			TArray<AActor*> FoundManagers;
+			UGameplayStatics::GetAllActorsOfClass(World, ACameraEnvironmentManager::StaticClass(), FoundManagers);
+
+			if (FoundManagers.Num() > 0)
+			{
+				EnvManager = Cast<ACameraEnvironmentManager>(FoundManagers[0]);
+			}
+		}
+	}
 }
 
 void AEnvCamDeactivateTrigger::OnTriggerBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -40,6 +54,16 @@ void AEnvCamDeactivateTrigger::OnTriggerBegin(UPrimitiveComponent* OverlappedCom
 
 	if (OtherActor->IsA(AVehicle::StaticClass()))
 	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				2.f,
+				FColor::Red,
+				TEXT("EnvCam DEACTIVATE: Truck entered deactivate trigger")
+			);
+		}
+
 		EnvManager->DeactivateDynamicCamera(BlendBackTime);
 	}
 }
