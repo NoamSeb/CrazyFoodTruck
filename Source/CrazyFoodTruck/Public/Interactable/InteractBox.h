@@ -31,6 +31,7 @@ public:
 	AInteractBox();
 
 	virtual void Tick(float DeltaSeconds) override;
+	void DetectPlayerAfterExit();
 	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
 	void TryInteractWithObject(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter);
 	void TryPossesPawn(APlayerController* InstigatorPlayerController);
@@ -204,6 +205,7 @@ private:
 	void TryReleaseLockFromActor(APlayerController* LeavingPlayerController);
 	bool PlayerStillInsideCheck(ACrazyFoodTruckCharacter* TargetCharacter);
 	ACrazyFoodTruckCharacter* DetectPlayerInside();
+	TArray<ACrazyFoodTruckCharacter*> DetectPlayersInside();
 
 	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
@@ -218,4 +220,7 @@ private:
 
 	UFUNCTION()
 	void OnRepairCompleted();
+
+	TArray<ACrazyFoodTruckCharacter*> PlayerDetected;
+	TArray<AActor*> DetectedActors;
 };
