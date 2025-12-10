@@ -44,9 +44,24 @@ void USoundManager::PlaySFXWithIndex(ESfxType SfxType, UObject* WorldContext, in
 	{
 		if (Row && Row->SoundType == SfxType && Row->MetaSound)
 		{
-			UAudioComponent* AC = UGameplayStatics::SpawnSound2D(WorldContext, Row->MetaSound);
-			AC->SetIntParameter("soundIndex", index);
-			AC->Play();
+			UAudioComponent* AC = UGameplayStatics::SpawnSound2D(
+				WorldContext,
+				Row->MetaSound,
+				1.0f,        
+				1.0f,        
+				0.0f,        
+				nullptr,     
+				false,       
+				false      
+			);
+			if(AC){
+				AC->SetIntParameter("soundIndex", index);
+				AC->Play();
+				UE_LOG(LogTemp, Error, TEXT("AC is null!"));
+			}else
+			{
+				UE_LOG(LogTemp, Error, TEXT("AC is null!"));
+			}
 			return;
 		}
 	}

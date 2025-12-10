@@ -13,4 +13,5 @@ enum ECameraShake : uint8
 	ZombieHit,
 	ObstacleHit,
 	ZombieCrush,
+	CalmAmbient
 };

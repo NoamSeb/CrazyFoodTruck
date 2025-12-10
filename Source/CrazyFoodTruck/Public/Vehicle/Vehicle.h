@@ -141,7 +141,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bShouldBounceBack = false;
-
+	
 	UFUNCTION(BlueprintCallable)
 	void SetTruckState(EVehicleStates NewState);
 	UFUNCTION(BlueprintCallable)
@@ -219,7 +219,7 @@ private:
 	FVector PossessKeepVelocity = FVector::ZeroVector;
 	bool bHoldSpeedAfterPossess = false;
 	float HoldSpeedTimer = 0.f;
-	
+
 	FTimerHandle BounceBackTimer;
 	bool bIsBoosted = false;
 	FTimerHandle BoostTimer;
