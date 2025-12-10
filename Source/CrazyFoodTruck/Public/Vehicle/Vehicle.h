@@ -139,6 +139,9 @@ public:
 
 	bool MapAlreadyChange;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bShouldBounceBack = false;
+
 	UFUNCTION(BlueprintCallable)
 	void SetTruckState(EVehicleStates NewState);
 	UFUNCTION(BlueprintCallable)
@@ -217,7 +220,6 @@ private:
 	bool bHoldSpeedAfterPossess = false;
 	float HoldSpeedTimer = 0.f;
 	
-	bool bShouldBounceBack = false;
 	FTimerHandle BounceBackTimer;
 	bool bIsBoosted = false;
 	FTimerHandle BoostTimer;
