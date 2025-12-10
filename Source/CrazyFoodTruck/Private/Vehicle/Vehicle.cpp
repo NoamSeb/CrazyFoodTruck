@@ -251,6 +251,19 @@ void AVehicle::Tick(float DeltaTime)
 		ForwardCapture->ClipPlaneNormal = ForwardCapture->GetForwardVector();
 	}
 
+	if (ForwardCamRoot)
+	{
+		const FRotator TruckRot = GetActorRotation();
+
+		const FRotator CamRot(
+			-5.f,
+			TruckRot.Yaw,
+			0.f
+		);
+
+		ForwardCamRoot->SetWorldRotation(CamRot);
+	}
+
 	ShootLineTrace(FEndOfTheRaceLocation);
 }
 
