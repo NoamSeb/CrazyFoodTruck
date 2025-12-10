@@ -39,8 +39,6 @@ AVehicle::AVehicle()
 	ForwardCamRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ForwardCamRoot"));
 	ForwardCamRoot->SetupAttachment(RootComponent);
 
-	ForwardCamRoot->SetUsingAbsoluteRotation(true);
-
 	ForwardCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("ForwardCapture"));
 	ForwardCapture->SetupAttachment(ForwardCamRoot);
 
@@ -250,6 +248,20 @@ void AVehicle::Tick(float DeltaTime)
 	}
 
 	UpdateForwardCapture(DeltaTime);
+
+	if (ForwardCamRoot)
+	{
+		const FRotator TruckRot = GetActorRotation();
+
+		const FRotator CamRot(
+			-5.f,
+			TruckRot.Yaw,
+			0.f
+		);
+
+		ForwardCamRoot->SetWorldRotation(CamRot);
+	}
+	
 	ShootLineTrace(FEndOfTheRaceLocation);
 }
 
