@@ -13,6 +13,16 @@ class UWidgetComponent;
 class USkeletalMeshComponent;
 class USkeletalMesh;
 
+USTRUCT(BlueprintType)
+struct FPreviewMeshStructure
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<USkeletalMesh> PreviewMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UMaterial> PreviewMaterial;
+	
+};
 UCLASS()
 class CRAZYFOODTRUCK_API AMenuPlayerSlot3D : public AActor
 {
@@ -31,7 +41,7 @@ protected:
 	int32 SlotIndex = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lobby|Preview")
-	TArray<TObjectPtr<USkeletalMesh>> PlayerPreviewMeshes;
+	TArray<FPreviewMeshStructure> PlayerPreviewMeshes;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> PedestalMesh;
