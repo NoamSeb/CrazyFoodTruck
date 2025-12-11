@@ -449,6 +449,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
                 }else
                 {
                     LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, false);
+                    CachedCharacter->MovementType = EMovementType::ECC_Push;
                 }
             }
         }
@@ -466,7 +467,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 void AInteractBox::UnpossessPawn()
 {
     OnPlayerQuit.Broadcast();
-    
+    CachedCharacter->MovementType = EMovementType::ECC_Idle;
     bPlayerIsControlling = false;
     CurrentInteractorPlayerController = nullptr;
 
