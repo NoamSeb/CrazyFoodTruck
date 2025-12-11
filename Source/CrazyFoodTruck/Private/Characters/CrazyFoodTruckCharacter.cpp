@@ -196,7 +196,7 @@ void ACrazyFoodTruckCharacter::BindInputMoveAction(UEnhancedInputComponent* Enha
     if (InputData && InputData->InputActionMove)
     {
         EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::OnInputMove);
-        EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Canceled, this, &ACrazyFoodTruckCharacter::OnStopMove);
+        EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Completed, this, &ACrazyFoodTruckCharacter::OnStopMove);
     }
 }
 
