@@ -21,8 +21,11 @@ AEnvCamActivateTrigger::AEnvCamActivateTrigger()
 
 	CamPreview = CreateDefaultSubobject<UBillboardComponent>(TEXT("CamPreview"));
 	CamPreview->SetupAttachment(RootComponent);
-	CamPreview->bIsScreenSizeScaled = true;
+
 	CamPreview->SetHiddenInGame(true);
+
+	CamPreview->Sprite = nullptr;
+	CamPreview->SetEditorScale(2.5f);
 }
 
 void AEnvCamActivateTrigger::BeginPlay()
