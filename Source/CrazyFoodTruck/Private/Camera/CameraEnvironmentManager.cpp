@@ -26,9 +26,9 @@ void ACameraEnvironmentManager::BeginPlay()
 
 	if (TargetSpringArm)
 	{
-		DefaultArmLength = TargetSpringArm->TargetArmLength;
 		DefaultRelativeLocation = TargetSpringArm->GetRelativeLocation();
 		DefaultRelativeRotation = TargetSpringArm->GetRelativeRotation();
+		DefaultArmLength = TargetSpringArm->TargetArmLength;
 	}
 }
 
@@ -88,8 +88,9 @@ void ACameraEnvironmentManager::StartBlend(bool bTowardsDynamic, float BlendDura
 	BlendTimer = 0.f;
 	CurrentBlendDuration = FMath::Max(BlendDuration, 0.05f);
 
-	StartArmLength = TargetSpringArm->TargetArmLength;
 	StartRelLocation = TargetSpringArm->GetRelativeLocation();
+	StartRelRotation = TargetSpringArm->GetRelativeRotation();
+	StartArmLength = TargetSpringArm->TargetArmLength;
 }
 
 void ACameraEnvironmentManager::UpdateBlend(float DeltaTime)
@@ -118,28 +119,28 @@ void ACameraEnvironmentManager::ApplyBlend(float Alpha, bool bTowardsDynamic)
 		return;
 	}
 
-	float TargetArmLength;
 	FVector TargetLocation;
+	FRotator TargetRotation;
+	float TargetArmLength;
 
 	if (bTowardsDynamic)
 	{
-		TargetArmLength = ActivePreset.TargetArmLength;
 		TargetLocation = ActivePreset.RelativeLocation;
+		TargetRotation = ActivePreset.RelativeRotation;
+		TargetArmLength = ActivePreset.TargetArmLength;
 	}
 	else
 	{
-		TargetArmLength = DefaultArmLength;
 		TargetLocation = DefaultRelativeLocation;
+		TargetRotation = DefaultRelativeRotation;
+		TargetArmLength = DefaultArmLength;
 	}
 
-	const float NewArmLength = FMath::Lerp(StartArmLength, TargetArmLength, Alpha);
 	const FVector NewLocation = FMath::Lerp(StartRelLocation, TargetLocation, Alpha);
+	const FRotator NewRotation = FMath::Lerp(StartRelRotation, TargetRotation, Alpha);
+	const float NewArmLength = FMath::Lerp(StartArmLength, TargetArmLength, Alpha);
 
-	TargetSpringArm->TargetArmLength = NewArmLength;
 	TargetSpringArm->SetRelativeLocation(NewLocation);
-
-	if (!bTowardsDynamic)
-	{
-		TargetSpringArm->SetRelativeRotation(DefaultRelativeRotation);
-	}
+	TargetSpringArm->SetRelativeRotation(NewRotation);
+	TargetSpringArm->TargetArmLength = NewArmLength;
 }
