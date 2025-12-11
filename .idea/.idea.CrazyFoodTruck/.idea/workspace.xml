@@ -15,9 +15,11 @@
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/CrazyFoodTruckEditor.target" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/Turret/Materials/Turret/Turret_Middle/M_Turret_Middle.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/Turret/Materials/Turret/Turret_Middle/M_Turret_Middle.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_MenuCamp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_MenuCamp.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_Upgrade.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_Upgrade.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
