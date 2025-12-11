@@ -467,7 +467,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 void AInteractBox::UnpossessPawn()
 {
     OnPlayerQuit.Broadcast();
-    
+    CachedCharacter->MovementType = EMovementType::ECC_Idle;
     bPlayerIsControlling = false;
     CurrentInteractorPlayerController = nullptr;
 
@@ -512,7 +512,6 @@ void AInteractBox::UnpossessPawn()
                 if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Pawn))
                 {
                     Character->SetFocusedInteractable(nullptr);
-                    Character->MovementType = EMovementType::ECC_Idle;
                 }
             }
         }
