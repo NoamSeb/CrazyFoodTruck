@@ -449,6 +449,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
                 }else
                 {
                     LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, false);
+                    CachedCharacter->MovementType = EMovementType::ECC_Push;
                 }
             }
         }
@@ -511,6 +512,7 @@ void AInteractBox::UnpossessPawn()
                 if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Pawn))
                 {
                     Character->SetFocusedInteractable(nullptr);
+                    Character->MovementType = EMovementType::ECC_Idle;
                 }
             }
         }
