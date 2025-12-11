@@ -3,6 +3,7 @@
 
 #include "MineExplosive.h"
 
+#include "NiagaraFunctionLibrary.h"
 
 
 class UGameInstanceCrazyFoodTruck;
@@ -88,5 +89,10 @@ void AMineExplosive::Explode()
     if (GI)
     {
         GI->PlayerCameraShake(Explosion);
+    }
+
+    if (ExplosionEffect)
+    {
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation(), GetActorRotation());
     }
 }

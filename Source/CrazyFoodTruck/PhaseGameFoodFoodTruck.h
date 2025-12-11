@@ -10,5 +10,6 @@ enum class EPhaseGameCrazyFoodTruckState : uint8
 	Menu = 0,
 	ChoosePlayers,
 	Route,
-	Amelioration
+	Amelioration,
+	Loose
 };

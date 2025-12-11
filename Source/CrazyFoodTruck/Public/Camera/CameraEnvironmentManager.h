@@ -19,6 +19,9 @@ struct FEnvCameraPreset
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector RelativeLocation = FVector::ZeroVector;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FRotator RelativeRotation = FRotator::ZeroRotator;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "100.0"))
 	float TargetArmLength = 800.f;
 
@@ -49,13 +52,13 @@ protected:
 	TObjectPtr<UGameInstanceCrazyFoodTruck> CFTGameInstance = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Defaults")
-	float DefaultArmLength = 800.f;
-
-	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Defaults")
 	FVector DefaultRelativeLocation = FVector::ZeroVector;
 
 	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Defaults")
 	FRotator DefaultRelativeRotation = FRotator::ZeroRotator;
+
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Defaults")
+	float DefaultArmLength = 800.f;
 
 	UPROPERTY(EditAnywhere, Category = "EnvCam|Settings")
 	bool bEnableEnvironmentMode = true;
@@ -80,6 +83,7 @@ protected:
 
 	float StartArmLength = 0.f;
 	FVector StartRelLocation = FVector::ZeroVector;
+	FRotator StartRelRotation = FRotator::ZeroRotator;
 
 	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Runtime")
 	FEnvCameraPreset ActivePreset;
