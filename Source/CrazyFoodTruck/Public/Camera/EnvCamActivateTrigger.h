@@ -9,6 +9,7 @@
 
 class UBoxComponent;
 class AVehicle;
+class UBillboardComponent;
 
 UCLASS()
 class CRAZYFOODTRUCK_API AEnvCamActivateTrigger : public AActor
@@ -28,7 +29,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnvCam")
 	FEnvCameraPreset CameraPreset;
 
+	UPROPERTY(VisibleAnywhere, Category = "EnvCam|Preview")
+	TObjectPtr<UBillboardComponent> CamPreview = nullptr;
+
 	virtual void BeginPlay() override;
+
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 	UFUNCTION()
 	void OnTriggerBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

@@ -39,8 +39,6 @@ AVehicle::AVehicle()
 
 	ForwardCamRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ForwardCamRoot"));
 	ForwardCamRoot->SetupAttachment(RootComponent);
-
-	ForwardCamRoot->SetUsingAbsoluteRotation(true);
 	
 	ForwardCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("ForwardCapture"));
 	ForwardCapture->SetupAttachment(ForwardCamRoot);
@@ -673,7 +671,6 @@ void AVehicle::DoForwardCapture()
 {
 	if (!bForwardCaptureActive || !ForwardCapture || !ForwardRT) return;
 	if (!ShouldCaptureForward()) return;
-	
 
 	ForwardCapture->CaptureSceneDeferred();
 }
