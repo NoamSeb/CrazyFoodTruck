@@ -107,6 +107,7 @@ void AVehicle::BeginPlay()
 	{
 		CreateWidgetCamera();
 		StartForwardCapture();
+		HideWidgetCamera();
 	}
 	else
 	{
@@ -652,6 +653,14 @@ void AVehicle::HideWidgetCamera()
 	if (ForwardCamWidget)
 	{
 		ForwardCamWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void AVehicle::ShowWidgetCamera()
+{
+	if (ForwardCamWidget)
+	{
+		ForwardCamWidget->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 

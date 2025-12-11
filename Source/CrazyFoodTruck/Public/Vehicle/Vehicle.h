@@ -318,6 +318,10 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	void HideWidgetCamera();
 
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
+	void ShowWidgetCamera();
+	
+
 	void CaptureForwardOnce();
 	
 	void DoForwardCapture();
