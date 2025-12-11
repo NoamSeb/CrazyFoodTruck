@@ -25,6 +25,16 @@ enum class EMovementFrame : uint8
 	Vehicle UMETA(DisplayName = "Vehicle")
 };
 
+/// Enum to separate differents anims characters has
+/// Idle | Walk | Push
+UENUM(BlueprintType)
+enum class EMovementType : uint8
+{
+	ECC_Idle   UMETA(DisplayName = "Idle"),
+	ECC_Run UMETA(DisplayName = "Run"),
+	ECC_Push UMETA(DisplayName = "Push")
+};
+
 UCLASS()
 class CRAZYFOODTRUCK_API ACrazyFoodTruckCharacter : public ACharacter, public IIPlayer
 {
@@ -39,8 +49,12 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override; 
 
 public:
+
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MovementSpeed = 600.f;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	EMovementType MovementType = EMovementType::ECC_Idle;
 
 	UPROPERTY(EditAnywhere, Category = "Movement|Frame")
 	EMovementFrame MovementFrame = EMovementFrame::Vehicle;
@@ -132,6 +146,7 @@ private:
 	void BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent);
 
 	void OnInputMove(const FInputActionValue& InputActionValue);
+	void OnStopMove();
 	void TryInteract();
 
 	void UpdatePlayerColorFromController();

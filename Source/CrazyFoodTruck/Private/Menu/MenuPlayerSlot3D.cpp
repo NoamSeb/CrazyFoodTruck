@@ -110,7 +110,9 @@ void AMenuPlayerSlot3D::RefreshFromSlotData()
 
 	if (PreviewMesh && PlayerPreviewMeshes.IsValidIndex(SlotIndex))
 	{
-		PreviewMesh->SetSkeletalMesh(PlayerPreviewMeshes[SlotIndex]);
+		PreviewMesh->SetSkeletalMesh(PlayerPreviewMeshes[SlotIndex].PreviewMesh);
+		PreviewMesh->SetMaterial(0,PlayerPreviewMeshes[SlotIndex].PreviewMaterial);
+		PreviewMesh->SetWorldScale3D(FVector(0.4f, 0.4f, 0.4f));
 		PreviewMesh->SetVisibility(true);
 	}
 
