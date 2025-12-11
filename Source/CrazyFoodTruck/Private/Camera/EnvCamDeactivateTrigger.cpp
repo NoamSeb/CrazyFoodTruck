@@ -8,7 +8,6 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Engine.h"
-#include "DrawDebugHelpers.h"
 
 AEnvCamDeactivateTrigger::AEnvCamDeactivateTrigger()
 {

@@ -5,9 +5,9 @@
 #include "CrazyFoodTruck/Public/Vehicle/Vehicle.h"
 
 #include "Components/BoxComponent.h"
+#include "Components/BillboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Engine.h"
-#include "DrawDebugHelpers.h"
 
 AEnvCamActivateTrigger::AEnvCamActivateTrigger()
 {
@@ -18,6 +18,14 @@ AEnvCamActivateTrigger::AEnvCamActivateTrigger()
 
 	TriggerBox->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerBox->SetGenerateOverlapEvents(true);
+
+	CamPreview = CreateDefaultSubobject<UBillboardComponent>(TEXT("CamPreview"));
+	CamPreview->SetupAttachment(RootComponent);
+
+	CamPreview->SetHiddenInGame(true);
+
+	CamPreview->Sprite = nullptr;
+	CamPreview->SetEditorScale(2.5f);
 }
 
 void AEnvCamActivateTrigger::BeginPlay()
@@ -41,6 +49,17 @@ void AEnvCamActivateTrigger::BeginPlay()
 				EnvManager = Cast<ACameraEnvironmentManager>(FoundManagers[0]);
 			}
 		}
+	}
+}
+
+void AEnvCamActivateTrigger::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	if (CamPreview)
+	{
+		CamPreview->SetRelativeLocation(CameraPreset.RelativeLocation);
+		CamPreview->SetRelativeRotation(CameraPreset.RelativeRotation);
 	}
 }
 

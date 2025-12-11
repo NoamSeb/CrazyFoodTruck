@@ -78,6 +78,7 @@ int32 UScoreManagerComponent::ComputeTotalScore(int32 TimeSeconds, int32 Zombies
 {
 	if (GameData)
 	{
+		GameData->NbrZombiesKill += ZombiesKilled;
 		FStructScoreLevel CurrentScoreLevel = GetScoreLevelData(GameData->LevelNumber);
 		OutTimeScore = EvaluateScore_Inverse(CurrentScoreLevel.TimeScoreTiers, TimeSeconds);
 		OutKillScore = EvaluateScore_Direct(CurrentScoreLevel.KillScoreTiers, ZombiesKilled);
