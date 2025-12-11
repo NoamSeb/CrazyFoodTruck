@@ -13,6 +13,7 @@ class CRAZYFOODTRUCK_API AModuleMine : public AModuleBase
 	GENERATED_BODY()
 
 public:
+	
 	AModuleMine();
 	UPROPERTY(editanywhere, Category="Module|Parameters")
 	USceneComponent* SpawnMinePoint;
@@ -21,6 +22,10 @@ public:
 	TSubclassOf<AMineExplosive> MinePrefab;
 	
 protected:
+
+	UPROPERTY(EditAnywhere , Category="Module|Parameters")
+	float VelocitySpawn = 500.f;
+	
 	virtual void BeginPlay() override;
 	virtual void Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter) override;
 	void DropMine();
@@ -29,6 +34,7 @@ protected:
 	void DropTestMine();
 
 public:
+	
 	virtual void Tick(float DeltaTime) override;
 
 private:
