@@ -68,7 +68,6 @@ void AInteractBox::DetectPlayerAfterExit()
     auto playerInsides = DetectPlayersInside();
     if (playerInsides.Num() == 0) // NO PLAYER DETECTED
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No Player Detected - Exiting"));
         if (!EnteringCharacter){return;}
         TryExitPlayer(EnteringCharacter);
         return;
@@ -77,7 +76,6 @@ void AInteractBox::DetectPlayerAfterExit()
     {
         if (PIX == EnteringCharacter) // SAME PLAYER STILL INSIDE
         {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("SAME Player Detected - TRY DETECT PLAYER "));
             TryDetectPlayer(CurrentInteractorPlayerController.Get(), EnteringCharacter);
             PlayerDetected.Empty();
             return;
@@ -86,7 +84,6 @@ void AInteractBox::DetectPlayerAfterExit()
     
     if (playerInsides[0] != nullptr)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red , FString::Printf(TEXT("NEW CHARACTER DETECTED INSIDE - P%d"), GetPlayerIndexFromPlayerController(GetPlayerControllerFromActor(playerInsides[0]))));
         if (EnteringCharacter)
         {
             TryExitPlayer(EnteringCharacter);
@@ -191,7 +188,6 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, U
     
     if (bPlayerIsControlling)
     {
-         GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Player Controlling"));
         return;
     }
 
@@ -202,23 +198,16 @@ void AInteractBox::OnBoxBeginOverlap(UPrimitiveComponent* Comp, AActor* Other, U
     {
         if (NewCharacter != EnteringCharacter)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("Another Player is already inside"));
             return;
         }
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("SAME PLAYER"));
     }
     
     if (NewCharacter)
     {
-
-        // PRINT NEW CHARACTER DETECTED USING ITS COLOR
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White , FString::Printf(TEXT("NEW CHARACTER DETECTED INSIDE - P%d"), GetPlayerIndexFromPlayerController(NewPlayerInside)));
-
         EnteringCharacter = NewCharacter;
         TryDetectPlayer(NewPlayerInside, EnteringCharacter);
     }else
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("CHARACTER NOT FOUND"));
     }
 }
 
@@ -250,7 +239,7 @@ void AInteractBox::TryExitPlayer(ACrazyFoodTruckCharacter* Character)
     if (Character)
     {
         // PRINT INDEX OF THE CHARACTER EXITING
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red , FString::Printf(TEXT("CHARACTER EXITING - P%d"), GetPlayerIndexFromPlayerController(GetPlayerControllerFromActor(Character))));
+       // GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red , FString::Printf(TEXT("CHARACTER EXITING - P%d"), GetPlayerIndexFromPlayerController(GetPlayerControllerFromActor(Character))));
         if (Character->GetFocusedInteractable().GetInterface() == static_cast<IInteractable*>(this))
         {
             Character->SetFocusedInteractable(TScriptInterface<IInteractable>(nullptr));
@@ -270,13 +259,10 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
 {
     if (!Character)
     {
-         GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No Character"));
         return;
     }
     if (!PlayerController)
     {
-         GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("No CONTROLLLER"));
-
         return;
     }
 
@@ -289,27 +275,11 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
         Character->SetFocusedInteractable(TScriptInterface<IInteractable>(this));
         if (!CurrentInteractorPlayerController.IsValid())
         {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("CURRENT INTERACTION BORADDDCAST Re-Entered"));
             OnCollisionEnter.Broadcast();
             if (!EnteringCharacter)
             {
                 EnteringCharacter = Character;
             }
-        }
-        else
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("NOT CURRENT INTERACTION Re-Entered"));
-        }
-    }
-    else
-    {
-        if (bLockedByAnother)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("InteractBox: Already in use by another player."));
-        }
-        else if (bAnotherInside)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("InteractBox: Another player is already inside."));
         }
     }
 }
@@ -337,7 +307,7 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACraz
     if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
     {
          //
-         //if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Already in use by another player."));
+         //if (ine) ine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Already in use by another player."));
         return;
     }
 
@@ -521,8 +491,6 @@ void AInteractBox::UnpossessPawn()
     if (players)
     {
         APlayerController* PC = GetPlayerControllerFromActor(players);
-        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red ,TEXT("TRY DETECT PLAYER FROM UNPOSSESS"));
-
         TryDetectPlayer(PC, players);
     }
     
@@ -565,7 +533,6 @@ void AInteractBox::TeleportAndAttachPlayer(APlayerController* PlayerController)
 {
     if (!PlayerController || !AttachPoint)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Invalid AttachPoint!"));
         return;
     }
 
@@ -580,7 +547,6 @@ void AInteractBox::TeleportBackAndDetachPlayer(APlayerController* PlayerControll
 {
     if (!PlayerController || !ReleasePoint)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Invalid ReleasePoint!"));
         return;
     }
 

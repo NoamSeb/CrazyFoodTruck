@@ -22,7 +22,8 @@ UENUM(BlueprintType)
 enum class EMovementFrame : uint8
 {
 	World   UMETA(DisplayName = "World"),
-	Vehicle UMETA(DisplayName = "Vehicle")
+	Vehicle UMETA(DisplayName = "Vehicle"),
+	Camera  UMETA(DisplayName = "Camera")
 };
 
 /// Enum to separate differents anims characters has
@@ -57,7 +58,7 @@ public:
 	EMovementType MovementType = EMovementType::ECC_Idle;
 
 	UPROPERTY(EditAnywhere, Category = "Movement|Frame")
-	EMovementFrame MovementFrame = EMovementFrame::Vehicle;
+	EMovementFrame MovementFrame = EMovementFrame::Camera;
 
 	UPROPERTY(EditAnywhere, Category = "Movement|Frame")
 	float MovementYawOffsetDegrees = 0.f;
@@ -73,6 +74,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Movement|Frame")
 	void UseVehicleFrame(AActor* InVehicle);
+
+	UFUNCTION(BlueprintCallable, Category = "Movement|Frame")
+	void UseCameraFrame();
 
 	void SetInputData(UCrazyFoodTruckCharacterInputData* InInputData);
 	void SetInputMappingContext(UInputMappingContext* InInputMappingContext);
