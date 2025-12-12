@@ -15,11 +15,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ZombieWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ZombieWidget.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Data/Private/GameInstanceCrazyFoodTruck.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Data/Private/GameInstanceCrazyFoodTruck.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Camera/EnvCamActivateTrigger.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Camera/EnvCamActivateTrigger.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -297,6 +293,7 @@
       <workItem from="1765393072755" duration="746000" />
       <workItem from="1765441398827" duration="1882000" />
       <workItem from="1765488454146" duration="1434000" />
+      <workItem from="1765544217095" duration="59000" />
     </task>
     <servers />
   </component>
