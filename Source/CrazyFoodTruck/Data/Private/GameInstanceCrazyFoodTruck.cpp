@@ -92,6 +92,7 @@ int32 UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
 {
 	if (int32* TicketsPtr = TicketsByGrade.Find(Grade))
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("AddTicketsForGrade"));
 		IncrementTicketsNumber(*TicketsPtr);
 		return *TicketsPtr;
 	}
