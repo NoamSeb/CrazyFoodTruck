@@ -57,4 +57,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="MunitionDrawer")
 	float _OpenSpeed = 5.f;
+
+	UPROPERTY()
+	float soundTimer = 0.f;
 };
