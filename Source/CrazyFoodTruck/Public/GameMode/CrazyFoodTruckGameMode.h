@@ -61,7 +61,7 @@ private:
 	AActor* ResolveVehicleActor() const;
 	AActor* ResolveViewTargetActor() const;
 
-	void ConfigureMovementFrameForAllCharacters(AActor* Vehicle);
+	void ConfigureMovementFrameForAllCharacters(AActor* Vehicle, AActor* ViewTarget);
 
 	UFUNCTION()
 	void HandleTimerSecondPrint(int32 ElapsedSeconds);

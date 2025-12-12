@@ -150,6 +150,9 @@ public:
 
 private:
 
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void UnPossessed() override;
+
 	float BulletHapticForce;
 
 	int _ActualPlayerReloading = 0;
@@ -219,8 +222,60 @@ private:
 	UPROPERTY(EditAnywhere, Category="TurretParameters")
 	ASplineTurret* TurretSpline;
 
+	float SplineLength = 0.f;
+
 	UPROPERTY(EditAnywhere, Category="TurretParameters")
 	ACisorTurret* CisorTurretActor;
+
+	UPROPERTY()
+	FVector cursorPosition;
+	UPROPERTY()
+	FVector TurretPosition;
+
+	UPROPERTY()
+	AActor* ParentOfTurret;
+
+	UPROPERTY()
+	USceneComponent* ReferenceComp;
+
+	UPROPERTY()
+	USceneComponent* ParentComp;
+	
+	UPROPERTY()
+	FVector worldDeltaX;
+	UPROPERTY()
+	FVector worldDeltaY;
+	UPROPERTY()
+	FVector newWorld;
+	
+	UPROPERTY()
+	FVector rel;
+
+	UPROPERTY(EditAnywhere, Category="TurretParameters")
+	bool WorldTurretRotation = false;
+	
+	FVector LastCursorPosition = FVector::ZeroVector;
+	FVector LastTurretPosition = FVector::ZeroVector;
+
+	// timing throttle
+	float RotationUpdateAccumulator = 0.f;
+
+	// --- tweakables ---
+	UPROPERTY(EditAnywhere, Category = "Turret|Perf")
+	float RotationUpdateRate = 30.f; 
+
+	UPROPERTY(EditAnywhere, Category = "Turret|Perf")
+	float PositionChangeThreshold = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Turret|Perf")
+	float AngleChangeThresholdDegrees = 0.5f; 
+
+	FVector LastActorLocation = FVector::ZeroVector;
+	FQuat   LastActorRotation = FQuat::Identity;
+	float   LastSplineAlpha = -1.f;
+	float   ActorTransformEpsilon = 0.1f;
+	float   AlphaThreshold = 0.001f;
+
 };
 
 
