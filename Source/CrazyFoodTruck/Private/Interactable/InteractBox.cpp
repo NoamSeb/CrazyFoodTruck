@@ -379,7 +379,6 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
     if (!PlayerController) return;
 
     CurrentPlayerId = GetPlayerIndexFromPlayerController(PlayerController);
-    //CurrentPlayerController = GetPlayerControllerFromActor();
 
     bPlayerIsControlling = true;
     CachedPlayerController = PlayerController;
@@ -391,7 +390,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
         RotationActorOnEnter = CachedCharacter->GetActorRotation();
         RotationControllerOnEnter = PlayerController->GetControlRotation();
     }
-
+    
     if (!bCanBreakWhilePossessed && bBreakable)
     {
         SetFunctional(true);
@@ -400,9 +399,9 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
             RepairProgressBillboard->SetDamaged(false);
         }
     }
-
+    
     TeleportAndAttachPlayer(PlayerController);
-
+    
     if (UGameInstance* GameInstance = GetGameInstance())
     {
         if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
@@ -424,7 +423,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
             }
         }
     }
-
+    
     if (UWorld* World = GetWorld())
     {
         if (auto* GM = Cast<ACrazyFoodTruckGameMode>(UGameplayStatics::GetGameMode(World)))
@@ -437,13 +436,17 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 void AInteractBox::UnpossessPawn()
 {
     OnPlayerQuit.Broadcast();
-    CachedCharacter->MovementType = EMovementType::ECC_Idle;
+    if (CachedCharacter.IsValid())
+    {
+        CachedCharacter->MovementType = EMovementType::ECC_Idle;
+    }
+    
     bPlayerIsControlling = false;
     CurrentInteractorPlayerController = nullptr;
-
+    
     if (!CachedPlayerController.IsValid())
         return;
-
+    
     const int32 PlayerIndex = GetPlayerIndexFromPlayerController(CachedPlayerController.Get());
     if (PlayerIndex != -1)
     {
@@ -461,9 +464,9 @@ void AInteractBox::UnpossessPawn()
             }
         }
     }
-
+    
     TeleportBackAndDetachPlayer(CachedPlayerController.Get());
-
+    
     if (CachedCharacter.IsValid())
     {
         CachedCharacter->SetActorRotation(RotationActorOnEnter);
