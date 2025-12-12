@@ -15,6 +15,11 @@
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/Road/Segments/BP_SurvivorCamp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/Road/Segments/BP_SurvivorCamp.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/RoadProgress/WBP_RoadProgress.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/RoadProgress/WBP_RoadProgress.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CrazyFoodTruck.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/CrazyFoodTruck.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Camera/EnvCamActivateTrigger.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Camera/EnvCamActivateTrigger.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -53,6 +58,7 @@
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/UMG/Public/Blueprint/UserWidget.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/UMG/Public/Components/Image.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Intermediate/Build/Win64/UnrealEditor/Inc/CrazyFoodTruck/UHT/StructListUpgrade.gen.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Camera/EnvCamActivateTrigger.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Client/Client.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/ActorFood.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/Bread.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -60,7 +66,7 @@
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Grille/Grille.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Menu/MenuLobbySlotsRoot.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/ModuleManager.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/PlayerController/MenuPlayerController.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/PlayerController/MenuPlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Steak/ActorSteak.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Steak/SpawnSteak.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/AmmoDeposit.h" root0="FORCE_HIGHLIGHTING" />
@@ -294,6 +300,9 @@
       <workItem from="1765441398827" duration="1882000" />
       <workItem from="1765488454146" duration="1434000" />
       <workItem from="1765544217095" duration="59000" />
+      <workItem from="1765544437336" duration="175000" />
+      <workItem from="1765544631642" duration="6000" />
+      <workItem from="1765544718113" duration="1343000" />
     </task>
     <servers />
   </component>

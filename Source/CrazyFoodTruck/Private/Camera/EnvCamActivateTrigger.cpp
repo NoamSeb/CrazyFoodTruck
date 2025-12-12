@@ -26,7 +26,7 @@ AEnvCamActivateTrigger::AEnvCamActivateTrigger()
 
 	CamPreview->Sprite = nullptr;
 	//CamPreview->SetEditorScale(2.5f);
-	BillboardComponent->SetWorldScale3D(FVector(0.5f));
+	CamPreview->SetWorldScale3D(FVector(0.5f));
 
 }
 
