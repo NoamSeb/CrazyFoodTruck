@@ -297,7 +297,6 @@ void ASideCabestan::StopPush()
 
 void ASideCabestan::Push(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, "Push");
 	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
 		if (!bPlayerIn){return;}
@@ -325,8 +324,6 @@ void ASideCabestan::Push(const FInputActionValue& Value)
 
 void ASideCabestan::Bring(const FInputActionValue& Value)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, "Bring");
-	
 	if (FMath::RoundToInt(Value.Get<float>()) >= 1)
 	{
 		if (!bPlayerIn){return;}

@@ -64,15 +64,23 @@ void AMunitionDrawer::UpdateValue(float valueChange, bool giveAmmo)
 {
 	if (bIsFull) return;
 	_ActualOpenValue += valueChange;
-	USoundManager* SM = USoundManager::Get();
-	if(SM)
-		SM->PlaySFX(ESfxType::ECC_Reload, this);
+
+	
 	_ActualOpenValue = FMath::Clamp(_ActualOpenValue, 0.f, 1.f);
 	OnAmmoUpdate.Broadcast(_ActualOpenValue);
 	if (LinkedTurretController && giveAmmo)
 	{
 		int Ammo = FMath::Lerp(0, munitionMax, _ActualOpenValue);
 		LinkedTurretController->SetCurrentAmmo(Ammo);
+
+		if (soundTimer <= 0.f)
+        {
+			USoundManager* SM = USoundManager::Get();
+			if(SM)SM->PlaySFX(ESfxType::ECC_Reload, this);
+            soundTimer = 0.2f;
+        }
+
+		
 		if (LinkedTurretController->GetAmmo() >= LinkedTurretController->GetAmmoMax())
 		{
 			bIsFull = true;
@@ -84,4 +92,8 @@ void AMunitionDrawer::UpdateValue(float valueChange, bool giveAmmo)
 void AMunitionDrawer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (soundTimer > 0.f)
+    {
+        soundTimer -= DeltaTime;
+    }
 }
