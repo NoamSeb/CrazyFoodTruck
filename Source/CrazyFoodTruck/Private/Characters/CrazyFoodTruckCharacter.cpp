@@ -143,7 +143,6 @@ void ACrazyFoodTruckCharacter::RemoveMappingUpgrade()
     }
 }
 
-
 void ACrazyFoodTruckCharacter::SetVehicleMovementRef(AActor* InVehicleActor)
 {
     VehicleRefActor = InVehicleActor;
@@ -159,6 +158,11 @@ void ACrazyFoodTruckCharacter::UseVehicleFrame(AActor* InVehicle)
 {
     MovementFrame = EMovementFrame::Vehicle;
     VehicleRefActor = InVehicle;
+}
+
+void ACrazyFoodTruckCharacter::UseCameraFrame()
+{
+    MovementFrame = EMovementFrame::Camera;
 }
 
 void ACrazyFoodTruckCharacter::SetInputData(UCrazyFoodTruckCharacterInputData* InInputData)
@@ -223,31 +227,54 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
         FVector Forward = FVector::ZeroVector;
         FVector Right = FVector::ZeroVector;
 
-        switch (MovementFrame)
-        {
-        case EMovementFrame::Vehicle:
+        auto BuildFromWorldYaw = [&](float Yaw)
             {
-                if (VehicleRefActor.IsValid())
-                {
-                    const float Yaw = VehicleRefActor->GetActorRotation().Yaw + MovementYawOffsetDegrees;
-                    BasisFromYaw(Yaw, Forward, Right);
-                }
-                else
-                {
-                    const APlayerController* PC = Cast<APlayerController>(Controller);
-                    const float Yaw = (PC ? PC->GetControlRotation().Yaw : GetActorRotation().Yaw) + MovementYawOffsetDegrees;
-                    BasisFromYaw(Yaw, Forward, Right);
-                }
-                break;
-            }
-        case EMovementFrame::World:
-        default:
+                BasisFromYaw(Yaw + MovementYawOffsetDegrees, Forward, Right);
+            };
+
+        auto TryBuildFromCamera = [&]() -> bool
             {
                 const APlayerController* PC = Cast<APlayerController>(Controller);
-                const float Yaw = (PC ? PC->GetControlRotation().Yaw : GetActorRotation().Yaw) + MovementYawOffsetDegrees;
-                BasisFromYaw(Yaw, Forward, Right);
-                break;
+                if (!PC) return false;
+
+                const APlayerCameraManager* PCM = PC->PlayerCameraManager;
+                if (!PCM) return false;
+
+                BuildFromWorldYaw(PCM->GetCameraRotation().Yaw);
+                return true;
+            };
+
+        auto TryBuildFromVehicle = [&]() -> bool
+            {
+                if (!VehicleRefActor.IsValid()) return false;
+
+                BuildFromWorldYaw(VehicleRefActor->GetActorRotation().Yaw);
+                return true;
+            };
+
+        switch (MovementFrame)
+        {
+        case EMovementFrame::Camera:
+            if (!TryBuildFromCamera())
+            {
+                if (!TryBuildFromVehicle())
+                {
+                    BuildFromWorldYaw(0.f);
+                }
             }
+            break;
+
+        case EMovementFrame::Vehicle:
+            if (!TryBuildFromVehicle())
+            {
+                BuildFromWorldYaw(0.f);
+            }
+            break;
+
+        case EMovementFrame::World:
+        default:
+            BuildFromWorldYaw(0.f);
+            break;
         }
 
         AddMovementInput(Forward, Y);

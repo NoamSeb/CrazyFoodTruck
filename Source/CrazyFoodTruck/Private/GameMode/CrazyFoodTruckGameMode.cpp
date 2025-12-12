@@ -94,7 +94,7 @@ void ACrazyFoodTruckGameMode::BeginPlay()
     AActor* ViewTarget = ResolveViewTargetActor();
     GlobalViewTarget = ViewTarget;
 
-    ConfigureMovementFrameForAllCharacters(Vehicle);
+    ConfigureMovementFrameForAllCharacters(Vehicle, ViewTarget);
 
     if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
     {
@@ -304,13 +304,19 @@ AActor* ACrazyFoodTruckGameMode::ResolveViewTargetActor() const
     return ResolveVehicleActor();
 }
 
-void ACrazyFoodTruckGameMode::ConfigureMovementFrameForAllCharacters(AActor* Vehicle)
+void ACrazyFoodTruckGameMode::ConfigureMovementFrameForAllCharacters(AActor* Vehicle, AActor* ViewTarget)
 {
     for (ACrazyFoodTruckCharacter* C : Characters)
     {
         if (!IsValid(C)) continue;
 
-        if (Vehicle)
+        if (ViewTarget)
+        {
+            C->UseCameraFrame();
+            C->SetVehicleMovementRef(Vehicle);
+            C->MovementYawOffsetDegrees = 180.f;
+        }
+        else if (Vehicle)
         {
             C->UseVehicleFrame(Vehicle);
             C->MovementYawOffsetDegrees = 180.f;
