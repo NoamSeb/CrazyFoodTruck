@@ -226,6 +226,10 @@ private:
 
 	FTimerHandle ForwardCaptureTimerHandle;
 
+	float BaseYaw = 0.f;
+	float YawOffset = 0.f;
+	float RollOffset = 0.f;
+
 private:
 	UFUNCTION()
 	void MoveForward();
