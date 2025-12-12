@@ -403,39 +403,46 @@ void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 	if (!AlreadyPassed)
 	{
 		RotationTimer = 0.f;
-		StartRotationYaw = GetActorRotation().Yaw;
+
+		BaseYaw = GetActorRotation().Yaw;
+
+		StartRotationYaw = BaseYaw;
 		StartRotationRoll = GetActorRotation().Roll;
+
+		YawOffset = 0.f;
+		RollOffset = StartRotationRoll;
 	}
 
-	if (InputRotatingValue > 0)
-	{
-		TruckOrientation = EVehicleOrientation::Right;
-	}
-	else
-	{
-		TruckOrientation = EVehicleOrientation::Left;
-	}
-
+	TruckOrientation = (InputRotatingValue > 0.f) ? EVehicleOrientation::Right : EVehicleOrientation::Left;
 	AlreadyPassed = true;
 }
 
 void AVehicle::SetTruckIdleStates()
 {
 	TruckState = EVehicleStates::Idle;
+
 	TiltTimer = 0.f;
 	StartRotationRoll = GetActorRotation().Roll;
+
 	AlreadyPassed = false;
 }
 
 void AVehicle::RotateTruck(float DeltaTime)
 {
-	destinationRotation.Yaw += (InputRotatingValue * _CurrentTruckAngleSpeed) * DeltaTime;
-	destinationRotation.Yaw = FMath::Clamp(destinationRotation.Yaw, -TruckMaxRotation, TruckMaxRotation);
+	YawOffset += (InputRotatingValue * _CurrentTruckAngleSpeed) * DeltaTime;
+	YawOffset = FMath::Clamp(YawOffset, -TruckMaxRotation, TruckMaxRotation);
 
-	destinationRotation.Roll += ((InputRotatingValue * _CurrentTruckAngleSpeed) / 2) * DeltaTime;
-	destinationRotation.Roll = FMath::Clamp(destinationRotation.Roll, -TruckMaxTilt, TruckMaxTilt);
+	float LocalRollOffset = RollOffset;
+	LocalRollOffset += ((InputRotatingValue * _CurrentTruckAngleSpeed) / 2.f) * DeltaTime;
+	LocalRollOffset = FMath::Clamp(LocalRollOffset, -TruckMaxTilt, TruckMaxTilt);
+	RollOffset = LocalRollOffset;
 
-	UpdateRotationTruck(destinationRotation, DeltaTime);
+	FRotator Target = GetActorRotation();
+	Target.Yaw = BaseYaw + YawOffset;
+	Target.Roll = RollOffset;
+	Target.Pitch = 0.f;
+
+	UpdateRotationTruck(Target, DeltaTime);
 }
 
 void AVehicle::UpdateRotationTruck(FRotator TargetRotation, float DeltaTime)
