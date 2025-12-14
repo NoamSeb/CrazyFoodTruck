@@ -35,5 +35,7 @@ private:
 	float ExplosionRadius = 400.f;
 	UPROPERTY(EditAnywhere, Category ="Module|Parameters")
 	int ExplosionDamage = 10;
+	UPROPERTY(EditAnywhere, Category = "Module|Parameters")
+	USoundBase* BoomSound = nullptr;
 	bool bHasExploded = false;
 };

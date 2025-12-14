@@ -26,6 +26,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Animation/AnimInstanceProxy.h"
+#include "AssetTypeActions/AssetDefinition_SoundBase.h"
 #include "Road/RoadManager.h"
 
 AVehicle::AVehicle()
@@ -285,6 +286,7 @@ void AVehicle::NotifyActorBeginOverlap(AActor* OtherActor)
 		if (!MapAlreadyChange)
 		{
 			RoadManager->UnloadRoadSegments();
+			UGameplayStatics::PlaySound2D(this, GoToUpgradeSound);
 			ChangeMap();
 			GlobalDynamicBuffer::GarbageCollect();
 			MapAlreadyChange = true;
