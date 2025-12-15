@@ -292,6 +292,9 @@ protected:
 	UPROPERTY(Transient)
 	TObjectPtr<UForwardCamWidget> ForwardCamWidget = nullptr;
 
+	UPROPERTY(EditAnywhere)
+	USoundBase* GoToUpgradeSound = nullptr;
+
 
 public:
 	UPROPERTY(EditAnywhere, Category = "ForwardCam|Settings", meta = (ClampMin = "1.0"))

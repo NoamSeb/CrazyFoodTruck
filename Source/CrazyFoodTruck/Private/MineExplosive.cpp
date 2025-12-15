@@ -4,6 +4,7 @@
 #include "MineExplosive.h"
 
 #include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 
 class UGameInstanceCrazyFoodTruck;
@@ -95,4 +96,5 @@ void AMineExplosive::Explode()
     {
         UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation(), GetActorRotation());
     }
+    UGameplayStatics::PlaySound2D(this, BoomSound);
 }
