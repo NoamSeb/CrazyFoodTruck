@@ -14,13 +14,16 @@ struct FStructHealTruck
 	GENERATED_BODY()
 
 	FStructHealTruck()
-		: TextUpgrade()
+		: ImgUpgrade()
+		, TextUpgrade()
 		, TextUpgradeDescription()
 		, intAddModif(10)
 		, UpgradeTruck(ECamionUpgrade::Heal)
 		, Zone(EZoneUpgrade::Camion)
 		, coutUpgrade(0)
 	{}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
+	UTexture2D* ImgUpgrade;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	FString TextUpgrade;
