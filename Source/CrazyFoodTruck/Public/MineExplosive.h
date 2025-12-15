@@ -38,4 +38,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Module|Parameters")
 	USoundBase* BoomSound = nullptr;
 	bool bHasExploded = false;
+
+	UPROPERTY(EditDefaultsOnly, Category="Module|Parameters")
+	USceneComponent* TargetBarils;
 };

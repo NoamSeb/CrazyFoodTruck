@@ -12,6 +12,9 @@ class UGameInstanceCrazyFoodTruck;
 AMineExplosive::AMineExplosive()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+    TargetBarils = CreateDefaultSubobject<USceneComponent>(TEXT("TargetBarils"));
+    TargetBarils->SetupAttachment(RootComponent);
 }
 
 void AMineExplosive::BeginPlay()

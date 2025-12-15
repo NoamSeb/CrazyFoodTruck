@@ -22,7 +22,7 @@ public:
 	AModuleBase* AddModule(FString ModuleID, EModuleSide ModuleSide);
 	
 	UFUNCTION(BlueprintCallable, Category="Module")
-	void Initialize(USceneComponent* LeftPos, USceneComponent* RightPos);
+	void Initialize(USceneComponent* LeftPos, USceneComponent* RightPos, ALever* LeftLev, ALever* RightLev);
 
 	UFUNCTION(BlueprintCallable, Category="Module")
 	void ResetAllModules();
@@ -38,6 +38,12 @@ private:
 	USceneComponent* LeftPosition;
 	UPROPERTY()
 	USceneComponent*  RightPosition;
+
+	UPROPERTY()
+	ALever* LeftLever;
+
+	UPROPERTY()
+	ALever* RightLever;
 
 	UPROPERTY()
 	AInteractBox* LeftInteractBox;
