@@ -9,6 +9,5 @@ enum class EModuleUpgrade : uint8
 {
 	None = 0,
 	Mine,
-	Explosive,
-	Boulet
+	Explosive
 };
