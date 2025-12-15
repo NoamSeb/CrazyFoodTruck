@@ -25,7 +25,9 @@ AEnvCamActivateTrigger::AEnvCamActivateTrigger()
 	CamPreview->SetHiddenInGame(true);
 
 	CamPreview->Sprite = nullptr;
-	CamPreview->SetEditorScale(2.5f);
+	//CamPreview->SetEditorScale(2.5f);
+	CamPreview->SetWorldScale3D(FVector(0.5f));
+
 }
 
 void AEnvCamActivateTrigger::BeginPlay()
