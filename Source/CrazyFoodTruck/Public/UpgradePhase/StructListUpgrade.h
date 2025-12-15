@@ -20,16 +20,16 @@ struct FStructListUpgrade  : public FTableRowBase
 		, ListGame()
 		, HealTruck()
 	{}
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	TArray<FStructUpgrade> ListCamion;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	TArray<FStructUpgrade> ListModule;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	TArray<FStructUpgrade> ListBullet;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	TArray<FStructUpgrade> ListTurret;
 

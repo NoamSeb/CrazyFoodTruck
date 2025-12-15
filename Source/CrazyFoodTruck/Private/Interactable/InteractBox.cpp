@@ -15,6 +15,7 @@
 #include "Interface/IVehicule.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMaterialLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Vehicle/Vehicle.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,8 +42,10 @@ AInteractBox::AInteractBox()
     ExitTimer = BaseOverlappTimer;
     bPlayerIsControlling = false;
     bIsFunctional = true;
-}
 
+    AttachLookPoint = CreateDefaultSubobject<USceneComponent>(TEXT("AttachLookPoint"));
+    AttachLookPoint->AttachToComponent(Box, FAttachmentTransformRules::KeepRelativeTransform, "");
+}
 void AInteractBox::BeginPlay()
 {
     Super::BeginPlay();
@@ -409,6 +412,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
             const int32 PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
             if (PlayerIndex != -1 && PawnToPossess)
             {
+                CachedCharacter->bIsInModule = true;
                 if(Cast<AVehicle>(PawnToPossess))
                 {
                     APlayerController* PC = CurrentInteractorPlayerController.Get(); 
@@ -419,6 +423,8 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
                 {
                     LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, false);
                     CachedCharacter->MovementType = EMovementType::ECC_Push;
+                    auto targetRotation = UKismetMathLibrary::FindLookAtRotation(CachedCharacter->GetActorLocation(), AttachLookPoint->GetComponentLocation());
+                    CachedCharacter->LastMovementDirection.Rotation() = targetRotation;
                 }
             }
         }
@@ -454,6 +460,7 @@ void AInteractBox::UnpossessPawn()
         {
             if (ULocalMultiplayerSubsystem* LMS = GI->GetSubsystem<ULocalMultiplayerSubsystem>())
             {
+                CachedCharacter->bIsInModule = false;
                 if(Cast<AVehicle>(PawnToPossess))
                 {
                     LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, true);
