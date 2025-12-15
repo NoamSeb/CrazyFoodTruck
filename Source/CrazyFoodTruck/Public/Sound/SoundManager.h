@@ -26,13 +26,16 @@ enum class ESfxType : uint8
 	// Zombie Related
 	ECC_HitZombie UMETA(Displayname = "HitZombie"), // Done
 	ECC_ZombieDeath UMETA(Displayname = "ZombieDeath"), // Done
+	ECC_ZombieAttack UMETA(Displayname = "ZombieAttack"),
 	// Obstacle Related
 	ECC_RockDestruction UMETA(Displayname = "RockDestruction"), // Done
 	ECC_WoodDestruction UMETA(Displayname = "WoodDestruction"), // Done
 	ECC_MetalDestruction UMETA(Displayname = "MetalDestruction"), // Donne
 	// UI Related
-	ECC_PlayerVote UMETA(Displayname = "PlayerVote"),
+	ECC_PlayerVote UMETA(Displayname = "PlayerVote"), // Done
 	ECC_UpdateModule UMETA(Displayname = "UpdateModule"), // Done
+	ECC_UseTickets UMETA(Displayname = "UseTickets"), // Done
+	ECC_IncrementScore UMETA(Displayname = "IncrementScore"), // Done
 };
 
 USTRUCT(BlueprintType)

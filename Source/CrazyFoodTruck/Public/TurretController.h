@@ -276,6 +276,10 @@ private:
 	float   ActorTransformEpsilon = 0.1f;
 	float   AlphaThreshold = 0.001f;
 
+	FVector GetCameraPlanarForward() const;
+	FVector GetCameraPlanarRight() const;
+
+	void ApplyCursorDeltaWorld(const FVector& WorldDelta);
 };
 
 
