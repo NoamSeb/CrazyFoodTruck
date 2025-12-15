@@ -17,7 +17,6 @@ AModuleMine::AModuleMine()
 void AModuleMine::BeginPlay()
 {
 	Super::BeginPlay();
-	DropMine();
 }
 
 void AModuleMine::Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter)
