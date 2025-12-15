@@ -16,10 +16,17 @@
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ZombieWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ZombieWidget.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Data/Private/GameInstanceCrazyFoodTruck.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Data/Private/GameInstanceCrazyFoodTruck.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/A_TurrentController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter1.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_CrazyFoodTruckCharacter1.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_MainMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_MainMenu.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_MenuCamp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_MenuCamp.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_ImagePlayer.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_ImagePlayer.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_Upgrade.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Upgrade/WBP_Upgrade.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_TurretWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_TurretWidget.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ScoreResultWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ScoreResultWidget.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Widget/MainMenuWidget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Widget/MainMenuWidget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Widget/MainMenuWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Widget/MainMenuWidget.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +64,7 @@
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/UMG/Public/Blueprint/UserWidget.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/UMG/Public/Components/Image.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Intermediate/Build/Win64/UnrealEditor/Inc/CrazyFoodTruck/UHT/StructListUpgrade.gen.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Camera/EnvCamActivateTrigger.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Client/Client.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/ActorFood.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Food/Bread.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -64,7 +72,7 @@
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Grille/Grille.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Menu/MenuLobbySlotsRoot.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/ModuleManager.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/PlayerController/MenuPlayerController.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/PlayerController/MenuPlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Steak/ActorSteak.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Steak/SpawnSteak.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/CrazyFoodTruck/Public/AmmoDeposit.h" root0="FORCE_HIGHLIGHTING" />
@@ -297,6 +305,11 @@
       <workItem from="1765393072755" duration="746000" />
       <workItem from="1765441398827" duration="1882000" />
       <workItem from="1765488454146" duration="1434000" />
+      <workItem from="1765544217095" duration="59000" />
+      <workItem from="1765544437336" duration="175000" />
+      <workItem from="1765544631642" duration="6000" />
+      <workItem from="1765544718113" duration="3831000" />
+      <workItem from="1765789842666" duration="3820000" />
     </task>
     <servers />
   </component>
