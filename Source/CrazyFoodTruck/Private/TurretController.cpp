@@ -365,116 +365,28 @@ void ATurretController::InputShootTriggered(const FInputActionValue& Value)
 
 void ATurretController::InputRoll(const FInputActionValue& Value)
 {
-    float valueToFloat = Value.Get<float>();
-    if (!_JointCursor) return;
+	const float Axis = Value.Get<float>();
+	if (!_JointCursor) return;
 
-    const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
-    const float Step = -valueToFloat * (_CursorSpeed * DeltaSeconds);
+	const float DT = GetWorld()->GetDeltaSeconds();
+	const FVector CamRight = GetCameraPlanarRight();
 
-    if (!ParentComp)
-    {
-        worldDeltaX = FVector::LeftVector * Step;
-        _JointCursor->AddWorldOffset(worldDeltaX);
-        UpdateTurretCanonRotation();
-        return;
-    }
+	const FVector WorldDelta = CamRight * (-Axis * _CursorSpeed * DT);
 
-    if (!ReferenceComp)
-    {
-        ReferenceComp = ParentComp;
-    }
-
-	
-    FVector localDeltaRef = FVector::ZeroVector;
-    localDeltaRef.Y = Step; // Y local = côté
-
-    FVector newRelative;
-	
-	FVector CurrentWold = _JointCursor->GetComponentLocation();
-	FTransform 	ParentTransform = ParentComp->GetComponentTransform();
-	FTransform RefTransform = ReferenceComp->GetComponentTransform();
-
-    if (ReferenceComp == ParentComp)
-    {
-        FVector currentRelative = _JointCursor->GetRelativeLocation();
-        FVector newRel = currentRelative + localDeltaRef;
-        // clamp both axes local
-        newRel.X = FMath::Clamp(newRel.X, -AreaRangeDepht, AreaRangeDepht);
-        newRel.Y = FMath::Clamp(newRel.Y, -AreaRangeSide, AreaRangeSide);
-        newRelative = newRel;
-    }
-    else
-    {
-        worldDeltaX = RefTransform.TransformVector(localDeltaRef);
-
-        newWorld = CurrentWold + worldDeltaX;
-
-    	rel = ParentTransform.InverseTransformPosition(newWorld);
-
-        rel.X = FMath::Clamp(rel.X, -AreaRangeDepht, AreaRangeDepht);
-        rel.Y = FMath::Clamp(rel.Y, -AreaRangeSide, AreaRangeSide);
-
-        newRelative = rel;
-    }
-
-    SetCursorLocation(newRelative);
-    UpdateTurretCanonRotation();
+	ApplyCursorDeltaWorld(WorldDelta);
 }
 
 void ATurretController::InputYaw(const FInputActionValue& Value)
 {
-    float valueToFloat = Value.Get<float>();
-    if (!_JointCursor) return;
+	const float Axis = Value.Get<float>();
+	if (!_JointCursor) return;
 
-    const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
-    const float Step = -valueToFloat * (_CursorSpeed * DeltaSeconds);
+	const float DT = GetWorld()->GetDeltaSeconds();
+	const FVector CamFwd = GetCameraPlanarForward();
 
-    if (!ParentComp)
-    {
-        worldDeltaY = FVector::BackwardVector * Step;
-        _JointCursor->AddWorldOffset(worldDeltaY);
-        UpdateTurretCanonRotation();
-        return;
-    }
+	const FVector WorldDelta = CamFwd * (-Axis * _CursorSpeed * DT);
 
-    if (!ReferenceComp)
-    {
-        ReferenceComp = ParentComp;
-    }
-	
-	FVector CurrentWold = _JointCursor->GetComponentLocation();
-	FTransform 	ParentTransform = ParentComp->GetComponentTransform();
-	FTransform RefTransform = ReferenceComp->GetComponentTransform();
-	
-    FVector localDeltaRef = FVector::ZeroVector;
-    localDeltaRef.X = Step;
-
-    FVector newRelative;
-
-    if (ReferenceComp == ParentComp)
-    {
-        FVector currentRelative = _JointCursor->GetRelativeLocation();
-        FVector newRel = currentRelative + localDeltaRef;
-        newRel.X = FMath::Clamp(newRel.X, -AreaRangeDepht, AreaRangeDepht);
-        newRel.Y = FMath::Clamp(newRel.Y, -AreaRangeSide, AreaRangeSide);
-        newRelative = newRel;
-    }
-    else
-    {
-    	worldDeltaY = RefTransform.TransformVector(localDeltaRef);
-
-        newWorld = CurrentWold + worldDeltaY;
-
-        rel = ParentTransform.InverseTransformPosition(newWorld);
-
-        rel.X = FMath::Clamp(rel.X, -AreaRangeDepht, AreaRangeDepht);
-        rel.Y = FMath::Clamp(rel.Y, -AreaRangeSide, AreaRangeSide);
-    	
-        newRelative = rel;
-    }
-
-    SetCursorLocation(newRelative);
-    UpdateTurretCanonRotation();
+	ApplyCursorDeltaWorld(WorldDelta);
 }
 
 void ATurretController::UpdateTurretCanonRotation()
@@ -607,3 +519,47 @@ void ATurretController::UnPossessed()
 	
 }
 
+FVector ATurretController::GetCameraPlanarForward() const
+{
+	const APlayerController* PC = Cast<APlayerController>(GetController());
+	if (!PC || !PC->PlayerCameraManager) return FVector::ForwardVector;
+
+	const float Yaw = PC->PlayerCameraManager->GetCameraRotation().Yaw;
+	const FRotator Flat(0.f, Yaw, 0.f);
+	return FRotationMatrix(Flat).GetUnitAxis(EAxis::X);
+}
+
+FVector ATurretController::GetCameraPlanarRight() const
+{
+	const APlayerController* PC = Cast<APlayerController>(GetController());
+	if (!PC || !PC->PlayerCameraManager) return FVector::RightVector;
+
+	const float Yaw = PC->PlayerCameraManager->GetCameraRotation().Yaw;
+	const FRotator Flat(0.f, Yaw, 0.f);
+	return FRotationMatrix(Flat).GetUnitAxis(EAxis::Y);
+}
+
+void ATurretController::ApplyCursorDeltaWorld(const FVector& WorldDelta)
+{
+	if (!_JointCursor) return;
+
+	if (!ParentComp)
+	{
+		_JointCursor->AddWorldOffset(WorldDelta);
+		SetCursorLocation(_JointCursor->GetRelativeLocation());
+		UpdateTurretCanonRotation();
+		return;
+	}
+
+	const FVector CurrentWorld = _JointCursor->GetComponentLocation();
+	const FVector NewWorld = CurrentWorld + WorldDelta;
+
+	const FTransform ParentTransform = ParentComp->GetComponentTransform();
+	FVector NewRel = ParentTransform.InverseTransformPosition(NewWorld);
+
+	NewRel.X = FMath::Clamp(NewRel.X, -AreaRangeDepht, AreaRangeDepht);
+	NewRel.Y = FMath::Clamp(NewRel.Y, -AreaRangeSide, AreaRangeSide);
+
+	SetCursorLocation(NewRel);
+	UpdateTurretCanonRotation();
+}
