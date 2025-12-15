@@ -18,7 +18,8 @@ struct FStructUpgrade
 	GENERATED_BODY()
 
 	FStructUpgrade()
-		: TextUpgrade()
+		: ImgUpgrade()
+		, TextUpgrade()
 		, TextUpgradeDescription()
 		, intAddModif(0)
 		, UpgradeTurret(ETurretUpgrade::None)
@@ -30,6 +31,8 @@ struct FStructUpgrade
 		, coutUpgrade(0)
 		, IsAlreadyUse(false)
 	{}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
+	UTexture2D* ImgUpgrade;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrade")
 	FString TextUpgrade;
