@@ -3,11 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Lever.h"
 #include "UWModule.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
 #include "ModuleBase.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnModuleEvent);
+
 
 UCLASS()
 class CRAZYFOODTRUCK_API AModuleBase : public AActor, public IInteractable
@@ -17,6 +21,17 @@ class CRAZYFOODTRUCK_API AModuleBase : public AActor, public IInteractable
 public:
 	AModuleBase();
 	void ResetModule();
+
+	void SetLever(ALever* NewLever) { LinkedLever = NewLever; }
+	ALever* GetLever() const { return LinkedLever; }
+
+	// BLUEPRINT EVENTS
+	UPROPERTY(BlueprintAssignable, Category="Module|Events")
+	FOnModuleEvent OnModuleUsed;
+
+	UPROPERTY(BlueprintAssignable, Category="Module|Events")
+	FOnModuleEvent OnModuleReady;
+
 
 protected:
 	
@@ -36,4 +51,9 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 	void TurnWidgetTowardCamera();
+
+private:
+	
+	ALever* LinkedLever;
+	
 };

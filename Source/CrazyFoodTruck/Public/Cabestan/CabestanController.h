@@ -49,7 +49,9 @@ private:
 	UFoodTruckDataSubSystem* TruckSubSystem;
 
 	USceneComponent* RootCabestan;
-	float RotationSpeed = 10.f;
+
+	UPROPERTY(EditAnywhere, Category="Cabestan|Parameters")
+	float RotationSpeedOfCabestan = 10.f;
 
 	float CurrentRotationSpeed;
 	

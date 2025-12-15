@@ -34,6 +34,7 @@ void AModuleBase::BeginPlay()
 
 void AModuleBase::Interact(APlayerController* InstigatorPlayerController, ACrazyFoodTruckCharacter* CrazyCharacter)
 {
+	OnModuleUsed.Broadcast();
 	ActualCooldown = BaseCooldown;
 }
 
@@ -52,9 +53,18 @@ void AModuleBase::Tick(float DeltaTime)
 	{
 		ActualCooldown -= DeltaTime;
 		IIUWModule::Execute_UpdateSliderCooldown(WidgetModuleClass, ActualCooldown, BaseCooldown);
+		
+		float alpha = FMath::Lerp( 1.f , 0.f, ActualCooldown / BaseCooldown);
+
+		if (LinkedLever)
+		{
+			LinkedLever->SetStateCooldown(alpha);
+		}
+		
 		TurnWidgetTowardCamera();
 		if (ActualCooldown <= 0.f)
         {
+			OnModuleReady.Broadcast();
             IIUWModule::Execute_CoolDownComplete(WidgetModuleClass);
         }
 	}

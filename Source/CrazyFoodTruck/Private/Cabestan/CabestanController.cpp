@@ -18,7 +18,7 @@ void ACabestanController::BeginPlay()
 	
 	TruckSubSystem = GI->GetSubsystem<UFoodTruckDataSubSystem>();
 
-	CurrentRotationSpeed = RotationSpeed + TruckSubSystem->RotationSpeed;
+	CurrentRotationSpeed = RotationSpeedOfCabestan + TruckSubSystem->RotationSpeed;
 }
 
 void ACabestanController::Tick(float DeltaTime)
