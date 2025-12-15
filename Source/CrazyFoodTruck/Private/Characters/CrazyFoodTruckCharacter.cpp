@@ -61,7 +61,7 @@ void ACrazyFoodTruckCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    if (!LastMovementDirection.IsNearlyZero())
+    if (!LastMovementDirection.IsNearlyZero() && !bIsInModule)
     {
         const FRotator TargetRot = LastMovementDirection.Rotation();
         const FRotator SmoothedRot = FMath::RInterpTo(GetActorRotation(), TargetRot, DeltaSeconds, RotationInterpSpeed);
