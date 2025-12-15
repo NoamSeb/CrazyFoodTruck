@@ -20,6 +20,9 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void FocusController();
+
 protected:
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UPlayerSlotWidget> Slot0;
@@ -30,7 +33,7 @@ protected:
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UPlayerSlotWidget> Slot2;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidgetOptional), BlueprintReadOnly)
 	TObjectPtr<UButton> PlayButton;
 
 private:
