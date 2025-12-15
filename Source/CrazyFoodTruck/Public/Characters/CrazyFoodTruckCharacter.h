@@ -105,6 +105,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	void SetPlayerColor(FLinearColor NewColor);
 
+	FVector LastMovementDirection = FVector::ZeroVector;
+	bool bIsInModule = false;
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Player")
 	FLinearColor PlayerColor = FLinearColor::White;
@@ -131,8 +134,6 @@ private:
 	UGameDataSubSystem* GameDataSubSystem;
 
 	UInputComponent* PlayerInputComp;
-
-	FVector LastMovementDirection = FVector::ZeroVector;
 
 	// APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 	// int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;

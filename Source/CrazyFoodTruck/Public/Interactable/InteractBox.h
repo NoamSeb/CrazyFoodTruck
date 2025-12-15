@@ -120,6 +120,9 @@ public:
 	TObjectPtr<APawn> PawnToPossess = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
+	USceneComponent* AttachLookPoint;
+
+	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
 	EInteractionType InteractionType;
 	
 	UPROPERTY(EditAnywhere, Category = "Interact|Possess")
