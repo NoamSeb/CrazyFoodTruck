@@ -76,5 +76,9 @@ void UMainMenuWidget::RefreshSlots()
 	{
 		const bool bAllConnected = GIRef->AreAllPlayersConnected();
 		PlayButton->SetIsEnabled(bAllConnected);
+		if (bAllConnected)
+		{
+			FocusController();
+		}
 	}
 }
