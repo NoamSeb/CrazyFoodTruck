@@ -13,21 +13,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_EndLevel.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_EndLevel.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/DATA/DT_ListUpgrades.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/DATA/DT_ListUpgrades.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/IMC/Turret_INPUT/IMC_Turret.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/IMC/Turret_INPUT/IMC_Turret.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_UpgradePhase.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/WBP_EndDemo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/WBP_EndDemo.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/WBP_Loose.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/WBP_Loose.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Resources/Module/ModuleExplosive.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Resources/Module/ModuleExplosive.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Resources/Module/ModuleMine.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Resources/Module/ModuleMine.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Data/Public/GameInstanceCrazyFoodTruck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/HordeManager.h" afterDir="false" />
-    </list>
+    <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
