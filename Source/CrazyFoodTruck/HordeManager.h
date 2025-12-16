@@ -81,6 +81,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Horde Manager | Spawn Horde")
 	void SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* ZoneSpawn, ETargetZombiePoint PositionSpawn);
 
+	TObjectPtr<UGameDataSubSystem> GameData;
 
 
 #pragma region Spawn Horde Zombie
