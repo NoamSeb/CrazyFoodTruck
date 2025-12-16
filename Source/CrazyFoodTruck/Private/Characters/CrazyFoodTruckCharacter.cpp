@@ -279,7 +279,11 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
 
         AddMovementInput(Forward, Y);
         AddMovementInput(Right, X);
-        MovementType = EMovementType::ECC_Run;
+        
+        if (!bIsInModule)
+        {
+            MovementType = EMovementType::ECC_Run;
+        }
         
         FVector Dir = Forward * Y + Right * X;
         Dir.Z = 0.f;

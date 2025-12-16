@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Interface/IBoxInteract.h"
 #include "UInteractBoxWidget.generated.h"
 
 UCLASS()
@@ -19,5 +18,8 @@ public :
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="InteractBox")
 	void HideInteract();
+
+	UFUNCTION(BlueprintImplementableEvent, Category="InteractBox")
+	void SetColor(FLinearColor NewColor);
 	
 };

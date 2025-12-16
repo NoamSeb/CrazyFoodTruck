@@ -7,6 +7,7 @@
 #include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameMode/CrazyFoodTruckGameMode.h"
 #include "LocalMultiplayerSubsystem.h"
+#include "AssetTypeActions/AssetDefinition_SoundBase.h"
 #include "Components/BoxComponent.h"
 #include "Components/Image.h"
 #include "Components/WidgetComponent.h"
@@ -46,6 +47,12 @@ AInteractBox::AInteractBox()
     AttachLookPoint = CreateDefaultSubobject<USceneComponent>(TEXT("AttachLookPoint"));
     AttachLookPoint->AttachToComponent(Box, FAttachmentTransformRules::KeepRelativeTransform, "");
 }
+
+void AInteractBox::SetWidgetInteractBox(UUInteractBoxWidget* NewWidget)
+{
+    InteractBoxWidget = NewWidget;
+}
+
 void AInteractBox::BeginPlay()
 {
     Super::BeginPlay();
@@ -279,6 +286,10 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
         if (!CurrentInteractorPlayerController.IsValid())
         {
             OnCollisionEnter.Broadcast();
+            if (InteractBoxWidget)
+            {
+                InteractBoxWidget->SetColor(GetPlayerColorFromPlayerController(PlayerController));
+            }
             if (!EnteringCharacter)
             {
                 EnteringCharacter = Character;
@@ -309,8 +320,6 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACraz
 
     if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
     {
-         //
-         //if (ine) ine->AddOnScreenDebugMessage(-1, 2.f, PlayerColor, PlayerLabel + TEXT("Already in use by another player."));
         return;
     }
 
@@ -364,6 +373,9 @@ void AInteractBox::TryPossesPawn(APlayerController* InstigatorPlayerController)
     if (!InstigatorPlayerController) return;
     if (!CurrentInteractorPlayerController.IsValid())
     {
+        //PLAY SOUND 2D
+        
+        UGameplayStatics::PlaySound2D(GetWorld(), InteractionSound);
         CurrentInteractorPlayerController = InstigatorPlayerController;
         OnInteractionStarted.Broadcast(InstigatorPlayerController);
     }
@@ -424,7 +436,8 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
                     LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, false);
                     CachedCharacter->MovementType = EMovementType::ECC_Push;
                     auto targetRotation = UKismetMathLibrary::FindLookAtRotation(CachedCharacter->GetActorLocation(), AttachLookPoint->GetComponentLocation());
-                    CachedCharacter->LastMovementDirection.Rotation() = targetRotation;
+                    CachedCharacter->SetActorRotation(targetRotation);
+                    GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green , "ENTER SET ROTAION");
                 }
             }
         }
