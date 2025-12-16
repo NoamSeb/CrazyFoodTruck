@@ -28,7 +28,9 @@ public:
 	virtual void ReceiveDamage(int DamageAmount) override;
 	virtual void Tick(float DeltaTime) override;
 private:
-
+	
+	UPROPERTY(EditDefaultsOnly, Category="Parameters")
+	 USceneComponent* Bariii;
 	UFUNCTION(BlueprintCallable, Category="Explosive")
 	void Explode();
 	UPROPERTY(EditAnywhere, Category = "Module|Parameters")
@@ -39,6 +41,5 @@ private:
 	USoundBase* BoomSound = nullptr;
 	bool bHasExploded = false;
 
-	UPROPERTY(EditDefaultsOnly, Category="Module|Parameters")
-	USceneComponent* TargetBarils;
+
 };

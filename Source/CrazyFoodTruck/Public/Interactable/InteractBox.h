@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,6 +5,7 @@
 #include "EInteractionType.h"
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
+#include "Widget/UInteractBoxWidget.h"
 #include "InteractBox.generated.h"
 
 class UWidgetComponent;
@@ -147,6 +147,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Interact|Events")
 	FOnCollision OnPlayerQuit;
 
+	UFUNCTION(BlueprintCallable)
+	void SetWidgetInteractBox(UUInteractBoxWidget* NewWidget);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player Index")
 	int CurrentPlayerId;
 	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player")
@@ -226,4 +229,10 @@ private:
 
 	TArray<ACrazyFoodTruckCharacter*> PlayerDetected;
 	TArray<AActor*> DetectedActors;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interact|Components")
+	USoundBase* InteractionSound = nullptr;
+
+	UPROPERTY()
+	UUInteractBoxWidget* InteractBoxWidget = nullptr;
 };

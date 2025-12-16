@@ -13,13 +13,20 @@ AMineExplosive::AMineExplosive()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-    TargetBarils = CreateDefaultSubobject<USceneComponent>(TEXT("TargetBarils"));
-    TargetBarils->SetupAttachment(RootComponent);
+
 }
 
 void AMineExplosive::BeginPlay()
 {
 	Super::BeginPlay();
+    auto sceneComponents = K2_GetComponentsByClass(USceneComponent::StaticClass());
+    for (auto SceneComponent : sceneComponents)
+    {
+        if (SceneComponent->GetName() == "SC_TargetBarils")
+        {
+            Bariii = Cast<USceneComponent>(SceneComponent);
+        }
+    }
 }
 
 void AMineExplosive::ReceiveDamage(int DamageAmount)
@@ -37,7 +44,8 @@ void AMineExplosive::Tick(float DeltaTime)
 
 void AMineExplosive::Explode()
 {
-	const FVector TraceStart = GetActorLocation();
+    if (!Bariii){return;}
+	const FVector TraceStart = Bariii->GetComponentLocation();
     const FVector TraceEnd = TraceStart;
 
     TArray<AActor*> ActorsToIgnore;
@@ -97,7 +105,7 @@ void AMineExplosive::Explode()
 
     if (ExplosionEffect)
     {
-        UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation(), GetActorRotation());
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation(), GetActorRotation(), FVector(2.5f));
     }
     UGameplayStatics::PlaySound2D(this, BoomSound);
 }
