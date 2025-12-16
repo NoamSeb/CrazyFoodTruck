@@ -282,7 +282,23 @@ void AHordeManager::BeginPlay()
 
 void AHordeManager::HandleZombieDied(AZombieIA* Zombie, AActor* Killer)
 {
+	if (!GameData)
+	{
+		UWorld* World = GetWorld();
+		if (!World) return;
+
+		UGameInstance* GIBase = World->GetGameInstance();
+		if (!GIBase) return;
+
+		UGameInstanceCrazyFoodTruck* GI = Cast<UGameInstanceCrazyFoodTruck>(GIBase);
+
+		if (!GI) return;
+
+		GameData = GI->GetSubsystem<UGameDataSubSystem>();
+	}
+	
 	++ZombiesKilledTotal;
+	++GameData->NbrZombiesKill;
 	ListHordeZombie.Remove(Zombie);
 	OnAnyZombieDied.Broadcast(Zombie, Killer);
 }
