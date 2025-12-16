@@ -15,30 +15,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/Truck/M_Truck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/Truck/M_Truck.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/Zombie/Zombie_Miku/Mat_ZombieMiku.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Assets/Zombie/Zombie_Miku/Mat_ZombieMiku.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_MineExplosive.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_MineExplosive.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Zombie.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/BP/BP_Zombie.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Camera/BP_CrazyFoodTruckCameraActor.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Camera/BP_CrazyFoodTruckCameraActor.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/Animation/ABP_Chara.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/Animation/ABP_Chara.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_GreenCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Characters/BP_GreenCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/MainMenu1.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/MainMenu1.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Menu/BP_MenuCamera.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Menu/BP_MenuCamera.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Menu/BP_MenuLobbySlotsRoot.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Menu/BP_MenuLobbySlotsRoot.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Menu/BP_MenuPlayerSlot3D.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Menu/BP_MenuPlayerSlot3D.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_MainMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/HUD_MainMenu.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_MenuCamp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/Menus/WBP_MenuCamp.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_InteractBox.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/UW_InteractBox.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Resources/Module/ModuleExplosive.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Resources/Module/ModuleExplosive.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Characters/CrazyFoodTruckCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/MineExplosive.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/MineExplosive.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interactable/InteractBox.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Interactable/InteractBox.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/MineExplosive.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/MineExplosive.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Widget/UInteractBoxWidget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Widget/UInteractBoxWidget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Vehicle/Vehicle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Vehicle/Vehicle.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +46,7 @@
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Core/Public/Templates/MemoryOps.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/Engine/Player.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/GameFramework/PlayerController.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.inl" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Private/KismetMaterialLibrary.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Private/KismetSystemLibrary.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/Engine/Public/Subsystems/GameInstanceSubsystem.h" root0="FORCE_HIGHLIGHTING" />
@@ -109,22 +90,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.EpicGames.AspNet.executor&quot;: &quot;Run&quot;,
-    &quot;C/C++ Project.CrazyFoodTruck.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;NewDevelopForOthers&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.appearance&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.EpicGames.AspNet.executor": "Run",
+    "C/C++ Project.CrazyFoodTruck.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature/Upgrades",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "configurable.group.appearance",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="C/C++ Project.CrazyFoodTruck">
     <configuration name="CrazyFoodTruck" type="CppProject" factoryName="C++ Project">
       <configuration_1 setup="1">
@@ -160,8 +141,13 @@
       <option name="WORKING_DIRECTORY" value="" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Programs/AutomationTool/AutomationTool.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
@@ -178,8 +164,13 @@
       <option name="WORKING_DIRECTORY" value="" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.5/Engine/Source/Programs/UnrealBuildTool/UnrealBuildTool.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
@@ -201,6 +192,7 @@
       <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
       <option name="SEND_DEBUG_REQUEST" value="1" />
       <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <option name="AUTO_ATTACH_CHILDREN" value="0" />
       <method v="2">
         <option name="Build" />
       </method>

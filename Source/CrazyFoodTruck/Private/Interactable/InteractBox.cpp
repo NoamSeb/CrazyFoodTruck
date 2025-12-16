@@ -7,15 +7,10 @@
 #include "Characters/CrazyFoodTruckCharacter.h"
 #include "GameMode/CrazyFoodTruckGameMode.h"
 #include "LocalMultiplayerSubsystem.h"
-#include "AssetTypeActions/AssetDefinition_SoundBase.h"
 #include "Components/BoxComponent.h"
-#include "Components/Image.h"
-#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Interface/IVehicule.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMaterialLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Vehicle/Vehicle.h"
 
@@ -648,10 +643,9 @@ FColor AInteractBox::GetPlayerColorFromPlayerController(APlayerController* Playe
 
     switch (GetPlayerIndexFromPlayerController(PlayerController))
     {
-    case 0: return FColor(0,115,255);
-    case 1: return FColor(26,204,51);
-    case 2: return FColor(255,26,26);
-    case 3: return FColor(255,230,26);
+    case 0: return FColor(226,69,161);
+    case 1: return FColor(33,121,198);
+    case 2: return FColor(245,155,67);
     default: return FColor::White;
     }
 }
