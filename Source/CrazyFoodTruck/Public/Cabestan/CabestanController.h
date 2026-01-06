@@ -22,6 +22,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	ATurretController* LinkedTurretController;
 
+	UFUNCTION(BlueprintImplementableEvent, Category="Cabestan|Events")
+	void OnCabestanPushed();
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Cabestan|Events")
+	void OnCabestanStopped();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -45,6 +51,7 @@ public:
 	void RemovePlayerInside();
 
 private:
+	bool bPlayerWasPushing = false;
 	UGameInstanceCrazyFoodTruck* GI;
 	UFoodTruckDataSubSystem* TruckSubSystem;
 
