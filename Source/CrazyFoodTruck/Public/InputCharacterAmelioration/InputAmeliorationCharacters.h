@@ -17,6 +17,13 @@ class CRAZYFOODTRUCK_API UInputAmeliorationCharacters : public UActorComponent
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,  Category="Color for Upgrades")
+	int32 indexPlayerColor;
+	
+	
+
+	
 	//DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnPlayerAction, int32, PlayerIndex, int32, PositionIndex, bool, OnSkip);
 //
 //	UPROPERTY(BlueprintAssignable, Category="Events")
@@ -99,6 +106,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	//int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
-	//APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
+	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
+	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
+	FColor GetPlayerColorFromPlayerController(APlayerController* PlayerController) const;
 };

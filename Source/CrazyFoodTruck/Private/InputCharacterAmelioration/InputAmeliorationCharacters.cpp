@@ -30,6 +30,9 @@ void UInputAmeliorationCharacters::BeginPlay()
 
 void UInputAmeliorationCharacters::Init()
 {
+
+	indexPlayerController = indexPlayerColor;
+	
 	IndexCurrentCible = indexPlayerController;
 	IsValidate = false;
 	CanMoveOnModule = false;
@@ -176,6 +179,36 @@ void UInputAmeliorationCharacters::ValidInModule(const FInputActionValue& Value)
 //		return Cast<APlayerController>(Pawn->GetController());
 //	}
 //	return Cast<APlayerController>(Actor);
+//}
+//
+//FColor UInputAmeliorationCharacters::GetPlayerColorFromPlayerController(APlayerController* PlayerController) const
+//{
+//	if (!PlayerController) return FColor::White;
+//	if (APawn* Pawn = PlayerController->GetPawn())
+//	{
+//		if (const ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Pawn))
+//		{
+//			return Character->GetPlayerColor().ToFColor(true);
+//		}
+//	}
+//
+//	switch (GetPlayerIndexFromPlayerController(PlayerController))
+//	{
+//	case 0: return FColor(226,69,161);
+//	case 1: return FColor(33,121,198);
+//	case 2: return FColor(245,155,67);
+//	default: return FColor::White;
+//	}
+//}
+
+//int32 AInteractBox::GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const
+//{
+//	if (!PlayerController) return -1;
+//	if (const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer())
+//	{
+//		return LocalPlayer->GetControllerId();
+//	}
+//	return -1;
 //}
 
 //int ChangeNumList

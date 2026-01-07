@@ -42,15 +42,34 @@ int32 UScoreManagerComponent::EvaluateScore_Direct(const TArray<FScoreTier>& Tie
 
 int32 UScoreManagerComponent::EvaluateScore_Inverse(const TArray<FScoreTier>& Tiers, int32 Value) const
 {
+	//for (const FScoreTier& Tier : Tiers)
+	//{
+	//	if (Value <= Tier.Threshold)
+	//	{
+	//		return Tier.Score;
+	//	}
+	//}
+	//
+	//return 0;
+
+
+	int32 BestScore = 0;
+	int32 value = 0;
+	int32 valueThreshold = 0;
 	for (const FScoreTier& Tier : Tiers)
 	{
+		value = Value;
+		valueThreshold =  Tier.Threshold;
 		if (Value <= Tier.Threshold)
 		{
-			return Tier.Score;
+			BestScore = Tier.Score;
+		}
+		else
+		{
+			break;
 		}
 	}
-
-	return 0;
+	return BestScore;
 }
 
 EScoreGrade UScoreManagerComponent::EvaluateGrade(const TArray<FScoreGradeTier>& Tiers, int32 TotalScore) const
@@ -80,8 +99,11 @@ int32 UScoreManagerComponent::ComputeTotalScore(int32 TimeSeconds, int32 Zombies
 	{
 		GameData->NbrZombiesKill += ZombiesKilled;
 		FStructScoreLevel CurrentScoreLevel = GetScoreLevelData(GameData->LevelNumber);
+		//OutTimeScore = EvaluateScore_Inverse(CurrentScoreLevel.TimeScoreTiers, TimeSeconds);
+		//OutKillScore = EvaluateScore_Direct(CurrentScoreLevel.KillScoreTiers, ZombiesKilled);
+
 		OutTimeScore = EvaluateScore_Inverse(CurrentScoreLevel.TimeScoreTiers, TimeSeconds);
-		OutKillScore = EvaluateScore_Direct(CurrentScoreLevel.KillScoreTiers, ZombiesKilled);
+        OutKillScore = EvaluateScore_Inverse(CurrentScoreLevel.KillScoreTiers, ZombiesKilled);
 	}
 	return OutTimeScore + OutKillScore + OutLifeScore;
 }

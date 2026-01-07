@@ -393,11 +393,16 @@ void ACrazyFoodTruckGameMode::EvaluateFinalScore()
 
     if (CFTGI)
     {
-        LifeRemaining = CFTGI->CurrentLifeFoodTruck - (CFTGI->MaxLifeFoodTruck -  CFTGI->CurrentLifeFoodTruck);
+        //LifeRemaining = CFTGI->CurrentLifeFoodTruck - (CFTGI->MaxLifeFoodTruck -  CFTGI->CurrentLifeFoodTruck);
+        LifeRemaining = CFTGI->CurrentLifeFoodTruck;
         OutLifeScore = LifeRemaining * 100;
     }
 
     const int32 FinalScore = ScoreManager->ComputeTotalScore(TimeSeconds, Kills, OutLifeScore, TimeScore,KillScore);
+
+
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("value : %f"), FinalScore)); 
+
     const EScoreGrade Grade = ScoreManager->GetGradeForScore(FinalScore);
     
     GS->SetScoreValues(FinalScore, TimeScore, KillScore, Grade);

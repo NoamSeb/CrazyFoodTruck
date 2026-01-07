@@ -90,12 +90,38 @@ int UGameInstanceCrazyFoodTruck::DecrementTicketsNumber(int Amount)
 
 int32 UGameInstanceCrazyFoodTruck::AddTicketsForGrade(EScoreGrade Grade)
 {
-	if (int32* TicketsPtr = TicketsByGrade.Find(Grade))
+	//if (int32* TicketsPtr = TicketsByGrade.Find(Grade))
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("AddTicketsForGrade"));
+	//	IncrementTicketsNumber(*TicketsPtr);
+	//	return *TicketsPtr;
+	//}
+
+	switch (Grade)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("AddTicketsForGrade"));
-		IncrementTicketsNumber(*TicketsPtr);
-		return *TicketsPtr;
+		case EScoreGrade::S:
+			IncrementTicketsNumber(TicketsByGrade[Grade]);
+			return TicketsByGrade[Grade];
+		case EScoreGrade::A:
+			IncrementTicketsNumber(TicketsByGrade[Grade]);
+			return TicketsByGrade[Grade];
+		case EScoreGrade::B:
+			IncrementTicketsNumber(TicketsByGrade[Grade]);
+			return TicketsByGrade[Grade];
+		case EScoreGrade::C:
+			IncrementTicketsNumber(TicketsByGrade[Grade]);
+			return TicketsByGrade[Grade];
+		case EScoreGrade::D:
+			IncrementTicketsNumber(TicketsByGrade[Grade]);
+			return TicketsByGrade[Grade];
+		//case EScoreGrade::E:
+		//	IncrementTicketsNumber(5);
+		//	return 5;
+		//case EScoreGrade::F:
+		//	IncrementTicketsNumber(4);
+		//	return 4;
 	}
+	
 	return 0;
 }
 

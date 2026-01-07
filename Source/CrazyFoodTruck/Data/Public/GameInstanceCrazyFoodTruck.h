@@ -76,10 +76,10 @@ public:
 	EModuleUpgrade ModuleUpgradeRight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 CurrentLifeFoodTruck = 25;
+	int32 CurrentLifeFoodTruck = 20;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 MaxLifeFoodTruck = 25;
+	int32 MaxLifeFoodTruck = 20;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Lobby")
 	TArray<FMenuPlayerSlot> PlayerSlots;
