@@ -6,6 +6,8 @@
 #include "AmmoBox.h"
 #include "LocalMultiplayerSettings.h"
 
+#include "Camera/CameraEnvironmentManager.h"
+
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -73,51 +75,74 @@ void ACrazyFoodTruckCharacter::SetupPlayerInputComponent(UInputComponent* Player
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-    
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         BindInputMoveAction(EnhancedInputComponent);
         BindInputInteractAction(EnhancedInputComponent);
+
+        if (IA_DebugCamMove)
+        {
+            EnhancedInputComponent->BindAction(IA_DebugCamMove, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::DebugCamMove);
+        }
+        if (IA_DebugCamRotate)
+        {
+            EnhancedInputComponent->BindAction(IA_DebugCamRotate, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::DebugCamRotate);
+        }
+        if (IA_DebugCamZoom)
+        {
+            EnhancedInputComponent->BindAction(IA_DebugCamZoom, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::DebugCamZoom);
+        }
+        if (IA_DebugCamReset)
+        {
+            EnhancedInputComponent->BindAction(IA_DebugCamReset, ETriggerEvent::Started, this, &ACrazyFoodTruckCharacter::DebugCamReset);
+        }
     }
-    
 
     PlayerInputComp = PlayerInputComponent;
 }
 
-void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* InputMappingContextParam, int8 Priority)
+void ACrazyFoodTruckCharacter::PossessedBy(AController* NewController)
 {
-    
-    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
-    if (!PlayerController)
-    {
-        return;
-    }
-    
-    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
-    if (!LocalPlayer)
+    Super::PossessedBy(NewController);
+
+    if (!bCanControlGlobalCamera || !DebugCameraIMC)
     {
         return;
     }
 
+    APlayerController* PC = Cast<APlayerController>(NewController);
+    if (!PC) return;
+
+    ULocalPlayer* LP = PC->GetLocalPlayer();
+    if (!LP) return;
+
+    if (UEnhancedInputLocalPlayerSubsystem* Subsystem = LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+    {
+        Subsystem->AddMappingContext(DebugCameraIMC, 100);
+    }
+}
+
+void ACrazyFoodTruckCharacter::AddMappingContext(UInputMappingContext* MappingContext, int8 Priority)
+{
+    const APlayerController* PlayerController = Cast<APlayerController>(Controller);
+    if (!PlayerController) return;
+
+    const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+    if (!LocalPlayer) return;
+
     if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
     {
-        EnhancedInputLocalPlayerSubsystem->AddMappingContext(InputMappingContextParam, Priority);
+        EnhancedInputLocalPlayerSubsystem->AddMappingContext(MappingContext, Priority);
     }
 }
 
 void ACrazyFoodTruckCharacter::RemoveMappingContext(UInputMappingContext* MappingContext)
 {
     const APlayerController* PlayerController = Cast<APlayerController>(Controller);
-    if (!PlayerController)
-    {
-        return;
-    }
+    if (!PlayerController) return;
 
     const ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
-    if (!LocalPlayer)
-    {
-        return;
-    }
+    if (!LocalPlayer) return;
 
     if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
     {
@@ -435,4 +460,69 @@ void ACrazyFoodTruckCharacter::UpdatePlayerColorFromController()
     //        }
     //    }
     //}
+}
+
+ACameraEnvironmentManager* ACrazyFoodTruckCharacter::GetEnvCameraManager()
+{
+    if (CachedEnvCam.IsValid())
+    {
+        return CachedEnvCam.Get();
+    }
+
+    TArray<AActor*> Found;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraEnvironmentManager::StaticClass(), Found);
+
+    if (Found.Num() > 0)
+    {
+        CachedEnvCam = Cast<ACameraEnvironmentManager>(Found[0]);
+    }
+    else
+    {
+        // Optionnel : signaler si absent
+        // if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("No CameraEnvironmentManager in level"));
+    }
+
+    return CachedEnvCam.Get();
+}
+
+void ACrazyFoodTruckCharacter::DebugCamMove(const FInputActionValue& Value)
+{
+    if (!bCanControlGlobalCamera) return;
+
+    ACameraEnvironmentManager* Cam = GetEnvCameraManager();
+    if (!Cam) return;
+
+    const FVector2D Axis = Value.Get<FVector2D>();
+    Cam->DebugMoveCamera(FVector(Axis.Y, Axis.X, 0.f), GetWorld()->GetDeltaSeconds());
+}
+
+void ACrazyFoodTruckCharacter::DebugCamRotate(const FInputActionValue& Value)
+{
+    if (!bCanControlGlobalCamera) return;
+
+    ACameraEnvironmentManager* Cam = GetEnvCameraManager();
+    if (!Cam) return;
+
+    const FVector2D Axis = Value.Get<FVector2D>();
+    Cam->DebugRotateCamera(FRotator(Axis.Y, Axis.X, 0.f), GetWorld()->GetDeltaSeconds());
+}
+
+void ACrazyFoodTruckCharacter::DebugCamZoom(const FInputActionValue& Value)
+{
+    if (!bCanControlGlobalCamera) return;
+
+    ACameraEnvironmentManager* Cam = GetEnvCameraManager();
+    if (!Cam) return;
+
+    Cam->DebugZoomCamera(Value.Get<float>(), GetWorld()->GetDeltaSeconds());
+}
+
+void ACrazyFoodTruckCharacter::DebugCamReset()
+{
+    if (!bCanControlGlobalCamera) return;
+
+    ACameraEnvironmentManager* Cam = GetEnvCameraManager();
+    if (!Cam) return;
+
+    Cam->DebugResetCamera();
 }

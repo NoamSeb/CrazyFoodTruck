@@ -9,6 +9,7 @@
 #include "Interface/IPlayer.h"
 
 #include "CrazyFoodTruck/Data/Public/GameDataSubSystem.h"
+#include "InputActionValue.h"
 
 #include "CrazyFoodTruckCharacter.generated.h"
 
@@ -17,6 +18,9 @@ class AAmmoBox;
 
 class UEnhancedInputComponent;
 class UEnhancedInputLocalPlayerSubsystem;
+
+class UInputAction;
+class ACameraEnvironmentManager;
 
 UENUM(BlueprintType)
 enum class EMovementFrame : uint8
@@ -47,10 +51,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override; 
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void PossessedBy(AController* NewController) override;
 
 public:
-
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MovementSpeed = 600.f;
 	
@@ -155,4 +160,33 @@ private:
 	void TryInteract();
 
 	void UpdatePlayerColorFromController();
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DebugCamera")
+	bool bCanControlGlobalCamera = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DebugCamera|Input")
+	TObjectPtr<UInputMappingContext> DebugCameraIMC = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DebugCamera|Input")
+	TObjectPtr<UInputAction> IA_DebugCamMove = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DebugCamera|Input")
+	TObjectPtr<UInputAction> IA_DebugCamRotate = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DebugCamera|Input")
+	TObjectPtr<UInputAction> IA_DebugCamZoom = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DebugCamera|Input")
+	TObjectPtr<UInputAction> IA_DebugCamReset = nullptr;
+
+private:
+	TWeakObjectPtr<ACameraEnvironmentManager> CachedEnvCam;
+
+	ACameraEnvironmentManager* GetEnvCameraManager();
+
+	void DebugCamMove(const FInputActionValue& Value);
+	void DebugCamRotate(const FInputActionValue& Value);
+	void DebugCamZoom(const FInputActionValue& Value);
+	void DebugCamReset();
 };

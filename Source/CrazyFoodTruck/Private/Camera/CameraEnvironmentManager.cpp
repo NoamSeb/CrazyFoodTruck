@@ -144,3 +144,33 @@ void ACameraEnvironmentManager::ApplyBlend(float Alpha, bool bTowardsDynamic)
 	TargetSpringArm->SetRelativeRotation(NewRotation);
 	TargetSpringArm->TargetArmLength = NewArmLength;
 }
+
+void ACameraEnvironmentManager::DebugMoveCamera(const FVector& LocalOffset, float DeltaTime)
+{
+	if (!bEnableDebugCamera || !TargetSpringArm) return;
+
+	TargetSpringArm->AddRelativeLocation(LocalOffset * DebugMoveSpeed * DeltaTime);
+}
+
+void ACameraEnvironmentManager::DebugRotateCamera(const FRotator& DeltaRot, float DeltaTime)
+{
+	if (!bEnableDebugCamera || !TargetSpringArm) return;
+
+	TargetSpringArm->AddRelativeRotation(DeltaRot * DebugRotateSpeed * DeltaTime);
+}
+
+void ACameraEnvironmentManager::DebugZoomCamera(float AxisValue, float DeltaTime)
+{
+	if (!bEnableDebugCamera || !TargetSpringArm) return;
+
+	TargetSpringArm->TargetArmLength = FMath::Clamp(TargetSpringArm->TargetArmLength + AxisValue * DebugZoomSpeed * DeltaTime, 100.f, 10000.f);
+}
+
+void ACameraEnvironmentManager::DebugResetCamera()
+{
+	if (!TargetSpringArm) return;
+
+	TargetSpringArm->SetRelativeLocation(DefaultRelativeLocation);
+	TargetSpringArm->SetRelativeRotation(DefaultRelativeRotation);
+	TargetSpringArm->TargetArmLength = DefaultArmLength;
+}

@@ -95,6 +95,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "EnvCam")
 	void DeactivateDynamicCamera(float BlendTimeOverride = -1.f);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DebugCamera")
+	bool bEnableDebugCamera = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DebugCamera", meta = (ClampMin = "0.0"))
+	float DebugMoveSpeed = 1200.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DebugCamera", meta = (ClampMin = "0.0"))
+	float DebugRotateSpeed = 120.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DebugCamera", meta = (ClampMin = "0.0"))
+	float DebugZoomSpeed = 3000.f;
+
+	void DebugMoveCamera(const FVector& LocalOffset, float DeltaTime);
+	void DebugRotateCamera(const FRotator& DeltaRot, float DeltaTime);
+	void DebugZoomCamera(float AxisValue, float DeltaTime);
+	void DebugResetCamera();
+
 private:
 	void StartBlend(bool bTowardsDynamic, float BlendDuration);
 	void UpdateBlend(float DeltaTime);
