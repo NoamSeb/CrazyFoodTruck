@@ -396,6 +396,7 @@ void AVehicle::InputQuitTruck(const FInputActionValue& InputActionValue)
 
 void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Truck Rotate");
 	TruckState = EVehicleStates::Rotating;
 	InputRotatingValue = InputActionValue.Get<float>();
 
@@ -418,6 +419,7 @@ void AVehicle::SetTruckRotatingStates(const FInputActionValue& InputActionValue)
 
 void AVehicle::SetTruckIdleStates()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Truck Idle");
 	TruckState = EVehicleStates::Idle;
 
 	TiltTimer = 0.f;
