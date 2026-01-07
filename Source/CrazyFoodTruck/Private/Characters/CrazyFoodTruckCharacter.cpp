@@ -152,7 +152,6 @@ void ACrazyFoodTruckCharacter::RemoveMappingContext(UInputMappingContext* Mappin
 
 void ACrazyFoodTruckCharacter::AddMappingUpgrade()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "add");
     if (UInputAmeliorationCharacters* InputAmeliorationComp = FindComponentByClass<UInputAmeliorationCharacters>())
     {
         AddMappingContext(InputAmeliorationComp->MoveAmeliorationInputMappingContext, 10);

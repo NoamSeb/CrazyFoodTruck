@@ -31,6 +31,10 @@ class CRAZYFOODTRUCK_API AHordeManager : public AActor
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(EditAnywhere, Category= "Horde Manager | Sound")
+	USoundBase* KlaxonSound;
+	
 	AHordeManager();
 	void FindTargetPoints();
 

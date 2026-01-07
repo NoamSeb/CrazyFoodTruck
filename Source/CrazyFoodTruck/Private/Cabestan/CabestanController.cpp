@@ -24,8 +24,27 @@ void ACabestanController::BeginPlay()
 void ACabestanController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (PlayerInsideCount <= 0){return;}
+	if (PlayerInsideCount <= 0)
+	{
+		if (bPlayerWasPushing)
+		{
+			bPlayerWasPushing = false;
+			OnCabestanStopped();
+		}
+		return;
+	}
+	
+	bPlayerWasPushing = true;
+
 	float value = towardInput - backwardInput;
+	if (value)
+	{
+		OnCabestanPushed();
+	}
+	else
+	{
+		OnCabestanStopped();
+	}
 	AddRotationInput(value);
 	if (LinkedTurretController)
 	{

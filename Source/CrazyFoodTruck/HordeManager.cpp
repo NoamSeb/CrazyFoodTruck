@@ -180,6 +180,8 @@ void AHordeManager::SpawnHordeZombie(int32 nombreZombies, AAreaZombieSpawn* Zone
 	const FVector BoxCenter = ZoneSpawn->NewBoxAreaSpawn->GetComponentLocation();
 
 	ShowSpawnIndicatorForTarget(targetPoint);
+	// Play Sound 2D
+	UGameplayStatics::PlaySound2D(this, KlaxonSound);
 
 	for (int32 i = 0; i < nombreZombies; ++i)
 	{
