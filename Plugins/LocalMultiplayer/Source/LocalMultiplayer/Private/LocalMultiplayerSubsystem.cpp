@@ -248,7 +248,7 @@ int32 ULocalMultiplayerSubsystem::GetPlayerIndexFromController(APlayerController
 	return -1;
 }
 
-bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed)
+bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed, int32 idColor)
 {
 	if (!PawnToPossess)
 	{
@@ -263,7 +263,7 @@ bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, AP
 
 	PC->Possess(PawnToPossess);
 	if(!IsVehiclePossessed)
-		ApplyOutline(PawnToPossess, PlayerIndex);
+		ApplyOutline(PawnToPossess, idColor);
 
 	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
 	{
@@ -273,8 +273,10 @@ bool ULocalMultiplayerSubsystem::PossessPawnForPlayerIndex(int32 PlayerIndex, AP
 	return true;
 }
 
-bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed)
+bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed, int32 idColor)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Silver, FString::Printf(TEXT("Bit_P%d"), idColor+1));
+	
 	APlayerController* PC = GetPlayerControllerForIndex(PlayerIndex);
 
 	if (!PC)
@@ -291,7 +293,7 @@ bool ULocalMultiplayerSubsystem::UnPossessPawnForPlayerIndex(int32 PlayerIndex, 
 	{
 		PC->Possess(PlayerPawn);
 		
-		ApplyOutline(PlayerPawn, PlayerIndex);
+		ApplyOutline(PlayerPawn, idColor);
 	}
 
 	if (UInputMappingContext* IMC = GetGamepadIMC(MappingType))
@@ -311,6 +313,8 @@ void ULocalMultiplayerSubsystem::ApplyOutline(APawn* OutlinedPawn, int PlayerInd
 		PawnMesh->SetCustomDepthStencilWriteMask(ERendererStencilMask::ERSM_255);
 		FString ParamName = FString::Printf(TEXT("Bit_P%d"), PlayerIndex+1);
 		FName ParamFName(*ParamName);
+
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, ParamName);
 		
 		const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
 		UMaterialParameterCollection* MPC = LocalMultiplayerSettings->MPCOutline.LoadSynchronous();

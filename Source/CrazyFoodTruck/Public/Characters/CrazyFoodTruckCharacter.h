@@ -11,6 +11,9 @@
 #include "CrazyFoodTruck/Data/Public/GameDataSubSystem.h"
 #include "InputActionValue.h"
 
+#include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
+
 #include "CrazyFoodTruckCharacter.generated.h"
 
 class UCrazyFoodTruckCharacterInputData;
@@ -56,6 +59,9 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "id for Color")
+	int32 IdColor;
+	
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MovementSpeed = 600.f;
 	
@@ -159,6 +165,7 @@ private:
 	void OnStopMove();
 	void TryInteract();
 
+	UFUNCTION(BlueprintCallable, Category = "Player Outline")
 	void UpdatePlayerColorFromController();
 
 protected:

@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Interactable/Interactable.h"
 #include "Widget/UInteractBoxWidget.h"
+#include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
 #include "InteractBox.generated.h"
 
 class UWidgetComponent;
@@ -216,6 +218,9 @@ private:
 	APlayerController* GetPlayerControllerFromActor(AActor* Actor) const;
 	int32 GetPlayerIndexFromPlayerController(APlayerController* PlayerController) const;
 	FColor GetPlayerColorFromPlayerController(APlayerController* PlayerController) const;
+	ACrazyFoodTruckCharacter* GetCrazyCharacterFromPC(APlayerController* PC);
+	int32 GetPlayerIdColorFromActor(AActor* Actor);
+	FColor GetColorFromColorId(int32 IdColor);
 
 	void AddOverlappingPlayerController(APlayerController* PlayerController);
 	void RemoveOverlappingPlayerController(APlayerController* PlayerController);

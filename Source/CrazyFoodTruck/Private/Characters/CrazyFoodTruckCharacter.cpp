@@ -17,6 +17,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "LocalMultiplayerSubsystem.h"
 #include "InputCharacterAmelioration/InputAmeliorationCharacters.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
 
 static void BasisFromYaw(const float YawDeg, FVector& OutForward, FVector& OutRight)
 {
@@ -407,17 +408,64 @@ int32 ACrazyFoodTruckCharacter::GetPlayerIndex() const
 
 FLinearColor ACrazyFoodTruckCharacter::GetPlayerColor() const
 {
+//#pragma region verif
+//    
+//    const ULocalMultiplayerSettings* Settings = GetDefault<ULocalMultiplayerSettings>();
+//    if (!Settings)
+//    {
+//        UE_LOG(LogTemp, Error, TEXT("Settings not found"));
+//        return FColor::White;
+//    }
+//
+//    UMaterialParameterCollection* MPC = Settings->MPCOutline.LoadSynchronous();
+//    if (!MPC)
+//    {
+//        UE_LOG(LogTemp, Error, TEXT("MPC not found"));
+//        return FColor::White;
+//    }
+//    
+//
+//    UMaterialParameterCollectionInstance* MPCInstance =
+//        GetWorld()->GetParameterCollectionInstance(MPC);
+//
+//    if (!MPCInstance)
+//    {
+//        UE_LOG(LogTemp, Error, TEXT("MPC Instance not found"));
+//        return FColor::White;
+//    }
+//
+//#pragma endregion
+//
+//
+//    const FString ColorName = FString::Printf(TEXT("OutlineColor_P%d"), IdColor + 1);
+//    const FName ColorFName(*ColorName);
+//
+//    FLinearColor OutColor;
+//    const bool bFound = MPCInstance->GetVectorParameterValue(ColorFName, OutColor);
+//
+//    if (!bFound)
+//    {
+//        UE_LOG(LogTemp, Warning, TEXT("Vector param %s not found"), *ColorName);
+//        return FColor::White;
+//    }
+//
+    //return OutColor;
+
+    
     return PlayerColor;
 }
 
 void ACrazyFoodTruckCharacter::SetPlayerColor(FLinearColor NewColor)
 {
     PlayerColor = NewColor;
+    UpdatePlayerColorFromController();
 }
 
 void ACrazyFoodTruckCharacter::UpdatePlayerColorFromController()
 {
-    const int32 ControllerId = GetPlayerIndex();
+    //const int32 ControllerId = GetPlayerIndex();
+    const int32 ControllerId = IdColor;
+    
     if (ControllerId < 0)
     {
         PlayerColor = FLinearColor::White;

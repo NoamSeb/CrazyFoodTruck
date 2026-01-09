@@ -12,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
 #include "Vehicle/Vehicle.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -283,7 +284,7 @@ void AInteractBox::TryDetectPlayer(APlayerController* PlayerController, ACrazyFo
             OnCollisionEnter.Broadcast();
             if (InteractBoxWidget)
             {
-                InteractBoxWidget->SetColor(GetPlayerColorFromPlayerController(PlayerController));
+                InteractBoxWidget->SetColor(GetColorFromColorId(Character->IdColor));
             }
             if (!EnteringCharacter)
             {
@@ -309,8 +310,9 @@ void AInteractBox::Interact(APlayerController* InstigatorPlayerController, ACraz
     {
     }
 
-    const FColor PlayerColor = GetPlayerColorFromPlayerController(InstigatorPlayerController);
-    const int32 PlayerIndex = GetPlayerIndexFromPlayerController(InstigatorPlayerController);
+    const FColor PlayerColor = GetColorFromColorId(CrazyCharacter->IdColor);
+    const int32 PlayerIndex = CrazyCharacter->IdColor;
+    //const int32 PlayerIndex = GetPlayerIndexFromPlayerController(InstigatorPlayerController);
     const FString PlayerLabel = FString::Printf(TEXT("[P%d] "), PlayerIndex);
 
     if (CurrentInteractorPlayerController.IsValid() && CurrentInteractorPlayerController.Get() != InstigatorPlayerController)
@@ -388,7 +390,9 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
 {
     if (!PlayerController) return;
 
-    CurrentPlayerId = GetPlayerIndexFromPlayerController(PlayerController);
+    //CurrentPlayerId = GetPlayerIndexFromPlayerController(PlayerController);
+    CurrentPlayerId = GetPlayerIdColorFromActor(GetCrazyCharacterFromPC(PlayerController));
+    
 
     bPlayerIsControlling = true;
     CachedPlayerController = PlayerController;
@@ -417,18 +421,20 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
         if (ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>())
         {
             const int32 PlayerIndex = GetPlayerIndexFromPlayerController(PlayerController);
+            //const int32 PlayerIndex = GetPlayerIdColorFromActor(GetCrazyCharacterFromPC(PlayerController));
             if (PlayerIndex != -1 && PawnToPossess)
             {
                 CachedCharacter->bIsInModule = true;
                 if(Cast<AVehicle>(PawnToPossess))
                 {
                     APlayerController* PC = CurrentInteractorPlayerController.Get(); 
-                    int CurrentPlayerIndex = GetPlayerIndexFromPlayerController(PC);
+                    //int CurrentPlayerIndex = GetPlayerIndexFromPlayerController(PC);
+                    int CurrentPlayerIndex = GetPlayerIdColorFromActor(GetCrazyCharacterFromPC(PlayerController));
                     AddOutlineToForwardCamera(CurrentPlayerIndex);
-                    LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, true);
+                    LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, true, CurrentPlayerId);
                 }else
                 {
-                    LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, false);
+                    LocalMultiplayerSubsystem->PossessPawnForPlayerIndex(PlayerIndex, PawnToPossess, MappingType, false, CurrentPlayerId);
                     CachedCharacter->MovementType = EMovementType::ECC_Push;
                     auto targetRotation = UKismetMathLibrary::FindLookAtRotation(CachedCharacter->GetActorLocation(), AttachLookPoint->GetComponentLocation());
                     CachedCharacter->SetActorRotation(targetRotation);
@@ -462,6 +468,11 @@ void AInteractBox::UnpossessPawn()
         return;
     
     const int32 PlayerIndex = GetPlayerIndexFromPlayerController(CachedPlayerController.Get());
+    const int32 PlayerIdColor = CachedCharacter->IdColor;
+
+    GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Silver, FString::Printf(TEXT("blablabla%d"), PlayerIdColor+1));
+    
+    
     if (PlayerIndex != -1)
     {
         if (UGameInstance* GI = GetGameInstance())
@@ -471,11 +482,13 @@ void AInteractBox::UnpossessPawn()
                 CachedCharacter->bIsInModule = false;
                 if(Cast<AVehicle>(PawnToPossess))
                 {
-                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, true);
+                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, true, PlayerIdColor);
                 }else
                 {
-                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false);
+                    LMS->UnPossessPawnForPlayerIndex(PlayerIndex, CachedPreviousPawn.Get(), MappingType, false, PlayerIdColor);
                 }
+                //LMS->PossessPawnForPlayerIndex(PlayerIndex, CachedCharacter.Get(), MappingType, false, CurrentPlayerId);
+                LMS->ApplyOutline(CachedCharacter.Get(), CachedCharacter->IdColor);
             }
         }
     }
@@ -648,6 +661,70 @@ FColor AInteractBox::GetPlayerColorFromPlayerController(APlayerController* Playe
     case 2: return FColor(245,155,67);
     default: return FColor::White;
     }
+}
+
+ACrazyFoodTruckCharacter* AInteractBox::GetCrazyCharacterFromPC(APlayerController* PC)
+{
+    ACharacter* Character = PC->GetCharacter();
+    ACrazyFoodTruckCharacter* CrazyCharacter = Cast<ACrazyFoodTruckCharacter>(Character);
+    return CrazyCharacter;
+}
+
+int32 AInteractBox::GetPlayerIdColorFromActor(AActor* Actor)
+{
+    if (!Actor) return -1;
+    if (ACrazyFoodTruckCharacter* Character = Cast<ACrazyFoodTruckCharacter>(Actor))
+    {
+        return Character->IdColor;
+    }
+    return -1;
+    //return Cast<APlayerController>(Actor);
+}
+
+FColor AInteractBox::GetColorFromColorId(int32 IdColor)
+{
+    #pragma region verif
+    
+    const ULocalMultiplayerSettings* Settings = GetDefault<ULocalMultiplayerSettings>();
+    if (!Settings)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Settings not found"));
+        return FColor::White;
+    }
+
+    UMaterialParameterCollection* MPC = Settings->MPCOutline.LoadSynchronous();
+    if (!MPC)
+    {
+        UE_LOG(LogTemp, Error, TEXT("MPC not found"));
+        return FColor::White;
+    }
+    
+
+    UMaterialParameterCollectionInstance* MPCInstance =
+        GetWorld()->GetParameterCollectionInstance(MPC);
+
+    if (!MPCInstance)
+    {
+        UE_LOG(LogTemp, Error, TEXT("MPC Instance not found"));
+        return FColor::White;
+    }
+
+    #pragma endregion
+
+
+    const FString ColorName = FString::Printf(TEXT("OutlineColor_P%d"), IdColor + 1);
+    const FName ColorFName(*ColorName);
+
+    FLinearColor OutColor;
+    const bool bFound = MPCInstance->GetVectorParameterValue(ColorFName, OutColor);
+
+    if (!bFound)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Vector param %s not found"), *ColorName);
+        return FColor::White;
+    }
+
+    return OutColor.ToFColor(true);
 }
 
 void AInteractBox::AddOverlappingPlayerController(APlayerController* PlayerController)

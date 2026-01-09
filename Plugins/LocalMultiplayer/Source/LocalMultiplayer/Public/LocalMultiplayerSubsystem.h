@@ -42,8 +42,8 @@ public:
 	ULocalPlayer* GetLocalPlayerForIndex(int32 PlayerIndex);
 	int32 GetPlayerIndexFromController(APlayerController* PlayerController) const;
 
-	bool PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed);
-	bool UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed);
+	bool PossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PawnToPossess, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed, int32 idColor);
+	bool UnPossessPawnForPlayerIndex(int32 PlayerIndex, APawn* PlayerPawn, ELocalMultiplayerInputMappingType MappingType, bool IsVehiclePossessed, int32 idColor);
 
 	void ApplyOutline(APawn* OutlinedPawn, int PlayerIndex);
 	
