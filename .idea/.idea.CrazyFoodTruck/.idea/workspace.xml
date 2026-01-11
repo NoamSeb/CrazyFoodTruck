@@ -16,10 +16,12 @@
     <list default="true" id="7831bf4c-44a8-403e-aa73-98f86c02d8d9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrazyFoodTruck/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Win64/UnrealEditor-CrazyFoodTruck.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Levels/TestGame.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/RoadProgress/WBP_RoadProgress.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/UI/WBP/RoadProgress/WBP_RoadProgress.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Blueprint/FoodTruck/BP_FoodTruck.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Interactable/BP_InteractBox.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Visuals/VFX/Outline/M_Outline_Inst.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Visuals/VFX/Outline/M_Outline_Inst.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ForwardCamWidget.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/CrazyFoodTruck/Widget/WBP_ForwardCamWidget.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/LocalMultiplayer/Binaries/Win64/UnrealEditor-LocalMultiplayer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Private/Interactable/InteractBox.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Vehicle/Vehicle.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/CrazyFoodTruck/Public/Vehicle/Vehicle.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -327,6 +329,12 @@
       <workItem from="1767952422504" duration="2530000" />
       <workItem from="1767958851618" duration="805000" />
       <workItem from="1767959989020" duration="10000" />
+      <workItem from="1767960062660" duration="257000" />
+      <workItem from="1767980691582" duration="604000" />
+      <workItem from="1767991270497" duration="594000" />
+      <workItem from="1767997626762" duration="2868000" />
+      <workItem from="1768072428764" duration="1473000" />
+      <workItem from="1768095978768" duration="2507000" />
     </task>
     <servers />
   </component>

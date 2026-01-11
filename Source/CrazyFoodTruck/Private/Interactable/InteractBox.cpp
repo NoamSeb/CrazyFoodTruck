@@ -427,6 +427,7 @@ void AInteractBox::PossessPawn(APlayerController* PlayerController)
                 CachedCharacter->bIsInModule = true;
                 if(Cast<AVehicle>(PawnToPossess))
                 {
+                    Cast<AVehicle>(PawnToPossess)->IsActuallyPossessed = true;
                     APlayerController* PC = CurrentInteractorPlayerController.Get(); 
                     //int CurrentPlayerIndex = GetPlayerIndexFromPlayerController(PC);
                     int CurrentPlayerIndex = GetPlayerIdColorFromActor(GetCrazyCharacterFromPC(PlayerController));
