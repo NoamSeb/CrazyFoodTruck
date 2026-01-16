@@ -1,6 +1,8 @@
 ﻿
 #include "MunitionDrawer.h"
 
+#include "Sound/SoundManager.h"
+
 AMunitionDrawer::AMunitionDrawer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -62,6 +64,9 @@ void AMunitionDrawer::UpdateValue(float valueChange, bool giveAmmo)
 {
 	if (bIsFull) return;
 	_ActualOpenValue += valueChange;
+	USoundManager* SM = USoundManager::Get();
+	if(SM)
+		SM->PlaySFX(ESfxType::ECC_Reload, this);
 	_ActualOpenValue = FMath::Clamp(_ActualOpenValue, 0.f, 1.f);
 	OnAmmoUpdate.Broadcast(_ActualOpenValue);
 	if (LinkedTurretController && giveAmmo)

@@ -39,8 +39,6 @@ AVehicle::AVehicle()
 
 	ForwardCamRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ForwardCamRoot"));
 	ForwardCamRoot->SetupAttachment(RootComponent);
-
-	ForwardCamRoot->SetUsingAbsoluteRotation(true);
 	
 	ForwardCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("ForwardCapture"));
 	ForwardCapture->SetupAttachment(ForwardCamRoot);
@@ -107,6 +105,7 @@ void AVehicle::BeginPlay()
 	{
 		CreateWidgetCamera();
 		StartForwardCapture();
+		HideWidgetCamera();
 	}
 	else
 	{
@@ -249,6 +248,19 @@ void AVehicle::Tick(float DeltaTime)
 	{
 		ForwardCapture->ClipPlaneBase = ForwardCapture->GetComponentLocation();
 		ForwardCapture->ClipPlaneNormal = ForwardCapture->GetForwardVector();
+	}
+
+	if (ForwardCamRoot)
+	{
+		const FRotator TruckRot = GetActorRotation();
+
+		const FRotator CamRot(
+			-5.f,
+			TruckRot.Yaw,
+			0.f
+		);
+
+		ForwardCamRoot->SetWorldRotation(CamRot);
 	}
 
 	ShootLineTrace(FEndOfTheRaceLocation);
@@ -642,6 +654,14 @@ void AVehicle::HideWidgetCamera()
 	}
 }
 
+void AVehicle::ShowWidgetCamera()
+{
+	if (ForwardCamWidget)
+	{
+		ForwardCamWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
 void AVehicle::CaptureForwardOnce()
 {
 	if (!ForwardCapture || !ForwardRT) return;
@@ -660,7 +680,6 @@ void AVehicle::DoForwardCapture()
 {
 	if (!bForwardCaptureActive || !ForwardCapture || !ForwardRT) return;
 	if (!ShouldCaptureForward()) return;
-	
 
 	ForwardCapture->CaptureSceneDeferred();
 }

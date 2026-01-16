@@ -196,6 +196,7 @@ void ACrazyFoodTruckCharacter::BindInputMoveAction(UEnhancedInputComponent* Enha
     if (InputData && InputData->InputActionMove)
     {
         EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Triggered, this, &ACrazyFoodTruckCharacter::OnInputMove);
+        EnhancedInputComponent->BindAction(InputData->InputActionMove, ETriggerEvent::Completed, this, &ACrazyFoodTruckCharacter::OnStopMove);
     }
 }
 
@@ -251,7 +252,8 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
 
         AddMovementInput(Forward, Y);
         AddMovementInput(Right, X);
-
+        MovementType = EMovementType::ECC_Run;
+        
         FVector Dir = Forward * Y + Right * X;
         Dir.Z = 0.f;
 
@@ -260,6 +262,11 @@ void ACrazyFoodTruckCharacter::OnInputMove(const FInputActionValue& InputActionV
             LastMovementDirection = Dir.GetSafeNormal();
         }
     }
+}
+
+void ACrazyFoodTruckCharacter::OnStopMove()
+{
+    MovementType = EMovementType::ECC_Idle;
 }
 
 void ACrazyFoodTruckCharacter::BindInputInteractAction(UEnhancedInputComponent* EnhancedInputComponent)

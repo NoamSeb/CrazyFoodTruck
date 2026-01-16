@@ -20,5 +20,11 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	void TurretChangePosition(FVector NewPosition);
+	void TurretChangePosition(FVector NewPosition, float currentAlpha);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="CisorTurret")
+	void SetAnimationAlpha(float Alpha);
+
+	UPROPERTY(EditAnywhere, Category="CisorTurret")
+	UCurveFloat* TurretCurve;
 };

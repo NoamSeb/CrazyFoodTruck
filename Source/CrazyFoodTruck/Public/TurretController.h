@@ -214,7 +214,7 @@ private:
 
 	int32 mappingPriority = 0;
 
-	void UpdateTurretOnSpline(float alpha);
+	void UpdateTurretOnSpline(float currentDistance, float alphaDistance);
 	
 	UPROPERTY(EditAnywhere, Category="TurretParameters")
 	ASplineTurret* TurretSpline;

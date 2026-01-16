@@ -3,6 +3,7 @@
 
 #include "Sound/SoundManager.h"
 
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 USoundManager::USoundManager()
@@ -24,6 +25,43 @@ void USoundManager::PlaySFX(ESfxType SfxType, UObject* WorldContext)
 		if (Row && Row->SoundType == SfxType && Row->MetaSound)
 		{
 			UGameplayStatics::PlaySound2D(WorldContext, Row->MetaSound);
+			return;
+		}
+	}
+}
+
+void USoundManager::PlaySFXWithIndex(ESfxType SfxType, UObject* WorldContext, int index)
+{
+	UDataTable* Table = MetaSoundsTable.LoadSynchronous();
+	if (!Table) return;
+
+	static const FString Context = TEXT("PlaySFX");
+	
+	TArray<FST_Sound*> AllRows;
+	Table->GetAllRows(Context, AllRows);
+
+	for (FST_Sound* Row : AllRows)
+	{
+		if (Row && Row->SoundType == SfxType && Row->MetaSound)
+		{
+			UAudioComponent* AC = UGameplayStatics::SpawnSound2D(
+				WorldContext,
+				Row->MetaSound,
+				1.0f,        
+				1.0f,        
+				0.0f,        
+				nullptr,     
+				false,       
+				false      
+			);
+			if(AC){
+				AC->SetIntParameter("soundIndex", index);
+				AC->Play();
+				UE_LOG(LogTemp, Error, TEXT("AC is null!"));
+			}else
+			{
+				UE_LOG(LogTemp, Error, TEXT("AC is null!"));
+			}
 			return;
 		}
 	}

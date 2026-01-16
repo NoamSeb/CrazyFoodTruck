@@ -83,6 +83,7 @@ int UGameInstanceCrazyFoodTruck::IncrementTicketsNumber(int Amount)
 
 int UGameInstanceCrazyFoodTruck::DecrementTicketsNumber(int Amount)
 {
+	GameData->NbrTicketsUse += Amount;
 	nbrTickets -= Amount;
 	return nbrTickets;
 }

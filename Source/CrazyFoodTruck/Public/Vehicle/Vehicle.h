@@ -139,6 +139,9 @@ public:
 
 	bool MapAlreadyChange;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bShouldBounceBack = false;
+	
 	UFUNCTION(BlueprintCallable)
 	void SetTruckState(EVehicleStates NewState);
 	UFUNCTION(BlueprintCallable)
@@ -216,8 +219,7 @@ private:
 	FVector PossessKeepVelocity = FVector::ZeroVector;
 	bool bHoldSpeedAfterPossess = false;
 	float HoldSpeedTimer = 0.f;
-	
-	bool bShouldBounceBack = false;
+
 	FTimerHandle BounceBackTimer;
 	bool bIsBoosted = false;
 	FTimerHandle BoostTimer;
@@ -315,6 +317,10 @@ private:
 	
 	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
 	void HideWidgetCamera();
+
+	UFUNCTION(BlueprintCallable, Category = "ForwardCam")
+	void ShowWidgetCamera();
+	
 
 	void CaptureForwardOnce();
 	
